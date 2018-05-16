@@ -288,7 +288,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"comment_id", commentId},
                     {"offset_to_video_start", 0}
                 };
@@ -322,7 +322,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"comment_id", commentId},
                     {"offset_to_video_start", 0}
                 };
@@ -386,7 +386,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()}
+                    {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Host = "i.instagram.com";
@@ -417,7 +417,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()}
+                    {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Host = "i.instagram.com";
@@ -449,7 +449,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"user_like_count", likeCount}
                 };
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -510,7 +510,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()}
+                    {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Host = "i.instagram.com";
@@ -541,7 +541,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()}
+                    {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Host = "i.instagram.com";
@@ -644,7 +644,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.UserName},
+                    {"_uid", _user.LoggedInUser.UserName},
                     {"end_after_copyright_warning", endAfterCopyrightWarning.ToString()},
                 };
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -754,7 +754,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"live_vods_skipped",  new JObject()},
                     {"nuxes_skipped",  new JObject()},
                     {"nuxes",  new JObject()},

@@ -43,7 +43,7 @@ namespace InstagramApiSharp.API.Processors
                 var fields = new Dictionary<string, string>
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_csrftoken", _user.CsrfToken},
                     {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
                     {"longitude", longitude.ToString(CultureInfo.InvariantCulture)},

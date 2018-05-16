@@ -116,7 +116,7 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk},
+                    {"_uid", _user.LoggedInUser.Pk},
                     {"_csrftoken", _user.CsrfToken},
                     {"source_type", "1"},
                     {"caption", caption},

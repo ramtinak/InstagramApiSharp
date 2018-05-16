@@ -84,7 +84,7 @@ namespace InstagramApiSharp.API.Processors
                     {"user_breadcrumb", breadcrumb},
                     {"idempotence_token", Guid.NewGuid().ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_csrftoken", _user.CsrfToken},
                     {"comment_text", text},
                     {"containermodule", "comments_feed_timeline"},
@@ -116,7 +116,7 @@ namespace InstagramApiSharp.API.Processors
                 var fields = new Dictionary<string, string>
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_csrftoken", _user.CsrfToken}
                 };
                 var request =

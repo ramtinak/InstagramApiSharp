@@ -40,7 +40,7 @@ namespace InstagramApiSharp.API.Processors
                 var fields = new Dictionary<string, string>
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_csrftoken", _user.CsrfToken}
                 };
                 var hash = CryptoHelper.CalculateHash(InstaApiConstants.IG_SIGNATURE_KEY,
@@ -78,7 +78,7 @@ namespace InstagramApiSharp.API.Processors
                 var fields = new Dictionary<string, string>
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_csrftoken", _user.CsrfToken}
                 };
                 var hash = CryptoHelper.CalculateHash(InstaApiConstants.IG_SIGNATURE_KEY,
@@ -123,7 +123,7 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk},
+                    {"_uid", _user.LoggedInUser.Pk},
                     {"_csrftoken", _user.CsrfToken},
                     {"old_password", oldPassword},
                     {"new_password1", newPassword},

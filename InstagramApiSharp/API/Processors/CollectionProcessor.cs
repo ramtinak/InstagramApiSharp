@@ -88,7 +88,7 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk},
+                    {"_uid", _user.LoggedInUser.Pk},
                     {"_csrftoken", _user.CsrfToken},
                     {"name", collectionName},
                     {"module_name", InstaApiConstants.COLLECTION_CREATE_MODULE}
@@ -122,7 +122,7 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk},
+                    {"_uid", _user.LoggedInUser.Pk},
                     {"_csrftoken", _user.CsrfToken},
                     {"module_name", "collection_editor"}
                 };
@@ -159,7 +159,7 @@ namespace InstagramApiSharp.API.Processors
                     {"added_media_ids", JsonConvert.SerializeObject(mediaIds)},
                     {"radio_type", "wifi-none"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk},
+                    {"_uid", _user.LoggedInUser.Pk},
                     {"_csrftoken", _user.CsrfToken}
                 };
 

@@ -37,13 +37,13 @@ namespace InstagramApiSharp.API
         ///     Get current state info as Memory stream
         /// </summary>
         /// <returns>State data</returns>
-        string GetStateDataAsStream();
+        Stream GetStateDataAsStream();
         Task<IResult<bool>> SendVerifyForChallenge(int UserChoice);
         Task<IResult<Step_Data>> GetChallengeChoices();
         /// <summary>
         ///     Set state data from provided stream
         /// </summary>
-        void LoadStateDataFromStream(string data);
+        void LoadStateDataFromStream(Stream data);
 
         #region Async Members
         Task<IResult<InstaFriendshipStatus>> AcceptFriendshipRequest(long UserID);

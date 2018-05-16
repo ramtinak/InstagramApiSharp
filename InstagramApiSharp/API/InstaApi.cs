@@ -134,7 +134,7 @@ namespace InstagramApiSharp.API
                 {
                     {"user_id", UserID.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
@@ -167,7 +167,7 @@ namespace InstagramApiSharp.API
                 {
                     {"user_id", UserID.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUder.Pk.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
@@ -1152,8 +1152,8 @@ namespace InstagramApiSharp.API
                 var loginInfo = JsonConvert.DeserializeObject<InstaLoginResponse>(json);
                 IsUserAuthenticated = loginInfo.User?.UserName.ToLower() == _user.UserName.ToLower();
                 var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
-                _user.LoggedInUder = converter.Convert();
-                _user.RankToken = $"{_user.LoggedInUder.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                _user.LoggedInUser = converter.Convert();
+                _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
                 return Result.Success(InstaLoginResult.Success);
             }
             catch (Exception exception)
@@ -1216,8 +1216,8 @@ namespace InstagramApiSharp.API
                     IsUserAuthenticated = IsUserAuthenticated =
                         loginInfo.User != null && loginInfo.User.UserName.ToLower() == _user.UserName.ToLower();
                     var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
-                    _user.LoggedInUder = converter.Convert();
-                    _user.RankToken = $"{_user.LoggedInUder.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                    _user.LoggedInUser = converter.Convert();
+                    _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
 
                     return Result.Success(InstaLoginTwoFactorResult.Success);
                 }
@@ -1287,7 +1287,7 @@ namespace InstagramApiSharp.API
         /// <returns>
         ///     State data
         /// </returns>
-        public string GetStateDataAsStream()
+        public Stream GetStateDataAsStream()
         {
 
             var Cookies = _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(new Uri(InstaApiConstants.INSTAGRAM_URL));
@@ -1313,7 +1313,7 @@ namespace InstagramApiSharp.API
         ///     Loads the state data from stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        public void LoadStateDataFromStream(string stream)
+        public void LoadStateDataFromStream(Stream stream)
         {
             var data = SerializationHelper.DeserializeFromStream<StateData>(stream);
             _deviceInfo = data.DeviceInfo;
