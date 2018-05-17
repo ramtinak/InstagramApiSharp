@@ -28,7 +28,27 @@ namespace Examples.Samples
 
             Console.WriteLine("See Samples/Live.cs to see how it's works");
             Console.WriteLine("Live functions: ");
-            Console.WriteLine(@"");
+            Console.WriteLine(@"GetHeartBeatAndViewerCountAsync
+GetFinalViewerListAsync
+GetSuggestedBroadcastsAsync
+GetDiscoverTopLiveAsync
+GetTopLiveStatusAsync
+GetInfoAsync
+GetViewerListAsync
+GetPostLiveViewerListAsync
+CommentAsync
+PinCommentAsync
+UnPinCommentAsync
+GetCommentsAsync
+EnableCommentsAsync
+DisableCommentsAsync
+LikeAsync
+GetLikeCountAsync
+AddToPostLiveAsync
+DeletePostLiveAsync
+CreateAsync
+StartAsync
+EndAsync");
         }
 
         public async void SuggestedBroadcasts()

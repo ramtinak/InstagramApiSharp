@@ -33,7 +33,7 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
-        /// Get heart beat and viewer count
+        /// Get heart beat and viewer count.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>

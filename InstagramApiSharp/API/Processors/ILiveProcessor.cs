@@ -8,7 +8,11 @@ namespace InstagramApiSharp.API.Processors
 {
     public interface ILiveProcessor
     {
-
+        /// <summary>
+        /// Get heart beat and viewer count.
+        /// </summary>
+        /// <param name="broadcastId">Broadcast id</param>
+        /// <returns></returns>
         Task<IResult<BroadcastLiveHeartBeatViewerCountResponse>> GetHeartBeatAndViewerCountAsync(string broadcastId);
         /// <summary>
         /// Get final viewer list.
