@@ -14,6 +14,11 @@ This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharpe
 ## Install
 Use this library as dll, reference from [NuGet](https://www.nuget.org/packages/InstagramApiSharp/).
 
+Nuget package manager command:
+```
+PM> Install-Package InstagramApiSharp
+```
+
 Note: this library uses [Json.NET v10.0.3 and above](https://www.nuget.org/packages/Newtonsoft.Json/) for serialize and deserialize json.
 
 ## Cross Platform
