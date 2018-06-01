@@ -5,7 +5,8 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp/)
+| Nuget | master | v1.0.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp/1.0.0)
+| Nuget | master | v1.0.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp/1.0.1)
 
 
 ## Note
@@ -46,7 +47,7 @@ Some of features:
 | Set account private | Set account public | Send comment | Delete comment |
 | Upload photo | Upload video | Get followings list | Delete media (photo/video) |
 | Upload story (photo) | Change password | Send direct message | Search location |
-| Get location feed | Collection create/get by id/get all/add items |
+| Get location feed | Collection create/get by id/get all/add items | Support challenge required |
 
 ## Usage
 #### Use builder to get Insta API instance:
