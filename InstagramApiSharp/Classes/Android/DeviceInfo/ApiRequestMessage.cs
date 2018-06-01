@@ -23,7 +23,10 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         {
             return JsonConvert.SerializeObject(new { choice = Choice.ToString(), _csrftoken = "ReplaceCSRF", guid, device_id });
         }
-
+        internal string GetChallengeVerificationCodeSend(string verify)
+        {
+            return JsonConvert.SerializeObject(new { security_code = verify.ToString(), _csrftoken = "ReplaceCSRF", guid, device_id });
+        }
         internal string GenerateSignature(string signatureKey, out string deviceid)
         {
             if (string.IsNullOrEmpty(signatureKey))

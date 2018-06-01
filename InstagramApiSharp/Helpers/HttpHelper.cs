@@ -103,7 +103,7 @@ namespace InstagramApiSharp.Helpers
                 data.ToString(Formatting.None));
             var payload = data.ToString(Formatting.None);
             var signature = $"{hash}.{payload}";
-
+            //System.Diagnostics.Debug.WriteLine(signature);
             var fields = new Dictionary<string, string>
             {
                 {InstaApiConstants.HEADER_IG_SIGNATURE, signature},

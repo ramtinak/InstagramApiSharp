@@ -1,21 +1,32 @@
 ﻿using System;
 
+using Newtonsoft.Json;
 namespace InstaAPI.Classes
 {
     class InstaLoginChallengeMethodResponse
     {
-        public string step_name { get; set; }
-        public Step_Data step_data { get; set; }
-        public long user_id { get; set; }
-        public string nonce_code { get; set; }
-        public string status { get; set; }
+        [JsonProperty("step_name")]
+        public string StepName { get; set; }
+        [JsonProperty("step_data")]
+        public StepData StepData { get; set; }
+        [JsonProperty("user_id")]
+        public long UserId { get; set; }
+        [JsonProperty("nonce_code")]
+        public string NonceCode { get; set; }
+        [JsonProperty("status")]
+        public string Status { get; set; }
     }
-    public class Step_Data
+    public class StepData
     {
-        public string choice { get; set; }
-        public string fb_access_token { get; set; }
-        public string big_blue_token { get; set; }
-        public string email { get; set; }
-        public string phone_number { get; set; }
+        [JsonProperty("choice")]
+        public string Choice { get; set; }
+        [JsonProperty("fb_access_token")]
+        public string FbAccessToken { get; set; }
+        [JsonProperty("big_blue_token")]
+        public string BigBlueToken { get; set; }
+        [JsonProperty("email")]
+        public string Email { get; set; }
+        [JsonProperty("phone_number")]
+        public string PhoneNumber { get; set; }
     }
 }

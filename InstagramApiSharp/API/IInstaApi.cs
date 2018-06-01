@@ -38,12 +38,24 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <returns>State data</returns>
         Stream GetStateDataAsStream();
-        Task<IResult<bool>> SendVerifyForChallenge(int UserChoice);
-        Task<IResult<Step_Data>> GetChallengeChoices();
+        //string GetStateDataAsString();
+        /// <summary>
+        ///     Get challenge login information for grabbing challenge url.
+        /// </summary>
+        /// <returns></returns>
+        InstaChallengeLoginInfo GetChallenge();
+        /// <summary>
+        ///     Set cookie and html document to verify login information.
+        /// </summary>
+        /// <param name="htmlDocument">Html document source</param>
+        /// <param name="cookies">Cookies from webview or webbrowser control</param>
+        /// <returns>True if logged in, False if not</returns>
+        IResult<bool> SetCookiesAndHtmlForChallenge(string htmlDocument, string cookies);
         /// <summary>
         ///     Set state data from provided stream
         /// </summary>
         void LoadStateDataFromStream(Stream data);
+        //void LoadStateDataFromString(string data);
 
         #region Async Members
         Task<IResult<InstaFriendshipStatus>> AcceptFriendshipRequest(long UserID);
