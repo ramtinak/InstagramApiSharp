@@ -81,6 +81,8 @@ namespace ChallengeExample
                         Size = ChallengeSize;
                     }
                 }
+                else
+                    Text = $"{AppName} Connected";
             }
             else
             {
