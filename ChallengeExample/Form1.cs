@@ -76,7 +76,7 @@ namespace ChallengeExample
                         var instaChallenge = InstaApi.GetChallenge();
                         IsWebBrowserInUse = false;
                         WebBrowserRmt.Visible = true;
-                        // Navigate to challenge Url
+                        // Navigate to challenge Url 
                         WebBrowserRmt.Navigate(instaChallenge.Url);
                         Size = ChallengeSize;
                     }
@@ -84,7 +84,7 @@ namespace ChallengeExample
                 else
                 {
                     Text = $"{AppName} Connected";
-                    // Save session
+                    // Save session 
                     var state = InstaApi.GetStateDataAsStream();
                     using (var fileStream = File.Create(StateFile))
                     {
