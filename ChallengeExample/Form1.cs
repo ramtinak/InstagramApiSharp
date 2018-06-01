@@ -82,7 +82,16 @@ namespace ChallengeExample
                     }
                 }
                 else
+                {
                     Text = $"{AppName} Connected";
+                    // Save session
+                    var state = InstaApi.GetStateDataAsStream();
+                    using (var fileStream = File.Create(StateFile))
+                    {
+                        state.Seek(0, SeekOrigin.Begin);
+                        state.CopyTo(fileStream);
+                    }
+                }
             }
             else
             {
