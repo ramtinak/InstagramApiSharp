@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
+| Nuget | master | v1.0.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
 
 
 ## Note
@@ -59,6 +59,13 @@ var api = new InstaApiBuilder()
                 .Build();
 ```
 ##### Note: every API method has synchronous implementation as well.
+
+## Version changes
+v1.0.2
+- Inline comments support(send and get)
+
+v1.0.1
+- Fix Challenge required api. Now you can verify your email or phone number with challenge required functions.
 
 ## Wiki
 Wiki page coming soon...
