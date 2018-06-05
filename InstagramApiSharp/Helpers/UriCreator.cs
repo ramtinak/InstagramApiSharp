@@ -253,6 +253,17 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
+        public static Uri GetMediaInlineCommentsUri(string mediaId, string targetCommentId, string nextId = "")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_COMMENTS, mediaId) +
+                $"{targetCommentId}/inline_child_comments/",
+                out var instaUri))
+                throw new Exception("Cant create URI for getting media comments");
+            return !string.IsNullOrEmpty(nextId)
+                ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
+                : instaUri;
+        }
+
         public static Uri GetMediaLikersUri(string mediaId)
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_LIKERS, mediaId),

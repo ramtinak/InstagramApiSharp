@@ -25,5 +25,19 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("pk")] public long Pk { get; set; }
 
         [JsonProperty("text")] public string Text { get; set; }
+
+        [JsonProperty("did_report_as_spam")] public bool DidReportAsSpam { get; set; }
+
+        [JsonProperty("has_liked_comment")] public bool HasLikedComment { get; set; }
+
+        [JsonProperty("child_comment_count")] public int ChildCommentCount { get; set; }
+
+        [JsonProperty("num_tail_child_comments")] public int NumTailChildComments { get; set; }
+
+        [JsonProperty("has_more_tail_child_comments")] public bool HasMoreTailChildComments { get; set; }
+
+        [JsonProperty("has_more_head_child_comments")] public bool HasMoreHeadChildComments { get; set; }
+
+        [JsonProperty("next_max_child_cursor")] public string NextMaxChildCursor { get; set; }
     }
 }

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using InstaAPI.Classes;
-using InstaAPI.Classes.Models;
 using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.ResponseWrappers;
 
 namespace InstagramApiSharp.API
 {
@@ -50,7 +49,7 @@ namespace InstagramApiSharp.API
         /// <param name="htmlDocument">Html document source</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        IResult<bool> SetCookiesAndHtmlForChallenge(string htmlDocument, string cookies);
+        IResult<bool> SetCookiesAndHtmlForChallenge(string htmlDocument, string cookies ,bool validate = false);
         /// <summary>
         ///     Set state data from provided stream
         /// </summary>
@@ -322,6 +321,16 @@ namespace InstagramApiSharp.API
         Task<IResult<InstaCommentList>> GetMediaCommentsAsync(string mediaId, PaginationParameters paginationParameters);
 
         /// <summary>
+        ///     Get media inline comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="targetCommentId">Target comment id</param>
+        /// <param name="paginationParameters">Maximum amount of pages to load and start id</param>
+        /// <returns></returns>
+        Task<IResult<InstaInlineCommentListResponse>> GetMediaInlineCommentsAsync(string mediaId, string targetCommentId,
+            PaginationParameters paginationParameters);
+
+        /// <summary>
         ///     Get users (short) who liked certain media. Normaly it return around 1000 last users.
         /// </summary>
         /// <param name="mediaId">Media id</param>
@@ -343,6 +352,15 @@ namespace InstagramApiSharp.API
         /// <param name="mediaId">Media id</param>
         /// <param name="text">Comment text</param>
         Task<IResult<InstaComment>> CommentMediaAsync(string mediaId, string text);
+
+        /// <summary>
+        ///     Inline comment media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="targetCommentId">Target comment id</param>
+        /// <param name="text">Comment text</param>
+        /// <returns></returns>
+        Task<IResult<InstaComment>> InlineCommentMediaAsync(string mediaId, string targetCommentId, string text);
 
         /// <summary>
         ///     Delete comment from media

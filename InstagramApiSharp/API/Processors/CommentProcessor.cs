@@ -72,7 +72,40 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaCommentList>(exception);
             }
         }
+        public async Task<IResult<InstaInlineCommentListResponse>> GetMediaInlineCommentsAsync(string mediaId, string targetCommentId,
+PaginationParameters paginationParameters)
+        {
+            try
+            {
+                var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommentId, paginationParameters.NextId);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaInlineCommentListResponse>(response, json);
+                var commentListResponse = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
+                var pagesLoaded = 1;
 
+                while (commentListResponse.HasMoreHeadChildComments
+                       && !string.IsNullOrEmpty(commentListResponse.NextId)
+                       && pagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var nextComments = await GetInlineCommentListWithMaxIdAsync(mediaId, targetCommentId, commentListResponse.NextId);
+                    if (!nextComments.Succeeded)
+                        return Result.Fail(nextComments.Info, commentListResponse);
+                    commentListResponse.NextId = nextComments.Value.NextId;
+                    commentListResponse.HasMoreHeadChildComments = nextComments.Value.HasMoreHeadChildComments;
+                    commentListResponse.ChildComments.AddRange(nextComments.Value.ChildComments);
+                    pagesLoaded++;
+                }
+                return Result.Success(commentListResponse);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaInlineCommentListResponse>(exception);
+            }
+        }
         public async Task<IResult<InstaComment>> CommentMediaAsync(string mediaId, string text)
         {
             try
@@ -105,6 +138,42 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail(exception.Message, (InstaComment) null);
+            }
+        }
+
+        public async Task<IResult<InstaComment>> InlineCommentMediaAsync(string mediaId, string targetCommentId, string text)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetPostCommetUri(mediaId);
+                var breadcrumb = CryptoHelper.GetCommentBreadCrumbEncoded(text);
+                var fields = new Dictionary<string, string>
+                {
+                    {"user_breadcrumb", breadcrumb},
+                    {"idempotence_token", Guid.NewGuid().ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"replied_to_comment_id", targetCommentId},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"comment_text", text},
+                    {"containermodule", "comments_feed_timeline"},
+                    {"radio_type", "wifi-none"}
+                };
+                var request =
+                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaComment>(response, json);
+                var commentResponse = JsonConvert.DeserializeObject<InstaCommentResponse>(json,
+                    new InstaCommentDataConverter());
+                var converter = ConvertersFabric.Instance.GetCommentConverter(commentResponse);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, (InstaComment)null);
             }
         }
 
@@ -144,6 +213,20 @@ namespace InstagramApiSharp.API.Processors
             if (response.StatusCode != HttpStatusCode.OK)
                 return Result.UnExpectedResponse<InstaCommentListResponse>(response, json);
             var comments = JsonConvert.DeserializeObject<InstaCommentListResponse>(json);
+            return Result.Success(comments);
+        }
+
+        private async Task<IResult<InstaInlineCommentListResponse>> GetInlineCommentListWithMaxIdAsync(string mediaId,
+    string targetCommandId,
+    string nextId)
+        {
+            var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommandId, nextId);
+            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
+            var response = await _httpRequestProcessor.SendAsync(request);
+            var json = await response.Content.ReadAsStringAsync();
+            if (response.StatusCode != HttpStatusCode.OK)
+                return Result.UnExpectedResponse<InstaInlineCommentListResponse>(response, json);
+            var comments = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
             return Result.Success(comments);
         }
     }

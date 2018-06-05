@@ -24,7 +24,14 @@ namespace InstagramApiSharp.Converters
                 Text = SourceObject.Text,
                 Type = SourceObject.Type,
                 UserId = SourceObject.UserId,
-                User = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.User).Convert()
+                User = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.User).Convert(),
+                DidReportAsSpam = SourceObject.DidReportAsSpam,
+                ChildCommentCount = SourceObject.ChildCommentCount,
+                HasLikedComment = SourceObject.HasLikedComment,
+                HasMoreHeadChildComments = SourceObject.HasMoreHeadChildComments,
+                HasMoreTailChildComments = SourceObject.HasMoreTailChildComments,
+                NextMaxChildCursor = SourceObject.NextMaxChildCursor,
+                NumTailChildComments = SourceObject.NumTailChildComments
             };
             return comment;
         }

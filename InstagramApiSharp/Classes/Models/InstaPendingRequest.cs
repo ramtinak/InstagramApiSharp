@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InstaAPI.Classes.Models
+namespace InstagramApiSharp.Classes.Models
 {
     public class InstaPendingRequest
     {

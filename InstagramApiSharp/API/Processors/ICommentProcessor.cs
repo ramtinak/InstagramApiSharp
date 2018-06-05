@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.ResponseWrappers;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -8,8 +9,11 @@ namespace InstagramApiSharp.API.Processors
     {
         Task<IResult<InstaCommentList>>
             GetMediaCommentsAsync(string mediaId, PaginationParameters paginationParameters);
+        Task<IResult<InstaInlineCommentListResponse>>
+           GetMediaInlineCommentsAsync(string mediaId, string targetCommentId, PaginationParameters paginationParameters);
 
         Task<IResult<InstaComment>> CommentMediaAsync(string mediaId, string text);
         Task<IResult<bool>> DeleteCommentAsync(string mediaId, string commentId);
+        Task<IResult<InstaComment>> InlineCommentMediaAsync(string mediaId, string targetCommentId, string text);
     }
 }

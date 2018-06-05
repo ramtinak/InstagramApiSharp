@@ -23,6 +23,20 @@ namespace InstagramApiSharp.Classes.Models
         public long Pk { get; set; }
         public string Text { get; set; }
 
+        public bool DidReportAsSpam { get; set; }
+
+        public bool HasLikedComment { get; set; }
+
+        public int ChildCommentCount { get; set; }
+
+        public int NumTailChildComments { get; set; }
+
+        public bool HasMoreTailChildComments { get; set; }
+
+        public bool HasMoreHeadChildComments { get; set; }
+
+        public string NextMaxChildCursor { get; set; }
+
         public bool Equals(InstaComment comment)
         {
             return Pk == comment?.Pk;

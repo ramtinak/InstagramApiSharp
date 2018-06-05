@@ -5,8 +5,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using InstaAPI.Classes;
-using InstaAPI.Classes.Models;
 using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
@@ -515,6 +513,22 @@ namespace InstagramApiSharp.API
         }
 
         /// <summary>
+        ///     Get media inline comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="targetCommentId">Target comment id</param>
+        /// <param name="paginationParameters">Maximum amount of pages to load and start id</param>
+        /// <returns></returns>
+        public async Task<IResult<InstaInlineCommentListResponse>> GetMediaInlineCommentsAsync(string mediaId, string targetCommentId,
+            PaginationParameters paginationParameters)
+        {
+            ValidateUser();
+            ValidateLoggedIn();
+
+            return await _commentProcessor.GetMediaInlineCommentsAsync(mediaId, targetCommentId, paginationParameters);
+        }
+
+        /// <summary>
         ///     Get users (short) who liked certain media. Normaly it return around 1000 last users.
         /// </summary>
         /// <param name="mediaId">Media id</param>
@@ -601,6 +615,20 @@ namespace InstagramApiSharp.API
             ValidateUser();
             ValidateLoggedIn();
             return await _commentProcessor.CommentMediaAsync(mediaId, text);
+        }
+
+        /// <summary>
+        ///     Inline comment media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="targetCommentId">Target comment id</param>
+        /// <param name="text">Comment text</param>
+        /// <returns></returns>
+        public async Task<IResult<InstaComment>> InlineCommentMediaAsync(string mediaId, string targetCommentId, string text)
+        {
+            ValidateUser();
+            ValidateLoggedIn();
+            return await _commentProcessor.InlineCommentMediaAsync(mediaId, targetCommentId, text);
         }
 
         /// <summary>
@@ -1207,7 +1235,7 @@ namespace InstagramApiSharp.API
         /// <param name="htmlDocument">Html document source</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        public IResult<bool> SetCookiesAndHtmlForChallenge(string htmlDocument, string cookie)
+        public IResult<bool> SetCookiesAndHtmlForChallenge(string htmlDocument, string cookie, bool invalidate = false)
         {
             if (!string.IsNullOrEmpty(cookie) && !string.IsNullOrEmpty(htmlDocument))
             {
@@ -1243,7 +1271,8 @@ namespace InstagramApiSharp.API
                     _user.CsrfToken = o.Config.CsrfToken;
                     _user.RankToken = $"{o.Config.Viewer.Id}_{_httpRequestProcessor.RequestMessage.phone_id}";
                     IsUserAuthenticated = true;
-
+                    if (invalidate)
+                        InvalidateProcessors();
                     return Result.Success(true);
                 }
                 catch (Exception ex)
