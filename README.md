@@ -61,6 +61,9 @@ var api = new InstaApiBuilder()
 ##### Note: every API method has synchronous implementation as well.
 
 ## Version changes
+v1.0.2.1
+- GetStateDataAsString and LoadStateDataFromString added.
+
 v1.0.2
 - Inline comments support(send and get)
 
