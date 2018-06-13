@@ -60,6 +60,13 @@ var api = new InstaApiBuilder()
 ```
 ##### Note: every API method has synchronous implementation as well.
 
+## Contract, warning, note
+Every method returns object IS NOT COMPLETED YET!
+For example:
+```
+Task<IResult<object>>
+```
+
 ## Version changes
 v1.0.2.1
 - GetStateDataAsString and LoadStateDataFromString added.
