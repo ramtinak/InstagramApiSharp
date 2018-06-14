@@ -92,6 +92,10 @@ Do whatever you want to do!
 - By using this api in your app, you agreed [Instagram Policy](https://www.instagram.com/about/legal/terms/api/).
 - Please don't use this library for sending spam or massive direct messages.
 
+## Donation
+If you in Iran, feel free to donate:
+https://zarinp.al/@ramtin
+
 ## Contribute
 Feel free to contribute and submit pull requests.
 
