@@ -31,6 +31,10 @@ namespace InstagramApiSharp.API
         /// Account api functions.
         /// </summary>
         IAccountProcessor AccountProcessor { get; }
+        /// <summary>
+        /// Story api functions.
+        /// </summary>
+        IStoryProcessor StoryProcessor { get; }
         UserSessionData GetLoggedUser();
         /// <summary>
         ///     Get current state info as Memory stream

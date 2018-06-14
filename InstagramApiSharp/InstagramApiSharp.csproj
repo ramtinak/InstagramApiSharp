@@ -38,6 +38,7 @@ v1.0.1
 - Fix Challenge required api. Now you can verify your email or phone number with challenge required functions.</PackageReleaseNotes>
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp</PackageTags>
   </PropertyGroup>
   
    <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">

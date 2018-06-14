@@ -56,7 +56,10 @@ namespace InstagramApiSharp.API
         /// Account api functions.
         /// </summary>
         public IAccountProcessor AccountProcessor => _accountProcessor;
-
+        /// <summary>
+        /// Story api functions.
+        /// </summary>
+        public IStoryProcessor StoryProcessor => _storyProcessor;
         public InstaApi(UserSessionData user, IInstaLogger logger, AndroidDevice deviceInfo,
             IHttpRequestProcessor httpRequestProcessor)
         {

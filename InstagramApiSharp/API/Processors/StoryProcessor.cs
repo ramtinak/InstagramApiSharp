@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -164,6 +165,64 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail(exception.Message, feed);
+            }
+        }
+
+        public async Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewers(string StoryMediaId, PaginationParameters paginationParameters)
+        {
+
+            try
+            {
+                if (paginationParameters.MaximumPagesToLoad > 1)
+                    throw new Exception("Not supported");
+                var directInboxUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL +$"media/{StoryMediaId}/list_reel_media_viewer/?max_id={paginationParameters.NextId}", UriKind.RelativeOrAbsolute);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaReelStoryMediaViewers>(response, json);
+                var threadResponse = JsonConvert.DeserializeObject<InstaReelStoryMediaViewers>(json);
+
+                return Result.Success(threadResponse);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaReelStoryMediaViewers>(exception.Message);
+            }
+        }
+        public async Task<IResult<InstaStorySharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId)
+        {
+            try
+            {
+                var instaUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + "direct_v2/threads/broadcast/story_share/?media_type=video");
+                var data = new JObject
+                {
+                    {"action", "send_item"},
+                    {"thread_ids", $"[{threadId}]"},
+                    {"unified_broadcast_format", "1"},
+                    {"reel_id", reelId},
+                    {"story_media_id", storyMediaId},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                };
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Add("Host", "i.instagram.com");
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.Fail("Status code: " + response.StatusCode, (InstaStorySharing)null);
+                var obj = JsonConvert.DeserializeObject<InstaStorySharing>(json);
+
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaStorySharing>(exception);
             }
         }
     }
