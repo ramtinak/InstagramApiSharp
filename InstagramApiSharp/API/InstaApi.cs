@@ -1029,6 +1029,49 @@ namespace InstagramApiSharp.API
                 return Result.Fail<CreationResponse>(exception);
             }
         }
+
+        /// <summary>
+        ///     Share an user
+        /// </summary>
+        /// <param name="userIdToSend">User id(PK)</param>
+        /// <param name="threadId">Thread id</param>
+        /// <returns></returns>
+        public async Task<IResult<InstaSharing>> ShareUserAsync(string userIdToSend, string threadId)
+        {
+            try
+            {
+                var instaUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + "direct_v2/threads/broadcast/profile/");
+                var uploadId = ApiRequestMessage.GenerateUploadId();
+                var requestContent = new MultipartFormDataContent(uploadId)
+                {
+                    {new StringContent(userIdToSend), "\"profile_user_id\""},
+                    {new StringContent("1"), "\"unified_broadcast_format\""},
+                    {new StringContent("send_item"), "\"action\""},
+                    {new StringContent($"[{threadId}]"), "\"thread_ids\""},
+                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                    {new StringContent(_user.LoggedInUser.Pk.ToString()), "\"_uid\""},
+                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""}
+
+                };
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                request.Content = requestContent;
+                request.Headers.Add("Host", "i.instagram.com");
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.Fail("Status code: " + response.StatusCode, (InstaSharing)null);
+                var obj = JsonConvert.DeserializeObject<InstaSharing>(json);
+
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaSharing>(exception);
+            }
+        }
+
         /// <summary>
         ///     Login using given credentials asynchronously
         /// </summary>

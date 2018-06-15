@@ -10,9 +10,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.2.1</Version>
-    <AssemblyVersion>1.0.2.1</AssemblyVersion>
-    <FileVersion>1.0.2.1</FileVersion>
+    <Version>1.0.2.2</Version>
+    <AssemblyVersion>1.0.2.2</AssemblyVersion>
+    <FileVersion>1.0.2.2</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 Support:
 - Edit Profile.
@@ -28,14 +28,19 @@ See examples to find out how can you use this library.</Description>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.2.1
+    <PackageReleaseNotes>v1.0.2.2
+- Share story added.
+- Access to StoryProcessor added.
+
+v1.0.2.1
 - GetStateDataAsString and LoadStateDataFromString added.
 
 v1.0.2
 - Inline comments support(send and get)
 
 v1.0.1
-- Fix Challenge required api. Now you can verify your email or phone number with challenge required functions.</PackageReleaseNotes>
+- Fix Challenge required api. Now you can verify your email or phone number with challenge required functions.
+</PackageReleaseNotes>
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp</PackageTags>

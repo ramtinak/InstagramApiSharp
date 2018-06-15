@@ -80,7 +80,13 @@ namespace InstagramApiSharp.API
         /// <param name="firstName">First name (optional)</param>
         /// <returns></returns>
         Task<IResult<CreationResponse>> CreateNewAccount(string username, string password, string email, string firstName);
-
+        /// <summary>
+        ///     Share an user
+        /// </summary>
+        /// <param name="userIdToSend">User id(PK)</param>
+        /// <param name="threadId">Thread id</param>
+        /// <returns></returns>
+        Task<IResult<InstaSharing>> ShareUserAsync(string userIdToSend, string threadId);
         /// <summary>
         ///     Login using given credentials asynchronously
         /// </summary>

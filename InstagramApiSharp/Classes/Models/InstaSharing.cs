@@ -5,19 +5,24 @@ using System.Text;
 
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaStorySharing
+    public enum SharingType
+    {
+        Video,
+        Photo
+    }
+    public class InstaSharing
     {
         [JsonProperty("action")]
         public string Action { get; set; }
         [JsonProperty("status_code")]
         public string StatusCode { get; set; }
         [JsonProperty("payload")]
-        public InstaStorySharingPayload[] Payload { get; set; }
+        public InstaSharingPayload[] Payload { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
     }
 
-    public class InstaStorySharingPayload
+    public class InstaSharingPayload
     {
         [JsonProperty("thread_id")]
         public string ThreadId { get; set; }

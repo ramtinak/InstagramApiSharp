@@ -12,6 +12,6 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaStoryMedia>> ConfigureStoryPhotoAsync(InstaImage image, string uploadId, string caption);
         Task<IResult<InstaReelFeed>> GetUserStoryFeedAsync(long userId);
         Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewers(string StoryMediaId, PaginationParameters paginationParameters);
-        Task<IResult<InstaStorySharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId);
+        Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, SharingType sharingType = SharingType.Video);
     }
 }

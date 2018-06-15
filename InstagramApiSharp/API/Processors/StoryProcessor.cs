@@ -192,11 +192,11 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaReelStoryMediaViewers>(exception.Message);
             }
         }
-        public async Task<IResult<InstaStorySharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId)
+        public async Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, SharingType sharingType = SharingType.Video)
         {
             try
             {
-                var instaUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + "direct_v2/threads/broadcast/story_share/?media_type=video");
+                var instaUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + $"direct_v2/threads/broadcast/story_share/?media_type={sharingType.ToString().ToLower()}");
                 var data = new JObject
                 {
                     {"action", "send_item"},
@@ -213,8 +213,8 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (InstaStorySharing)null);
-                var obj = JsonConvert.DeserializeObject<InstaStorySharing>(json);
+                    return Result.Fail("Status code: " + response.StatusCode, (InstaSharing)null);
+                var obj = JsonConvert.DeserializeObject<InstaSharing>(json);
 
                 return Result.Success(obj);
             }
@@ -222,7 +222,7 @@ namespace InstagramApiSharp.API.Processors
             {
                 Debug.WriteLine(exception.Message);
                 _logger?.LogException(exception);
-                return Result.Fail<InstaStorySharing>(exception);
+                return Result.Fail<InstaSharing>(exception);
             }
         }
     }
