@@ -57,7 +57,14 @@ namespace InstagramApiSharp.API
         /// <param name="htmlDocument">Html document source</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        IResult<bool> SetCookiesAndHtmlForChallenge(string htmlDocument, string cookies ,bool validate = false);
+        IResult<bool> SetCookiesAndHtmlForFbLoginAndChallenge(string htmlDocument, string cookies ,bool validate = false);
+        /// <summary>
+        ///     Set cookie and web browser response object to verify login information.
+        /// </summary>
+        /// <param name="webBrowserResponse">Web browser response object</param>
+        /// <param name="cookies">Cookies from webview or webbrowser control</param>
+        /// <returns>True if logged in, False if not</returns>
+        IResult<bool> SetCookiesAndHtmlForFbLoginAndChallenge(WebBrowserResponse webBrowserResponse, string cookies, bool validate = false);
         /// <summary>
         ///     Set state data from provided stream
         /// </summary>

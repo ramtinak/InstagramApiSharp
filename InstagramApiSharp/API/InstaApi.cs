@@ -1281,23 +1281,12 @@ namespace InstagramApiSharp.API
         /// <param name="htmlDocument">Html document source</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        public IResult<bool> SetCookiesAndHtmlForChallenge(string htmlDocument, string cookie, bool invalidate = false)
+        public IResult<bool> SetCookiesAndHtmlForFbLoginAndChallenge(string htmlDocument, string cookie, bool facebookLogin = false)
         {
             if (!string.IsNullOrEmpty(cookie) && !string.IsNullOrEmpty(htmlDocument))
             {
                 try
                 {
-                    var uri = new Uri(InstaApiConstants.INSTAGRAM_URL);
-                    if (cookie.Contains("urlgen"))
-                    {
-                        var removeStart = "urlgen=";
-                        var removeEnd = ";";
-                        var t = cookie.Substring(cookie.IndexOf(removeStart) + 0);
-                        t = t.Substring(0, t.IndexOf(removeEnd) + 2);
-                        cookie = cookie.Replace(t, "");                     
-                    }
-                    cookie = cookie.Replace(';', ',');
-                    _httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(uri, cookie);
                     var start = "<script type=\"text/javascript\">window._sharedData";
                     var end = ";</script>";
 
@@ -1305,19 +1294,59 @@ namespace InstagramApiSharp.API
                     str = str.Substring(0, str.IndexOf(end));
                     str = str.Substring(str.IndexOf("=") + 2);
                     var o = JsonConvert.DeserializeObject<WebBrowserResponse>(str);
+                    return SetCookiesAndHtmlForFbLoginAndChallenge(o, cookie, facebookLogin);
+                }
+                catch (Exception ex)
+                {
+                    return Result.Fail(ex.Message, false);
+                }
+            }
+            return Result.Fail("", false);
+        }
+        /// <summary>
+        ///     Set cookie and web browser response object to verify login information.
+        /// </summary>
+        /// <param name="webBrowserResponse">Web browser response object</param>
+        /// <param name="cookies">Cookies from webview or webbrowser control</param>
+        /// <returns>True if logged in, False if not</returns>
+        public IResult<bool> SetCookiesAndHtmlForFbLoginAndChallenge(WebBrowserResponse webBrowserResponse, string cookie, bool facebookLogin = false)
+        {
+            if(webBrowserResponse == null)
+                return Result.Fail("", false);
+            if(webBrowserResponse.Config == null)
+                return Result.Fail("", false);
+            if(webBrowserResponse.Config.Viewer == null)
+                return Result.Fail("", false);
+
+            if (!string.IsNullOrEmpty(cookie))
+            {
+                try
+                {
+                    var uri = new Uri(InstaApiConstants.INSTAGRAM_URL);
+                    //if (cookie.Contains("urlgen"))
+                    //{
+                    //    var removeStart = "urlgen=";
+                    //    var removeEnd = ";";
+                    //    var t = cookie.Substring(cookie.IndexOf(removeStart) + 0);
+                    //    t = t.Substring(0, t.IndexOf(removeEnd) + 2);
+                    //    cookie = cookie.Replace(t, "");
+                    //}
+                    cookie = cookie.Replace(';', ',');
+                    _httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(uri, cookie);
+                  
                     InstaUserShort user = new InstaUserShort
                     {
-                        Pk = long.Parse(o.Config.Viewer.Id),
+                        Pk = long.Parse(webBrowserResponse.Config.Viewer.Id),
                         UserName = _user.UserName,
                         ProfilePictureId = "unknown",
-                        FullName = o.Config.Viewer.FullName,
-                        ProfilePicture = o.Config.Viewer.ProfilePicUrl
+                        FullName = webBrowserResponse.Config.Viewer.FullName,
+                        ProfilePicture = webBrowserResponse.Config.Viewer.ProfilePicUrl
                     };
                     _user.LoggedInUser = user;
-                    _user.CsrfToken = o.Config.CsrfToken;
-                    _user.RankToken = $"{o.Config.Viewer.Id}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                    _user.CsrfToken = webBrowserResponse.Config.CsrfToken;
+                    _user.RankToken = $"{webBrowserResponse.Config.Viewer.Id}_{_httpRequestProcessor.RequestMessage.phone_id}";
                     IsUserAuthenticated = true;
-                    if (invalidate)
+                    if (facebookLogin)
                         InvalidateProcessors();
                     return Result.Success(true);
                 }

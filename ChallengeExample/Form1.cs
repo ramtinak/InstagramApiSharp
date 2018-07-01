@@ -114,7 +114,7 @@ namespace ChallengeExample
 
                 // Pass web browser document source and cookies to this function:
                 // NOTE: Don't use WebBrowserRmt.Document.Cookie to get cookies because it's not getting full cookies
-                var result = InstaApi.SetCookiesAndHtmlForChallenge(WebBrowserRmt.DocumentText, cookies);
+                var result = InstaApi.SetCookiesAndHtmlForFbLoginAndChallenge(WebBrowserRmt.DocumentText, cookies);
                 // You are logged in
                 if (result.Succeeded)
                 {

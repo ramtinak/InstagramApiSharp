@@ -59,6 +59,10 @@ namespace Examples
                         using (var fs = File.OpenRead(stateFile))
                         {
                             _instaApi.LoadStateDataFromStream(fs);
+                            // in .net core or uwp apps don't use LoadStateDataFromStream
+                            // use this one:
+                            // _instaApi.LoadStateDataFromString(new StreamReader(fs).ReadToEnd());
+                            // you should pass json string as parameter to this function.
                         }
                     }
                 }
@@ -81,6 +85,10 @@ namespace Examples
                     }
                 }
                 var state = _instaApi.GetStateDataAsStream();
+                // in .net core or uwp apps don't use GetStateDataAsStream.
+                // use this one:
+                // var state = _instaApi.GetStateDataAsString();
+                // this returns you session as json string.
                 using (var fileStream = File.Create(stateFile))
                 {
                     state.Seek(0, SeekOrigin.Begin);
