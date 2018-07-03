@@ -99,14 +99,12 @@ namespace InstagramApiSharp.API
                         .BaseAddress);
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
                 _user.CsrfToken = csrftoken;
-                var instaUri = new Uri($"https://i.instagram.com/api/v1/friendships/pending/?rank_mutual=0&rank_token={_user.RankToken}", UriKind.RelativeOrAbsolute);
-                //await Launcher.LaunchUriAsync(new Uri(_challengeinfo.url, UriKind.RelativeOrAbsolute));
-               
+                var instaUri = new Uri($"https://i.instagram.com/api/v1/friendships/pending/?rank_mutual=0&rank_token={_user.RankToken}", UriKind.RelativeOrAbsolute);               
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode == HttpStatusCode.OK) //If the password is correct BUT 2-Factor Authentication is enabled, it will still get a 400 error (bad request)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
                     var JRes = JsonConvert.DeserializeObject<InstaPendingRequest>(json);
                     return Result.Success(JRes);

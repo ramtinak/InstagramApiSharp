@@ -1,4 +1,5 @@
 ﻿using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.ResponseWrappers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,17 +18,19 @@ namespace InstagramApiSharp.Classes.Models
         [JsonProperty("status")]
         public string Status { get; set; }
         [JsonProperty("suggested_users")]
-        public Suggested_Users SuggestedUsers { get; set; }
+        public SuggestedUsers SuggestedUsers { get; set; }
         [JsonProperty("truncate_follow_requests_at_index")]
         public int TruncateFollowRequestsAtIndex { get; set; }
         [JsonProperty("users")]
-        public InstaUserShort[] Users { get; set; }
+        public InstaUserShortResponse[] Users { get; set; }
     }
     
-    public class Suggested_Users
+    public class SuggestedUsers
     {
-        public string netego_type { get; set; }
-        public object[] suggestions { get; set; }
+        [JsonProperty("netego_type")]
+        public string NetegoType { get; set; }
+        [JsonProperty("suggestions")]
+        public object[] Suggestions { get; set; }
     }
     
 }
