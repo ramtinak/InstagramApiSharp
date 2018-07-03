@@ -36,17 +36,17 @@ Some of features:
 
 |    |    |    |    |
 | ------ | ------ | ------ | ------ |
-| Login | Logout | Create new account | Edit profile |
-| Change/remove profile picture | Story settings | Get user explore feed | Get user timeline feed |
-| Get all user media by username | Get media by its id | Get user info by its username | Get current user info |
-| Get tag feed by tag value | Get current user media | Get followers list | Get followers list for logged in user |
-| Get following list | Get recent following activity | Get user tags by username | Get direct mailbox |
-| Get recent recipients | Get ranked recipients | Get inbox thread | Get recent activity |
-| Like media | Unlike media | Follow user | Unfollow user |
-| Set account private | Set account public | Send comment | Delete comment |
-| Upload photo | Upload video | Get followings list | Delete media (photo/video) |
-| Upload story (photo) | Change password | Send direct message | Search location |
-| Get location feed | Collection create/get by id/get all/add items | Support challenge required |
+| Login | Login with Facebook | Logout | Create new account |
+| Edit profile | Change/remove profile picture | Story settings | Get user explore feed |
+| Get user timeline feed | Get all user media by username | Get media by its id | Get user info by its username |
+| Get current user info | Get tag feed by tag value | Get current user media | Get followers list |
+| Get followers list for logged in user | Get following list | Get recent following activity | Get user tags by username |
+| Get direct mailbox | Get recent recipients | Get ranked recipients | Get inbox thread |
+| Get recent activity | Like media | Unlike media | Follow user |
+| Unfollow user | Set account private | Set account public | Send comment |
+| Delete comment | Upload photo | Upload video | Get followings list |
+| Delete media (photo/video) | Upload story (photo) | Change password | Send direct message |
+| Search location | Get location feed | Collection create/get by id/get all/add items | Support challenge required |
 
 ## Usage
 #### Use builder to get Insta API instance:
