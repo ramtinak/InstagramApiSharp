@@ -32,8 +32,8 @@ namespace Examples
                 // create user session data and provide login details
                 var userSession = new UserSessionData
                 {
-                    UserName = "username",
-                    Password = "password"
+                    UserName = "freemtprotos",
+                    Password = "Pytop298"
                 };
 
                 var delay = RequestDelay.FromSeconds(2, 2);
@@ -94,6 +94,40 @@ namespace Examples
                     state.Seek(0, SeekOrigin.Begin);
                     state.CopyTo(fileStream);
                 }
+var pendings = await _instaApi.GetPendingFriendRequests();
+
+if (pendings.Succeeded && pendings.Value.Users != null)
+{
+    foreach (var user in pendings.Value.Users)
+    {
+        System.Diagnostics.Debug.WriteLine($"{user.UserName} is private: {user.IsPrivate}");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 Console.WriteLine("Press 1 to start basic demo samples");
                 Console.WriteLine("Press 2 to start upload photo demo sample");

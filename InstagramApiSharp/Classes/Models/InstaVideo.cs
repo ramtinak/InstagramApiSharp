@@ -17,5 +17,9 @@
         public int Height { get; set; }
 
         public int Type { get; set; }
+
+        internal string UploadId { get; set; }
+
+        public double Length { get; set; } = 0;
     }
 }

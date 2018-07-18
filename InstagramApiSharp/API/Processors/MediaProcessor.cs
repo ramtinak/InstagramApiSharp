@@ -401,6 +401,112 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        public async Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideo[] videos, string caption)
+        {
+            try
+            {
+                var uploadIds = new string[images.Length];
+                var index = 0;
+
+                foreach (var image in images)
+                {
+                    var instaUri = UriCreator.GetUploadPhotoUri();
+                    var uploadId = ApiRequestMessage.GenerateUploadId();
+                    var requestContent = new MultipartFormDataContent(uploadId)
+                    {
+                        {new StringContent(uploadId), "\"upload_id\""},
+                        {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                        {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                        {
+                            new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                            "\"image_compression\""
+                        },
+                        {new StringContent("1"), "\"is_sidecar\""}
+                    };
+                    var imageContent = new ByteArrayContent(File.ReadAllBytes(image.URI));
+                    imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                    imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                    requestContent.Add(imageContent, "photo",
+                        $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
+                    var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                    request.Content = requestContent;
+                    var response = await _httpRequestProcessor.SendAsync(request);
+                    var json = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
+                        uploadIds[index++] = uploadId;
+                    else
+                        return Result.UnExpectedResponse<InstaMedia>(response, json);
+                }
+
+                var videosDic = new Dictionary<string, InstaVideo>();
+
+                foreach (var video in videos)
+                {
+                    var instaUri = UriCreator.GetUploadVideoUri();
+                    var uploadId = ApiRequestMessage.GenerateUploadId();
+                    var requestContent = new MultipartFormDataContent(uploadId)
+                {
+                    {new StringContent("2"), "\"media_type\""},
+                    {new StringContent(uploadId), "\"upload_id\""},
+                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                    {
+                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                        "\"image_compression\""
+                    }
+                };
+
+                    var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                    request.Content = requestContent;
+                    var response = await _httpRequestProcessor.SendAsync(request);
+                    var json = await response.Content.ReadAsStringAsync();
+
+                    var videoResponse = JsonConvert.DeserializeObject<VideoUploadJobResponse>(json);
+                    if (videoResponse == null)
+                        return Result.Fail<InstaMedia>("Failed to get response from instagram video upload endpoint");
+
+                    var fileBytes = File.ReadAllBytes(video.Url);
+                    var first = videoResponse.VideoUploadUrls[0];
+                    instaUri = new Uri(Uri.EscapeUriString(first.Url));
+
+
+                    requestContent = new MultipartFormDataContent(uploadId)
+                {
+                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                    {
+                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                        "\"image_compression\""
+                    }
+                };
+
+
+                    var videoContent = new ByteArrayContent(fileBytes);
+                    videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                    videoContent.Headers.Add("Content-Type", "application/octet-stream");
+                    videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Url)}\"");
+                    requestContent.Add(videoContent);
+                    request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                    request.Content = requestContent;
+                    request.Headers.Host = "upload.instagram.com";
+                    request.Headers.Add("Cookie2", "$Version=1");
+                    request.Headers.Add("Session-ID", uploadId);
+                    request.Headers.Add("job", first.Job);
+                    response = await _httpRequestProcessor.SendAsync(request);
+                    json = await response.Content.ReadAsStringAsync();
+                    await UploadVideoThumbnailAsync(images[0], uploadId);
+                    System.Diagnostics.Debug.WriteLine("Video Upload: " +  json);
+                    videosDic.Add(uploadId, video);
+                }
+
+                return await ConfigureAlbum2Async(uploadIds, videosDic, caption);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMedia>(exception);
+            }
+        }
+
         public async Task<IResult<InstaMedia>> ConfigurePhotoAsync(InstaImage image, string uploadId, string caption)
         {
             try
@@ -497,6 +603,124 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                    return Result.UnExpectedResponse<InstaMedia>(response, json);
+                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaItemResponse>(json);
+                var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMedia>(exception);
+            }
+        }
+
+        public async Task<IResult<InstaMedia>> ConfigureAlbum2Async(string[] imagesUploadId, Dictionary<string,InstaVideo> videos, string caption)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetMediaAlbumConfigureUri();
+                var clientSidecarId = ApiRequestMessage.GenerateUploadId();
+                var childrenArray = new JArray();
+                //{
+                //		"timezone_offset": "16200",
+                //		"source_type": "4",
+                //		"upload_id": "1530841727773",
+                //		"caption": null,
+                //		"device": "{\"manufacturer\":\"HUAWEI\",\"model\":\"PRA-LA1\",\"android_version\":24,\"android_release\":\"7.0\"}",
+                //		"extra": "{\"source_width\":256,\"source_height\":256}",
+                //		"edits": "{\"crop_original_size\":[256.0,256.0],\"crop_center\":[0.0,-0.0],\"crop_zoom\":1.0}"
+                //}]
+                System.Diagnostics.Debug.WriteLine("p1111111");
+                foreach (var id in imagesUploadId)
+                    childrenArray.Add(new JObject
+                    {
+                        { "timezone_offset", "16200"},
+                        //{"scene_capture_type", "standard"},
+                        //{"mas_opt_in", "NOT_PROMPTED"},
+                        //{"camera_position", "unknown"},
+                        //{"allow_multi_configures", false},
+                        //{"geotag_enabled", false},
+                        //{"disable_comments", false},
+                        {"source_type", 4},
+                        {"upload_id", id},
+                        {"caption", null},
+                    });
+
+                foreach (var id in videos)
+                {
+                    if (id.Value.Width == 0)
+                        id.Value.Width = 640;
+                    if (id.Value.Height == 0)
+                        id.Value.Height = 640;
+                    childrenArray.Add(new JObject
+                    {
+                        {"timezone_offset", "16200"},
+                        {"caption", null},
+                        {"upload_id", id.Key},
+                        {"date_time_original", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fffZ")},
+                        {"source_type", "4"},
+                        {
+                            "extra", JsonConvert.SerializeObject(new JObject
+                            {
+                                {"source_width", id.Value.Width},
+                                {"source_height", id.Value.Height}
+                            })
+                        },
+                        {
+                            "clips", JsonConvert.SerializeObject(new JArray{
+                                new JObject
+                                {
+                                    {"length", id.Value.Length},
+                                    {"source_type", "4"},
+                                }
+                            })
+                        },
+                        {"length", id.Value.Length},
+                        {"poster_frame_index", 0},
+                        {"audio_muted", false},
+                        {"filter_type", "0"},
+                        {"video_result", "deprecated"},
+                        //{"_csrftoken", _user.CsrfToken},
+                        //{"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                        //{"_uid", _user.LoggedInUser.UserName}
+                    });
+                }
+                //{
+                //	"manufacturer": "HUAWEI",
+                //	"model": "PRA-LA1",
+                //	"android_version": 24,
+                //	"android_release": "7.0"
+                //},
+                var data = new JObject
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"caption", caption},
+                    {"client_sidecar_id", clientSidecarId},
+                    {"upload_id", clientSidecarId},
+                    //{"geotag_enabled", false},
+                    //{"disable_comments", false},
+                        {
+                            "device", new JObject
+                            {
+                                {"manufacturer", "HUAWEI"},
+                                {"model", "PRA-LA1"},
+                                {"android_release", "7.0"},
+                                {"source_height", 24}
+                            }
+                        },
+                    {"children_metadata", childrenArray}
+                };
+                System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(data));
+
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine("latest response: " + json);
+
                 if (!response.IsSuccessStatusCode)
                     return Result.UnExpectedResponse<InstaMedia>(response, json);
                 var mediaResponse = JsonConvert.DeserializeObject<InstaMediaItemResponse>(json);

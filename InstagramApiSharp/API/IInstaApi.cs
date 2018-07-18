@@ -35,6 +35,7 @@ namespace InstagramApiSharp.API
         /// Story api functions.
         /// </summary>
         IStoryProcessor StoryProcessor { get; }
+        IMediaProcessor MediaProcessor { get; }
         UserSessionData GetLoggedUser();
         /// <summary>
         ///     Get current state info as Memory stream
@@ -344,6 +345,16 @@ namespace InstagramApiSharp.API
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         Task<IResult<InstaCommentList>> GetMediaCommentsAsync(string mediaId, PaginationParameters paginationParameters);
 
+        /// <summary>
+        ///     Allow media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        Task<IResult<bool>> EnableMediaCommentAsync(string mediaId);
+        /// <summary>
+        ///     Disable media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        Task<IResult<bool>> DisableMediaCommentAsync(string mediaId);
         /// <summary>
         ///     Get media inline comments
         /// </summary>

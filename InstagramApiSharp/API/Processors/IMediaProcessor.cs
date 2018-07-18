@@ -24,6 +24,7 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption);
 
         Task<IResult<InstaMedia>> UploadPhotosAlbumAsync(InstaImage[] images, string caption);
+        Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideo[] videos, string caption);
 
         Task<IResult<InstaMedia>> ConfigurePhotoAsync(InstaImage image, string uploadId, string caption);
 

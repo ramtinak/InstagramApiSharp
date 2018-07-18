@@ -68,7 +68,19 @@ namespace ChallengeExample
             if (!InstaApi.IsUserAuthenticated)
             {
                 var logInResult = await InstaApi.LoginAsync();
-                if (!logInResult.Succeeded)
+                Debug.WriteLine(logInResult.Value);
+                if (logInResult.Succeeded)
+                {
+                    Text = $"{AppName} Connected";
+                    // Save session 
+                    var state = InstaApi.GetStateDataAsStream();
+                    using (var fileStream = File.Create(StateFile))
+                    {
+                        state.Seek(0, SeekOrigin.Begin);
+                        state.CopyTo(fileStream);
+                    }
+                }
+                else
                 {
                     if (logInResult.Value == InstaLoginResult.ChallengeRequired)
                     {
@@ -79,17 +91,6 @@ namespace ChallengeExample
                         // Navigate to challenge Url 
                         WebBrowserRmt.Navigate(instaChallenge.Url);
                         Size = ChallengeSize;
-                    }
-                }
-                else
-                {
-                    Text = $"{AppName} Connected";
-                    // Save session 
-                    var state = InstaApi.GetStateDataAsStream();
-                    using (var fileStream = File.Create(StateFile))
-                    {
-                        state.Seek(0, SeekOrigin.Begin);
-                        state.CopyTo(fileStream);
                     }
                 }
             }

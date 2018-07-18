@@ -229,5 +229,58 @@ PaginationParameters paginationParameters)
             var comments = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
             return Result.Success(comments);
         }
+
+        public async Task<IResult<bool>> EnableMediaCommentAsync(string mediaId)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetAllowMediaCommetsUri(mediaId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var request =
+                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
+
+        public async Task<IResult<bool>> DisableMediaCommentAsync(string mediaId)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetDisableMediaCommetsUri(mediaId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var request =
+                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
+
     }
 }

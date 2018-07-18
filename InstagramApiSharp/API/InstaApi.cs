@@ -60,6 +60,7 @@ namespace InstagramApiSharp.API
         /// Story api functions.
         /// </summary>
         public IStoryProcessor StoryProcessor => _storyProcessor;
+        public IMediaProcessor MediaProcessor => _mediaProcessor;
         public InstaApi(UserSessionData user, IInstaLogger logger, AndroidDevice deviceInfo,
             IHttpRequestProcessor httpRequestProcessor)
         {
@@ -513,6 +514,28 @@ namespace InstagramApiSharp.API
             return await _commentProcessor.GetMediaCommentsAsync(mediaId, paginationParameters);
         }
 
+        /// <summary>
+        ///     Allow media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> EnableMediaCommentAsync(string mediaId)
+        {
+            ValidateUser();
+            ValidateLoggedIn();
+
+            return await _commentProcessor.EnableMediaCommentAsync(mediaId);
+        }
+        /// <summary>
+        ///     Disable media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> DisableMediaCommentAsync(string mediaId)
+        {
+            ValidateUser();
+            ValidateLoggedIn();
+
+            return await _commentProcessor.DisableMediaCommentAsync(mediaId);
+        }
         /// <summary>
         ///     Get media inline comments
         /// </summary>
