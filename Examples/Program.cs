@@ -32,8 +32,8 @@ namespace Examples
                 // create user session data and provide login details
                 var userSession = new UserSessionData
                 {
-                    UserName = "freemtprotos",
-                    Password = "Pytop298"
+                    UserName = "Username",
+                    Password = "Password"
                 };
 
                 var delay = RequestDelay.FromSeconds(2, 2);
