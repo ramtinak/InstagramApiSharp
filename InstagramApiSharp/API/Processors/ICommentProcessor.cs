@@ -17,5 +17,7 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaComment>> InlineCommentMediaAsync(string mediaId, string targetCommentId, string text);
         Task<IResult<bool>> EnableMediaCommentAsync(string mediaId);
         Task<IResult<bool>> DisableMediaCommentAsync(string mediaId);
+        Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId);
+        Task<IResult<bool>> ReportCommentAsync(string mediaId, string commentId);
     }
 }

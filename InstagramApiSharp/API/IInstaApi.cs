@@ -387,7 +387,17 @@ namespace InstagramApiSharp.API
         /// <param name="mediaId">Media id</param>
         /// <param name="text">Comment text</param>
         Task<IResult<InstaComment>> CommentMediaAsync(string mediaId, string text);
-
+        /// <summary>
+        ///     Get media comments likers
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId);
+        /// <summary>
+        ///     Report media comment
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentId">Comment id</param>
+        Task<IResult<bool>> ReportCommentAsync(string mediaId, string commentId);
         /// <summary>
         ///     Inline comment media
         /// </summary>

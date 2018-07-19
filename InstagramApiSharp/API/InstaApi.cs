@@ -537,6 +537,29 @@ namespace InstagramApiSharp.API
             return await _commentProcessor.DisableMediaCommentAsync(mediaId);
         }
         /// <summary>
+        ///     Get media comments likers
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId)
+        {
+            ValidateUser();
+            ValidateLoggedIn();
+
+            return await _commentProcessor.GetMediaCommentLikersAsync(mediaId);
+        }
+        /// <summary>
+        ///     Report media comment
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentId">Comment id</param>
+        public async Task<IResult<bool>> ReportCommentAsync(string mediaId, string commentId)
+        {
+            ValidateUser();
+            ValidateLoggedIn();
+
+            return await _commentProcessor.ReportCommentAsync(mediaId, commentId);
+        }
+        /// <summary>
         ///     Get media inline comments
         /// </summary>
         /// <param name="mediaId">Media id</param>

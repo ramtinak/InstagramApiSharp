@@ -345,7 +345,22 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI to disable comments on media");
             return instaUri;
         }
-
+        public static Uri GetMediaCommetLikersUri(string mediaId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_COMMENT_LIKERS, mediaId),
+                    out var instaUri))
+                throw new Exception("Cant create URI to media comments likers");
+            return instaUri;
+        }
+        public static Uri GetReportCommetUri(string mediaId, string commentId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_REPORT_COMMENT, mediaId, commentId),
+                    out var instaUri))
+                throw new Exception("Cant create URI for report comment");
+            return instaUri;
+        }
         public static Uri GetDeleteCommetUri(string mediaId, string commentId)
         {
             if (

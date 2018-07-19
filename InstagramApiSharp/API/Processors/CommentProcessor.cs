@@ -271,6 +271,7 @@ PaginationParameters paginationParameters)
                     HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine(json);
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
@@ -281,6 +282,55 @@ PaginationParameters paginationParameters)
                 return Result.Fail(exception.Message, false);
             }
         }
-
+        public async Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetMediaCommetLikersUri(mediaId);
+                var request =
+                    HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine(json);
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
+        public async Task<IResult<bool>> ReportCommentAsync(string mediaId, string commentId)
+        {
+            try
+            { 
+                var instaUri = UriCreator.GetReportCommetUri(mediaId, commentId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"media_id", mediaId},
+                    {"comment_id", commentId},
+                    {"reason", "1"},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var request =
+                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine(json);
+                //{"message": "login_required", "logout_reason": 3, "status": "fail"}
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
     }
 }
