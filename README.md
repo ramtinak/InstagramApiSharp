@@ -88,6 +88,10 @@ v1.0.2
 v1.0.1
 - Fix Challenge required api. Now you can verify your email or phone number with challenge required functions.
 
+## Known Issues
+- After facebook login, user can't follow, like and post media!
+- After passing challenge required, user can't follow, like and post media!
+
 ## Wiki
 Wiki page coming soon...
 
