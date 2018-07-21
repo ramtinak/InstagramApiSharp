@@ -98,7 +98,7 @@ v1.0.1
 Wiki page coming soon...
 
 ## License
-Do whatever you want to do!
+Do whatever you want to do! Except changing library name!!!!
 
 ## Terms and conditions
 - Use this Api at your own risk.
