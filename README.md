@@ -68,6 +68,9 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.2.5
+- Bugfix for facebook login(now you can do anything after you logged in with facebook)
+
 v1.0.2.4
 - Enable/disable media comments
 
@@ -89,7 +92,6 @@ v1.0.1
 - Fix Challenge required api. Now you can verify your email or phone number with challenge required functions.
 
 ## Known Issues
-- After facebook login, user can't follow, like and post media!
 - After passing challenge required, user can't follow, like and post media!
 
 ## Wiki

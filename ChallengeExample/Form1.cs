@@ -100,7 +100,7 @@ namespace ChallengeExample
             }
         }
 
-        private void WebBrowserRmtDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private async void WebBrowserRmtDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             if (sender == null)
                 return;
@@ -115,7 +115,7 @@ namespace ChallengeExample
 
                 // Pass web browser document source and cookies to this function:
                 // NOTE: Don't use WebBrowserRmt.Document.Cookie to get cookies because it's not getting full cookies
-                var result = InstaApi.SetCookiesAndHtmlForFbLoginAndChallenge(WebBrowserRmt.DocumentText, cookies);
+                var result = await InstaApi.SetCookiesAndHtmlForFbLoginAndChallenge(WebBrowserRmt.DocumentText, cookies);
                 // You are logged in
                 if (result.Succeeded)
                 {

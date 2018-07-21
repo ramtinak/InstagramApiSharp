@@ -10,11 +10,12 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.2.4</Version>
-    <AssemblyVersion>1.0.2.4</AssemblyVersion>
-    <FileVersion>1.0.2.4</FileVersion>
+    <Version>1.0.2.5</Version>
+    <AssemblyVersion>1.0.2.5</AssemblyVersion>
+    <FileVersion>1.0.2.5</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 Support:
+- Login with Facebook
 - Edit Profile.
 - Change/Remove profile picture.
 - Live functions.
@@ -28,12 +29,15 @@ See examples to find out how can you use this library.</Description>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.2.4
-- Enable/disable media comments
+    <PackageReleaseNotes>v1.0.2.5
+- Bugfix for facebook login(now you can do anything after you logged in with facebook)
+
+v1.0.2.4
+- Enable/disable media comments.
 
 v1.0.2.3
-- Facebook login added
-- Fix GetPendingFriendRequests response issue
+- Facebook login added.
+- Fix GetPendingFriendRequests response issue.
 
 v1.0.2.2
 - Share story added.
@@ -43,7 +47,7 @@ v1.0.2.1
 - GetStateDataAsString and LoadStateDataFromString added.
 
 v1.0.2
-- Inline comments support(send and get)
+- Inline comments support(send and get).
 
 v1.0.1
 - Fix Challenge required api. Now you can verify your email or phone number with challenge required functions.

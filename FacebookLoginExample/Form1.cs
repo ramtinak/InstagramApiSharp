@@ -85,7 +85,7 @@ namespace FacebookLoginExample
             }
             while (FacebookWebBrowser.ReadyState != WebBrowserReadyState.Complete);
         }
-        private void FacebookWebBrowserDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs args)
+        private async void FacebookWebBrowserDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs args)
         {
             if (FacebookLoginHelper.FirstStep(args.Url))
             {
@@ -121,7 +121,7 @@ namespace FacebookLoginExample
                             .Build();
                         LoadingPanel.Visible = false;
                         // pass information to InstaApi
-                        var result = InstaApi.SetCookiesAndHtmlForFbLoginAndChallenge(response, cookies, true);
+                        var result = await InstaApi.SetCookiesAndHtmlForFbLoginAndChallenge(response, cookies, true);
                         if(result.Value)
                         {
                             // Save session 
@@ -197,16 +197,27 @@ namespace FacebookLoginExample
                 MessageBox.Show("Login first.");
 
             var x = await InstaApi.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
-            ("Explore Feeds Result: " + x.Succeeded).Output();
 
             if (x.Succeeded)
             {
                 StringBuilder sb = new StringBuilder();
+                StringBuilder sb2 = new StringBuilder();
+                sb2.AppendLine("Like 5 Media>");
+                foreach (var item in x.Value.Medias.Take(5))
+                {
+                    // like media...
+                    var liked = await InstaApi.LikeMediaAsync(item.InstaIdentifier);
+                    sb2.AppendLine($"{item.InstaIdentifier} liked? {liked.Succeeded}");
+                }
+
+                sb.AppendLine(("Explore Feeds Result: " + x.Succeeded).Output());
                 foreach (var media in x.Value.Medias)
                 {
                     sb.AppendLine(DebugUtils.PrintMedia("Feed media", media));
                 }
-                RtBox.Text = sb.ToString();
+                RtBox.Text = sb2.ToString() + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+
+                RtBox.Text += sb.ToString();
                 RtBox.Visible = true;
             }
         }

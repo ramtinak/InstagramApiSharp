@@ -24,6 +24,7 @@ namespace InstagramApiSharp.API
         public const string HEADER_COUNT = "count";
         public const string HEADER_EXCLUDE_LIST = "exclude_list";
 
+        public const string FB_ACCESS_TOKEN = "EAABwzLixnjYBADcFesqNbHwRoDFmpBpEVZB2hcOAhMh1A3gGyxoW82CZBXKUEAYDAfNrA2Ntt4Pf21mXIT5Bv2CYIY3OhWJZCChIxAopXyOYQq4KkZBUsRL3deG7550cL9qiJaPEwlnK9pTQCWSUok5ZBZBNaUyW78eiQeTJCfBOQxYbjNG8CU";
         public const string
             IG_SIGNATURE_KEY =
                 "b4946d296abf005163e72346a6d33dd083cadde638e6ad9c5eb92e381b35784a"; //4749bda4fc1f49372dae3d79db339ce4959cfbbe
@@ -183,7 +184,7 @@ namespace InstagramApiSharp.API
         public const string LIVE_START = API_SUFFIX + "/live/{0}/start/";
         public const string LIVE_END = API_SUFFIX + "/live/{0}/end_broadcast/";
 
-
+        public const string FB_FACEBOOK_SIGNUP = API_SUFFIX + "/fb/facebook_signup/";
 
         public static readonly Uri BaseInstagramUri = new Uri(BASE_INSTAGRAM_API_URL);
     }

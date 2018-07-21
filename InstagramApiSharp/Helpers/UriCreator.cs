@@ -869,5 +869,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for broadcast end");
             return instaUri;
         }
+        public static Uri GetFacebookSignUpUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FB_FACEBOOK_SIGNUP, out var instaUri))
+                throw new Exception("Cant create URI for facebook sign up url");
+            return instaUri;
+        }
+
     }
 }

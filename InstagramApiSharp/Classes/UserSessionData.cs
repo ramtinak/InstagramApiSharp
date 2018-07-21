@@ -13,7 +13,10 @@ namespace InstagramApiSharp.Classes
 
         public string RankToken { get; set; }
         public string CsrfToken { get; set; }
-
+        /// <summary>
+        /// Only for facebook login
+        /// </summary>
+        public string FacebookUserId { get; internal set; } = string.Empty;
         public static UserSessionData Empty => new UserSessionData();
 
         public static UserSessionData ForUsername(string username)

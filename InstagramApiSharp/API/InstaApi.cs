@@ -1325,7 +1325,7 @@ namespace InstagramApiSharp.API
         /// <param name="htmlDocument">Html document source</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        public IResult<bool> SetCookiesAndHtmlForFbLoginAndChallenge(string htmlDocument, string cookie, bool facebookLogin = false)
+        public async Task<IResult<bool>> SetCookiesAndHtmlForFbLoginAndChallenge(string htmlDocument, string cookie, bool facebookLogin = false)
         {
             if (!string.IsNullOrEmpty(cookie) && !string.IsNullOrEmpty(htmlDocument))
             {
@@ -1338,7 +1338,7 @@ namespace InstagramApiSharp.API
                     str = str.Substring(0, str.IndexOf(end));
                     str = str.Substring(str.IndexOf("=") + 2);
                     var o = JsonConvert.DeserializeObject<WebBrowserResponse>(str);
-                    return SetCookiesAndHtmlForFbLoginAndChallenge(o, cookie, facebookLogin);
+                    return await SetCookiesAndHtmlForFbLoginAndChallenge(o, cookie, facebookLogin);
                 }
                 catch (Exception ex)
                 {
@@ -1353,7 +1353,7 @@ namespace InstagramApiSharp.API
         /// <param name="webBrowserResponse">Web browser response object</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        public IResult<bool> SetCookiesAndHtmlForFbLoginAndChallenge(WebBrowserResponse webBrowserResponse, string cookie, bool facebookLogin = false)
+        public async Task<IResult<bool>> SetCookiesAndHtmlForFbLoginAndChallenge(WebBrowserResponse webBrowserResponse, string cookie, bool facebookLogin = false)
         {
             if(webBrowserResponse == null)
                 return Result.Fail("", false);
@@ -1377,7 +1377,7 @@ namespace InstagramApiSharp.API
                     //}
                     cookie = cookie.Replace(';', ',');
                     _httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(uri, cookie);
-                  
+
                     InstaUserShort user = new InstaUserShort
                     {
                         Pk = long.Parse(webBrowserResponse.Config.Viewer.Id),
@@ -1391,7 +1391,33 @@ namespace InstagramApiSharp.API
                     _user.RankToken = $"{webBrowserResponse.Config.Viewer.Id}_{_httpRequestProcessor.RequestMessage.phone_id}";
                     IsUserAuthenticated = true;
                     if (facebookLogin)
+                    {
+                        try
+                        {
+                            var instaUri = UriCreator.GetFacebookSignUpUri();
+                            var data = new JObject
+                            {
+                                {"dryrun", "true"},
+                                {"phone_id", _deviceInfo.DeviceGuid.ToString()},
+                                {"_csrftoken", _user.CsrfToken},
+                                {"adid", Guid.NewGuid().ToString()},
+                                {"guid", Guid.NewGuid().ToString()},
+                                {"device_id", ApiRequestMessage.GenerateDeviceId()},
+                                {"waterfall_id", Guid.NewGuid().ToString()},
+                                {"fb_access_token", InstaApiConstants.FB_ACCESS_TOKEN},
+                            };
+                            var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                            request.Headers.Add("Host", "i.instagram.com");
+                            var response = await _httpRequestProcessor.SendAsync(request);
+                            var json = await response.Content.ReadAsStringAsync();
+                            var obj = JsonConvert.DeserializeObject<FacebookLoginResponse>(json);
+                            _user.FacebookUserId = obj.FbUserId;
+                        }
+                        catch(Exception)
+                        {
+                        }
                         InvalidateProcessors();
+                    }
                     return Result.Success(true);
                 }
                 catch (Exception ex)
