@@ -38,6 +38,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public string CommentsCount { get; set; }
 
+        public bool IsCommentsDisabled { get; set; }
+
         public bool PhotoOfYou { get; set; }
 
         private bool _hasliked { get; set; }

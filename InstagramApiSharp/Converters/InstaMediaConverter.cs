@@ -31,7 +31,8 @@ namespace InstagramApiSharp.Converters
                 FilterType = SourceObject.FilterType,
                 Width = SourceObject.Width,
                 HasAudio = SourceObject.HasAudio,
-                ViewCount = int.Parse(SourceObject.ViewCount.ToString(CultureInfo.InvariantCulture))
+                ViewCount = int.Parse(SourceObject.ViewCount.ToString(CultureInfo.InvariantCulture)),
+                IsCommentsDisabled = SourceObject.IsCommentsDisabled
             };
             if (SourceObject.CarouselMedia != null)
                 media.Carousel = ConvertersFabric.Instance.GetCarouselConverter(SourceObject.CarouselMedia).Convert();

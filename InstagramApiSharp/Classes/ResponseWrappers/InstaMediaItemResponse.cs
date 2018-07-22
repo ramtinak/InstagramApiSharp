@@ -43,6 +43,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("comment_count")] public string CommentsCount { get; set; }
 
+        [JsonProperty("comments_disabled")] public bool IsCommentsDisabled { get; set; }
+
         [JsonProperty("photo_of_you")] public bool PhotoOfYou { get; set; }
 
         [JsonProperty("has_liked")] public bool HasLiked { get; set; }
