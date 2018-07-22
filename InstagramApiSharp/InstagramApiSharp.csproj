@@ -10,9 +10,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.2.5</Version>
-    <AssemblyVersion>1.0.2.5</AssemblyVersion>
-    <FileVersion>1.0.2.5</FileVersion>
+    <Version>1.0.2.6</Version>
+    <AssemblyVersion>1.0.2.6</AssemblyVersion>
+    <FileVersion>1.0.2.6</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 Support:
 - Login with Facebook
@@ -29,7 +29,11 @@ See examples to find out how can you use this library.</Description>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.2.5
+    <PackageReleaseNotes>v1.0.2.6
+- Change challenge require function(now it's works perfectly).
+- IsCommentsDisabled added to InstaMedia class.
+
+v1.0.2.5
 - Bugfix for facebook login(now you can do anything after you logged in with facebook)
 
 v1.0.2.4

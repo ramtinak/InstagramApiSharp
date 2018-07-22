@@ -1,0 +1,289 @@
+﻿/*
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * 
+ * Github source: https://github.com/ramtinak/InstagramApiSharp
+ * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
+ * 
+ * IRANIAN DEVELOPERS
+ */
+using InstagramApiSharp.API;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Threading;
+using System.Diagnostics;
+using System.IO;
+using InstagramApiSharp.Classes;
+using InstagramApiSharp.API.Builder;
+using InstagramApiSharp.Logger;
+using System.Text.RegularExpressions;
+using InstagramApiSharp.Classes.Models;
+
+namespace ChallengeRequireExample
+{
+    public partial class Form1 : Form
+    {
+        // Note: the old challenge require function is not supported anymore.
+        // Note: new challenge require functions is very easy to use.
+        // there are 5 functions I've added to IInstaApi for challenge require (checkpoint_endpoint)
+        
+        // here:
+        // 1. Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync();
+        // If your login needs challenge, first you should call this function.
+
+
+        // 2. Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
+        // This function will send you verification code via SMS.
+
+
+        // 3. Task<IResult<ChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync();
+        // This function will send you verification code via Email.
+
+
+        // 4. Task<IResult<ChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync();
+        // Reset challenge require.
+        // Example: if your account has phone number and email, and you request for email(or phone number)
+        // and now you want to change it to another one, you should first call this function,
+        // then you have to call GetChallengeRequireVerifyMethodAsync and after that you can change your method!!!
+
+
+        // 5. Task<IResult<ChallengeRequireVerifyCode>> VerifyCodeForChallengeRequireAsync(string verifyCode);
+        // Verify sms or email verification code for login.
+  
+        const string AppName = "Challenge Required";
+        const string StateFile = "state.bin";
+        readonly Size NormalSize = new Size(432, 164);
+        readonly Size ChallengeSize = new Size(432, 604);
+        private static IInstaApi InstaApi;
+        public Form1()
+        {
+            InitializeComponent();
+            Load += Form1_Load;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Size = NormalSize;
+        }
+
+        private async void LoginButton_Click(object sender, EventArgs e)
+        {
+            Size = NormalSize;
+            var userSession = new UserSessionData
+            {
+                UserName = txtUser.Text,
+                Password = txtPass.Text
+            };
+
+            InstaApi = InstaApiBuilder.CreateBuilder()
+                .SetUser(userSession)
+                .UseLogger(new DebugLogger(LogLevel.Exceptions))
+                .SetRequestDelay(RequestDelay.FromSeconds(0, 1))
+                .Build();
+            Text = $"{AppName} Connecting";
+            try
+            {
+                if (File.Exists(StateFile))
+                {
+                    Debug.WriteLine("Loading state from file");
+                    using (var fs = File.OpenRead(StateFile))
+                    {
+                        InstaApi.LoadStateDataFromStream(fs);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+            if (!InstaApi.IsUserAuthenticated)
+            {
+                var logInResult = await InstaApi.LoginAsync();
+                Debug.WriteLine(logInResult.Value);
+                if (logInResult.Succeeded)
+                {
+                    GetFeedButton.Visible = true;
+                    Text = $"{AppName} Connected";
+                    // Save session 
+                    var state = InstaApi.GetStateDataAsStream();
+                    using (var fileStream = File.Create(StateFile))
+                    {
+                        state.Seek(0, SeekOrigin.Begin);
+                        state.CopyTo(fileStream);
+                    }
+                }
+                else
+                {
+                    if (logInResult.Value == InstaLoginResult.ChallengeRequired)
+                    {
+                        var challenge = await InstaApi.GetChallengeRequireVerifyMethodAsync();
+                        if (challenge.Succeeded)
+                        {
+                            if (challenge.Value.StepData != null)
+                            {
+                                if (!string.IsNullOrEmpty(challenge.Value.StepData.PhoneNumber))
+                                {
+                                    RadioVerifyWithPhoneNumber.Checked = false;
+                                    RadioVerifyWithPhoneNumber.Visible = true;
+                                    RadioVerifyWithPhoneNumber.Text = challenge.Value.StepData.PhoneNumber;
+                                }
+                                if (!string.IsNullOrEmpty(challenge.Value.StepData.Email))
+                                {
+                                    RadioVerifyWithEmail.Checked = false;
+                                    RadioVerifyWithEmail.Visible = true;
+                                    RadioVerifyWithEmail.Text = challenge.Value.StepData.Email;
+                                }
+                            }
+                        }
+                        else
+                            MessageBox.Show(challenge.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            else
+            {
+                Text = $"{AppName} Connected";
+                GetFeedButton.Visible = true;
+            }
+        }
+
+        private async void SendCodeButton_Click(object sender, EventArgs e)
+        {
+            bool isEmail = false;
+            if (RadioVerifyWithEmail.Checked)
+                isEmail = true;
+            //if (RadioVerifyWithPhoneNumber.Checked)
+            //    isEmail = false;
+
+            try
+            {
+                // Note: every request to this endpoint is limited to 60 seconds                 
+                if(isEmail)
+                {
+                    // send verification code to email
+                    var email = await InstaApi.RequestVerifyCodeToEmailForChallengeRequireAsync();
+                    if(email.Succeeded)
+                    {
+                        LblForSmsEmail.Text = $"We sent verify code to this email:\n{email.Value.StepData.ContactPoint}";
+                        VerifyCodeGroupBox.Visible = true;
+                    }
+                    else
+                        MessageBox.Show(email.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    // send verification code to phone number
+                    var phoneNumber = await InstaApi.RequestVerifyCodeToSMSForChallengeRequireAsync();
+                    if (phoneNumber.Succeeded)
+                    {
+                        LblForSmsEmail.Text = $"We sent verify code to this phone number(it's end with this):\n{phoneNumber.Value.StepData.ContactPoint}";
+                        VerifyCodeGroupBox.Visible = true;
+                    }
+                    else
+                        MessageBox.Show(phoneNumber.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "EX", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
+        }
+
+        private void ResendButton_Click(object sender, EventArgs e)
+        {
+            SendCodeButton_Click(null, null);
+        }
+
+        private async void VerifyButton_Click(object sender, EventArgs e)
+        {
+            txtVerifyCode.Text = txtVerifyCode.Text.Trim();
+            txtVerifyCode.Text = txtVerifyCode.Text.Replace(" ", "");
+            var regex = new Regex(@"^-*[0-9,\.]+$");
+            if (!regex.IsMatch(txtVerifyCode.Text))
+            {
+                MessageBox.Show("Verification code is numeric!!!", "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (txtVerifyCode.Text.Length != 6)
+            {
+                MessageBox.Show("Verification code must be 6 digits!!!", "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            try
+            {
+                var verify = await InstaApi.VerifyCodeForChallengeRequireAsync(txtVerifyCode.Text);
+                if (verify.Succeeded)
+                {
+                    if (verify.Value.IsLoggedIn)
+                    {
+                        // you are logged in sucessfully.
+                        VerifyCodeGroupBox.Visible = SelectMethodGroupBox.Visible = false;
+                        Size = ChallengeSize;
+                        GetFeedButton.Visible = true;
+                    }
+                    else
+                    {
+                        // you aren't!
+                        MessageBox.Show(verify.Value.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                    MessageBox.Show(verify.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "EX", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
+        }
+
+        private async void GetFeedButton_Click(object sender, EventArgs e)
+        {
+            if (InstaApi == null)
+                MessageBox.Show("Login first.");
+            if (!InstaApi.IsUserAuthenticated)
+                MessageBox.Show("Login first.");
+          
+            var x = await InstaApi.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
+
+            if (x.Succeeded)
+            {
+                StringBuilder sb = new StringBuilder();
+                StringBuilder sb2 = new StringBuilder();
+                sb2.AppendLine("Like 5 Media>");
+                foreach (var item in x.Value.Medias.Take(5))
+                {
+                    // like media...
+                    var liked = await InstaApi.LikeMediaAsync(item.InstaIdentifier);
+                    sb2.AppendLine($"{item.InstaIdentifier} liked? {liked.Succeeded}");
+                }
+
+                sb.AppendLine("Explore Feeds Result: " + x.Succeeded);
+                foreach (var media in x.Value.Medias)
+                {
+                    sb.AppendLine(DebugUtils.PrintMedia("Feed media", media));
+                }
+                RtBox.Text = sb2.ToString() + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+
+                RtBox.Text += sb.ToString();
+                RtBox.Visible = true;
+                Size = ChallengeSize;
+            }
+        }
+    }
+    public static class DebugUtils
+    {
+        public static string PrintMedia(string header, InstaMedia media)
+        {
+            var content = $"{header}: {media.Caption?.Text.Truncate(30)}, {media.Code}";
+            Debug.WriteLine(content);
+            return content;
+        }
+        public static string Truncate(this string value, int maxChars)
+        {
+            return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
+        }
+    }
+}

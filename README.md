@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.2.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
+| Nuget | master | v1.0.2.6 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
 
 
 ## Note
@@ -68,6 +68,10 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.2.6
+- Change challenge require function(now it's works perfectly).
+- IsCommentsDisabled added to InstaMedia class.
+
 v1.0.2.5
 - Bugfix for facebook login(now you can do anything after you logged in with facebook)
 
@@ -92,7 +96,7 @@ v1.0.1
 - Fix Challenge required api. Now you can verify your email or phone number with challenge required functions.
 
 ## Known Issues
-- After passing challenge required, user can't follow, like and post media!
+Nothing!!!!
 
 ## Wiki
 Wiki page coming soon...

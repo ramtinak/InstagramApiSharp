@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ChallengeExample.Properties
+namespace ChallengeRequireExample.Properties
 {
 
 

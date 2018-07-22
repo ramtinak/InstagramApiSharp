@@ -51,7 +51,16 @@ namespace InstagramApiSharp.API
         ///     Get challenge login information for grabbing challenge url.
         /// </summary>
         /// <returns></returns>
-        InstaChallengeLoginInfo GetChallenge();
+        //InstaChallengeLoginInfo GetChallenge();
+        /// <summary>
+        ///     Get challenge require(checkpoint required) options.
+        /// </summary>
+        /// <returns></returns>
+        Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync();
+        Task<IResult<ChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync();
+        Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
+        Task<IResult<ChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync();
+        Task<IResult<ChallengeRequireVerifyCode>> VerifyCodeForChallengeRequireAsync(string verifyCode);
         /// <summary>
         ///     Set cookie and html document to verify login information.
         /// </summary>

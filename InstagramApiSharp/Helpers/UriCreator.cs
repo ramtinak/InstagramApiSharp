@@ -875,6 +875,27 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for facebook sign up url");
             return instaUri;
         }
-
+        public static Uri GetChallengeRequireFirstUri(string apiPath,string guid,string deviceId)
+        {
+            if (!apiPath.EndsWith("/"))
+                apiPath = apiPath + "/";
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.API_SUFFIX + apiPath +
+                $"?guid={guid}&device_id={deviceId}", out var instaUri))
+                throw new Exception("Cant create URI for challenge require url");
+            return instaUri;
+        }
+        public static Uri GetChallengeRequireUri(string apiPath)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.API_SUFFIX + apiPath, out var instaUri))
+                throw new Exception("Cant create URI for challenge require url");
+            return instaUri;
+        }
+        public static Uri GetResetChallengeRequireUri(string apiPath)
+        {
+            apiPath = apiPath.Replace("/challenge/", "/challenge/reset/");
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.API_SUFFIX + apiPath, out var instaUri))
+                throw new Exception("Cant create URI for challenge require url");
+            return instaUri;
+        }
     }
 }

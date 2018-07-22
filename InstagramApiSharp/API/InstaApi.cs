@@ -1311,13 +1311,242 @@ namespace InstagramApiSharp.API
                 return Result.Fail(exception, false);
             }
         }
-        /// <summary>
-        ///     Get Challenge information
-        /// </summary>
-        /// <returns></returns>
-        public InstaChallengeLoginInfo GetChallenge()
+        ///// <summary>
+        /////     Get Challenge information
+        ///// </summary>
+        ///// <returns></returns>
+        //public InstaChallengeLoginInfo GetChallenge()
+        //{
+        //    return _challengeinfo;
+        //}
+        string _challengeGuid, _challengeDeviceId;
+        public async Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync()
         {
-            return _challengeinfo;
+            if (_challengeinfo == null)
+                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (ChallengeRequireVerifyMethod)null);
+
+            try
+            {
+                _challengeGuid = Guid.NewGuid().ToString();
+                _challengeDeviceId = ApiRequestMessage.GenerateDeviceId();
+                var instaUri = UriCreator.GetChallengeRequireFirstUri(_challengeinfo.ApiPath, _challengeGuid, _challengeDeviceId);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var msg = "";
+                    try
+                    {
+                        var j = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
+                        msg = j.Message;
+                    }
+                    catch { }
+                    return Result.Fail(msg +"\t\tStatus code: " + response.StatusCode+"\r\n"+ json, (ChallengeRequireVerifyMethod)null);
+                }
+                else
+                {
+                    var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex, (ChallengeRequireVerifyMethod)null);
+            }
+        }
+
+        public async Task<IResult<ChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync()
+        {
+            if (_challengeinfo == null)
+                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (ChallengeRequireVerifyMethod)null);
+
+            try
+            {
+                _challengeGuid = Guid.NewGuid().ToString();
+                _challengeDeviceId = ApiRequestMessage.GenerateDeviceId();
+                var instaUri = UriCreator.GetResetChallengeRequireUri(_challengeinfo.ApiPath);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var msg = "";
+                    try
+                    {
+                        var j = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
+                        msg = j.Message;
+                    }
+                    catch { }
+                    return Result.Fail(msg + "\t\tStatus code: " + response.StatusCode + "\r\n" + json, (ChallengeRequireVerifyMethod)null);
+                }
+                else
+                {
+                    var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex, (ChallengeRequireVerifyMethod)null);
+            }
+        }
+
+        public async Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync()
+        {
+            if (_challengeinfo == null)
+                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (ChallengeRequireSMSVerify)null);
+
+            try
+            {
+                var instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
+                if (string.IsNullOrEmpty(_challengeGuid))
+                    _challengeGuid = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(_challengeDeviceId))
+                    _challengeDeviceId = ApiRequestMessage.GenerateDeviceId();
+                var data = new JObject
+                {
+                    {"choice", "0"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"guid", _challengeGuid},
+                    {"device_id", _challengeDeviceId},
+                };
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Add("Host", "i.instagram.com");
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var msg = "";
+                    try
+                    {
+                        var j = JsonConvert.DeserializeObject<ChallengeRequireSMSVerify>(json);
+                        msg = j.Message;
+                    }
+                    catch { }
+                    return Result.Fail(msg, (ChallengeRequireSMSVerify)null);
+                }
+                else
+                {
+                    var obj = JsonConvert.DeserializeObject<ChallengeRequireSMSVerify>(json);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex, (ChallengeRequireSMSVerify)null);
+            }
+        }
+
+        public async Task<IResult<ChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync()
+        {
+            if (_challengeinfo == null)
+                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (ChallengeRequireEmailVerify)null);
+
+            try
+            {
+                var instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
+                if (string.IsNullOrEmpty(_challengeGuid))
+                    _challengeGuid = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(_challengeDeviceId))
+                    _challengeDeviceId = ApiRequestMessage.GenerateDeviceId();
+                var data = new JObject
+                {
+                    {"choice", "1"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"guid", _challengeGuid},
+                    {"device_id", _challengeDeviceId},
+                };
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Add("Host", "i.instagram.com");
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var msg = "";
+                    try
+                    {
+                        var j = JsonConvert.DeserializeObject<ChallengeRequireEmailVerify>(json);
+                        msg = j.Message;
+                    }
+                    catch { }
+                    return Result.Fail(msg, (ChallengeRequireEmailVerify)null);
+                }
+                else
+                {
+                    var obj = JsonConvert.DeserializeObject<ChallengeRequireEmailVerify>(json);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex, (ChallengeRequireEmailVerify)null);
+            }
+        }
+
+        public async Task<IResult<ChallengeRequireVerifyCode>> VerifyCodeForChallengeRequireAsync(string verifyCode)
+        {
+            if(verifyCode.Length != 6)
+                return Result.Fail("Verify code must be an 6 digit number.", (ChallengeRequireVerifyCode)null);
+
+            if (_challengeinfo == null)
+                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (ChallengeRequireVerifyCode)null);
+
+            try
+            {
+                var instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
+                if (string.IsNullOrEmpty(_challengeGuid))
+                    _challengeGuid = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(_challengeDeviceId))
+                    _challengeDeviceId = ApiRequestMessage.GenerateDeviceId();
+                var data = new JObject
+                {
+                    {"security_code", verifyCode},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"guid", _challengeGuid},
+                    {"device_id", _challengeDeviceId},
+                };
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Add("Host", "i.instagram.com");
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var msg = "";
+                    try
+                    {
+                        var j = JsonConvert.DeserializeObject<ChallengeRequireVerifyCode>(json);
+                        msg = j.Message;
+                    }
+                    catch { }
+                    return Result.Fail(msg, (ChallengeRequireVerifyCode)null);
+                }
+                else
+                {
+                    var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyCode>(json);
+                    if (obj != null && obj.LoggedInUser != null)
+                        ValidateChallengeAsync(obj.LoggedInUser);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex, (ChallengeRequireVerifyCode)null);
+            }
+        }
+
+
+        private void ValidateChallengeAsync(InstaUserShortResponse user)
+        {
+            try
+            {
+                var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
+                _user.LoggedInUser = converter.Convert();
+                _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                IsUserAuthenticated = true;
+                InvalidateProcessors();
+            }
+            catch { }
         }
         /// <summary>
         ///     Set cookie and html document to verify login information.
