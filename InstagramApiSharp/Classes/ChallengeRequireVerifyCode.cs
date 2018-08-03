@@ -54,7 +54,7 @@ namespace InstagramApiSharp.Classes
     public class ChallengeRequireVerifyCode
     {
         [JsonIgnore]
-        public bool IsLoggedIn { get { return LoggedInUser != null; } }
+        public bool IsLoggedIn { get { return LoggedInUser != null || Status.ToLower() == "ok"; } }
         [JsonProperty("logged_in_user")]
         internal /*InstaUserInfoResponse*/InstaUserShortResponse LoggedInUser { get; set; }
         [JsonProperty("message")]

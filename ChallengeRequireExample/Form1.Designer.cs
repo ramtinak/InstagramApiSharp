@@ -201,7 +201,6 @@
             this.txtVerifyCode.Name = "txtVerifyCode";
             this.txtVerifyCode.Size = new System.Drawing.Size(196, 20);
             this.txtVerifyCode.TabIndex = 6;
-            this.txtVerifyCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // LblForSmsEmail
             // 
@@ -221,6 +220,7 @@
             this.GetFeedButton.TabIndex = 12;
             this.GetFeedButton.Text = "Get some feeds after login";
             this.GetFeedButton.UseVisualStyleBackColor = true;
+            this.GetFeedButton.Visible = false;
             this.GetFeedButton.Click += new System.EventHandler(this.GetFeedButton_Click);
             // 
             // RtBox
@@ -246,8 +246,10 @@
             this.Controls.Add(this.txtUser);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Challenge Required";
             this.SelectMethodGroupBox.ResumeLayout(false);
             this.SelectMethodGroupBox.PerformLayout();
             this.VerifyCodeGroupBox.ResumeLayout(false);

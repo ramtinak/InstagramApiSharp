@@ -3,7 +3,7 @@
  * 
  * Github source: https://github.com/ramtinak/InstagramApiSharp
  * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
- * 
+ * Update date: 4 August 2018
  * IRANIAN DEVELOPERS
  */
 using InstagramApiSharp.API;
@@ -112,12 +112,7 @@ namespace ChallengeRequireExample
                     GetFeedButton.Visible = true;
                     Text = $"{AppName} Connected";
                     // Save session 
-                    var state = InstaApi.GetStateDataAsStream();
-                    using (var fileStream = File.Create(StateFile))
-                    {
-                        state.Seek(0, SeekOrigin.Begin);
-                        state.CopyTo(fileStream);
-                    }
+                    SaveSession();
                 }
                 else
                 {
@@ -140,6 +135,9 @@ namespace ChallengeRequireExample
                                     RadioVerifyWithEmail.Visible = true;
                                     RadioVerifyWithEmail.Text = challenge.Value.StepData.Email;
                                 }
+
+                                SelectMethodGroupBox.Visible = true;
+                                Size = ChallengeSize;
                             }
                         }
                         else
@@ -173,6 +171,7 @@ namespace ChallengeRequireExample
                     {
                         LblForSmsEmail.Text = $"We sent verify code to this email:\n{email.Value.StepData.ContactPoint}";
                         VerifyCodeGroupBox.Visible = true;
+                        SelectMethodGroupBox.Visible = false;
                     }
                     else
                         MessageBox.Show(email.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -185,6 +184,7 @@ namespace ChallengeRequireExample
                     {
                         LblForSmsEmail.Text = $"We sent verify code to this phone number(it's end with this):\n{phoneNumber.Value.StepData.ContactPoint}";
                         VerifyCodeGroupBox.Visible = true;
+                        SelectMethodGroupBox.Visible = false;
                     }
                     else
                         MessageBox.Show(phoneNumber.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -225,6 +225,8 @@ namespace ChallengeRequireExample
                         VerifyCodeGroupBox.Visible = SelectMethodGroupBox.Visible = false;
                         Size = ChallengeSize;
                         GetFeedButton.Visible = true;
+                        // Save session
+                        SaveSession();
                     }
                     else
                     {
@@ -270,6 +272,20 @@ namespace ChallengeRequireExample
                 RtBox.Text += sb.ToString();
                 RtBox.Visible = true;
                 Size = ChallengeSize;
+            }
+        }
+
+        void SaveSession()
+        {
+            if (InstaApi == null)
+                return;
+            if (!InstaApi.IsUserAuthenticated)
+                return;
+            var state = InstaApi.GetStateDataAsStream();
+            using (var fileStream = File.Create(StateFile))
+            {
+                state.Seek(0, SeekOrigin.Begin);
+                state.CopyTo(fileStream);
             }
         }
     }
