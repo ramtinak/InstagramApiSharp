@@ -227,6 +227,7 @@ namespace ChallengeRequireExample
                         GetFeedButton.Visible = true;
                         // Save session
                         SaveSession();
+                        Text = $"{AppName} Connected";
                     }
                     else
                     {

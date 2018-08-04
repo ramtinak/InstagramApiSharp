@@ -16,7 +16,9 @@ namespace InstagramApiSharp.API
         public const string HEADER_XML_HTTP_REQUEST = "XMLHttpRequest";
 
         public const string USER_AGENT =
-            "Instagram 12.0.0.7.91 Android (23/6.0.1; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_NZ)";
+            //"Instagram 35.0.0.20.96 Android (24/7.0; 480dpi; 1080x1812; HUAWEI/HONOR; PRA-LA1; HWPRA-H; hi6250; en_US; 95414346)";
+            "Instagram 35.0.0.20.96  Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US)";
+            //"Instagram 12.0.0.7.91 Android (23/6.0.1; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_NZ)";
         public const string HEADER_USER_AGENT = "User-Agent";
 
         public const string HEADER_QUERY = "q";
@@ -27,12 +29,13 @@ namespace InstagramApiSharp.API
         public const string FB_ACCESS_TOKEN = "EAABwzLixnjYBADcFesqNbHwRoDFmpBpEVZB2hcOAhMh1A3gGyxoW82CZBXKUEAYDAfNrA2Ntt4Pf21mXIT5Bv2CYIY3OhWJZCChIxAopXyOYQq4KkZBUsRL3deG7550cL9qiJaPEwlnK9pTQCWSUok5ZBZBNaUyW78eiQeTJCfBOQxYbjNG8CU";
         public const string
             IG_SIGNATURE_KEY =
-                "b4946d296abf005163e72346a6d33dd083cadde638e6ad9c5eb92e381b35784a"; //4749bda4fc1f49372dae3d79db339ce4959cfbbe
+              "be01114435207c0a0b11a5cf68faeb82ec4eee37c52e8429af5fff6b54b80b28";    
+            //"b4946d296abf005163e72346a6d33dd083cadde638e6ad9c5eb92e381b35784a"; //4749bda4fc1f49372dae3d79db339ce4959cfbbe
 
         public const string HEADER_IG_SIGNATURE = "signed_body";
         public const string IG_SIGNATURE_KEY_VERSION = "4"; //5
         public const string HEADER_IG_SIGNATURE_KEY_VERSION = "ig_sig_key_version";
-        public const string IG_CAPABILITIES = "3boBAA==";
+        public const string IG_CAPABILITIES = "3brTBw==";//"3boBAA==";
         public const string HEADER_IG_CAPABILITIES = "X-IG-Capabilities";
         public const string IG_CONNECTION_TYPE = "WIFI";
         public const string HEADER_IG_CONNECTION_TYPE = "X-IG-Connection-Type";

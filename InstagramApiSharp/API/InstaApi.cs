@@ -1530,8 +1530,9 @@ namespace InstagramApiSharp.API
                 else
                 {
                     var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyCode>(json);
-                    if (obj != null )
-                        ValidateChallengeAsync(obj.LoggedInUser);
+                    if (obj != null)
+                        ValidateChallengeAsync(obj.LoggedInUser, _user.CsrfToken);
+                    await GetDirectInboxAsync(PaginationParameters.MaxPagesToLoad(1));
                     return Result.Success(obj);
                 }
             }
@@ -1542,16 +1543,14 @@ namespace InstagramApiSharp.API
         }
 
 
-        private void ValidateChallengeAsync(InstaUserShortResponse user)
+        private void ValidateChallengeAsync(InstaUserShortResponse user, string csrfToken)
         {
             try
             {
-                if (user != null)
-                {
-                    var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
-                    _user.LoggedInUser = converter.Convert();
-                    _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
-                }
+                var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
+                _user.LoggedInUser = converter.Convert();
+                _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                _user.CsrfToken = csrfToken;
                 IsUserAuthenticated = true;
                 InvalidateProcessors();
             }
