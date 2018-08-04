@@ -1366,7 +1366,13 @@ namespace InstagramApiSharp.API
                 _challengeGuid = Guid.NewGuid().ToString();
                 _challengeDeviceId = ApiRequestMessage.GenerateDeviceId();
                 var instaUri = UriCreator.GetResetChallengeRequireUri(_challengeinfo.ApiPath);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"guid", _challengeGuid},
+                    {"device_id", _challengeDeviceId},
+                };
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -1524,7 +1530,7 @@ namespace InstagramApiSharp.API
                 else
                 {
                     var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyCode>(json);
-                    if (obj != null && obj.LoggedInUser != null)
+                    if (obj != null )
                         ValidateChallengeAsync(obj.LoggedInUser);
                     return Result.Success(obj);
                 }
@@ -1540,9 +1546,12 @@ namespace InstagramApiSharp.API
         {
             try
             {
-                var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
-                _user.LoggedInUser = converter.Convert();
-                _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                if (user != null)
+                {
+                    var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
+                    _user.LoggedInUser = converter.Convert();
+                    _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                }
                 IsUserAuthenticated = true;
                 InvalidateProcessors();
             }
