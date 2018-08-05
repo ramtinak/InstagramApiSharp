@@ -106,7 +106,7 @@ v1.0.1
 Nothing!!!!
 
 ## Wiki
-Wiki page coming soon...
+Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## License
 Do whatever you want to do! Except changing library name!!!!
