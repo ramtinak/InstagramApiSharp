@@ -1500,6 +1500,11 @@ namespace InstagramApiSharp.API
 
             try
             {
+                var cookies =
+            _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                _user.CsrfToken = csrftoken;
                 var instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
                 if (string.IsNullOrEmpty(_challengeGuid))
                     _challengeGuid = Guid.NewGuid().ToString();
