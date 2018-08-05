@@ -1132,7 +1132,7 @@ namespace InstagramApiSharp.API
             ValidateRequestMessage();
             try
             {
-                ; var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                         .BaseAddress);
@@ -1173,18 +1173,23 @@ namespace InstagramApiSharp.API
                     if (loginFailReason.ErrorType == "checkpoint_challenge_required")
                     {
                         _challengeinfo = loginFailReason.Challenge;
-                        //await Launcher.LaunchUriAsync(new Uri(loginFailReason.Challenge.url, UriKind.RelativeOrAbsolute));
                         return Result.Fail("Challenge is required", InstaLoginResult.ChallengeRequired);
                     }
 
                     return Result.UnExpectedResponse<InstaLoginResult>(response, json);
                 }
-
                 var loginInfo = JsonConvert.DeserializeObject<InstaLoginResponse>(json);
                 IsUserAuthenticated = loginInfo.User?.UserName.ToLower() == _user.UserName.ToLower();
                 var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
                 _user.LoggedInUser = converter.Convert();
                 _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                if(string.IsNullOrEmpty(_user.CsrfToken))
+                {
+                    cookies =
+                      _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                          .BaseAddress);
+                    _user.CsrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                }
                 return Result.Success(InstaLoginResult.Success);
             }
             catch (Exception exception)
@@ -1536,8 +1541,10 @@ namespace InstagramApiSharp.API
                 {
                     var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyCode>(json);
                     if (obj != null)
-                        ValidateChallengeAsync(obj.LoggedInUser, _user.CsrfToken);
+                        ValidateChallengeAsync(obj.LoggedInUser, csrftoken);
+                    await Task.Delay(1500);
                     await GetDirectInboxAsync(PaginationParameters.MaxPagesToLoad(1));
+                    await _feedProcessor.GetRecentActivityFeedAsync(PaginationParameters.MaxPagesToLoad(1));
                     return Result.Success(obj);
                 }
             }
