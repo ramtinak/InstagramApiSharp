@@ -55,7 +55,7 @@ var api = new InstaApiBuilder()
                 .UseLogger(new SomeLogger())
                 .UseHttpClient(new SomeHttpClient())
                 .SetUser(new UserCredentials(...You user...))
-                .UseHttpClient(httpHandlerWithSomeProxy)
+                .UseHttpClientHandler(httpHandlerWithSomeProxy)
                 .Build();
 ```
 ##### Note: every API method has synchronous implementation as well.
