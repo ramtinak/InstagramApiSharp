@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using InstagramApiSharp.API;
+﻿using InstagramApiSharp.API;
 using InstagramApiSharp.Classes.Models;
+using System;
+using System.Collections.Generic;
 
 namespace InstagramApiSharp.Helpers
 {
@@ -171,8 +171,21 @@ namespace InstagramApiSharp.Helpers
             return !string.IsNullOrEmpty(NextId)
                 ? new UriBuilder(instaUri) { Query = $"cursor={NextId}" }.Uri
                 : instaUri;
+    //        return instaUri
+    ////GET /api/v1/direct_v2/inbox/?visual_message_return_type=unseen&persistentBadging=true&use_unified_inbox=true
+    //.AddQueryParameterIfNotEmpty("visual_message_return_type", "unseen")
+    //.AddQueryParameterIfNotEmpty("persistentBadging", "true")
+    //.AddQueryParameterIfNotEmpty("use_unified_inbox", "true")
+    //.AddQueryParameterIfNotEmpty("cursor", NextId);
         }
-
+        public static Uri GetDirectPendingInboxUri(string NextId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_PENDING_INBOX, out var instaUri))
+                throw new Exception("Cant create URI for get pending inbox");
+            return !string.IsNullOrEmpty(NextId)
+                ? new UriBuilder(instaUri) { Query = $"cursor={NextId}" }.Uri
+                : instaUri;
+        }
         public static Uri GetDirectInboxThreadUri(string threadId, string NextId)
         {
             if (
@@ -182,7 +195,20 @@ namespace InstagramApiSharp.Helpers
                 ? new UriBuilder(instaUri) { Query = $"cursor={NextId}" }.Uri
                 : instaUri;
         }
-
+        public static Uri GetApprovePendingDirectRequestUri(string threadId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_DIRECT_THREAD_APPROVE, threadId),
+                    out var instaUri)) throw new Exception("Cant create URI for approve inbox thread");
+            return instaUri;
+        }
+        public static Uri GetDeclineAllPendingDirectRequestsUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_THREAD_APPROVE,
+                    out var instaUri)) throw new Exception("Cant create URI for decline all pending direct requests");
+            return instaUri;
+        }
         public static Uri GetUserTagsUri(long userPk, string rankToken, string maxId = null)
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_USER_TAGS, userPk),

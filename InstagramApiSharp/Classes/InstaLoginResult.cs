@@ -7,6 +7,7 @@
         InvalidUser,
         TwoFactorRequired,
         Exception,
-        ChallengeRequired
+        ChallengeRequired,
+        LimitError
     }
 }

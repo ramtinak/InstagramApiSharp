@@ -23,7 +23,7 @@ namespace Examples.Samples
                 Width = 1080,
                 URI = new Uri(Path.GetFullPath(@"c:\someawesomepicture.jpg"), UriKind.Absolute).LocalPath
             };
-            var result = await _instaApi.UploadPhotoAsync(mediaImage, "someawesomepicture");
+            var result = await _instaApi.MediaProcessor.UploadPhotoAsync(mediaImage, "someawesomepicture");
             Console.WriteLine(result.Succeeded
                 ? $"Media created: {result.Value.Pk}, {result.Value.Caption}"
                 : $"Unable to upload photo: {result.Info.Message}");

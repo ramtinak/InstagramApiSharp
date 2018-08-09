@@ -24,16 +24,21 @@ namespace InstagramApiSharp.API.Processors
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
-
+        private readonly UserAuthValidate _userAuthValidate;
         public MediaProcessor(AndroidDevice deviceInfo, UserSessionData user,
-            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger)
+            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger, UserAuthValidate userAuthValidate)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
+            _userAuthValidate = userAuthValidate;
         }
-
+        /// <summary>
+        ///     Get media ID from an url (got from "share link")
+        /// </summary>
+        /// <param name="uri">Uri to get media ID</param>
+        /// <returns>Media ID</returns>
         public async Task<IResult<string>> GetMediaIdFromUrlAsync(Uri uri)
         {
             try
@@ -55,9 +60,15 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<string>(exception);
             }
         }
-
+        /// <summary>
+        ///     Delete a media (photo or video)
+        /// </summary>
+        /// <param name="mediaId">The media ID</param>
+        /// <param name="mediaType">The type of the media</param>
+        /// <returns>Return true if the media is deleted</returns>
         public async Task<IResult<bool>> DeleteMediaAsync(string mediaId, InstaMediaType mediaType)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var deleteMediaUri = UriCreator.GetDeleteMediaUri(mediaId, mediaType);
@@ -87,9 +98,15 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
-
+        /// <summary>
+        ///     Edit the caption of the media (photo/video)
+        /// </summary>
+        /// <param name="mediaId">The media ID</param>
+        /// <param name="caption">The new caption</param>
+        /// <returns>Return true if everything is ok</returns>
         public async Task<IResult<bool>> EditMediaAsync(string mediaId, string caption)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var editMediaUri = UriCreator.GetEditMediaUri(mediaId);
@@ -116,8 +133,15 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+        /// <summary>
+        ///     Upload video
+        /// </summary>
+        /// <param name="video">Video to upload</param>
+        /// <param name="imageThumbnail">Image thumbnail</param>
+        /// <param name="caption">Caption</param>
         public async Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideo video, InstaImage imageThumbnail, string caption)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetUploadVideoUri();
@@ -183,7 +207,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        public async Task<IResult<bool>> UploadVideoThumbnailAsync(InstaImage image, string uploadId)
+        private async Task<IResult<bool>> UploadVideoThumbnailAsync(InstaImage image, string uploadId)
         {
             try
             {
@@ -220,7 +244,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        public async Task<IResult<InstaMedia>> ConfigureVideoAsync(InstaVideo video, string uploadId, string caption)
+        private async Task<IResult<InstaMedia>> ConfigureVideoAsync(InstaVideo video, string uploadId, string caption)
         {
             try
             {
@@ -282,7 +306,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        public async Task<IResult<InstaMedia>> ExposeVideoAsync(string uploadId)
+        private async Task<IResult<InstaMedia>> ExposeVideoAsync(string uploadId)
         {
             try
             {
@@ -320,8 +344,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
+        /// <summary>
+        ///     Upload photo
+        /// </summary>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="caption">Caption</param>
         public async Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetUploadPhotoUri();
@@ -354,9 +384,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
-
+        /// <summary>
+        ///     Upload photo
+        /// </summary>
+        /// <param name="images">Array of photos to upload</param>
+        /// <param name="caption">Caption</param>
         public async Task<IResult<InstaMedia>> UploadPhotosAlbumAsync(InstaImage[] images, string caption)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var uploadIds = new string[images.Length];
@@ -401,7 +436,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        public async Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideo[] videos, string caption)
+        private async Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideo[] videos, string caption)
         {
             try
             {
@@ -506,8 +541,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
-
-        public async Task<IResult<InstaMedia>> ConfigurePhotoAsync(InstaImage image, string uploadId, string caption)
+        /// <summary>
+        ///     Configure photo
+        /// </summary>
+        /// <param name="image">Photo to configure</param>
+        /// <param name="uploadId">Upload id</param>
+        /// <param name="caption">Caption</param>
+        /// <returns></returns>
+        private async Task<IResult<InstaMedia>> ConfigurePhotoAsync(InstaImage image, string uploadId, string caption)
         {
             try
             {
@@ -566,8 +607,13 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
-
-        public async Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] uploadId, string caption)
+        /// <summary>
+        ///     Configure photos for Album
+        /// </summary>
+        /// <param name="uploadId">Array of upload IDs to configure</param>
+        /// <param name="caption">Caption</param>
+        /// <returns></returns>
+        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] uploadId, string caption)
         {
             try
             {
@@ -616,7 +662,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        public async Task<IResult<InstaMedia>> ConfigureAlbum2Async(string[] imagesUploadId, Dictionary<string,InstaVideo> videos, string caption)
+        private async Task<IResult<InstaMedia>> ConfigureAlbum2Async(string[] imagesUploadId, Dictionary<string,InstaVideo> videos, string caption)
         {
             try
             {
@@ -733,9 +779,13 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
-
+        /// <summary>
+        ///     Get users (short) who liked certain media. Normaly it return around 1000 last users.
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
         public async Task<IResult<InstaLikersList>> GetMediaLikersAsync(string mediaId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var likers = new InstaLikersList();
@@ -759,9 +809,13 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaLikersList>(exception);
             }
         }
-
+        /// <summary>
+        ///     Like media (photo or video)
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
         public async Task<IResult<bool>> LikeMediaAsync(string mediaId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 return await LikeUnlikeMediaInternal(mediaId, UriCreator.GetLikeMediaUri(mediaId));
@@ -772,9 +826,13 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
-
+        /// <summary>
+        ///     Remove like from media (photo or video)
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
         public async Task<IResult<bool>> UnLikeMediaAsync(string mediaId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 return await LikeUnlikeMediaInternal(mediaId, UriCreator.GetUnLikeMediaUri(mediaId));
@@ -785,9 +843,16 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
-
+        /// <summary>
+        ///     Get media by its id asynchronously
+        /// </summary>
+        /// <param name="mediaId">Maximum count of pages to retrieve</param>
+        /// <returns>
+        ///     <see cref="InstaMedia" />
+        /// </returns>
         public async Task<IResult<InstaMedia>> GetMediaByIdAsync(string mediaId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var mediaUri = UriCreator.GetMediaUri(mediaId);
@@ -815,9 +880,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
-
+        /// <summary>
+        ///     Get share link from media Id
+        /// </summary>
+        /// <param name="mediaId">media ID</param>
+        /// <returns>Share link as Uri</returns>
         public async Task<IResult<Uri>> GetShareLinkFromMediaIdAsync(string mediaId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var collectionUri = UriCreator.GetShareLinkFromMediaId(mediaId);

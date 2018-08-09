@@ -24,6 +24,7 @@ using InstagramApiSharp.Converters;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.Models;
 using System.Net;
+using InstagramApiSharp.Converters.Json;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -33,17 +34,146 @@ namespace InstagramApiSharp.API.Processors
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
-
+        private readonly UserAuthValidate _userAuthValidate;
         public AccountProcessor(AndroidDevice deviceInfo, UserSessionData user,
-            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger)
+            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger, UserAuthValidate userAuthValidate)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
+            _userAuthValidate = userAuthValidate;
         }
+        
+        /// <summary>
+        ///     Set current account private
+        /// </summary>
+        public async Task<IResult<InstaUserShort>> SetAccountPrivateAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetUriSetAccountPrivate();
+                var fields = new Dictionary<string, string>
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var hash = CryptoHelper.CalculateHash(InstaApiConstants.IG_SIGNATURE_KEY,
+                    JsonConvert.SerializeObject(fields));
+                var payload = JsonConvert.SerializeObject(fields);
+                var signature = $"{hash}.{Uri.EscapeDataString(payload)}";
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                request.Content = new FormUrlEncodedContent(fields);
+                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE, signature);
+                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION,
+                    InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUserShort>(response, json);
+                var userInfoUpdated =
+                    JsonConvert.DeserializeObject<InstaUserShortResponse>(json, new InstaUserShortDataConverter());
+                if (userInfoUpdated.Pk < 1)
+                    return Result.Fail<InstaUserShort>("Pk is null or empty");
+                var converter = ConvertersFabric.Instance.GetUserShortConverter(userInfoUpdated);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, (InstaUserShort)null);
+            }
+        }
+        /// <summary>
+        ///     Set current account public
+        /// </summary>
+        public async Task<IResult<InstaUserShort>> SetAccountPublicAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetUriSetAccountPublic();
+                var fields = new Dictionary<string, string>
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var hash = CryptoHelper.CalculateHash(InstaApiConstants.IG_SIGNATURE_KEY,
+                    JsonConvert.SerializeObject(fields));
+                var payload = JsonConvert.SerializeObject(fields);
+                var signature = $"{hash}.{Uri.EscapeDataString(payload)}";
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                request.Content = new FormUrlEncodedContent(fields);
+                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE, signature);
+                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION,
+                    InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var userInfoUpdated =
+                        JsonConvert.DeserializeObject<InstaUserShortResponse>(json, new InstaUserShortDataConverter());
+                    if (userInfoUpdated.Pk < 1)
+                        return Result.Fail<InstaUserShort>("Pk is incorrect");
+                    var converter = ConvertersFabric.Instance.GetUserShortConverter(userInfoUpdated);
+                    return Result.Success(converter.Convert());
+                }
 
+                return Result.UnExpectedResponse<InstaUserShort>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, (InstaUserShort)null);
+            }
+        }
+        /// <summary>
+        ///     Change password
+        /// </summary>
+        /// <param name="oldPassword">The old password</param>
+        /// <param name="newPassword">
+        ///     The new password (shouldn't be the same old password, and should be a password you never used
+        ///     here)
+        /// </param>
+        /// <returns>Return true if the password is changed</returns>
+        public async Task<IResult<bool>> ChangePasswordAsync(string oldPassword, string newPassword)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            if (oldPassword == newPassword)
+                return Result.Fail("The old password should not the same of the new password", false);
 
+            try
+            {
+                var changePasswordUri = UriCreator.GetChangePasswordUri();
+
+                var data = new JObject
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"old_password", oldPassword},
+                    {"new_password1", newPassword},
+                    {"new_password2", newPassword}
+                };
+
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Get, changePasswordUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode == HttpStatusCode.OK)
+                    return Result.Success(true);
+                var error = JsonConvert.DeserializeObject<BadStatusErrorsResponse>(json);
+                var errors = "";
+                error.Message.Errors.ForEach(errorContent => errors += errorContent + "\n");
+                return Result.Fail(errors, false);
+            }
+            catch (Exception exception)
+            {
+                return Result.Fail(exception.Message, false);
+            }
+        }
         /// <summary>
         /// Edit profile.
         /// </summary>
@@ -57,6 +187,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<AccountUserResponse>> EditProfileAsync(string url, string phone, string name, string biography, string email, GenderType gender, string newUsername = null)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var editRequest = await GetRequestForEditProfileAsync();
@@ -101,8 +232,9 @@ namespace InstagramApiSharp.API.Processors
         /// Get request for edit profile.
         /// </summary>
         /// <returns></returns>
-        public async Task<IResult<AccountUserResponse>> GetRequestForEditProfileAsync()
+        private async Task<IResult<AccountUserResponse>> GetRequestForEditProfileAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetRequestForEditProfileUri();
@@ -128,6 +260,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<bool>> SetNameAndPhoneNumberAsync(string name, string phoneNumber = "")
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetProfileSetPhoneAndNameUri();
@@ -145,7 +278,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.Fail("Status code: " + response.StatusCode, false);
-                var obj = JsonConvert.DeserializeObject<AccountDefaultResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
                 else
@@ -164,6 +297,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<AccountUserResponse>> RemoveProfilePictureAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetRemoveProfilePictureUri();
@@ -197,6 +331,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<AccountUserResponse>> ChangeProfilePictureAsync(byte[] pictureBytes)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetChangeProfilePictureUri();
@@ -233,6 +368,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<AccountSettingsResponse>> GetStorySettingsAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetStorySettingsUri();
@@ -256,6 +392,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<bool>> EnableSaveStoryToGalleryAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {            
                 var instaUri = UriCreator.GetSetReelSettingsUri();
@@ -289,6 +426,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<bool>> DisableSaveStoryToGalleryAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetSetReelSettingsUri();
@@ -322,6 +460,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<bool>> EnableSaveStoryToArchiveAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 //POST /api/v1/users/set_reel_settings/ HTTP/1.1
@@ -361,6 +500,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<bool>> DisableSaveStoryToArchiveAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetSetReelSettingsUri();
@@ -396,6 +536,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<bool>> AllowStorySharingAsync(bool allow = true)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetSetReelSettingsUri();
@@ -433,6 +574,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<bool>> AllowStoryMessageRepliesAsync(MessageRepliesType repliesType)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetSetReelSettingsUri();
@@ -516,6 +658,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<AccountSecuritySettingsResponse>> GetSecuritySettingsInfoAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetAccountSecurityInfoUri();
@@ -545,6 +688,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<bool>> DisableTwoFactorAuthenticationAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetDisableSmsTwoFactorUri();
@@ -578,6 +722,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<AccountTwoFactorSmsResponse>> SendTwoFactorEnableSmsAsync(string phoneNumber)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetSendTwoFactorEnableSmsUri();
@@ -611,6 +756,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<AccountTwoFactorResponse>> TwoFactorEnableAsync(string phoneNumber, string verificationCode)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetEnableSmsTwoFactorUri();
@@ -643,6 +789,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<AccountConfirmEmailResponse>> SendConfirmEmailAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetAccountSendConfirmEmailUri();
@@ -674,6 +821,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<AccountSendSmsResponse>> SendSmsCodeAsync(string phoneNumber)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetAccountSendSmsCodeUri();
@@ -707,6 +855,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<AccountVerifySmsResponse>> VerifySmsCodeAsync(string phoneNumber, string verificationCode)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetAccountVerifySmsCodeUri();
@@ -736,13 +885,16 @@ namespace InstagramApiSharp.API.Processors
 
 
 
+
+
         /// <summary>
         /// NOT COMPLETE
         /// </summary>
         /// <param name="bio"></param>
         /// <returns></returns>
-        public async Task<IResult<object>> SetBiographyAsync(string bio)
+        private async Task<IResult<object>> SetBiographyAsync(string bio)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 //POST /api/v1/accounts/set_biography/ HTTP/1.1
@@ -785,8 +937,9 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         //NOT COMPLETE
-        public async Task<IResult<object>> EnablePresenceAsync()
+        private async Task<IResult<object>> EnablePresenceAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetAccountSetPresenseDisabledUri();
@@ -819,8 +972,9 @@ namespace InstagramApiSharp.API.Processors
         }
 
         //NOT COMPLETE
-        public async Task<IResult<object>> DisablePresenceAsync()
+        private async Task<IResult<object>> DisablePresenceAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetAccountSetPresenseDisabledUri();
@@ -853,8 +1007,9 @@ namespace InstagramApiSharp.API.Processors
         }
 
         //NOT COMPLETE
-        public async Task<IResult<object>> GetCommentFilterAsync()
+        private async Task<IResult<object>> GetCommentFilterAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + $"accounts/get_comment_filter/");

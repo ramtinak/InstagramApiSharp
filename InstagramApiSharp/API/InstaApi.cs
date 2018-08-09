@@ -32,38 +32,72 @@ namespace InstagramApiSharp.API
         private ILocationProcessor _locationProcessor;
         private IMediaProcessor _mediaProcessor;
         private IMessagingProcessor _messagingProcessor;
-        private IUserProfileProcessor _profileProcessor;
         private IStoryProcessor _storyProcessor;
         private TwoFactorLoginInfo _twoFactorInfo;
         private InstaChallengeLoginInfo _challengeinfo;
-        private UserSessionData _user;
+        private UserSessionData _userSession;
+        private UserSessionData _user
+        {
+            get { return _userSession; }
+            set { _userSession = value; _userAuthValidate.User = value; }
+        }
+        private UserAuthValidate _userAuthValidate;
         private IUserProcessor _userProcessor;
 
         private ILiveProcessor _liveProcessor;
         /// <summary>
-        /// Live api functions.
+        ///     Live api functions.
         /// </summary>
         public ILiveProcessor LiveProcessor => _liveProcessor;
 
         private IDiscoverProcessor _discoverProcessor;
         /// <summary>
-        /// Discover api functions.
+        ///     Discover api functions.
         /// </summary>
         public IDiscoverProcessor DiscoverProcessor => _discoverProcessor;
 
         private IAccountProcessor _accountProcessor;
         /// <summary>
-        /// Account api functions.
+        ///     Account api functions.
         /// </summary>
         public IAccountProcessor AccountProcessor => _accountProcessor;
         /// <summary>
-        /// Story api functions.
+        ///     Comments api functions.
+        /// </summary>
+        public ICommentProcessor CommentProcessor => _commentProcessor;
+        /// <summary>
+        ///     Story api functions.
         /// </summary>
         public IStoryProcessor StoryProcessor => _storyProcessor;
+        /// <summary>
+        ///     Media api functions.
+        /// </summary>
         public IMediaProcessor MediaProcessor => _mediaProcessor;
+        /// <summary>
+        ///     Messaging (direct) api functions.
+        /// </summary>
+        public IMessagingProcessor MessagingProcessor => _messagingProcessor;
+        /// <summary>
+        ///     Feed api functions.
+        /// </summary>
+        public IFeedProcessor FeedProcessor => _feedProcessor;
+        /// <summary>
+        ///     Collection api functions.
+        /// </summary>
+        public ICollectionProcessor CollectionProcessor => _collectionProcessor;
+        /// <summary>
+        /// Location api functions.
+        /// </summary>
+        public ILocationProcessor LocationProcessor => _locationProcessor;
+        /// <summary>
+        ///     Hashtag api functions.
+        /// </summary>
+        public IHashtagProcessor HashtagProcessor => _hashtagProcessor;
+        public IUserProcessor UserProcessor => _userProcessor;
         public InstaApi(UserSessionData user, IInstaLogger logger, AndroidDevice deviceInfo,
             IHttpRequestProcessor httpRequestProcessor)
         {
+            _userAuthValidate = new UserAuthValidate();
             _user = user;
             _logger = logger;
             _deviceInfo = deviceInfo;
@@ -226,10 +260,7 @@ namespace InstagramApiSharp.API
         {
             ValidateUser();
             ValidateLoggedIn();
-            var user = await GetUserAsync(username);
-            if (!user.Succeeded)
-                return Result.Fail<InstaMediaList>("Unable to get user to load media");
-            return await _userProcessor.GetUserMediaAsync(user.Value.Pk, paginationParameters);
+            return await _userProcessor.GetUserMediaAsync(username, paginationParameters);
         }
 
         /// <summary>
@@ -627,7 +658,7 @@ namespace InstagramApiSharp.API
         {
             return await _userProcessor.UnBlockUserAsync(userId);
         }
-
+        [Obsolete("SetAccountPrivateAsync is deprecated, please use AccountProcessor.SetAccountPrivateAsync instead.\r\nThis will be deleted in the next update.")]
         /// <summary>
         ///     Set current account private
         /// </summary>
@@ -636,9 +667,9 @@ namespace InstagramApiSharp.API
         {
             ValidateUser();
             ValidateLoggedIn();
-            return await _profileProcessor.SetAccountPrivateAsync();
+            return await _accountProcessor.SetAccountPrivateAsync();
         }
-
+        [Obsolete("SetAccountPublicAsync is deprecated, please use AccountProcessor.SetAccountPublicAsync instead.\r\nThis will be deleted in the next update.")]
         /// <summary>
         ///     Set current account public
         /// </summary>
@@ -647,7 +678,7 @@ namespace InstagramApiSharp.API
         {
             ValidateUser();
             ValidateLoggedIn();
-            return await _profileProcessor.SetAccountPublicAsync();
+            return await _accountProcessor.SetAccountPublicAsync();
         }
 
 
@@ -737,12 +768,12 @@ namespace InstagramApiSharp.API
         /// <param name="uploadId">Upload id</param>
         /// <param name="caption">Caption</param>
         /// <returns></returns>
-        public async Task<IResult<InstaMedia>> ConfigurePhotoAsync(InstaImage image, string uploadId, string caption)
-        {
-            ValidateUser();
-            ValidateLoggedIn();
-            return await _mediaProcessor.ConfigurePhotoAsync(image, uploadId, caption);
-        }
+        //public async Task<IResult<InstaMedia>> ConfigurePhotoAsync(InstaImage image, string uploadId, string caption)
+        //{
+        //    ValidateUser();
+        //    ValidateLoggedIn();
+        //    return await _mediaProcessor.ConfigurePhotoAsync(image, uploadId, caption);
+        //}
 
         /// <summary>
         ///     Configure photos for Album
@@ -751,12 +782,12 @@ namespace InstagramApiSharp.API
         /// ///
         /// <param name="caption">Caption</param>
         /// <returns></returns>
-        public async Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] uploadIds, string caption)
-        {
-            ValidateUser();
-            ValidateLoggedIn();
-            return await _mediaProcessor.ConfigureAlbumAsync(uploadIds, caption);
-        }
+        //public async Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] uploadIds, string caption)
+        //{
+        //    ValidateUser();
+        //    ValidateLoggedIn();
+        //    return await _mediaProcessor.ConfigureAlbumAsync(uploadIds, caption);
+        //}
 
 
         /// <summary>
@@ -802,14 +833,14 @@ namespace InstagramApiSharp.API
         /// <param name="uploadId">Upload id</param>
         /// <param name="caption">Caption</param>
         /// <returns></returns>
-        public async Task<IResult<InstaStoryMedia>> ConfigureStoryPhotoAsync(InstaImage image, string uploadId,
-            string caption)
-        {
-            ValidateUser();
-            ValidateLoggedIn();
-            return await _storyProcessor.ConfigureStoryPhotoAsync(image, uploadId, caption);
-        }
-
+        //public async Task<IResult<InstaStoryMedia>> ConfigureStoryPhotoAsync(InstaImage image, string uploadId,
+        //    string caption)
+        //{
+        //    ValidateUser();
+        //    ValidateLoggedIn();
+        //    return await _storyProcessor.ConfigureStoryPhotoAsync(image, uploadId, caption);
+        //}
+        [Obsolete("ChangePasswordAsync is deprecated, please use AccountProcessor.ChangePasswordAsync instead.\r\nThis will be deleted in the next update.")]
         /// <summary>
         ///     Change password
         /// </summary>
@@ -825,7 +856,7 @@ namespace InstagramApiSharp.API
         {
             ValidateUser();
             ValidateLoggedIn();
-            return await _profileProcessor.ChangePasswordAsync(oldPassword, newPassword);
+            return await _accountProcessor.ChangePasswordAsync(oldPassword, newPassword);
         }
 
         /// <summary>
@@ -983,7 +1014,7 @@ namespace InstagramApiSharp.API
         {
             ValidateUser();
             ValidateLoggedIn();
-            return await _locationProcessor.Search(latitude, longitude, query);
+            return await _locationProcessor.SearchLocationAsync(latitude, longitude, query);
         }
 
         /// <summary>
@@ -999,7 +1030,7 @@ namespace InstagramApiSharp.API
         {
             ValidateUser();
             ValidateLoggedIn();
-            return await _locationProcessor.GetFeed(locationId, paginationParameters);
+            return await _locationProcessor.GetLocationFeedAsync(locationId, paginationParameters);
         }
 
         /// <summary>
@@ -1015,7 +1046,7 @@ namespace InstagramApiSharp.API
         {
             ValidateUser();
             ValidateLoggedIn();
-            return await _hashtagProcessor.Search(query, excludeList, rankToken);
+            return await _hashtagProcessor.SearchHashtagAsync(query, excludeList, rankToken);
         }
 
         /// <summary>
@@ -1025,18 +1056,23 @@ namespace InstagramApiSharp.API
         /// <returns>Hashtag information</returns>
         public async Task<IResult<InstaHashtag>> GetHashtagInfo(string tagname)
         {
-            ValidateUser();
-            ValidateLoggedIn();
-            return await _hashtagProcessor.GetHashtagInfo(tagname);
+            //ValidateUser();
+            //ValidateLoggedIn();
+            UserAuthValidator.Validate(_user, IsUserAuthenticated);
+            return await _hashtagProcessor.GetHashtagInfoAsync(tagname);
         }
 
 
         #region Authentication/State data
-
+        private bool _isUserAuthenticated;
         /// <summary>
         ///     Indicates whether user authenticated or not
         /// </summary>
-        public bool IsUserAuthenticated { get; private set; }
+        public bool IsUserAuthenticated
+        {
+            get { return _isUserAuthenticated; }
+            internal set { _isUserAuthenticated = value; _userAuthValidate.IsUserAuthenticated = value; }
+        }
         /// <summary>
         ///     Create a new instagram account
         /// </summary>
@@ -1119,6 +1155,7 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///     Login using given credentials asynchronously
         /// </summary>
+        /// <param name="isNewLogin"></param>
         /// <returns>
         ///     Success --> is succeed
         ///     TwoFactorRequired --> requires 2FA login.
@@ -1126,19 +1163,26 @@ namespace InstagramApiSharp.API
         ///     InvalidUser --> User/phone number is wrong
         ///     Exception --> Something wrong happened
         /// </returns>
-        public async Task<IResult<InstaLoginResult>> LoginAsync()
+        public async Task<IResult<InstaLoginResult>> LoginAsync(bool isNewLogin = true)
         {
             ValidateUser();
             ValidateRequestMessage();
             try
             {
-                var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                if (isNewLogin)
+                {
+                    var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                    var html = await firstResponse.Content.ReadAsStringAsync();
+                    Debug.WriteLine(html);
+                    _logger?.LogResponse(firstResponse);
+                }
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                         .BaseAddress);
-                _logger?.LogResponse(firstResponse);
+              
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
                 _user.CsrfToken = csrftoken;
+                Debug.WriteLine("login token: " + csrftoken);
                 var instaUri = UriCreator.GetLoginUri();
                 var signature =
                     $"{_httpRequestProcessor.RequestMessage.GenerateSignature(InstaApiConstants.IG_SIGNATURE_KEY, out string devid)}.{_httpRequestProcessor.RequestMessage.GetMessageString()}";
@@ -1173,9 +1217,13 @@ namespace InstagramApiSharp.API
                     if (loginFailReason.ErrorType == "checkpoint_challenge_required")
                     {
                         _challengeinfo = loginFailReason.Challenge;
+
                         return Result.Fail("Challenge is required", InstaLoginResult.ChallengeRequired);
                     }
-
+                    if (loginFailReason.ErrorType == "rate_limit_error")
+                    {
+                        return Result.Fail("Please wait a few minutes before you try again.", InstaLoginResult.LimitError);
+                    }
                     return Result.UnExpectedResponse<InstaLoginResult>(response, json);
                 }
                 var loginInfo = JsonConvert.DeserializeObject<InstaLoginResponse>(json);
@@ -1510,6 +1558,8 @@ namespace InstagramApiSharp.API
                 .BaseAddress);
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
                 _user.CsrfToken = csrftoken;
+                Debug.WriteLine("verify token: " + csrftoken);
+
                 var instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
                 if (string.IsNullOrEmpty(_challengeGuid))
                     _challengeGuid = Guid.NewGuid().ToString();
@@ -1541,10 +1591,21 @@ namespace InstagramApiSharp.API
                 {
                     var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyCode>(json);
                     if (obj != null)
-                        ValidateChallengeAsync(obj.LoggedInUser, csrftoken);
-                    await Task.Delay(1500);
-                    await GetDirectInboxAsync(PaginationParameters.MaxPagesToLoad(1));
-                    await _feedProcessor.GetRecentActivityFeedAsync(PaginationParameters.MaxPagesToLoad(1));
+                    {
+                        if (obj.LoggedInUser != null)
+                        {
+                            ValidateChallengeAsync(obj.LoggedInUser, csrftoken);
+                            await Task.Delay(1500);
+                            await GetDirectInboxAsync(PaginationParameters.MaxPagesToLoad(1));
+                            await _feedProcessor.GetRecentActivityFeedAsync(PaginationParameters.MaxPagesToLoad(1));
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    
+
                     return Result.Success(obj);
                 }
             }
@@ -1795,23 +1856,26 @@ namespace InstagramApiSharp.API
 
         private void InvalidateProcessors()
         {
-            _hashtagProcessor = new HashtagProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _locationProcessor = new LocationProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _collectionProcessor = new CollectionProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _mediaProcessor = new MediaProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _userProcessor = new UserProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _storyProcessor = new StoryProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _commentProcessor = new CommentProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _profileProcessor = new UserProfileProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _messagingProcessor = new MessagingProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _feedProcessor = new FeedProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
+            _hashtagProcessor = new HashtagProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
+            _locationProcessor = new LocationProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
+            _collectionProcessor = new CollectionProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
+            _mediaProcessor = new MediaProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
+            _userProcessor = new UserProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
+            _storyProcessor = new StoryProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
+            _commentProcessor = new CommentProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
+            _messagingProcessor = new MessagingProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
+            _feedProcessor = new FeedProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
 
-            _liveProcessor = new LiveProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _discoverProcessor = new DiscoverProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-            _accountProcessor = new AccountProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
+            _liveProcessor = new LiveProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
+            _discoverProcessor = new DiscoverProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
+            _accountProcessor = new AccountProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
 
         }
-
+        internal void ValidateUserAndLogin()
+        {
+            ValidateUser();
+            ValidateLoggedIn();
+        }
         private void ValidateUser()
         {
             if (string.IsNullOrEmpty(_user.UserName) || string.IsNullOrEmpty(_user.Password))

@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.2.8 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
+| Nuget | master | v1.0.2.9 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
 
 
 ## Note
@@ -68,6 +68,12 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.2.9
+- Deprecate most of functions! Please check new functions because old ones will removed in v1.0.3.
+- Approve direct pending inbox thread
+- Decline all direct pending inbox threads
+- Get direct pending inbox threads
+
 v1.0.2.8
 - Bugfix for ResetChallengeRequireVerifyMethodAsync
 - Bugfix for VerifyCodeForChallengeRequireAsync

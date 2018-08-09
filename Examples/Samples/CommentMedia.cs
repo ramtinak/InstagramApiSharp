@@ -15,7 +15,7 @@ namespace Examples.Samples
 
         public async Task DoShow()
         {
-            var commentResult = await _instaApi.CommentMediaAsync("", "Hi there!");
+            var commentResult = await _instaApi.CommentProcessor.CommentMediaAsync("", "Hi there!");
             Console.WriteLine(commentResult.Succeeded
                 ? $"Comment created: {commentResult.Value.Pk}, text: {commentResult.Value.Text}"
                 : $"Unable to create comment: {commentResult.Info.Message}");

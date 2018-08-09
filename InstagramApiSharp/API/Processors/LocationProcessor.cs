@@ -24,18 +24,28 @@ namespace InstagramApiSharp.API.Processors
         private readonly IInstaLogger _logger;
         private readonly IUriCreator _searchLocationUriCreator = new SearchLocationUriCreator();
         private readonly UserSessionData _user;
-
+        private readonly UserAuthValidate _userAuthValidate;
         public LocationProcessor(AndroidDevice deviceInfo, UserSessionData user,
-            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger)
+            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger, UserAuthValidate userAuthValidate)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
+            _userAuthValidate = userAuthValidate;
         }
-
-        public async Task<IResult<InstaLocationShortList>> Search(double latitude, double longitude, string query)
+        /// <summary>
+        ///     Searches for specific location by provided geo-data or search query.
+        /// </summary>
+        /// <param name="latitude">Latitude</param>
+        /// <param name="longitude">Longitude</param>
+        /// <param name="query">Search query</param>
+        /// <returns>
+        ///     List of locations (short format)
+        /// </returns>
+        public async Task<IResult<InstaLocationShortList>> SearchLocationAsync(double latitude, double longitude, string query)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var uri = _searchLocationUriCreator.GetUri();
@@ -72,10 +82,18 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaLocationShortList>(exception);
             }
         }
-
-        public async Task<IResult<InstaLocationFeed>> GetFeed(long locationId,
+        /// <summary>
+        ///     Gets the feed of particular location.
+        /// </summary>
+        /// <param name="locationId">Location identifier</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     Location feed
+        /// </returns>
+        public async Task<IResult<InstaLocationFeed>> GetLocationFeedAsync(long locationId,
             PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var uri = _getFeedUriCreator.GetUri(locationId, paginationParameters.NextId);
@@ -94,7 +112,7 @@ namespace InstagramApiSharp.API.Processors
                        && !string.IsNullOrEmpty(paginationParameters.NextId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var nextFeed = await GetFeed(locationId, paginationParameters);
+                    var nextFeed = await GetLocationFeedAsync(locationId, paginationParameters);
                     if (!nextFeed.Succeeded)
                         return nextFeed;
                     paginationParameters.StartFromId(nextFeed.Value.NextId);

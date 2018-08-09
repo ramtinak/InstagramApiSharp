@@ -21,19 +21,25 @@ namespace InstagramApiSharp.API.Processors
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
-
+        private readonly UserAuthValidate _userAuthValidate;
         public CommentProcessor(AndroidDevice deviceInfo, UserSessionData user,
-            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger)
+            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger, UserAuthValidate userAuthValidate)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
+            _userAuthValidate = userAuthValidate;
         }
-
+        /// <summary>
+        ///     Get media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         public async Task<IResult<InstaCommentList>> GetMediaCommentsAsync(string mediaId,
             PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var commentsUri = UriCreator.GetMediaCommentsUri(mediaId, paginationParameters.NextId);
@@ -72,9 +78,17 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaCommentList>(exception);
             }
         }
+        /// <summary>
+        ///     Get media inline comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="targetCommentId">Target comment id</param>
+        /// <param name="paginationParameters">Maximum amount of pages to load and start id</param>
+        /// <returns></returns>
         public async Task<IResult<InstaInlineCommentListResponse>> GetMediaInlineCommentsAsync(string mediaId, string targetCommentId,
 PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommentId, paginationParameters.NextId);
@@ -106,8 +120,14 @@ PaginationParameters paginationParameters)
                 return Result.Fail<InstaInlineCommentListResponse>(exception);
             }
         }
+        /// <summary>
+        ///     Comment media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="text">Comment text</param>
         public async Task<IResult<InstaComment>> CommentMediaAsync(string mediaId, string text)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetPostCommetUri(mediaId);
@@ -140,9 +160,15 @@ PaginationParameters paginationParameters)
                 return Result.Fail(exception.Message, (InstaComment) null);
             }
         }
-
+        /// <summary>
+        ///     Inline comment media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="targetCommentId">Target comment id</param>
+        /// <param name="text">Comment text</param>
         public async Task<IResult<InstaComment>> InlineCommentMediaAsync(string mediaId, string targetCommentId, string text)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetPostCommetUri(mediaId);
@@ -176,9 +202,14 @@ PaginationParameters paginationParameters)
                 return Result.Fail(exception.Message, (InstaComment)null);
             }
         }
-
+        /// <summary>
+        ///     Delete media comment
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentId">Comment id</param>
         public async Task<IResult<bool>> DeleteCommentAsync(string mediaId, string commentId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetDeleteCommetUri(mediaId, commentId);
@@ -229,9 +260,13 @@ PaginationParameters paginationParameters)
             var comments = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
             return Result.Success(comments);
         }
-
+        /// <summary>
+        ///     Allow media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
         public async Task<IResult<bool>> EnableMediaCommentAsync(string mediaId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetAllowMediaCommetsUri(mediaId);
@@ -255,9 +290,13 @@ PaginationParameters paginationParameters)
                 return Result.Fail(exception.Message, false);
             }
         }
-
+        /// <summary>
+        ///     Disable media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
         public async Task<IResult<bool>> DisableMediaCommentAsync(string mediaId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetDisableMediaCommetsUri(mediaId);
@@ -282,8 +321,13 @@ PaginationParameters paginationParameters)
                 return Result.Fail(exception.Message, false);
             }
         }
+        /// <summary>
+        ///     Get media comments likers
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
         public async Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetMediaCommetLikersUri(mediaId);
@@ -302,8 +346,14 @@ PaginationParameters paginationParameters)
                 return Result.Fail(exception.Message, false);
             }
         }
+        /// <summary>
+        ///     Report media comment
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentId">Comment id</param>
         public async Task<IResult<bool>> ReportCommentAsync(string mediaId, string commentId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             { 
                 var instaUri = UriCreator.GetReportCommetUri(mediaId, commentId);

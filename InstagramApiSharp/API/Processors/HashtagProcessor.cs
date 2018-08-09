@@ -21,18 +21,28 @@ namespace InstagramApiSharp.API.Processors
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
-
+        private readonly UserAuthValidate _userAuthValidate;
         public HashtagProcessor(AndroidDevice deviceInfo, UserSessionData user,
-            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger)
+            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger, UserAuthValidate userAuthValidate)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
+            _userAuthValidate = userAuthValidate;
         }
-
-        public async Task<IResult<InstaHashtagSearch>> Search(string query, IEnumerable<long> excludeList, string rankToken)
+        /// <summary>
+        ///     Searches for specific hashtag by search query.
+        /// </summary>
+        /// <param name="query">Search query</param>
+        /// <param name="excludeList">Array of numerical hashtag IDs (ie "17841562498105353") to exclude from the response, allowing you to skip tags from a previous call to get more results</param>
+        /// <param name="rankToken">The rank token from the previous page's response</param>
+        /// <returns>
+        ///     List of hashtags
+        /// </returns>
+        public async Task<IResult<InstaHashtagSearch>> SearchHashtagAsync(string query, IEnumerable<long> excludeList, string rankToken)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var RequestHeaderFieldsTooLarge = (HttpStatusCode)431;
             var count = 50;
             var tags = new InstaHashtagSearch();
@@ -65,9 +75,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, tags);
             }
         }
-
-        public async Task<IResult<InstaHashtag>> GetHashtagInfo(string tagname)
+        /// <summary>
+        ///     Gets the hashtag information by user tagname.
+        /// </summary>
+        /// <param name="tagname">Tagname</param>
+        /// <returns>Hashtag information</returns>
+        public async Task<IResult<InstaHashtag>> GetHashtagInfoAsync(string tagname)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var userUri = UriCreator.GetTagInfoUri(tagname);

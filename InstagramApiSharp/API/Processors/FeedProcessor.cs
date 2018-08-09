@@ -22,18 +22,27 @@ namespace InstagramApiSharp.API.Processors
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
-
+        private readonly UserAuthValidate _userAuthValidate;
         public FeedProcessor(AndroidDevice deviceInfo, UserSessionData user, IHttpRequestProcessor httpRequestProcessor,
-            IInstaLogger logger)
+            IInstaLogger logger, UserAuthValidate userAuthValidate)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
+            _userAuthValidate = userAuthValidate;
         }
-
+        /// <summary>
+        ///     Get tag feed by tag value asynchronously
+        /// </summary>
+        /// <param name="tag">Tag value</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaTagFeed" />
+        /// </returns>
         public async Task<IResult<InstaTagFeed>> GetTagFeedAsync(string tag, PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var tagFeed = new InstaTagFeed();
             try
             {
@@ -70,9 +79,16 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, tagFeed);
             }
         }
-
+        /// <summary>
+        ///     Get user timeline feed (feed of recent posts from users you follow) asynchronously.
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaFeed" />
+        /// </returns>
         public async Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var feed = new InstaFeed();
             try
             {
@@ -112,9 +128,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, feed);
             }
         }
-
+        /// <summary>
+        ///     Get user explore feed (Explore tab info) asynchronously
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns><see cref="InstaExploreFeed" /></returns>
         public async Task<IResult<InstaExploreFeed>> GetExploreFeedAsync(PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var exploreFeed = new InstaExploreFeed();
             try
             {
@@ -155,23 +176,44 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, exploreFeed);
             }
         }
-
+        /// <summary>
+        ///     Get activity of following asynchronously
+        /// </summary>
+        /// <param name="paginationParameters"></param>
+        /// <returns>
+        ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaActivityFeed" />
+        /// </returns>
         public async Task<IResult<InstaActivityFeed>> GetFollowingRecentActivityFeedAsync(
             PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var uri = UriCreator.GetFollowingRecentActivityUri();
             return await GetRecentActivityInternalAsync(uri, paginationParameters);
         }
-
+        /// <summary>
+        ///     Get recent activity info asynchronously
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaActivityFeed" />
+        /// </returns>
         public async Task<IResult<InstaActivityFeed>> GetRecentActivityFeedAsync(
             PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var uri = UriCreator.GetRecentActivityUri();
             return await GetRecentActivityInternalAsync(uri, paginationParameters);
         }
-
+        /// <summary>
+        ///     Get feed of media your liked.
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
         public async Task<IResult<InstaMediaList>> GetLikeFeedAsync(PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var instaUri = UriCreator.GetUserLikeFeedUri(paginationParameters.NextId);
             var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request);

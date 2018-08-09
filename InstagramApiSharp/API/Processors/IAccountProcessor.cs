@@ -19,6 +19,24 @@ namespace InstagramApiSharp.API.Processors
     public interface IAccountProcessor
     {
         /// <summary>
+        ///     Set current account private
+        /// </summary>
+        Task<IResult<InstaUserShort>> SetAccountPrivateAsync();
+        /// <summary>
+        ///     Set current account public
+        /// </summary>
+        Task<IResult<InstaUserShort>> SetAccountPublicAsync();
+        /// <summary>
+        ///     Change password
+        /// </summary>
+        /// <param name="oldPassword">The old password</param>
+        /// <param name="newPassword">
+        ///     The new password (shouldn't be the same old password, and should be a password you never used
+        ///     here)
+        /// </param>
+        /// <returns>Return true if the password is changed</returns>
+        Task<IResult<bool>> ChangePasswordAsync(string oldPassword, string newPassword);
+        /// <summary>
         /// Edit profile.
         /// </summary>
         /// <param name="url">Url</param>
@@ -34,7 +52,7 @@ namespace InstagramApiSharp.API.Processors
         /// Get request for edit profile.
         /// </summary>
         /// <returns></returns>
-        Task<IResult<AccountUserResponse>> GetRequestForEditProfileAsync();
+        //Task<IResult<AccountUserResponse>> GetRequestForEditProfileAsync();
         /// <summary>
         /// Set name and phone number.
         /// </summary>
@@ -149,26 +167,28 @@ namespace InstagramApiSharp.API.Processors
 
 
 
+
+
         /// <summary>
         /// NOT COMPLETE
         /// </summary>
         /// <returns></returns>
-        Task<IResult<object>> SetBiographyAsync(string bio);
+        //Task<IResult<object>> SetBiographyAsync(string bio);
         /// <summary>
         /// NOT COMPLETE dastrasi last activity
         /// </summary>
         /// <returns></returns>
-        Task<IResult<object>> EnablePresenceAsync();
+        //Task<IResult<object>> EnablePresenceAsync();
         /// <summary>
         /// NOT COMPLETE dastrasi last activity
         /// </summary>
         /// <returns></returns>
-        Task<IResult<object>> DisablePresenceAsync();
+        //Task<IResult<object>> DisablePresenceAsync();
         /// <summary>
         /// NOT COMPLETE dastrasi last activity
         /// </summary>
         /// <returns></returns>
-        Task<IResult<object>> GetCommentFilterAsync();
+        //Task<IResult<object>> GetCommentFilterAsync();
 
     }
 }

@@ -91,7 +91,10 @@ namespace InstagramApiSharp.API
 
         public const string GET_RECENT_RECIPIENTS = API_SUFFIX + "/direct_share/recent_recipients/";
         public const string GET_DIRECT_THREAD = API_SUFFIX + "/direct_v2/threads/{0}";
+        public const string GET_DIRECT_THREAD_APPROVE = GET_DIRECT_THREAD +"/approve/";
+        public const string GET_DIRECT_THREAD_DECLINEALL = API_SUFFIX + "/direct_v2/threads/decline_all/";
         public const string GET_DIRECT_INBOX = API_SUFFIX + "/direct_v2/inbox/";
+        public const string GET_DIRECT_PENDING_INBOX = API_SUFFIX + "/direct_v2/pending_inbox/";
         public const string GET_DIRECT_TEXT_BROADCAST = API_SUFFIX + "/direct_v2/threads/broadcast/text/";
         public const string GET_RECENT_ACTIVITY = API_SUFFIX + "/news/inbox/";
         public const string GET_FOLLOWING_RECENT_ACTIVITY = API_SUFFIX + "/news/";

@@ -10,9 +10,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.2.8</Version>
-    <AssemblyVersion>1.0.2.8</AssemblyVersion>
-    <FileVersion>1.0.2.8</FileVersion>
+    <Version>1.0.2.9</Version>
+    <AssemblyVersion>1.0.2.9</AssemblyVersion>
+    <FileVersion>1.0.2.9</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 Support:
 - Login with Facebook
@@ -29,7 +29,13 @@ See examples to find out how can you use this library.</Description>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.2.8
+    <PackageReleaseNotes>v1.0.2.9
+- Deprecate most of functions! Please check new functions because old ones will removed in v1.0.3.
+- Approve direct pending inbox thread
+- Decline all direct pending inbox threads
+- Get direct pending inbox threads
+
+v1.0.2.8
 - Bugfix for ResetChallengeRequireVerifyMethodAsync
 - Bugfix for VerifyCodeForChallengeRequireAsync
 

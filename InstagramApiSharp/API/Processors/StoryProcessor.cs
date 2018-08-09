@@ -22,18 +22,22 @@ namespace InstagramApiSharp.API.Processors
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
-
+        private readonly UserAuthValidate _userAuthValidate;
         public StoryProcessor(AndroidDevice deviceInfo, UserSessionData user,
-            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger)
+            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger, UserAuthValidate userAuthValidate)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
+            _userAuthValidate = userAuthValidate;
         }
-
+        /// <summary>
+        ///     Get user story feed (stories from users followed by current user).
+        /// </summary>
         public async Task<IResult<InstaStoryFeed>> GetStoryFeedAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var storyFeedUri = UriCreator.GetStoryFeedUri();
@@ -51,9 +55,13 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaStoryFeed>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Get the story by userId
+        /// </summary>
+        /// <param name="userId">User Id</param>
         public async Task<IResult<InstaStory>> GetUserStoryAsync(long userId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var userStoryUri = UriCreator.GetUserStoryUri(userId);
@@ -72,9 +80,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaStory>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Upload story photo
+        /// </summary>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="caption">Caption</param>
         public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(InstaImage image, string caption)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetUploadPhotoUri();
@@ -107,8 +120,13 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaStoryMedia>(exception.Message);
             }
         }
-
-        public async Task<IResult<InstaStoryMedia>> ConfigureStoryPhotoAsync(InstaImage image, string uploadId,
+        /// <summary>
+        ///     Configure story photo
+        /// </summary>
+        /// <param name="image">Photo to configure</param>
+        /// <param name="uploadId">Upload id</param>
+        /// <param name="caption">Caption</param>
+        private async Task<IResult<InstaStoryMedia>> ConfigureStoryPhotoAsync(InstaImage image, string uploadId,
             string caption)
         {
             try
@@ -145,9 +163,13 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaStoryMedia>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Get user story reel feed. Contains user info last story including all story items.
+        /// </summary>
+        /// <param name="userId">User identifier (PK)</param>
         public async Task<IResult<InstaReelFeed>> GetUserStoryFeedAsync(long userId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var feed = new InstaReelFeed();
             try
             {
@@ -167,10 +189,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception.Message, feed);
             }
         }
-
+        /// <summary>
+        ///     Get story media viewers
+        /// </summary>
+        /// <param name="StoryMediaId">Story media id</param>
+        /// <param name="paginationParameters">Pagination parameters</param>
         public async Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewers(string StoryMediaId, PaginationParameters paginationParameters)
         {
-
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 if (paginationParameters.MaximumPagesToLoad > 1)
@@ -192,8 +218,16 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaReelStoryMediaViewers>(exception.Message);
             }
         }
+        /// <summary>
+        ///     Share story to someone
+        /// </summary>
+        /// <param name="reelId">Reel id</param>
+        /// <param name="storyMediaId">Story media id</param>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="sharingType">Sharing type</param>
         public async Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, SharingType sharingType = SharingType.Video)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + $"direct_v2/threads/broadcast/story_share/?media_type={sharingType.ToString().ToLower()}");

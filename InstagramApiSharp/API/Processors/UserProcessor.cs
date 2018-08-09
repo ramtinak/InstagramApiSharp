@@ -22,17 +22,34 @@ namespace InstagramApiSharp.API.Processors
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
-
+        private readonly UserAuthValidate _userAuthValidate;
         public UserProcessor(AndroidDevice deviceInfo, UserSessionData user, IHttpRequestProcessor httpRequestProcessor,
-            IInstaLogger logger)
+            IInstaLogger logger, UserAuthValidate userAuthValidate)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
+            _userAuthValidate = userAuthValidate;
         }
-
-        public async Task<IResult<InstaMediaList>> GetUserMediaAsync(long userId,
+        /// <summary>
+        ///     Get all user media by username asynchronously
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        public async Task<IResult<InstaMediaList>> GetUserMediaAsync(string username,
+             PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var user = await GetUserAsync(username);
+            if (!user.Succeeded)
+                return Result.Fail<InstaMediaList>("Unable to get user to load media");
+           return await GetUserMediaAsync(user.Value.Pk, paginationParameters);
+        }
+        private async Task<IResult<InstaMediaList>> GetUserMediaAsync(long userId,
             PaginationParameters paginationParameters)
         {
             var mediaList = new InstaMediaList();
@@ -72,9 +89,16 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, mediaList);
             }
         }
-
+        /// <summary>
+        ///     Get user info by its user name asynchronously
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <returns>
+        ///     <see cref="InstaUser" />
+        /// </returns>
         public async Task<IResult<InstaUser>> GetUserAsync(string username)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var userUri = UriCreator.GetUserUri(username);
@@ -108,9 +132,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaUser>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Gets the user extended information (followers count, following count, bio, etc) by user identifier.
+        /// </summary>
+        /// <param name="pk">User Id, like "123123123"</param>
+        /// <returns></returns>
         public async Task<IResult<InstaUserInfo>> GetUserInfoByIdAsync(long pk)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var userUri = UriCreator.GetUserInfoByIdUri(pk);
@@ -122,9 +151,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaUserInfo>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Gets the user extended information (followers count, following count, bio, etc) by username.
+        /// </summary>
+        /// <param name="username">Username, like "instagram"</param>
+        /// <returns></returns>
         public async Task<IResult<InstaUserInfo>> GetUserInfoByUsernameAsync(string username)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var userUri = UriCreator.GetUserInfoByUsernameUri(username);
@@ -156,9 +190,15 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaUserInfo>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Get currently logged in user info asynchronously
+        /// </summary>
+        /// <returns>
+        ///     <see cref="InstaCurrentUser" />
+        /// </returns>
         public async Task<IResult<InstaCurrentUser>> GetCurrentUserAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetCurrentUserUri();
@@ -188,10 +228,19 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaCurrentUser>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Get followers list by username asynchronously
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="searchQuery">Search string to locate specific followers</param>
+        /// <returns>
+        ///     <see cref="InstaUserShortList" />
+        /// </returns>
         public async Task<IResult<InstaUserShortList>> GetUserFollowersAsync(string username,
             PaginationParameters paginationParameters, string searchQuery)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var followers = new InstaUserShortList();
             try
             {
@@ -232,10 +281,19 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, followers);
             }
         }
-
+        /// <summary>
+        ///     Get following list by username asynchronously
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="searchQuery">Search string to locate specific followings</param>
+        /// <returns>
+        ///     <see cref="InstaUserShortList" />
+        /// </returns>
         public async Task<IResult<InstaUserShortList>> GetUserFollowingAsync(string username,
             PaginationParameters paginationParameters, string searchQuery)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var following = new InstaUserShortList();
             try
             {
@@ -274,16 +332,32 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, following);
             }
         }
-
+        /// <summary>
+        ///     Get followers list for currently logged in user asynchronously
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaUserShortList" />
+        /// </returns>
         public async Task<IResult<InstaUserShortList>> GetCurrentUserFollowersAsync(
             PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             return await GetUserFollowersAsync(_user.UserName, paginationParameters, string.Empty);
         }
-
+        /// <summary>
+        ///     Get user tags by username asynchronously
+        ///     <remarks>Returns media list containing tags</remarks>
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
         public async Task<IResult<InstaMediaList>> GetUserTagsAsync(long userId,
             PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var userTags = new InstaMediaList();
             try
             {
@@ -320,29 +394,52 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, userTags);
             }
         }
-
+        /// <summary>
+        ///     Follow user
+        /// </summary>
+        /// <param name="userId">User id</param>
         public async Task<IResult<InstaFriendshipStatus>> FollowUserAsync(long userId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             return await FollowUnfollowUserInternal(userId, UriCreator.GetFollowUserUri(userId));
         }
-
+        /// <summary>
+        ///     Stop follow user
+        /// </summary>
+        /// <param name="userId">User id</param>
         public async Task<IResult<InstaFriendshipStatus>> UnFollowUserAsync(long userId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             return await FollowUnfollowUserInternal(userId, UriCreator.GetUnFollowUserUri(userId));
         }
-
+        /// <summary>
+        ///     Block user
+        /// </summary>
+        /// <param name="userId">User id</param>
         public async Task<IResult<InstaFriendshipStatus>> BlockUserAsync(long userId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             return await BlockUnblockUserInternal(userId, UriCreator.GetBlockUserUri(userId));
         }
-
+        /// <summary>
+        ///     Stop block user
+        /// </summary>
+        /// <param name="userId">User id</param>
         public async Task<IResult<InstaFriendshipStatus>> UnBlockUserAsync(long userId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             return await BlockUnblockUserInternal(userId, UriCreator.GetUnBlockUserUri(userId));
         }
-
+        /// <summary>
+        ///     Get friendship status for given user id.
+        /// </summary>
+        /// <param name="userId">User identifier (PK)</param>
+        /// <returns>
+        ///     <see cref="InstaFriendshipStatus" />
+        /// </returns>
         public async Task<IResult<InstaFriendshipStatus>> GetFriendshipStatusAsync(long userId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var userUri = UriCreator.GetUserFriendshipUri(userId);

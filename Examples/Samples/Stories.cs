@@ -15,7 +15,7 @@ namespace Examples.Samples
 
         public async Task DoShow()
         {
-            var result = await _instaApi.GetStoryFeedAsync();
+            var result = await _instaApi.StoryProcessor.GetStoryFeedAsync();
             if (!result.Succeeded)
             {
                 Console.WriteLine($"Unable to get story feed: {result.Info}");

@@ -21,18 +21,26 @@ namespace InstagramApiSharp.API.Processors
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
-
+        private readonly UserAuthValidate _userAuthValidate;
         public CollectionProcessor(AndroidDevice deviceInfo, UserSessionData user,
-            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger)
+            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger, UserAuthValidate userAuthValidate)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
+            _userAuthValidate = userAuthValidate;
         }
-
+        /// <summary>
+        ///     Get your collection for given collection id
+        /// </summary>
+        /// <param name="collectionId">Collection ID</param>
+        /// <returns>
+        ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCollectionItem" />
+        /// </returns>
         public async Task<IResult<InstaCollectionItem>> GetCollectionAsync(long collectionId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var collectionUri = UriCreator.GetCollectionUri(collectionId);
@@ -54,9 +62,15 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaCollectionItem>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Get your collections
+        /// </summary>
+        /// <returns>
+        ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCollections" />
+        /// </returns>
         public async Task<IResult<InstaCollections>> GetCollectionsAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var collectionUri = UriCreator.GetCollectionsUri();
@@ -78,9 +92,16 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaCollections>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Create a new collection
+        /// </summary>
+        /// <param name="collectionName">The name of the new collection</param>
+        /// <returns>
+        ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCollectionItem" />
+        /// </returns>
         public async Task<IResult<InstaCollectionItem>> CreateCollectionAsync(string collectionName)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var createCollectionUri = UriCreator.GetCreateCollectionUri();
@@ -112,9 +133,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaCollectionItem>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Delete your collection for given collection id
+        /// </summary>
+        /// <param name="collectionId">Collection ID to delete</param>
+        /// <returns>true if succeed</returns>
         public async Task<IResult<bool>> DeleteCollectionAsync(long collectionId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var createCollectionUri = UriCreator.GetDeleteCollectionUri(collectionId);
@@ -143,10 +169,15 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception.Message, false);
             }
         }
-
+        /// <summary>
+        ///     Adds items to collection asynchronous.
+        /// </summary>
+        /// <param name="collectionId">Collection identifier.</param>
+        /// <param name="mediaIds">Media id list.</param>
         public async Task<IResult<InstaCollectionItem>> AddItemsToCollectionAsync(long collectionId,
             params string[] mediaIds)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 if (mediaIds?.Length < 1)

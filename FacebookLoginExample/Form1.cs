@@ -199,7 +199,7 @@ namespace FacebookLoginExample
             if (!InstaApi.IsUserAuthenticated)
                 MessageBox.Show("Login first.");
 
-            var x = await InstaApi.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
+            var x = await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
             if (x.Succeeded)
             {
@@ -209,7 +209,7 @@ namespace FacebookLoginExample
                 foreach (var item in x.Value.Medias.Take(5))
                 {
                     // like media...
-                    var liked = await InstaApi.LikeMediaAsync(item.InstaIdentifier);
+                    var liked = await InstaApi.MediaProcessor.LikeMediaAsync(item.InstaIdentifier);
                     sb2.AppendLine($"{item.InstaIdentifier} liked? {liked.Succeeded}");
                 }
 
