@@ -114,6 +114,10 @@ Nothing!!!!
 ## Wiki
 Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
+## Language
+You can ask questions or report issues in Persian or English language.
+I can't answer to other languages, because I don't understand other languages.
+
 ## License
 Do whatever you want to do! Except changing library name!!!!
 
