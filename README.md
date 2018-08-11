@@ -145,7 +145,7 @@ Live in: Kazeroun city, Fars state, Iran
 
 Bio: I hate programming and developing apps/libraries:|!
 
-Email: [Ramtinak@live.com](mailto:ramtinak@live.com
+Email: [Ramtinak@live.com](mailto:ramtinak@live.com)
 
 Telegram: https://t.me/Ramtinak
 
