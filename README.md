@@ -152,4 +152,4 @@ Telegram: https://t.me/Ramtinak
 Instagram: https://instagram.com/Rmt4006
 
 
-Iranina developers - (c) 2018
+Iranian developers - (c) 2018
