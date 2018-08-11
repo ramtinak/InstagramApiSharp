@@ -138,9 +138,15 @@ This code is in no way affiliated with, authorized, maintained, sponsored or end
 
 ## About me
 First and last name: Ramtin Jokar
+
 Born: 1995 (Bushehr city, Iran)
+
 Live in: Kazeroun city, Fars state, Iran
+
 Bio: I hate programming and developing apps/libraries:|!
+
 Email: [Ramtinak@live.com](mailto:ramtinak@live.com
+
 Telegram: https://t.me/Ramtinak
+
 Instagram: https://instagram.com/Rmt4006
