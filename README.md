@@ -150,3 +150,6 @@ Email: [Ramtinak@live.com](mailto:ramtinak@live.com
 Telegram: https://t.me/Ramtinak
 
 Instagram: https://instagram.com/Rmt4006
+
+
+Iranina developers - (c) 2018
