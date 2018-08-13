@@ -114,6 +114,10 @@ Nothing!!!!
 ## Wiki
 Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
+## Language
+You can ask questions or report issues in Persian or English language.
+I can't answer to other languages, because I don't understand other languages.
+
 ## License
 Do whatever you want to do! Except changing library name!!!!
 
@@ -135,3 +139,21 @@ Special thanks to [mgp25](https://github.com/mgp25) and his [php wrapper](https:
 ## Legal
 This code is in no way affiliated with, authorized, maintained, sponsored or endorsed by Instagram or any of its affiliates or subsidiaries. This is an independent and unofficial API wrapper.
 
+
+## About me
+First and last name: Ramtin Jokar
+
+Born: 1995 (Bushehr city, Iran)
+
+Live in: Kazeroun city, Fars state, Iran
+
+Bio: I hate programming and developing apps/libraries:|!
+
+Email: [Ramtinak@live.com](mailto:ramtinak@live.com)
+
+Telegram: https://t.me/Ramtinak
+
+Instagram: https://instagram.com/Rmt4006
+
+
+Iranian developers - (c) 2018
