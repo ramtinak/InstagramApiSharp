@@ -12,7 +12,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaDirectInboxContainer" />
         /// </returns>
-        Task<IResult<InstaDirectInboxContainer>> GetDirectInboxAsync(PaginationParameters paginationParameters);
+        Task<IResult<InstaDirectInboxContainer>> GetDirectInboxAsync(string nextOrCursorId = "");
         /// <summary>
         ///     Get direct inbox thread by its id asynchronously
         /// </summary>
@@ -20,7 +20,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="InstaDirectInboxThread" />
         /// </returns>
-        Task<IResult<InstaDirectInboxThread>> GetDirectInboxThreadAsync(string threadId, PaginationParameters paginationParameters);
+        Task<IResult<InstaDirectInboxThread>> GetDirectInboxThreadAsync(string threadId, string nextOrCursorId = "");
         /// <summary>
         ///     Send direct message to provided users and threads
         /// </summary>
@@ -59,6 +59,6 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaDirectInboxContainer" />
         /// </returns>
-        Task<IResult<InstaDirectInboxContainer>> GetPendingDirectAsync(PaginationParameters paginationParameters);
+        Task<IResult<InstaDirectInboxContainer>> GetPendingDirectAsync(string nextOrCursorId = "");
     }
 }

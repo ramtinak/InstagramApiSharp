@@ -40,14 +40,12 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaDirectInboxContainer" />
         /// </returns>
-        public async Task<IResult<InstaDirectInboxContainer>> GetDirectInboxAsync(PaginationParameters paginationParameters)
+        public async Task<IResult<InstaDirectInboxContainer>> GetDirectInboxAsync(string nextOrCursorId = "")
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                if (paginationParameters.MaximumPagesToLoad > 1)
-                    throw new Exception("Not supported");
-                var directInboxUri = UriCreator.GetDirectInboxUri(paginationParameters.NextId);
+                var directInboxUri = UriCreator.GetDirectInboxUri(nextOrCursorId);
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -69,14 +67,12 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="InstaDirectInboxThread" />
         /// </returns>
-        public async Task<IResult<InstaDirectInboxThread>> GetDirectInboxThreadAsync(string threadId, PaginationParameters paginationParameters)
+        public async Task<IResult<InstaDirectInboxThread>> GetDirectInboxThreadAsync(string threadId, string nextOrCursorId = "")
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                if (paginationParameters.MaximumPagesToLoad > 1)
-                    throw new Exception("Not supported");
-                var directInboxUri = UriCreator.GetDirectInboxThreadUri(threadId, paginationParameters.NextId);
+                var directInboxUri = UriCreator.GetDirectInboxThreadUri(threadId, nextOrCursorId);
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -271,14 +267,12 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaDirectInboxContainer" />
         /// </returns>
-        public async Task<IResult<InstaDirectInboxContainer>> GetPendingDirectAsync(PaginationParameters paginationParameters)
+        public async Task<IResult<InstaDirectInboxContainer>> GetPendingDirectAsync(string nextOrCursorId = "")
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                if (paginationParameters.MaximumPagesToLoad > 1)
-                    throw new Exception("Not supported");
-                var directInboxUri = UriCreator.GetDirectPendingInboxUri(paginationParameters.NextId);
+                var directInboxUri = UriCreator.GetDirectPendingInboxUri(nextOrCursorId);
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();

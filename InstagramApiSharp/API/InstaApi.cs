@@ -423,7 +423,7 @@ namespace InstagramApiSharp.API
         {
             ValidateUser();
             ValidateLoggedIn();
-            return await _messagingProcessor.GetDirectInboxAsync(paginationParameters);
+            return await _messagingProcessor.GetDirectInboxAsync(paginationParameters.NextId);
         }
 
         /// <summary>
@@ -437,7 +437,7 @@ namespace InstagramApiSharp.API
         {
             ValidateUser();
             ValidateLoggedIn();
-            return await _messagingProcessor.GetDirectInboxThreadAsync(threadId, pagination);
+            return await _messagingProcessor.GetDirectInboxThreadAsync(threadId, pagination.NextId);
         }
 
         /// <summary>

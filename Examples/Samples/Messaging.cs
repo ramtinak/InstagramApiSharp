@@ -27,7 +27,7 @@ namespace Examples.Samples
             foreach (var thread in recipientsResult.Value.Threads)
                 Console.WriteLine($"Threadname: {thread.ThreadTitle}, users: {thread.Users.Count}");
 
-            var inboxThreads = await _instaApi.MessagingProcessor.GetDirectInboxAsync(PaginationParameters.MaxPagesToLoad(2));
+            var inboxThreads = await _instaApi.MessagingProcessor.GetDirectInboxAsync();
             if (!inboxThreads.Succeeded)
             {
                 Console.WriteLine("Unable to get inbox");

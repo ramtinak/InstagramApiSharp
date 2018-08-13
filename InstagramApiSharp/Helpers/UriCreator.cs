@@ -164,7 +164,7 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetDirectInboxUri(string NextId)
+        public static Uri GetDirectInboxUri(string NextId = "")
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_INBOX, out var instaUri))
                 throw new Exception("Cant create URI for get inbox");
@@ -178,7 +178,7 @@ namespace InstagramApiSharp.Helpers
     //.AddQueryParameterIfNotEmpty("use_unified_inbox", "true")
     //.AddQueryParameterIfNotEmpty("cursor", NextId);
         }
-        public static Uri GetDirectPendingInboxUri(string NextId)
+        public static Uri GetDirectPendingInboxUri(string NextId = "")
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_PENDING_INBOX, out var instaUri))
                 throw new Exception("Cant create URI for get pending inbox");
