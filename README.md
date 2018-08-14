@@ -69,7 +69,7 @@ Task<IResult<object>>
 
 ## Version changes
 1.0.3
-- Register new account via phone number! [Example](https://github.com/ramtinak/InstagramApiSharp/wiki/Create-new-account)
+- Register new account via phone number! [Wiki example](https://github.com/ramtinak/InstagramApiSharp/wiki/Create-new-account)
 - SendNewDirectMessage (for users that you didn't send message before).
 - ShareUser added to MessagingProcessor.
 - Some clean up.
