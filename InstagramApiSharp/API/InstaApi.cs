@@ -1073,6 +1073,380 @@ namespace InstagramApiSharp.API
             get { return _isUserAuthenticated; }
             internal set { _isUserAuthenticated = value; _userAuthValidate.IsUserAuthenticated = value; }
         }
+        #region Register new account with Phone number
+        string _waterfallIdReg = "", _deviceIdReg = "", _phoneIdReg = "", _guidReg = "";
+        /// <summary>
+        ///     Check email availability
+        /// </summary>
+        /// <param name="email">Email to check</param>
+        public async Task<IResult<CheckEmailRegistration>> CheckEmailAsync(string email)
+        {
+            try
+            {
+                _waterfallIdReg = Guid.NewGuid().ToString();
+                var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                var cookies = 
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                _user.CsrfToken = csrftoken;
+                Debug.WriteLine("verify token: " + csrftoken);
+                var postData = new Dictionary<string, string>
+                {
+                    {"_csrftoken",      csrftoken},
+                    {"login_nonces",    "[]"},
+                    {"email",           email},
+                    {"qe_id",           Guid.NewGuid().ToString()},
+                    {"waterfall_id",    _waterfallIdReg},
+                };
+                var instaUri = UriCreator.GetCheckEmailUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    return Result.Fail("Status code: " + response.StatusCode, (CheckEmailRegistration)null);
+                }
+                else
+                {
+                    var obj = JsonConvert.DeserializeObject<CheckEmailRegistration>(json);
+                    if(obj.ErrorType == "fail")
+                        return Result.Fail("Error type: " + obj.ErrorType, (CheckEmailRegistration)null);
+                    else if (obj.ErrorType == "email_is_taken")
+                        return Result.Fail("Email is taken.", (CheckEmailRegistration)null);
+                    else if (obj.ErrorType == "invalid_email")
+                        return Result.Fail("Please enter a valid email address.", (CheckEmailRegistration)null);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<CheckEmailRegistration>(exception);
+            }
+        }
+        /// <summary>
+        ///     Check phone number availability
+        /// </summary>
+        /// <param name="phoneNumber">Phone number to check</param>
+        public async Task<IResult<InstaDefault>> CheckPhoneNumberAsync(string phoneNumber)
+        {
+            try
+            {
+                _deviceIdReg = ApiRequestMessage.GenerateDeviceId();
+                var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                _user.CsrfToken = csrftoken;
+                Debug.WriteLine("verify token: " + csrftoken);
+                var postData = new Dictionary<string, string>
+                {
+                    {"_csrftoken",      csrftoken},
+                    {"login_nonces",    "[]"},
+                    {"phone_number",    phoneNumber},
+                    {"device_id",    _deviceIdReg},
+                };
+                var instaUri = UriCreator.GetCheckPhoneNumberUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    return Result.Fail("Status code: " + response.StatusCode, (InstaDefault)null);
+                }
+                else
+                {
+                    var obj = JsonConvert.DeserializeObject<InstaDefault>(json);                 
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaDefault>(exception);
+            }
+        }
+        /// <summary>
+        ///     Send sign up sms code
+        /// </summary>
+        /// <param name="phoneNumber">Phone number</param>
+        public async Task<IResult<InstaDefault>> SendSignUpSmsCodeAsync(string phoneNumber)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_deviceIdReg))
+                    throw new ArgumentException("You should call CheckPhoneNumberAsync function first.");
+                _phoneIdReg = Guid.NewGuid().ToString();
+                _waterfallIdReg = Guid.NewGuid().ToString();
+                _guidReg = Guid.NewGuid().ToString();
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                _user.CsrfToken = csrftoken;
+                var postData = new Dictionary<string, string>
+                {
+                    {"phone_id",        _phoneIdReg},
+                    {"phone_number",    phoneNumber},
+                    {"_csrftoken",      csrftoken},
+                    {"guid",            _guidReg},
+                    {"device_id",       _deviceIdReg},
+                    {"waterfall_id",    _waterfallIdReg},
+                };
+                var instaUri = UriCreator.GetSignUpSMSCodeUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var o = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumber>(json);
+                    
+                    return Result.Fail(o.Message?.Errors?[0], (ResponseType)response.StatusCode, (InstaDefault)null);
+                }
+                else
+                {
+                    var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaDefault>(exception);
+            }
+        }
+        /// <summary>
+        ///     Verify sign up sms code
+        /// </summary>
+        /// <param name="phoneNumber">Phone number</param>
+        /// <param name="verificationCode">Verification code</param>
+        public async Task<IResult<PhoneNumberRegistration>> VerifySignUpSmsCodeAsync(string phoneNumber, string verificationCode)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_deviceIdReg))
+                    throw new ArgumentException("You should call CheckPhoneNumberAsync function first.");
+
+                if (string.IsNullOrEmpty(_guidReg) || string.IsNullOrEmpty(_waterfallIdReg))
+                    throw new ArgumentException("You should call SendSignUpSmsCodeAsync function first.");
+
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                _user.CsrfToken = csrftoken;
+                var postData = new Dictionary<string, string>
+                {
+                    {"verification_code",         verificationCode},
+                    {"phone_number",              phoneNumber},
+                    {"_csrftoken",                csrftoken},
+                    {"guid",                      _guidReg},
+                    {"device_id",                 _deviceIdReg},
+                    {"waterfall_id",              _waterfallIdReg},
+                };
+                var instaUri = UriCreator.GetValidateSignUpSMSCodeUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var o = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumberVerifySms>(json);
+
+                    return Result.Fail(o.Errors?.Nonce?[0], (ResponseType)response.StatusCode, (PhoneNumberRegistration)null);
+                }
+                else
+                {
+                    var r = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumberVerifySms>(json);
+                    if(r.ErrorType == "invalid_nonce")
+                        return Result.Fail(r.Errors?.Nonce?[0], (ResponseType)response.StatusCode, (PhoneNumberRegistration)null);
+
+                    await GetRegistrationStepsAsync();
+                    var obj = JsonConvert.DeserializeObject<PhoneNumberRegistration>(json);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<PhoneNumberRegistration>(exception);
+            }
+        }
+        /// <summary>
+        ///     Get username suggestions
+        /// </summary>
+        /// <param name="name">Name</param>
+        public async Task<IResult<RegistrationSuggestionResponse>> GetUsernameSuggestionsAsync(string name)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_deviceIdReg))
+                    _deviceIdReg = ApiRequestMessage.GenerateDeviceId();
+                _phoneIdReg = Guid.NewGuid().ToString();
+                _waterfallIdReg = Guid.NewGuid().ToString();
+                _guidReg = Guid.NewGuid().ToString();
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                _user.CsrfToken = csrftoken;
+                var postData = new Dictionary<string, string>
+                {
+                    {"phone_id",        _phoneIdReg},
+                    {"name",            name},
+                    {"_csrftoken",      csrftoken},
+                    {"guid",            _guidReg},
+                    {"device_id",       _deviceIdReg},
+                    {"email",           ""},
+                    {"waterfall_id",    _waterfallIdReg},
+                };
+                var instaUri = UriCreator.GetUsernameSuggestionsUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var o = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumber>(json);
+
+                    return Result.Fail(o.Message?.Errors?[0], (ResponseType)response.StatusCode, (RegistrationSuggestionResponse)null);
+                }
+                else
+                {
+                    var obj = JsonConvert.DeserializeObject<RegistrationSuggestionResponse>(json);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<RegistrationSuggestionResponse>(exception);
+            }
+        }
+        /// <summary>
+        ///     Validate new account creation with phone number
+        /// </summary>
+        /// <param name="phoneNumber">Phone number</param>
+        /// <param name="verificationCode">Verification code</param>
+        /// <param name="username">Username to set</param>
+        /// <param name="password">Password to set</param>
+        /// <param name="firstName">First name to set</param>
+        public async Task<IResult<AccountCreation>> ValidateNewAccountWithPhoneNumberAsync(string phoneNumber, string verificationCode, string username, string password, string firstName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_deviceIdReg))
+                    throw new ArgumentException("You should call CheckPhoneNumberAsync function first.");
+
+                if (string.IsNullOrEmpty(_guidReg) || string.IsNullOrEmpty(_waterfallIdReg))
+                    throw new ArgumentException("You should call SendSignUpSmsCodeAsync function first.");
+
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                _user.CsrfToken = csrftoken;
+                //sn_nonce:Kzk4OTE3NDMxNDAwNnwxNTM0MTg0MjYzfAhfpJ9rzGNAlQLWQe+kor/nDAntXA0i8Q==
+                //+989174314006|1534184263|_��k�c@��A濫��	�\
+                //"�
+                var postData = new Dictionary<string, string>
+                {
+                    {"allow_contacts_sync",       "true"},
+                    {"verification_code",         verificationCode},
+                    {"sn_result",                 "API_ERROR:+null"},
+                    {"phone_id",                  _phoneIdReg},
+                    {"phone_number",              phoneNumber},
+                    {"_csrftoken",                csrftoken},
+                    {"username",                  username},
+                    {"first_name",                firstName},
+                    {"adid",                      Guid.NewGuid().ToString()},
+                    {"guid",                      _guidReg},
+                    {"device_id",                 _deviceIdReg},
+                    {"sn_nonce",                  ""},
+                    {"force_sign_up_code",        ""},
+                    {"waterfall_id",              _waterfallIdReg},
+                    {"qs_stamp",                  ""},
+                    {"password",                  password},
+                    {"has_sms_consent",           "true"},
+                };
+                var instaUri = UriCreator.GetCreateValidatedUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var o = JsonConvert.DeserializeObject<AccountCreationResponse>(json);
+
+                    return Result.Fail(o.Errors?.Username?[0], (ResponseType)response.StatusCode, (AccountCreation)null);
+                }
+                else
+                {
+                    var r = JsonConvert.DeserializeObject<AccountCreationResponse>(json);
+                    if (r.ErrorType == "username_is_taken")
+                        return Result.Fail(r.Errors?.Username?[0], (ResponseType)response.StatusCode, (AccountCreation)null);
+
+                    var obj = JsonConvert.DeserializeObject<AccountCreation>(json);
+                    if (obj.AccountCreated && obj.CreatedUser != null)
+                        ValidateUserAsync(obj.CreatedUser, csrftoken, true);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<AccountCreation>(exception);
+            }
+        }
+
+
+        private async Task<IResult<object>> GetRegistrationStepsAsync()
+        {
+            try
+            {
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                _user.CsrfToken = csrftoken;
+                var postData = new Dictionary<string, string>
+                {
+                    {"fb_connected",            "false"},
+                    {"seen_steps",            "[]"},
+                    {"phone_id",        _phoneIdReg},
+                    {"fb_installed",            "false"},
+                    {"locale",            "en_US"},
+                    {"timezone_offset",            "16200"},
+                    {"network_type",            "WIFI-UNKNOWN"},
+                    {"_csrftoken",      csrftoken},
+                    {"guid",            _guidReg},
+                    {"is_ci",            "false"},
+                    {"android_id",       _deviceIdReg},
+                    {"reg_flow_taken",           "phone"},
+                    {"tos_accepted",    "false"},
+                };
+                var instaUri = UriCreator.GetOnboardingStepsUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var o = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumber>(json);
+
+                    return Result.Fail(o.Message?.Errors?[0], (ResponseType)response.StatusCode, (RegistrationSuggestionResponse)null);
+                }
+                else
+                {
+                    var obj = JsonConvert.DeserializeObject<RegistrationSuggestionResponse>(json);
+                    return Result.Success(obj);
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<RegistrationSuggestionResponse>(exception);
+            }
+        }
+
         /// <summary>
         ///     Create a new instagram account
         /// </summary>
@@ -1081,9 +1455,9 @@ namespace InstagramApiSharp.API
         /// <param name="email">Email</param>
         /// <param name="firstName">First name (optional)</param>
         /// <returns></returns>
-        public async Task<IResult<CreationResponse>> CreateNewAccount(string username, string password, string email, string firstName)
+        public async Task<IResult<AccountCreation>> CreateNewAccount(string username, string password, string email, string firstName)
         {
-            CreationResponse createResponse = new CreationResponse();
+            AccountCreation createResponse = new AccountCreation();
             try
             {
                 var postData = new Dictionary<string, string>
@@ -1101,15 +1475,16 @@ namespace InstagramApiSharp.API
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var result = await response.Content.ReadAsStringAsync();
 
-                return Result.Success(JsonConvert.DeserializeObject<CreationResponse>(result));
+                return Result.Success(JsonConvert.DeserializeObject<AccountCreation>(result));
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<CreationResponse>(exception);
+                return Result.Fail<AccountCreation>(exception);
             }
         }
 
+        #endregion
         /// <summary>
         ///     Share an user
         /// </summary>
@@ -1118,38 +1493,7 @@ namespace InstagramApiSharp.API
         /// <returns></returns>
         public async Task<IResult<InstaSharing>> ShareUserAsync(string userIdToSend, string threadId)
         {
-            try
-            {
-                var instaUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + "direct_v2/threads/broadcast/profile/");
-                var uploadId = ApiRequestMessage.GenerateUploadId();
-                var requestContent = new MultipartFormDataContent(uploadId)
-                {
-                    {new StringContent(userIdToSend), "\"profile_user_id\""},
-                    {new StringContent("1"), "\"unified_broadcast_format\""},
-                    {new StringContent("send_item"), "\"action\""},
-                    {new StringContent($"[{threadId}]"), "\"thread_ids\""},
-                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
-                    {new StringContent(_user.LoggedInUser.Pk.ToString()), "\"_uid\""},
-                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""}
-
-                };
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = requestContent;
-                request.Headers.Add("Host", "i.instagram.com");
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (InstaSharing)null);
-                var obj = JsonConvert.DeserializeObject<InstaSharing>(json);
-
-                return Result.Success(obj);
-            }
-            catch (Exception exception)
-            {
-                Debug.WriteLine(exception.Message);
-                _logger?.LogException(exception);
-                return Result.Fail<InstaSharing>(exception);
-            }
+            return await _messagingProcessor.ShareUserAsync(userIdToSend, threadId);
         }
 
         /// <summary>
@@ -1594,7 +1938,7 @@ namespace InstagramApiSharp.API
                     {
                         if (obj.LoggedInUser != null)
                         {
-                            ValidateChallengeAsync(obj.LoggedInUser, csrftoken);
+                            ValidateUserAsync(obj.LoggedInUser, csrftoken);
                             await Task.Delay(1500);
                             await GetDirectInboxAsync(PaginationParameters.MaxPagesToLoad(1));
                             await _feedProcessor.GetRecentActivityFeedAsync(PaginationParameters.MaxPagesToLoad(1));
@@ -1616,16 +1960,19 @@ namespace InstagramApiSharp.API
         }
 
 
-        private void ValidateChallengeAsync(InstaUserShortResponse user, string csrfToken)
+        private void ValidateUserAsync(InstaUserShortResponse user, string csrfToken, bool validateExtra = true)
         {
             try
             {
                 var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
                 _user.LoggedInUser = converter.Convert();
-                _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
-                _user.CsrfToken = csrfToken;
-                IsUserAuthenticated = true;
-                InvalidateProcessors();
+                if (validateExtra)
+                {
+                    _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                    _user.CsrfToken = csrfToken;
+                    IsUserAuthenticated = true;
+                    InvalidateProcessors();
+                }
             }
             catch { }
         }

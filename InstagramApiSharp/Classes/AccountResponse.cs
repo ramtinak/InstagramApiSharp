@@ -19,13 +19,16 @@ namespace InstagramApiSharp.Classes
         Female = 2,
         Unknown = 3
     }
-    internal class InstaDefaultResponse
+    public class InstaDefault
     {
-        public bool IsSucceed { get { return Status.ToLower() == "ok"; } }
         [JsonProperty("status")]
         public string Status { get; set; }
         [JsonProperty("message")]
         public string Message { get; set; }
+    }
+    internal class InstaDefaultResponse : InstaDefault
+    {
+        public bool IsSucceed { get { return Status.ToLower() == "ok"; } }
     }
 
     internal class AccountArchiveStoryResponse

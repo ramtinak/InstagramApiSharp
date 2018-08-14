@@ -89,6 +89,9 @@ namespace InstagramApiSharp.API
         public const string GET_MEDIAID = API_SUFFIX + "/oembed/?url={0}";
         public const string GET_SHARE_LINK = API_SUFFIX + "/media/{0}/permalink/";
 
+        public const string GET_DIRECT_SHARE_USER = API_SUFFIX + "/direct_v2/threads/broadcast/profile/";
+        public const string GET_RANK_RECIPIENTS_BY_USERNAME = API_SUFFIX + "/direct_v2/ranked_recipients/?mode=raven&show_threads=true&query={0}&use_unified_inbox=true";
+        public const string GET_PARTICIPANTS_RECIPIENT_USER = API_SUFFIX + "/direct_v2/threads/get_by_participants/?recipient_users=[{0}]";
         public const string GET_RECENT_RECIPIENTS = API_SUFFIX + "/direct_share/recent_recipients/";
         public const string GET_DIRECT_THREAD = API_SUFFIX + "/direct_v2/threads/{0}";
         public const string GET_DIRECT_THREAD_APPROVE = GET_DIRECT_THREAD +"/approve/";
@@ -129,7 +132,11 @@ namespace InstagramApiSharp.API
         public const string USER_REEL_FEED = API_SUFFIX + "/feed/user/{0}/reel_media/";
 
 
-
+        public const string ACCOUNTS_CHECK_PHONE_NUMBER = API_SUFFIX + "/accounts/check_phone_number/";
+        public const string ACCOUNTS_SEND_SIGNUP_SMS_CODE = API_SUFFIX + "/accounts/send_signup_sms_code/";
+        public const string ACCOUNTS_VALIDATE_SIGNUP_SMS_CODE = API_SUFFIX + "/accounts/validate_signup_sms_code/";
+        public const string ACCOUNTS_USERNAME_SUGGESTIONS = API_SUFFIX + "/accounts/username_suggestions/";
+        public const string ACCOUNTS_CREATE_VALIDATED = API_SUFFIX + "/accounts/create_validated/";
         public const string ACCOUNTS_REQUEST_PROFILE_EDIT = API_SUFFIX + "/accounts/current_user/?edit=true";
         public const string ACCOUNTS_EDIT_PROFILE = API_SUFFIX + "/accounts/edit_profile/";
         public const string ACCOUNTS_SET_PHONE_AND_NAME = API_SUFFIX + "/accounts/set_phone_and_name/";
@@ -145,7 +152,7 @@ namespace InstagramApiSharp.API
         public const string ACCOUNTS_SET_PRESENCE_DISABLED = API_SUFFIX + "/accounts/set_presence_disabled/";
         public const string ACCOUNTS_GET_COMMENT_FILTER = API_SUFFIX + "/accounts/get_comment_filter/";
 
-
+        public const string USER_CHECK_EMAIL = API_SUFFIX + "/users/check_email/";
         public const string USER_REEL_SETTINGS = API_SUFFIX + "/users/reel_settings/";
         public const string USER_SET_REEL_SETTINGS = API_SUFFIX + "/users/set_reel_settings/";
         public const string USER_CHECK_USERNAME = API_SUFFIX + "/users/check_username/";
@@ -189,6 +196,8 @@ namespace InstagramApiSharp.API
         public const string LIVE_CREATE = API_SUFFIX + "/live/create/";
         public const string LIVE_START = API_SUFFIX + "/live/{0}/start/";
         public const string LIVE_END = API_SUFFIX + "/live/{0}/end_broadcast/";
+
+        public const string DYNAMIC_ONBOARDING_GET_STEPS = API_SUFFIX + "/dynamic_onboarding/get_steps/";
 
         public const string FB_FACEBOOK_SIGNUP = API_SUFFIX + "/fb/facebook_signup/";
 

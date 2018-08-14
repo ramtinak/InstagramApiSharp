@@ -10,11 +10,12 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.2.9</Version>
-    <AssemblyVersion>1.0.2.9</AssemblyVersion>
-    <FileVersion>1.0.2.9</FileVersion>
+    <Version>1.0.3.0</Version>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 Support:
+- Create new account with phone number and email
 - Login with Facebook
 - Edit Profile.
 - Change/Remove profile picture.
@@ -29,7 +30,14 @@ See examples to find out how can you use this library.</Description>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.2.9
+    <PackageReleaseNotes>1.0.3
+- Register new account via phone number!
+- SendNewDirectMessage (for users that you didn't send message before).
+- ShareUser added to MessagingProcessor.
+- Some clean up.
+- Obsolete function will remove in next version.
+
+v1.0.2.9
 - Deprecate most of functions! Please check new functions because old ones will removed in v1.0.3.
 - Approve direct pending inbox thread
 - Decline all direct pending inbox threads

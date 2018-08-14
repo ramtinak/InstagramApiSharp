@@ -120,14 +120,49 @@ namespace InstagramApiSharp.API
         Task<IResult<InstaFriendshipStatus>> IgnoreFriendshipRequest(long UserID);
         Task<IResult<InstaPendingRequest>> GetPendingFriendRequests();
         /// <summary>
+        ///     Check email availability
+        /// </summary>
+        /// <param name="email">Email to check</param>
+        Task<IResult<CheckEmailRegistration>> CheckEmailAsync(string email);
+        /// <summary>
+        ///     Check phone number availability
+        /// </summary>
+        /// <param name="phoneNumber">Phone number to check</param>
+        Task<IResult<InstaDefault>> CheckPhoneNumberAsync(string phoneNumber);
+        /// <summary>
+        ///     Send sign up sms code
+        /// </summary>
+        /// <param name="phoneNumber">Phone number</param>
+        Task<IResult<InstaDefault>> SendSignUpSmsCodeAsync(string phoneNumber);
+        /// <summary>
+        ///     Verify sign up sms code
+        /// </summary>
+        /// <param name="phoneNumber">Phone number</param>
+        /// <param name="verificationCode">Verification code</param>
+        Task<IResult<PhoneNumberRegistration>> VerifySignUpSmsCodeAsync(string phoneNumber, string verificationCode);
+        /// <summary>
+        ///     Get username suggestions
+        /// </summary>
+        /// <param name="name">Name</param>
+        Task<IResult<RegistrationSuggestionResponse>> GetUsernameSuggestionsAsync(string name);
+        /// <summary>
+        ///     Validate new account creation with phone number
+        /// </summary>
+        /// <param name="phoneNumber">Phone number</param>
+        /// <param name="verificationCode">Verification code</param>
+        /// <param name="username">Username to set</param>
+        /// <param name="password">Password to set</param>
+        /// <param name="firstName">First name to set</param>
+        Task<IResult<AccountCreation>> ValidateNewAccountWithPhoneNumberAsync(string phoneNumber, string verificationCode, string username, string password, string firstName);
+        /// <summary>
         ///     Create a new instagram account
         /// </summary>
         /// <param name="username">Username</param>
         /// <param name="password">Password</param>
         /// <param name="email">Email</param>
         /// <param name="firstName">First name (optional)</param>
-        /// <returns></returns>
-        Task<IResult<CreationResponse>> CreateNewAccount(string username, string password, string email, string firstName);
+        Task<IResult<AccountCreation>> CreateNewAccount(string username, string password, string email, string firstName);
+        [Obsolete("ShareUserAsync is deprecated, please use MessagingProcessor.ShareUserAsync instead.\r\nThis will be deleted in the next update.")]
         /// <summary>
         ///     Share an user
         /// </summary>
@@ -186,14 +221,14 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaFeed" />
         /// </returns>
         Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters);
-        [Obsolete("GetExploreFeedAsync is deprecated, please use FeedProcessor.GetExploreFeedAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetExploreFeedAsync is deprecated, please use FeedProcessor.GetExploreFeedAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get user explore feed (Explore tab info) asynchronously
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <returns><see cref="InstaExploreFeed" />></returns>
         Task<IResult<InstaExploreFeed>> GetExploreFeedAsync(PaginationParameters paginationParameters);
-        [Obsolete("GetUserMediaAsync is deprecated, please use UserProcessor.GetUserMediaAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetUserMediaAsync is deprecated, please use UserProcessor.GetUserMediaAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get all user media by username asynchronously
         /// </summary>
@@ -203,7 +238,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaMediaList" />
         /// </returns>
         Task<IResult<InstaMediaList>> GetUserMediaAsync(string username, PaginationParameters paginationParameters);
-        [Obsolete("GetMediaByIdAsync is deprecated, please use MediaProcessor.GetMediaByIdAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetMediaByIdAsync is deprecated, please use MediaProcessor.GetMediaByIdAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get media by its id asynchronously
         /// </summary>
@@ -212,7 +247,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaMedia" />
         /// </returns>
         Task<IResult<InstaMedia>> GetMediaByIdAsync(string mediaId);
-        [Obsolete("GetUserAsync is deprecated, please use UserProcessor.GetUserAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetUserAsync is deprecated, please use UserProcessor.GetUserAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get user info by its user name asynchronously
         /// </summary>
@@ -228,7 +263,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaCurrentUser" />
         /// </returns>
         Task<IResult<InstaCurrentUser>> GetCurrentUserAsync();
-        [Obsolete("GetTagFeedAsync is deprecated, please use FeedProcessor.GetTagFeedAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetTagFeedAsync is deprecated, please use FeedProcessor.GetTagFeedAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get tag feed by tag value asynchronously
         /// </summary>
@@ -238,7 +273,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaTagFeed" />
         /// </returns>
         Task<IResult<InstaTagFeed>> GetTagFeedAsync(string tag, PaginationParameters paginationParameters);
-        [Obsolete("GetUserFollowersAsync is deprecated, please use UserProcessor.GetUserFollowersAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetUserFollowersAsync is deprecated, please use UserProcessor.GetUserFollowersAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get followers list by username asynchronously
         /// </summary>
@@ -250,7 +285,7 @@ namespace InstagramApiSharp.API
         /// </returns>
         Task<IResult<InstaUserShortList>> GetUserFollowersAsync(string username,
             PaginationParameters paginationParameters, string searchQuery = "");
-        [Obsolete("GetUserFollowingAsync is deprecated, please use UserProcessor.GetUserFollowingAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetUserFollowingAsync is deprecated, please use UserProcessor.GetUserFollowingAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get following list by username asynchronously
         /// </summary>
@@ -262,7 +297,7 @@ namespace InstagramApiSharp.API
         /// </returns>
         Task<IResult<InstaUserShortList>> GetUserFollowingAsync(string username,
             PaginationParameters paginationParameters, string searchQuery = "");
-        [Obsolete("GetCurrentUserFollowersAsync is deprecated, please use UserProcessor.GetCurrentUserFollowersAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetCurrentUserFollowersAsync is deprecated, please use UserProcessor.GetCurrentUserFollowersAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get followers list for currently logged in user asynchronously
         /// </summary>
@@ -271,7 +306,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaUserShortList" />
         /// </returns>
         Task<IResult<InstaUserShortList>> GetCurrentUserFollowersAsync(PaginationParameters paginationParameters);
-        [Obsolete("GetUserTagsAsync is deprecated, please use UserProcessor.GetUserTagsAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetUserTagsAsync is deprecated, please use UserProcessor.GetUserTagsAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get user tags by username asynchronously
         ///     <remarks>Returns media list containing tags</remarks>
@@ -282,7 +317,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaMediaList" />
         /// </returns>
         Task<IResult<InstaMediaList>> GetUserTagsAsync(string username, PaginationParameters paginationParameters);
-        [Obsolete("GetDirectInboxAsync is deprecated, please use MessagingProcessor.GetDirectInboxAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetDirectInboxAsync is deprecated, please use MessagingProcessor.GetDirectInboxAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get direct inbox threads for current user asynchronously
         /// </summary>
@@ -291,7 +326,7 @@ namespace InstagramApiSharp.API
         /// </returns>
         Task<IResult<InstaDirectInboxContainer>> GetDirectInboxAsync(PaginationParameters paginationParameters);
 
-        [Obsolete("GetDirectInboxAsync is deprecated, please use MessagingProcessor.GetDirectInboxAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetDirectInboxAsync is deprecated, please use MessagingProcessor.GetDirectInboxAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get direct inbox thread by its id asynchronously
         /// </summary>
@@ -301,7 +336,7 @@ namespace InstagramApiSharp.API
         /// </returns>
         Task<IResult<InstaDirectInboxThread>> GetDirectInboxThreadAsync(string threadId, PaginationParameters paginationParameters);
 
-        [Obsolete("SendDirectMessage is deprecated, please use MessagingProcessor.SendDirectMessage instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("SendDirectMessage is deprecated, please use MessagingProcessor.SendDirectMessage instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Send direct message to provided users and threads
         /// </summary>
@@ -311,7 +346,7 @@ namespace InstagramApiSharp.API
         /// <returns>List of threads</returns>
         Task<IResult<InstaDirectInboxThreadList>> SendDirectMessage(string recipients, string threadIds, string text);
 
-        [Obsolete("GetRecentRecipientsAsync is deprecated, please use MessagingProcessor.GetRecentRecipientsAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetRecentRecipientsAsync is deprecated, please use MessagingProcessor.GetRecentRecipientsAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get recent recipients (threads and users) asynchronously
         /// </summary>
@@ -320,7 +355,7 @@ namespace InstagramApiSharp.API
         /// </returns>
         Task<IResult<InstaRecipients>> GetRecentRecipientsAsync();
 
-        [Obsolete("GetRankedRecipientsAsync is deprecated, please use MessagingProcessor.GetRankedRecipientsAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetRankedRecipientsAsync is deprecated, please use MessagingProcessor.GetRankedRecipientsAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get ranked recipients (threads and users) asynchronously
         /// </summary>
@@ -328,7 +363,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaRecipients" />
         /// </returns>
         Task<IResult<InstaRecipients>> GetRankedRecipientsAsync();
-        [Obsolete("GetRecentActivityAsync is deprecated, please use FeedProcessor.GetRecentActivityFeedAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetRecentActivityAsync is deprecated, please use FeedProcessor.GetRecentActivityFeedAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get recent activity info asynchronously
         /// </summary>
@@ -337,7 +372,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaActivityFeed" />
         /// </returns>
         Task<IResult<InstaActivityFeed>> GetRecentActivityAsync(PaginationParameters paginationParameters);
-        [Obsolete("GetFollowingRecentActivityAsync is deprecated, please use FeedProcessor.GetFollowingRecentActivityFeedAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetFollowingRecentActivityAsync is deprecated, please use FeedProcessor.GetFollowingRecentActivityFeedAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get activity of following asynchronously
         /// </summary>
@@ -346,62 +381,62 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaActivityFeed" />
         /// </returns>
         Task<IResult<InstaActivityFeed>> GetFollowingRecentActivityAsync(PaginationParameters paginationParameters);
-        [Obsolete("LikeMediaAsync is deprecated, please use MediaProcessor.LikeMediaAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("LikeMediaAsync is deprecated, please use MediaProcessor.LikeMediaAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Like media (photo or video)
         /// </summary>
         /// <param name="mediaId">Media id</param>
         Task<IResult<bool>> LikeMediaAsync(string mediaId);
-        [Obsolete("UnLikeMediaAsync is deprecated, please use MediaProcessor.UnLikeMediaAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("UnLikeMediaAsync is deprecated, please use MediaProcessor.UnLikeMediaAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Remove like from media (photo or video)
         /// </summary>
         /// <param name="mediaId">Media id</param>
         Task<IResult<bool>> UnLikeMediaAsync(string mediaId);
-        [Obsolete("FollowUserAsync is deprecated, please use UserProcessor.FollowUserAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("FollowUserAsync is deprecated, please use UserProcessor.FollowUserAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Follow user
         /// </summary>
         /// <param name="userId">User id</param>
         Task<IResult<InstaFriendshipStatus>> FollowUserAsync(long userId);
-        [Obsolete("UnFollowUserAsync is deprecated, please use UserProcessor.UnFollowUserAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("UnFollowUserAsync is deprecated, please use UserProcessor.UnFollowUserAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Stop follow user
         /// </summary>
         /// <param name="userId">User id</param>
         Task<IResult<InstaFriendshipStatus>> UnFollowUserAsync(long userId);
-        [Obsolete("BlockUserAsync is deprecated, please use UserProcessor.BlockUserAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("BlockUserAsync is deprecated, please use UserProcessor.BlockUserAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Block user
         /// </summary>
         /// <param name="userId">User id</param>
         Task<IResult<InstaFriendshipStatus>> BlockUserAsync(long userId);
-        [Obsolete("UnBlockUserAsync is deprecated, please use UserProcessor.UnBlockUserAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("UnBlockUserAsync is deprecated, please use UserProcessor.UnBlockUserAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Stop block user
         /// </summary>
         /// <param name="userId">User id</param>
         Task<IResult<InstaFriendshipStatus>> UnBlockUserAsync(long userId);
-        [Obsolete("GetMediaCommentsAsync is deprecated, please use CommentProcessor.GetMediaCommentsAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetMediaCommentsAsync is deprecated, please use CommentProcessor.GetMediaCommentsAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get media comments
         /// </summary>
         /// <param name="mediaId">Media id</param>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         Task<IResult<InstaCommentList>> GetMediaCommentsAsync(string mediaId, PaginationParameters paginationParameters);
-        [Obsolete("EnableMediaCommentAsync is deprecated, please use CommentProcessor.EnableMediaCommentAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("EnableMediaCommentAsync is deprecated, please use CommentProcessor.EnableMediaCommentAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Allow media comments
         /// </summary>
         /// <param name="mediaId">Media id</param>
         Task<IResult<bool>> EnableMediaCommentAsync(string mediaId);
-        [Obsolete("DisableMediaCommentAsync is deprecated, please use CommentProcessor.DisableMediaCommentAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("DisableMediaCommentAsync is deprecated, please use CommentProcessor.DisableMediaCommentAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Disable media comments
         /// </summary>
         /// <param name="mediaId">Media id</param>
         Task<IResult<bool>> DisableMediaCommentAsync(string mediaId);
-        [Obsolete("GetMediaInlineCommentsAsync is deprecated, please use CommentProcessor.GetMediaInlineCommentsAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetMediaInlineCommentsAsync is deprecated, please use CommentProcessor.GetMediaInlineCommentsAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get media inline comments
         /// </summary>
@@ -411,30 +446,30 @@ namespace InstagramApiSharp.API
         /// <returns></returns>
         Task<IResult<InstaInlineCommentListResponse>> GetMediaInlineCommentsAsync(string mediaId, string targetCommentId,
             PaginationParameters paginationParameters);
-        [Obsolete("GetMediaLikersAsync is deprecated, please use MediaProcessor.GetMediaLikersAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetMediaLikersAsync is deprecated, please use MediaProcessor.GetMediaLikersAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get users (short) who liked certain media. Normaly it return around 1000 last users.
         /// </summary>
         /// <param name="mediaId">Media id</param>
         Task<IResult<InstaLikersList>> GetMediaLikersAsync(string mediaId);
-        [Obsolete("SetAccountPrivateAsync is deprecated, please use AccountProcessor.SetAccountPrivateAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("SetAccountPrivateAsync is deprecated, please use AccountProcessor.SetAccountPrivateAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Set current account private
         /// </summary>
         Task<IResult<InstaUserShort>> SetAccountPrivateAsync();
-        [Obsolete("SetAccountPublicAsync is deprecated, please use AccountProcessor.SetAccountPublicAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("SetAccountPublicAsync is deprecated, please use AccountProcessor.SetAccountPublicAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Set current account public
         /// </summary>
         Task<IResult<InstaUserShort>> SetAccountPublicAsync();
-        [Obsolete("CommentMediaAsync is deprecated, please use CommentProcessor.CommentMediaAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("CommentMediaAsync is deprecated, please use CommentProcessor.CommentMediaAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Comment media
         /// </summary>
         /// <param name="mediaId">Media id</param>
         /// <param name="text">Comment text</param>
         Task<IResult<InstaComment>> CommentMediaAsync(string mediaId, string text);
-        [Obsolete("GetMediaCommentLikersAsync is deprecated, please use CommentProcessor.GetMediaCommentLikersAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetMediaCommentLikersAsync is deprecated, please use CommentProcessor.GetMediaCommentLikersAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get media comments likers
         /// </summary>
@@ -446,7 +481,7 @@ namespace InstagramApiSharp.API
         /// <param name="mediaId">Media id</param>
         /// <param name="commentId">Comment id</param>
         //Task<IResult<bool>> ReportCommentAsync(string mediaId, string commentId);
-        [Obsolete("InlineCommentMediaAsync is deprecated, please use CommentProcessor.InlineCommentMediaAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("InlineCommentMediaAsync is deprecated, please use CommentProcessor.InlineCommentMediaAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Inline comment media
         /// </summary>
@@ -455,7 +490,7 @@ namespace InstagramApiSharp.API
         /// <param name="text">Comment text</param>
         /// <returns></returns>
         Task<IResult<InstaComment>> InlineCommentMediaAsync(string mediaId, string targetCommentId, string text);
-        [Obsolete("DeleteCommentAsync is deprecated, please use CommentProcessor.DeleteCommentAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("DeleteCommentAsync is deprecated, please use CommentProcessor.DeleteCommentAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Delete comment from media
         /// </summary>
@@ -463,7 +498,7 @@ namespace InstagramApiSharp.API
         /// <param name="commentId">Comment id</param>
         Task<IResult<bool>> DeleteCommentAsync(string mediaId, string commentId);
 
-        [Obsolete("UploadVideoAsync is deprecated, please use MediaProcessor.UploadVideoAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("UploadVideoAsync is deprecated, please use MediaProcessor.UploadVideoAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Upload video
         /// </summary>
@@ -472,14 +507,14 @@ namespace InstagramApiSharp.API
         /// <param name="caption">Caption</param>
         /// <returns></returns>
         Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideo video, InstaImage imageThumbnail, string caption);
-        [Obsolete("UploadPhotoAsync is deprecated, please use MediaProcessor.UploadPhotoAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("UploadPhotoAsync is deprecated, please use MediaProcessor.UploadPhotoAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Upload photo
         /// </summary>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption);
-        [Obsolete("UploadPhotosAlbumAsync is deprecated, please use MediaProcessor.UploadPhotosAlbumAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("UploadPhotosAlbumAsync is deprecated, please use MediaProcessor.UploadPhotosAlbumAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Upload photo
         /// </summary>
@@ -507,18 +542,18 @@ namespace InstagramApiSharp.API
         ///// <param name="caption">Caption</param>
         ///// <returns></returns>
         //Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] uploadId, string caption);
-        [Obsolete("GetStoryFeedAsync is deprecated, please use StoryProcessor.GetStoryFeedAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetStoryFeedAsync is deprecated, please use StoryProcessor.GetStoryFeedAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get user story feed (stories from users followed by current user).
         /// </summary>
         Task<IResult<InstaStoryFeed>> GetStoryFeedAsync();
-        [Obsolete("GetUserStoryAsync is deprecated, please use StoryProcessor.GetUserStoryAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetUserStoryAsync is deprecated, please use StoryProcessor.GetUserStoryAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get the story by userId
         /// </summary>
         /// <param name="userId">User Id</param>
         Task<IResult<InstaStory>> GetUserStoryAsync(long userId);
-        [Obsolete("UploadStoryPhotoAsync is deprecated, please use StoryProcessor.UploadStoryPhotoAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("UploadStoryPhotoAsync is deprecated, please use StoryProcessor.UploadStoryPhotoAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Upload story photo
         /// </summary>
@@ -545,7 +580,7 @@ namespace InstagramApiSharp.API
         /// </param>
         /// <returns>Return true if the password is changed</returns>
         Task<IResult<bool>> ChangePasswordAsync(string oldPassword, string newPassword);
-        [Obsolete("DeleteMediaAsync is deprecated, please use MediaProcessor.DeleteMediaAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("DeleteMediaAsync is deprecated, please use MediaProcessor.DeleteMediaAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Delete a media (photo or video)
         /// </summary>
@@ -553,7 +588,7 @@ namespace InstagramApiSharp.API
         /// <param name="mediaType">The type of the media</param>
         /// <returns>Return true if the media is deleted</returns>
         Task<IResult<bool>> DeleteMediaAsync(string mediaId, InstaMediaType mediaType);
-        [Obsolete("EditMediaAsync is deprecated, please use MediaProcessor.EditMediaAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("EditMediaAsync is deprecated, please use MediaProcessor.EditMediaAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Edit the caption of the media (photo/video)
         /// </summary>
@@ -561,7 +596,7 @@ namespace InstagramApiSharp.API
         /// <param name="caption">The new caption</param>
         /// <returns>Return true if everything is ok</returns>
         Task<IResult<bool>> EditMediaAsync(string mediaId, string caption);
-        [Obsolete("GetLikeFeedAsync is deprecated, please use FeedProcessor.GetLikeFeedAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetLikeFeedAsync is deprecated, please use FeedProcessor.GetLikeFeedAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get feed of media your liked.
         /// </summary>
@@ -570,7 +605,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaMediaList" />
         /// </returns>
         Task<IResult<InstaMediaList>> GetLikeFeedAsync(PaginationParameters paginationParameters);
-        [Obsolete("GetFriendshipStatusAsync is deprecated, please use UserProcessor.GetFriendshipStatusAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetFriendshipStatusAsync is deprecated, please use UserProcessor.GetFriendshipStatusAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get friendship status for given user id.
         /// </summary>
@@ -579,14 +614,14 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaFriendshipStatus" />
         /// </returns>
         Task<IResult<InstaFriendshipStatus>> GetFriendshipStatusAsync(long userId);
-        [Obsolete("GetUserStoryFeedAsync is deprecated, please use StoryProcessor.GetUserStoryFeedAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetUserStoryFeedAsync is deprecated, please use StoryProcessor.GetUserStoryFeedAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get user story reel feed. Contains user info last story including all story items.
         /// </summary>
         /// <param name="userId">User identifier (PK)</param>
         /// <returns></returns>
         Task<IResult<InstaReelFeed>> GetUserStoryFeedAsync(long userId);
-        [Obsolete("GetCollectionAsync is deprecated, please use CollectionProcessor.GetCollectionAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetCollectionAsync is deprecated, please use CollectionProcessor.GetCollectionAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get your collection for given collection id
         /// </summary>
@@ -595,7 +630,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCollectionItem" />
         /// </returns>
         Task<IResult<InstaCollectionItem>> GetCollectionAsync(long collectionId);
-        [Obsolete("GetCollectionsAsync is deprecated, please use CollectionProcessor.GetCollectionsAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetCollectionsAsync is deprecated, please use CollectionProcessor.GetCollectionsAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get your collections
         /// </summary>
@@ -603,7 +638,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCollections" />
         /// </returns>
         Task<IResult<InstaCollections>> GetCollectionsAsync();
-        [Obsolete("CreateCollectionAsync is deprecated, please use CollectionProcessor.CreateCollectionAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("CreateCollectionAsync is deprecated, please use CollectionProcessor.CreateCollectionAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Create a new collection
         /// </summary>
@@ -612,7 +647,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCollectionItem" />
         /// </returns>
         Task<IResult<InstaCollectionItem>> CreateCollectionAsync(string collectionName);
-        [Obsolete("DeleteCollectionAsync is deprecated, please use CollectionProcessor.DeleteCollectionAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("DeleteCollectionAsync is deprecated, please use CollectionProcessor.DeleteCollectionAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Delete your collection for given collection id
         /// </summary>
@@ -620,21 +655,21 @@ namespace InstagramApiSharp.API
         /// <returns>true if succeed</returns>
         Task<IResult<bool>> DeleteCollectionAsync(long collectionId);
 
-        [Obsolete("GetMediaIdFromUrlAsync is deprecated, please use MediaProcessor.GetMediaIdFromUrlAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetMediaIdFromUrlAsync is deprecated, please use MediaProcessor.GetMediaIdFromUrlAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get media ID from an url (got from "share link")
         /// </summary>
         /// <param name="uri">Uri to get media ID</param>
         /// <returns>Media ID</returns>
         Task<IResult<string>> GetMediaIdFromUrlAsync(Uri uri);
-        [Obsolete("GetShareLinkFromMediaIdAsync is deprecated, please use MediaProcessor.GetShareLinkFromMediaIdAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetShareLinkFromMediaIdAsync is deprecated, please use MediaProcessor.GetShareLinkFromMediaIdAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Get share link from media Id
         /// </summary>
         /// <param name="mediaId">media ID</param>
         /// <returns>Share link as Uri</returns>
         Task<IResult<Uri>> GetShareLinkFromMediaIdAsync(string mediaId);
-        [Obsolete("AddItemsToCollectionAsync is deprecated, please use CollectionProcessor.AddItemsToCollectionAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("AddItemsToCollectionAsync is deprecated, please use CollectionProcessor.AddItemsToCollectionAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Adds items to collection asynchronous.
         /// </summary>
@@ -642,7 +677,7 @@ namespace InstagramApiSharp.API
         /// <param name="mediaIds">Media id list.</param>
         /// <returns></returns>
         Task<IResult<InstaCollectionItem>> AddItemsToCollectionAsync(long collectionId, params string[] mediaIds);
-        [Obsolete("SearchLocation is deprecated, please use LocationProcessor.SearchLocationAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("SearchLocation is deprecated, please use LocationProcessor.SearchLocationAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Searches for specific location by provided geo-data or search query.
         /// </summary>
@@ -651,7 +686,7 @@ namespace InstagramApiSharp.API
         /// <param name="query">Search query</param>
         /// <returns>List of locations (short format)</returns>
         Task<IResult<InstaLocationShortList>> SearchLocation(double latitude, double longitude, string query);
-        [Obsolete("GetLocationFeed is deprecated, please use LocationProcessor.GetLocationFeedAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetLocationFeed is deprecated, please use LocationProcessor.GetLocationFeedAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Gets the feed of particular location.
         /// </summary>
@@ -659,7 +694,7 @@ namespace InstagramApiSharp.API
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <returns>Location feed</returns>
         Task<IResult<InstaLocationFeed>> GetLocationFeed(long locationId, PaginationParameters paginationParameters);
-        [Obsolete("SearchHashtag is deprecated, please use HashtagProcessor.SearchHashtagAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("SearchHashtag is deprecated, please use HashtagProcessor.SearchHashtagAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Searches for specific hashtag by search query.
         /// </summary>
@@ -668,21 +703,21 @@ namespace InstagramApiSharp.API
         /// <param name="rankToken">The rank token from the previous page's response</param>
         /// <returns>List of hashtags</returns>
         Task<IResult<InstaHashtagSearch>> SearchHashtag(string query, IEnumerable<long> excludeList = null, string rankToken = null);
-        [Obsolete("GetHashtagInfo is deprecated, please use HashtagProcessor.GetHashtagInfoAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetHashtagInfo is deprecated, please use HashtagProcessor.GetHashtagInfoAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Gets the hashtag information by user tagname.
         /// </summary>
         /// <param name="tagname">Tagname</param>
         /// <returns>Hashtag information</returns>
         Task<IResult<InstaHashtag>> GetHashtagInfo(string tagname);
-        [Obsolete("GetUserInfoByIdAsync is deprecated, please use UserProcessor.GetUserInfoByIdAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetUserInfoByIdAsync is deprecated, please use UserProcessor.GetUserInfoByIdAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Gets the user extended information (followers count, following count, bio, etc) by user identifier.
         /// </summary>
         /// <param name="pk">User Id, like "123123123"</param>
         /// <returns></returns>
         Task<IResult<InstaUserInfo>> GetUserInfoByIdAsync(long pk);
-        [Obsolete("GetUserInfoByUsernameAsync is deprecated, please use UserProcessor.GetUserInfoByUsernameAsync instead.\r\nThis will be deleted in the next update.")]
+        [Obsolete("GetUserInfoByUsernameAsync is deprecated, please use UserProcessor.GetUserInfoByUsernameAsync instead.\r\nThis will be deleted in the next update.", true)]
         /// <summary>
         ///     Gets the user extended information (followers count, following count, bio, etc) by username.
         /// </summary>

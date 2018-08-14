@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.2.9 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
+| Nuget | master | v1.0.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
 
 
 ## Note
@@ -68,6 +68,13 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+1.0.3
+- Register new account via phone number!
+- SendNewDirectMessage (for users that you didn't send message before).
+- ShareUser added to MessagingProcessor.
+- Some clean up.
+- Obsolete function will remove in next version.
+
 v1.0.2.9
 - Deprecate most of functions! Please check new functions because old ones will removed in v1.0.3.
 - Approve direct pending inbox thread

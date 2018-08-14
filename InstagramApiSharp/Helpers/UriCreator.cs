@@ -82,6 +82,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for user creation");
             return instaUri;
         }
+        public static Uri GetCheckEmailUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USER_CHECK_EMAIL, out var instaUri))
+                throw new Exception("Cant create URI for check email");
+            return instaUri;
+        }
         public static Uri GetLoginUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_LOGIN, out var instaUri))
@@ -921,6 +927,60 @@ namespace InstagramApiSharp.Helpers
             apiPath = apiPath.Replace("/challenge/", "/challenge/reset/");
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.API_SUFFIX + apiPath, out var instaUri))
                 throw new Exception("Cant create URI for challenge require url");
+            return instaUri;
+        }
+        public static Uri GetCheckPhoneNumberUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_CHECK_PHONE_NUMBER, out var instaUri))
+                throw new Exception("Cant create URI for check phone number");
+            return instaUri;
+        }
+        public static Uri GetSignUpSMSCodeUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_SEND_SIGNUP_SMS_CODE, out var instaUri))
+                throw new Exception("Cant create URI for send signup sms code");
+            return instaUri;
+        }
+        public static Uri GetValidateSignUpSMSCodeUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_VALIDATE_SIGNUP_SMS_CODE, out var instaUri))
+                throw new Exception("Cant create URI for validate signup sms code");
+            return instaUri;
+        }
+        public static Uri GetUsernameSuggestionsUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_USERNAME_SUGGESTIONS, out var instaUri))
+                throw new Exception("Cant create URI for username suggestions");
+            return instaUri;
+        }
+        public static Uri GetOnboardingStepsUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DYNAMIC_ONBOARDING_GET_STEPS, out var instaUri))
+                throw new Exception("Cant create URI for dynamic onboarding get steps");
+            return instaUri;
+        }
+        public static Uri GetCreateValidatedUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_CREATE_VALIDATED, out var instaUri))
+                throw new Exception("Cant create URI for accounbts create validated");
+            return instaUri;
+        }
+        public static Uri GetRankRecipientsByUserUri(string username)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_RANK_RECIPIENTS_BY_USERNAME, username), out var instaUri))
+                throw new Exception("Cant create URI for get rank recipients by username");
+            return instaUri;
+        }
+        public static Uri GetParticipantRecipientUserUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_PARTICIPANTS_RECIPIENT_USER, userId), out var instaUri))
+                throw new Exception("Cant create URI for get participants recipient user");
+            return instaUri;
+        }
+        public static Uri GetShareUserUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_SHARE_USER, out var instaUri))
+                throw new Exception("Cant create URI for share user");
             return instaUri;
         }
     }

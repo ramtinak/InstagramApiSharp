@@ -22,6 +22,13 @@ namespace InstagramApiSharp.API.Processors
         /// </returns>
         Task<IResult<InstaDirectInboxThread>> GetDirectInboxThreadAsync(string threadId, string nextOrCursorId = "");
         /// <summary>
+        ///     Send new direct message. (use this function, if you didn't send any message to this user before)
+        /// </summary>
+        /// <param name="username">Username to send</param>
+        /// <param name="text">Message text</param>
+        /// <returns>List of threads</returns>
+        Task<IResult<InstaDirectInboxThreadList>> SendNewDirectMessage(string username, string text);
+        /// <summary>
         ///     Send direct message to provided users and threads
         /// </summary>
         /// <param name="recipients">Comma-separated users PK</param>
@@ -60,5 +67,11 @@ namespace InstagramApiSharp.API.Processors
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaDirectInboxContainer" />
         /// </returns>
         Task<IResult<InstaDirectInboxContainer>> GetPendingDirectAsync(string nextOrCursorId = "");
+        /// <summary>
+        ///     Share an user
+        /// </summary>
+        /// <param name="userIdToSend">User id(PK)</param>
+        /// <param name="threadId">Thread id</param>
+        Task<IResult<InstaSharing>> ShareUserAsync(string userIdToSend, string threadId);
     }
 }

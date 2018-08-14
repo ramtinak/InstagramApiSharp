@@ -1,5 +1,14 @@
-﻿using System;
+﻿/*
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * 
+ * Github source: https://github.com/ramtinak/InstagramApiSharp
+ * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
+ * 
+ * IRANIAN DEVELOPERS
+ */
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -96,6 +105,69 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaDirectInboxThread>(exception.Message);
+            }
+        }
+
+        /// <summary>
+        ///     Send new direct message. (use this function, if you didn't send any message to this user before)
+        /// </summary>
+        /// <param name="username">Username to send</param>
+        /// <param name="text">Message text</param>
+        /// <returns>List of threads</returns>
+        public async Task<IResult<InstaDirectInboxThreadList>> SendNewDirectMessage(string username, string text)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetRankRecipientsByUserUri(username);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+      
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
+
+
+                var responseRecipients = JsonConvert.DeserializeObject<InstaRankedRecipientsResponse>(json);
+                var converter = ConvertersFabric.Instance.GetRecipientsConverter(responseRecipients);
+                var recipients = converter.Convert();
+
+                var firstRecipient = recipients.Users?.FirstOrDefault(rec => rec?.UserName.ToLower() == username.ToLower());
+                if(firstRecipient == null)
+                    return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
+
+                instaUri = UriCreator.GetParticipantRecipientUserUri(firstRecipient.Pk);
+                request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
+
+                var respParticipant = JsonConvert.DeserializeObject<InstaDefault>(json);
+
+                if(respParticipant.Status.ToLower() != "ok")
+                    return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
+
+
+
+                instaUri = UriCreator.GetParticipantRecipientUserUri(firstRecipient.Pk);
+                request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
+
+
+                var result = await SendDirectMessage(firstRecipient.Pk.ToString(), null, text);
+               
+                return result;
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaDirectInboxThreadList>(exception);
             }
         }
         /// <summary>
@@ -287,5 +359,48 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaDirectInboxContainer>(exception.Message);
             }
         }
+        /// <summary>
+        ///     Share an user
+        /// </summary>
+        /// <param name="userIdToSend">User id(PK)</param>
+        /// <param name="threadId">Thread id</param>
+        public async Task<IResult<InstaSharing>> ShareUserAsync(string userIdToSend, string threadId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetShareUserUri();
+                var uploadId = ApiRequestMessage.GenerateUploadId();
+                var requestContent = new MultipartFormDataContent(uploadId)
+                {
+                    {new StringContent(userIdToSend), "\"profile_user_id\""},
+                    {new StringContent("1"), "\"unified_broadcast_format\""},
+                    {new StringContent("send_item"), "\"action\""},
+                    {new StringContent($"[{threadId}]"), "\"thread_ids\""},
+                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                    {new StringContent(_user.LoggedInUser.Pk.ToString()), "\"_uid\""},
+                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""}
+
+                };
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                request.Content = requestContent;
+                request.Headers.Add("Host", "i.instagram.com");
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.Fail("Status code: " + response.StatusCode, (InstaSharing)null);
+                var obj = JsonConvert.DeserializeObject<InstaSharing>(json);
+
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaSharing>(exception);
+            }
+        }
+
+
     }
 }
