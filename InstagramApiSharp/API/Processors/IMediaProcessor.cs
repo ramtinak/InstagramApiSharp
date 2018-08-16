@@ -30,10 +30,9 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Upload video
         /// </summary>
-        /// <param name="video">Video to upload</param>
-        /// <param name="imageThumbnail">Image thumbnail</param>
+        /// <param name="video">Video and thumbnail to upload</param>
         /// <param name="caption">Caption</param>
-        Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideo video, InstaImage image, string caption);
+        Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption);
 
         //Task<IResult<bool>> UploadVideoThumbnailAsync(InstaImage image, string uploadId);
         //Task<IResult<InstaMedia>> ConfigureVideoAsync(InstaVideo video, string uploadId, string caption);
@@ -45,14 +44,20 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption);
+        [Obsolete("UploadPhotosAlbumAsync is deprecated, please use UploadAlbumAsync instead.\r\nThis will be deleted in the next update.",false)]
         /// <summary>
         ///     Upload photo
         /// </summary>
         /// <param name="images">Array of photos to upload</param>
         /// <param name="caption">Caption</param>
         Task<IResult<InstaMedia>> UploadPhotosAlbumAsync(InstaImage[] images, string caption);
-
-        //Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideo[] videos, string caption);
+        /// <summary>
+        ///     Upload album (videos and photos)
+        /// </summary>
+        /// <param name="images">Array of photos to upload</param>
+        /// <param name="videos">Array of videos to upload</param>
+        /// <param name="caption">Caption</param>
+        Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideoUpload[] videos, string caption);
         //Task<IResult<InstaMedia>> ConfigurePhotoAsync(InstaImage image, string uploadId, string caption);
         //Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] uploadId, string caption);
 

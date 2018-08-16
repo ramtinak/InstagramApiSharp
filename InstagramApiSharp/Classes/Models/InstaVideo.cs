@@ -2,6 +2,7 @@
 {
     public class InstaVideo
     {
+        public InstaVideo(string url, int width, int height) : this(url, width, height, 3) { }
         public InstaVideo(string url, int width, int height, int type)
         {
             Url = url;

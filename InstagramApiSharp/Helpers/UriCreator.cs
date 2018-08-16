@@ -733,7 +733,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for deny friendship");
             return instaUri;
         }
-
+        public static Uri GetFriendshipPendingRequestsUri(string rankToken)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_PENDING_REQUESTS, rankToken), out var instaUri))
+                throw new Exception("Cant create URI for friendship pending requests");
+            return instaUri;
+        }
         public static Uri GetLiveHeartbeatAndViewerCountUri(string broadcastId)
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_HEARTBEAT_AND_GET_VIEWER_COUNT, broadcastId), out var instaUri))

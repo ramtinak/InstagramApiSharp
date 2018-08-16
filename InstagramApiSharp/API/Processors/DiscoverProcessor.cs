@@ -153,7 +153,7 @@ namespace InstagramApiSharp.API.Processors
         /// NOT COMPLETE
         /// </summary>
         /// <returns></returns>
-        public async Task<IResult<object>> AcceptFriendshipAsync(long userId)
+        private async Task<IResult<object>> AcceptFriendshipAsync(long userId)
         {
             try
             {
@@ -187,7 +187,7 @@ namespace InstagramApiSharp.API.Processors
         /// NOT COMPLETE
         /// </summary>
         /// <returns></returns>
-        public async Task<IResult<object>> RejectFriendshipAsync(long userId)
+        private async Task<IResult<object>> RejectFriendshipAsync(long userId)
         {
             try
             {
@@ -222,7 +222,7 @@ namespace InstagramApiSharp.API.Processors
         /// NOT COMPLETE
         /// </summary>
         /// <returns></returns>
-        public async Task<IResult<object>> DiscoverPeopleAsync()
+        private async Task<IResult<object>> DiscoverPeopleAsync()
         {
             try
             {

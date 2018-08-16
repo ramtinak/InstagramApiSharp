@@ -49,21 +49,21 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<DiscoverSearchResponse>> SearchPeopleAsync(string content, int count = 30);
 
 
-        /// <summary>
-        /// NOT COMPLETE
-        /// </summary>
-        /// <returns></returns>
-        Task<IResult<object>> AcceptFriendshipAsync(long userId);
-        /// <summary>
-        /// NOT COMPLETE
-        /// </summary>
-        /// <returns></returns>
-        Task<IResult<object>> RejectFriendshipAsync(long userId);
-        /// <summary>
-        /// NOT COMPLETE
-        /// </summary>
-        /// <returns></returns>
-        Task<IResult<object>> DiscoverPeopleAsync();
+        ///// <summary>
+        ///// NOT COMPLETE
+        ///// </summary>
+        ///// <returns></returns>
+        //Task<IResult<object>> AcceptFriendshipAsync(long userId);
+        ///// <summary>
+        ///// NOT COMPLETE
+        ///// </summary>
+        ///// <returns></returns>
+        //Task<IResult<object>> RejectFriendshipAsync(long userId);
+        ///// <summary>
+        ///// NOT COMPLETE
+        ///// </summary>
+        ///// <returns></returns>
+        //Task<IResult<object>> DiscoverPeopleAsync();
 
     }
 }

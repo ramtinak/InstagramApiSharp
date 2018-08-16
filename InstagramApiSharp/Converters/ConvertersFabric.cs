@@ -33,7 +33,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaMediaConverter {SourceObject = responseMedia};
         }
-
+        public IObjectConverter<InstaMedia, InstaMediaAlbumResponse> GetSingleMediaFromAlbumConverter(
+    InstaMediaAlbumResponse responseMedia)
+        {
+            return new InstaMediaAlbumConverter { SourceObject = responseMedia };
+        }
         public IObjectConverter<InstaFeed, InstaFeedResponse> GetFeedConverter(
             InstaFeedResponse feedResponse)
         {

@@ -458,6 +458,103 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaFriendshipStatus>(exception.Message);
             }
         }
+        /// <summary>
+        ///     Get pending friendship requests.
+        /// </summary>
+        public async Task<IResult<InstaPendingRequest>> GetPendingFriendRequestsAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                        .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                _user.CsrfToken = csrftoken;
+                //var instaUri = new Uri($"https://i.instagram.com/api/v1/friendships/pending/?rank_mutual=0&rank_token={_user.RankToken}", UriKind.RelativeOrAbsolute);
+                var instaUri = UriCreator.GetFriendshipPendingRequestsUri(_user.RankToken);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var JRes = JsonConvert.DeserializeObject<InstaPendingRequest>(json);
+                    return Result.Success(JRes);
+                }
+                else
+                {
+                    return Result.Fail<InstaPendingRequest>(response.StatusCode.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<InstaPendingRequest>(ex.Message);
+            }
+        }
+        /// <summary>
+        ///     Accept user friendship requst.
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<InstaFriendshipStatus>> AcceptFriendshipRequestAsync(long userId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetAcceptFriendshipUri(userId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"user_id", userId.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                };
+                var request =
+                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, json);
+                var JRes = JsonConvert.DeserializeObject<InstaFriendshipStatus>(json);
+                return Result.Success(JRes);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<InstaFriendshipStatus>(ex.Message);
+            }
+        }
+        /// <summary>
+        ///     Ignore user friendship requst.
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<InstaFriendshipStatus>> IgnoreFriendshipRequestAsync(long userId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetDenyFriendshipUri(userId);
+                //var instaUri = new Uri($"https://i.instagram.com/api/v1/friendships/ignore/{UserID}/", UriKind.RelativeOrAbsolute);
+                var fields = new Dictionary<string, string>
+                {
+                    {"user_id", userId.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                };
+                var request =
+                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, json);
+                var JRes = JsonConvert.DeserializeObject<InstaFriendshipStatus>(json);
+                return Result.Success(JRes);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<InstaFriendshipStatus>(ex.Message);
+            }
+        }
 
         private async Task<IResult<InstaFriendshipStatus>> FollowUnfollowUserInternal(long userId, Uri instaUri)
         {
@@ -531,5 +628,6 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Success(instaUserListResponse);
             return Result.UnExpectedResponse<InstaUserListShortResponse>(response, json);
         }
+
     }
 }

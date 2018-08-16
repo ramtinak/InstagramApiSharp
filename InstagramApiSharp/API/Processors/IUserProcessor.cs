@@ -110,5 +110,19 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="username">Username, like "instagram"</param>
         /// <returns></returns>
         Task<IResult<InstaUserInfo>> GetUserInfoByUsernameAsync(string username);
+        /// <summary>
+        ///     Get pending friendship requests.
+        /// </summary>
+        Task<IResult<InstaPendingRequest>> GetPendingFriendRequestsAsync();
+        /// <summary>
+        ///     Accept user friendship requst.
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<InstaFriendshipStatus>> AcceptFriendshipRequestAsync(long userId);
+        /// <summary>
+        ///     Ignore user friendship requst.
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<InstaFriendshipStatus>> IgnoreFriendshipRequestAsync(long userId);
     }
 }

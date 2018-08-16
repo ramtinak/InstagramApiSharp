@@ -55,6 +55,7 @@
     <Compile Include="Samples\Messaging.cs" />
     <Compile Include="Samples\SaveLoadState.cs" />
     <Compile Include="Samples\Stories.cs" />
+    <Compile Include="Samples\UploadAlbum.cs" />
     <Compile Include="Samples\UploadPhoto.cs" />
     <Compile Include="Samples\UploadVideo.cs" />
     <Compile Include="Utils\ConsoleUtils.cs" />

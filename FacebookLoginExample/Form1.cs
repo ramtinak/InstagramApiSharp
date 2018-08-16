@@ -124,7 +124,7 @@ namespace FacebookLoginExample
                             .Build();
                         LoadingPanel.Visible = false;
                         // pass information to InstaApi
-                        var result = await InstaApi.SetCookiesAndHtmlForFbLoginAndChallenge(response, cookies, true);
+                        var result = await InstaApi.SetCookiesAndHtmlForFacebookLogin(response, cookies, true);
                         if(result.Value)
                         {
                             // Save session 

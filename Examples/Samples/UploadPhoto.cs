@@ -18,10 +18,11 @@ namespace Examples.Samples
         public async Task DoShow()
         {
             var mediaImage = new InstaImage
-            {
+            {  
+                // leave zero, if you don't know how height and width is it.
                 Height = 1080,
                 Width = 1080,
-                URI = new Uri(Path.GetFullPath(@"c:\someawesomepicture.jpg"), UriKind.Absolute).LocalPath
+                URI = @"c:\someawesomepicture.jpg"
             };
             var result = await _instaApi.MediaProcessor.UploadPhotoAsync(mediaImage, "someawesomepicture");
             Console.WriteLine(result.Succeeded

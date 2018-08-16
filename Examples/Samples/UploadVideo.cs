@@ -27,14 +27,13 @@ namespace Examples.Samples
         }
         public async Task DoShow()
         {
-            var mediaVideo = new InstaVideo(@"c:\somevideo.mp4", 1080, 1080, 3);
-            var mediaImage = new InstaImage
+            var video = new InstaVideoUpload
             {
-                Height = 1080,
-                Width = 1080,
-                URI = new Uri(Path.GetFullPath(@"c:\RamtinJokar.jpg"), UriKind.Absolute).LocalPath
+                // leave zero, if you don't know how height and width is it.
+                Video = new InstaVideo(@"c:\video1.mp4", 0, 0),
+                VideoThumbnail = new InstaImage(@"c:\video thumbnail 1.jpg", 0, 0)
             };
-            var result = await _instaApi.MediaProcessor.UploadVideoAsync(mediaVideo, mediaImage, "ramtinak");
+            var result = await _instaApi.MediaProcessor.UploadVideoAsync(video, "ramtinak");
             Console.WriteLine(result.Succeeded
                 ? $"Media created: {result.Value.Pk}, {result.Value.Caption}"
                 : $"Unable to upload video: {result.Info.Message}");

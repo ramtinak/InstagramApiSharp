@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -136,10 +137,9 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Upload video
         /// </summary>
-        /// <param name="video">Video to upload</param>
-        /// <param name="imageThumbnail">Image thumbnail</param>
+        /// <param name="video">Video and thumbnail to upload</param>
         /// <param name="caption">Caption</param>
-        public async Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideo video, InstaImage imageThumbnail, string caption)
+        public async Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -167,7 +167,7 @@ namespace InstagramApiSharp.API.Processors
                 if (videoResponse == null)
                     return Result.Fail<InstaMedia>("Failed to get response from instagram video upload endpoint");
 
-                var fileBytes = File.ReadAllBytes(video.Url);
+                var fileBytes = File.ReadAllBytes(video.Video.Url);
                 var first = videoResponse.VideoUploadUrls[0];
                 instaUri = new Uri(Uri.EscapeUriString(first.Url));
 
@@ -185,7 +185,7 @@ namespace InstagramApiSharp.API.Processors
                 var videoContent = new ByteArrayContent(fileBytes);
                 videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 videoContent.Headers.Add("Content-Type", "application/octet-stream");
-                videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Url)}\"");
+                videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Url)}\"");
                 requestContent.Add(videoContent);
                 request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
                 request.Content = requestContent;
@@ -196,9 +196,9 @@ namespace InstagramApiSharp.API.Processors
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
 
-                await UploadVideoThumbnailAsync(imageThumbnail, uploadId);
+                await UploadVideoThumbnailAsync(video.VideoThumbnail, uploadId);
 
-                return await ConfigureVideoAsync(video, uploadId, caption);
+                return await ConfigureVideoAsync(video.Video, uploadId, caption);
             }
             catch (Exception exception)
             {
@@ -427,7 +427,7 @@ namespace InstagramApiSharp.API.Processors
                         return Result.UnExpectedResponse<InstaMedia>(response, json);
                 }
 
-                return await ConfigureAlbumAsync(uploadIds, caption);
+                return await ConfigurePhotoAlbumAsync(uploadIds, caption);
             }
             catch (Exception exception)
             {
@@ -435,105 +435,134 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
-
-        private async Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideo[] videos, string caption)
+        /// <summary>
+        ///     Upload album (videos and photos)
+        /// </summary>
+        /// <param name="images">Array of photos to upload</param>
+        /// <param name="videos">Array of videos to upload</param>
+        /// <param name="caption">Caption</param>
+        public async Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideoUpload[] videos, string caption)
         {
             try
             {
-                var uploadIds = new string[images.Length];
+                var imagesUploadIds = new string[images.Length];
                 var index = 0;
-
-                foreach (var image in images)
-                {
-                    var instaUri = UriCreator.GetUploadPhotoUri();
-                    var uploadId = ApiRequestMessage.GenerateUploadId();
-                    var requestContent = new MultipartFormDataContent(uploadId)
+                if (images != null)
+                    foreach (var image in images)
                     {
-                        {new StringContent(uploadId), "\"upload_id\""},
-                        {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
-                        {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                        var instaUri = UriCreator.GetUploadPhotoUri();
+                        var uploadId = ApiRequestMessage.GenerateUploadId();
+                        var requestContent = new MultipartFormDataContent(uploadId)
                         {
-                            new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
-                            "\"image_compression\""
-                        },
-                        {new StringContent("1"), "\"is_sidecar\""}
-                    };
-                    var imageContent = new ByteArrayContent(File.ReadAllBytes(image.URI));
-                    imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
-                    imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                    requestContent.Add(imageContent, "photo",
-                        $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
-                    var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                    request.Content = requestContent;
-                    var response = await _httpRequestProcessor.SendAsync(request);
-                    var json = await response.Content.ReadAsStringAsync();
-                    if (response.IsSuccessStatusCode)
-                        uploadIds[index++] = uploadId;
-                    else
-                        return Result.UnExpectedResponse<InstaMedia>(response, json);
-                }
+                            {new StringContent(uploadId), "\"upload_id\""},
+                            {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                            {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                            {
+                                new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                                "\"image_compression\""
+                            },
+                            {new StringContent("1"), "\"is_sidecar\""}
+                        };
+                        var imageContent = new ByteArrayContent(File.ReadAllBytes(image.URI));
+                        imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                        imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                        requestContent.Add(imageContent, "photo",
+                            $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
+                        var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                        request.Content = requestContent;
+                        var response = await _httpRequestProcessor.SendAsync(request);
+                        var json = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                            imagesUploadIds[index++] = uploadId;
+                        else
+                            return Result.UnExpectedResponse<InstaMedia>(response, json);
+                    }
 
                 var videosDic = new Dictionary<string, InstaVideo>();
-
-                foreach (var video in videos)
-                {
-                    var instaUri = UriCreator.GetUploadVideoUri();
-                    var uploadId = ApiRequestMessage.GenerateUploadId();
-                    var requestContent = new MultipartFormDataContent(uploadId)
-                {
-                    {new StringContent("2"), "\"media_type\""},
-                    {new StringContent(uploadId), "\"upload_id\""},
-                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
-                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                if (videos != null)
+                    foreach (var video in videos)
                     {
-                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
-                        "\"image_compression\""
+                        var instaUri = UriCreator.GetUploadVideoUri();
+                        var uploadId = ApiRequestMessage.GenerateUploadId();
+                        var requestContent = new MultipartFormDataContent(uploadId)
+                        {
+                            {new StringContent("0"), "\"upload_media_height\""},
+                            {new StringContent("1"), "\"is_sidecar\""},
+                            {new StringContent("0"), "\"upload_media_width\""},
+                            {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                            {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                            {new StringContent("0"), "\"upload_media_duration_ms\""},
+                            {new StringContent(uploadId), "\"upload_id\""},
+                            {new StringContent("{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}"), "\"retry_context\""},
+                            {new StringContent("2"), "\"media_type\""},
+                        };
+
+                        var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                        request.Content = requestContent;
+                        var response = await _httpRequestProcessor.SendAsync(request);
+                        var json = await response.Content.ReadAsStringAsync();
+                        var videoResponse = JsonConvert.DeserializeObject<VideoUploadJobResponse>(json);
+                        if (videoResponse == null)
+                            return Result.Fail<InstaMedia>("Failed to get response from instagram video upload endpoint");
+
+                        var fileBytes = File.ReadAllBytes(video.Video.Url);
+                        var first = videoResponse.VideoUploadUrls[0];
+                        instaUri = new Uri(Uri.EscapeUriString(first.Url));
+
+
+                        requestContent = new MultipartFormDataContent(uploadId)
+                        {
+                            {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                            {
+                                new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                                "\"image_compression\""
+                            }
+                        };
+                        var videoContent = new ByteArrayContent(fileBytes);
+                        videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                        videoContent.Headers.Add("Content-Type", "application/octet-stream");
+                        videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Url)}\"");
+                        requestContent.Add(videoContent);
+                        request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                        request.Content = requestContent;
+                        request.Headers.Host = "upload.instagram.com";
+                        request.Headers.Add("Cookie2", "$Version=1");
+                        request.Headers.Add("Session-ID", uploadId);
+                        request.Headers.Add("job", first.Job);
+                        response = await _httpRequestProcessor.SendAsync(request);
+                        json = await response.Content.ReadAsStringAsync();
+
+
+                        //await UploadVideoThumbnailAsync(images[0], uploadId);
+                        // upload video thumbnail
+                        instaUri = UriCreator.GetUploadPhotoUri();
+                        requestContent = new MultipartFormDataContent(uploadId)
+                        {
+                            {new StringContent("1"), "\"is_sidecar\""},
+                            {new StringContent(uploadId), "\"upload_id\""},
+                            {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                            {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                            {
+                                new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                                "\"image_compression\""
+                            },
+                            {new StringContent("{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}"), "\"retry_context\""},
+                            {new StringContent("2"), "\"media_type\""},
+                        };
+
+                        var imageContent = new ByteArrayContent(File.ReadAllBytes(video.VideoThumbnail.URI));
+                        imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                        imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                        requestContent.Add(imageContent, "photo", $"cover_photo_{uploadId}.jpg");
+                        request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                        request.Content = requestContent;
+                        response = await _httpRequestProcessor.SendAsync(request);
+                        json = await response.Content.ReadAsStringAsync();
+                        var imgResp = JsonConvert.DeserializeObject<ImageThumbnailResponse>(json);
+                        videosDic.Add(uploadId, video.Video);
                     }
-                };
-
-                    var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                    request.Content = requestContent;
-                    var response = await _httpRequestProcessor.SendAsync(request);
-                    var json = await response.Content.ReadAsStringAsync();
-
-                    var videoResponse = JsonConvert.DeserializeObject<VideoUploadJobResponse>(json);
-                    if (videoResponse == null)
-                        return Result.Fail<InstaMedia>("Failed to get response from instagram video upload endpoint");
-
-                    var fileBytes = File.ReadAllBytes(video.Url);
-                    var first = videoResponse.VideoUploadUrls[0];
-                    instaUri = new Uri(Uri.EscapeUriString(first.Url));
-
-
-                    requestContent = new MultipartFormDataContent(uploadId)
-                {
-                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
-                    {
-                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
-                        "\"image_compression\""
-                    }
-                };
-
-
-                    var videoContent = new ByteArrayContent(fileBytes);
-                    videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
-                    videoContent.Headers.Add("Content-Type", "application/octet-stream");
-                    videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Url)}\"");
-                    requestContent.Add(videoContent);
-                    request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                    request.Content = requestContent;
-                    request.Headers.Host = "upload.instagram.com";
-                    request.Headers.Add("Cookie2", "$Version=1");
-                    request.Headers.Add("Session-ID", uploadId);
-                    request.Headers.Add("job", first.Job);
-                    response = await _httpRequestProcessor.SendAsync(request);
-                    json = await response.Content.ReadAsStringAsync();
-                    await UploadVideoThumbnailAsync(images[0], uploadId);
-                    System.Diagnostics.Debug.WriteLine("Video Upload: " +  json);
-                    videosDic.Add(uploadId, video);
-                }
-
-                return await ConfigureAlbum2Async(uploadIds, videosDic, caption);
+                var config = await ConfigureAlbumAsync(imagesUploadIds, videosDic, caption);
+                return config;
             }
             catch (Exception exception)
             {
@@ -613,7 +642,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="uploadId">Array of upload IDs to configure</param>
         /// <param name="caption">Caption</param>
         /// <returns></returns>
-        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] uploadId, string caption)
+        private async Task<IResult<InstaMedia>> ConfigurePhotoAlbumAsync(string[] uploadId, string caption)
         {
             try
             {
@@ -662,7 +691,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaMedia>> ConfigureAlbum2Async(string[] imagesUploadId, Dictionary<string,InstaVideo> videos, string caption)
+        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] imagesUploadId, Dictionary<string,InstaVideo> videos, string caption)
         {
             try
             {
@@ -691,7 +720,7 @@ namespace InstagramApiSharp.API.Processors
                         //{"disable_comments", false},
                         {"source_type", 4},
                         {"upload_id", id},
-                        {"caption", null},
+                        {"caption", ""},
                     });
 
                 foreach (var id in videos)
@@ -703,15 +732,15 @@ namespace InstagramApiSharp.API.Processors
                     childrenArray.Add(new JObject
                     {
                         {"timezone_offset", "16200"},
-                        {"caption", null},
+                        {"caption", ""},
                         {"upload_id", id.Key},
                         {"date_time_original", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fffZ")},
                         {"source_type", "4"},
                         {
                             "extra", JsonConvert.SerializeObject(new JObject
                             {
-                                {"source_width", id.Value.Width},
-                                {"source_height", id.Value.Height}
+                                {"source_width", /*id.Value.Width*/0},
+                                {"source_height", /*id.Value.Height*/0}
                             })
                         },
                         {
@@ -721,6 +750,14 @@ namespace InstagramApiSharp.API.Processors
                                     {"length", id.Value.Length},
                                     {"source_type", "4"},
                                 }
+                            })
+                        },
+                        {
+                            "device", JsonConvert.SerializeObject(new JObject{
+                                {"manufacturer", "HUAWEI"},
+                                {"model", "PRA-LA1"},
+                                {"android_release", "7.0"},
+                                {"source_height", 24}
                             })
                         },
                         {"length", id.Value.Length},
@@ -758,7 +795,19 @@ namespace InstagramApiSharp.API.Processors
                                 {"source_height", 24}
                             }
                         },
-                    {"children_metadata", childrenArray}
+                    {"children_metadata", childrenArray},
+  
+                    ////"extra": "{\"source_width\":223,\"source_height\":226}",		
+                    ////"edits": "{\"crop_original_size\":[223.0,226.0],\"crop_center\":[0.0,-0.07079646],\"crop_zoom\":1.0134529}"
+                    //  {
+                    //        "edits", JsonConvert.SerializeObject(new JArray{
+                    //            new JObject
+                    //            {
+                    //                {"crop_center", "[0.0,0.0]" },
+                    //                {"crop_zoom", 1.0},
+                    //            }
+                    //        })
+                    //    }
                 };
                 System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(data));
 
@@ -769,9 +818,10 @@ namespace InstagramApiSharp.API.Processors
 
                 if (!response.IsSuccessStatusCode)
                     return Result.UnExpectedResponse<InstaMedia>(response, json);
-                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaItemResponse>(json);
-                var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
-                return Result.Success(converter.Convert());
+                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaAlbumResponse>(json);
+                var converter = ConvertersFabric.Instance.GetSingleMediaFromAlbumConverter(mediaResponse);
+                var obj = converter.Convert();
+                return Result.Success(obj);
             }
             catch (Exception exception)
             {
