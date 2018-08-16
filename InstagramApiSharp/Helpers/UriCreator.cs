@@ -211,7 +211,7 @@ namespace InstagramApiSharp.Helpers
         public static Uri GetDeclineAllPendingDirectRequestsUri()
         {
             if (
-                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_THREAD_APPROVE,
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_THREAD_DECLINEALL,
                     out var instaUri)) throw new Exception("Cant create URI for decline all pending direct requests");
             return instaUri;
         }

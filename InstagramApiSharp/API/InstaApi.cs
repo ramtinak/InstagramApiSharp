@@ -130,7 +130,7 @@ namespace InstagramApiSharp.API
             get { return _isUserAuthenticated; }
             internal set { _isUserAuthenticated = value; _userAuthValidate.IsUserAuthenticated = value; }
         }
-        #region Register new account with Phone number
+        #region Register new account with Phone number and email
         string _waterfallIdReg = "", _deviceIdReg = "", _phoneIdReg = "", _guidReg = "";
         /// <summary>
         ///     Check email availability
@@ -562,7 +562,6 @@ namespace InstagramApiSharp.API
                 {
                     var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
                     var html = await firstResponse.Content.ReadAsStringAsync();
-                    Debug.WriteLine(html);
                     _logger?.LogResponse(firstResponse);
                 }
                 var cookies =

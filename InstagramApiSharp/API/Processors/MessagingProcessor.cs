@@ -279,7 +279,7 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new JObject
                 {
-                    { "_csrftoken", _user.CsrfToken},
+                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -312,7 +312,7 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new JObject
                 {
-                    { "_csrftoken", _user.CsrfToken},
+                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);

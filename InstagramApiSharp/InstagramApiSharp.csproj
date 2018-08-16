@@ -10,9 +10,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.3.1</Version>
-    <AssemblyVersion>1.0.3.1</AssemblyVersion>
-    <FileVersion>1.0.3.1</FileVersion>
+    <Version>1.0.3.2</Version>
+    <AssemblyVersion>1.0.3.2</AssemblyVersion>
+    <FileVersion>1.0.3.2</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 Support:
 
@@ -42,7 +42,11 @@ See examples to find out how can you use this library.</Description>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.3.1
+    <PackageReleaseNotes>v1.0.3.2
+- Bugfix for random device (in user-agent)
+- Bugfix for Decline DeclineAllDirectPendingRequests
+
+v1.0.3.1
 - Upload album (videos and photos together) added
 - SendNewDirectMessage added
 - All deprecated functions removed

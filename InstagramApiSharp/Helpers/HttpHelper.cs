@@ -12,11 +12,12 @@ namespace InstagramApiSharp.Helpers
     {
         public static HttpRequestMessage GetDefaultRequest(HttpMethod method, Uri uri, AndroidDevice deviceInfo)
         {
+            var userAgent = GenerateUserAgent(deviceInfo);
             var request = new HttpRequestMessage(method, uri);
             request.Headers.Add(InstaApiConstants.HEADER_ACCEPT_LANGUAGE, InstaApiConstants.ACCEPT_LANGUAGE);
             request.Headers.Add(InstaApiConstants.HEADER_IG_CAPABILITIES, InstaApiConstants.IG_CAPABILITIES);
             request.Headers.Add(InstaApiConstants.HEADER_IG_CONNECTION_TYPE, InstaApiConstants.IG_CONNECTION_TYPE);
-            request.Headers.Add(InstaApiConstants.HEADER_USER_AGENT, InstaApiConstants.USER_AGENT);
+            request.Headers.Add(InstaApiConstants.HEADER_USER_AGENT, userAgent);
             request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_XGOOGLE_AD_IDE,
                 deviceInfo.GoogleAdId.ToString()));
             return request;
@@ -115,6 +116,14 @@ namespace InstagramApiSharp.Helpers
             request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION,
                 InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
             return request;
+        }
+
+        private static string GenerateUserAgent(AndroidDevice deviceInfo)
+        {
+            if (deviceInfo == null)
+                return InstaApiConstants.USER_AGENT_DEFAULT;
+            return string.Format(InstaApiConstants.USER_AGENT, deviceInfo.Dpi, deviceInfo.Resolution, deviceInfo.HardwareManufacturer,
+                deviceInfo.DeviceModelIdentifier, deviceInfo.FirmwareBrand, deviceInfo.HardwareModel);
         }
     }
 }

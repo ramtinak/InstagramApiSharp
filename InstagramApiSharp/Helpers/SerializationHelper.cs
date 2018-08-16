@@ -9,10 +9,6 @@ namespace InstagramApiSharp.Helpers
     {
         public static Stream SerializeToStream(object o)
         {
-            //var stream = new MemoryStream();
-            //DataContractSerializer serializer = new DataContractSerializer(o.GetType());
-            //serializer.WriteObject(stream, o);
-            //stream.Position = 0;
             MemoryStream stream = new MemoryStream();
             IFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, o);
@@ -22,10 +18,6 @@ namespace InstagramApiSharp.Helpers
 
         public static T DeserializeFromStream<T>(Stream stream)
         {
-            //var formatter = new DataContractSerializer(stream.GetType());
-            //stream.Seek(0, SeekOrigin.Begin);
-            //var fromStream = formatter.ReadObject(stream);
-            //return (T)fromStream;
             IFormatter formatter = new BinaryFormatter();
             stream.Seek(0, SeekOrigin.Begin);
             return (T)formatter.Deserialize(stream);
