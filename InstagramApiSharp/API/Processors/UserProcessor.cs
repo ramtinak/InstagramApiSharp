@@ -354,6 +354,24 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="InstaMediaList" />
         /// </returns>
+        public async Task<IResult<InstaMediaList>> GetUserTagsAsync(string username,
+            PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var user = await GetUserAsync(username);
+            if (!user.Succeeded)
+                return Result.Fail($"Unable to get user {username} to get tags", (InstaMediaList)null);
+            return await GetUserTagsAsync(user.Value.Pk, paginationParameters);
+        }
+        /// <summary>
+        ///     Get user tags by username asynchronously
+        ///     <remarks>Returns media list containing tags</remarks>
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
         public async Task<IResult<InstaMediaList>> GetUserTagsAsync(long userId,
             PaginationParameters paginationParameters)
         {
