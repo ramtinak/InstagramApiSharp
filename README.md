@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
+| Nuget | master | v1.0.3.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
 
 
 ## Note
@@ -47,7 +47,7 @@ Some of features:
 | Delete comment | Upload photo | Upload video | Get followings list |
 | Delete media (photo/video) | Upload story (photo) | Change password | Send direct message |
 | Search location | Get location feed | Collection create/get by id/get all/add items | Support challenge required |
-
+| Upload album (videos/photo) |
 ## Usage
 #### Use builder to get Insta API instance:
 ```c#
@@ -68,7 +68,12 @@ Task<IResult<object>>
 ```
 
 ## Version changes
-1.0.3
+v1.0.3.1
+- Upload album (videos and photos together) added. [Wiki example](https://github.com/ramtinak/InstagramApiSharp/wiki/Upload-album)
+- SendNewDirectMessage added
+- All deprecated functions removed
+
+v1.0.3.0
 - Register new account via phone number! [Wiki example](https://github.com/ramtinak/InstagramApiSharp/wiki/Create-new-account)
 - SendNewDirectMessage (for users that you didn't send message before).
 - ShareUser added to MessagingProcessor.
