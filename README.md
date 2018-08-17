@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.3.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
+| Nuget | master | v1.0.3.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp)
 
 
 ## Note
@@ -68,6 +68,10 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.3.2
+- Bugfix for random device (in user-agent)
+- Bugfix for Decline DeclineAllDirectPendingRequests
+
 v1.0.3.1
 - Upload album (videos and photos together) added. [Wiki example](https://github.com/ramtinak/InstagramApiSharp/wiki/Upload-album)
 - SendNewDirectMessage added
