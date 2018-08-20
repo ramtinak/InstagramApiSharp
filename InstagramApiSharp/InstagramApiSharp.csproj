@@ -10,12 +10,13 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.3.2</Version>
-    <AssemblyVersion>1.0.3.2</AssemblyVersion>
-    <FileVersion>1.0.3.2</FileVersion>
+    <Version>1.0.3.3</Version>
+    <AssemblyVersion>1.0.3.3</AssemblyVersion>
+    <FileVersion>1.0.3.3</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
-Support:
 
+
+Support:
 - Create new account with phone number and email
 
 - Login with Facebook
@@ -42,7 +43,10 @@ See examples to find out how can you use this library.</Description>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.3.2
+    <PackageReleaseNotes>v1.0.2.3
+- Set custom device (user-agent)
+
+v1.0.3.2
 - Bugfix for random device (in user-agent)
 - Bugfix for Decline DeclineAllDirectPendingRequests
 

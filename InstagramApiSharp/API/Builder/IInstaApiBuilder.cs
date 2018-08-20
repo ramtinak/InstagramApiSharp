@@ -56,5 +56,13 @@ namespace InstagramApiSharp.API.Builder
         /// <param name="delay">Timespan delay</param>
         /// <returns>API Builder</returns>
         IInstaApiBuilder SetRequestDelay(IRequestDelay delay);
+
+        /// <summary>
+        ///     Set custom android device.
+        ///     <para>Note: this is optional, if you didn't set this, InstagramApiSharp will choose random device.</para>
+        /// </summary>
+        /// <param name="androidDevice">Android device</param>
+        /// <returns>API Builder</returns>
+        IInstaApiBuilder SetDevice(AndroidDevice androidDevice);
     }
 }

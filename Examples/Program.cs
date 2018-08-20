@@ -35,6 +35,8 @@ namespace Examples
                     UserName = "Username",
                     Password = "Password"
                 };
+                // if you want to set custom device (user-agent) please check this:
+                // https://github.com/ramtinak/InstagramApiSharp/wiki/Set-custom-device(user-agent)
 
                 var delay = RequestDelay.FromSeconds(2, 2);
                 // create new InstaApi instance using Builder
@@ -43,13 +45,9 @@ namespace Examples
                     .UseLogger(new DebugLogger(LogLevel.Exceptions)) // use logger for requests and debug messages
                     .SetRequestDelay(delay)
                     .Build();
-                //// create account
-                //var username = "kajokoleha";
-                //var password = "ramtinjokar";
-                //var email = "ramtinak@live.com";
-                //var firstName = "Ramtin";
-                //var accountCreation = await _instaApi.CreateNewAccount(username, password, email, firstName);
-
+                // create account
+                // to create new account please check this:
+                // https://github.com/ramtinak/InstagramApiSharp/wiki/Create-new-account
                 const string stateFile = "state.bin";
                 try
                 {

@@ -16,11 +16,10 @@ namespace InstagramApiSharp.API
         public const string HEADER_XML_HTTP_REQUEST = "XMLHttpRequest";
 
         public const string USER_AGENT =
-            "Instagram 35.0.0.20.96  Android (24/7.0; {0}; {1}; {2}; {3}; {4}; {5}; en_US; 95414346)";
-        //{dpi}; {resolution}; {devicebrand}; {devicemodelindentifier}; {FirmwareBrand}; {hardwaremodel}; en_US
+            "Instagram 35.0.0.20.96 Android (24/7.0; {0}; {1}; {2}; {3}; {4}; {5}; en_US; 95414346)";
         ////"Instagram 35.0.0.20.96 Android (24/7.0; 480dpi; 1080x1812; HUAWEI/HONOR; PRA-LA1; HWPRA-H; hi6250; en_US; 95414346)";
         public const string USER_AGENT_DEFAULT =
-        "Instagram 35.0.0.20.96  Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 95414346)";
+        "Instagram 35.0.0.20.96 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 95414346)";
         ////"Instagram 12.0.0.7.91 Android (23/6.0.1; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_NZ)";
         public const string HEADER_USER_AGENT = "User-Agent";
 

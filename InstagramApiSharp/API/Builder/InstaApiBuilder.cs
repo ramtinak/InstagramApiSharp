@@ -37,7 +37,8 @@ namespace InstagramApiSharp.API.Builder
 
             if (_requestMessage == null)
             {
-                _device = AndroidDeviceGenerator.GetRandomAndroidDevice();
+                if (_device == null)
+                    _device = AndroidDeviceGenerator.GetRandomAndroidDevice();
                 _requestMessage = new ApiRequestMessage
                 {
                     phone_id = _device.PhoneGuid.ToString(),
@@ -141,6 +142,21 @@ namespace InstagramApiSharp.API.Builder
         public IInstaApiBuilder SetRequestDelay(IRequestDelay delay)
         {
             _delay = delay;
+            return this;
+        }
+
+        /// <summary>
+        ///     Set custom android device.
+        ///     <para>Note: this is optional, if you didn't set this, InstagramApiSharp will choose random device.</para>
+        /// </summary>
+        /// <param name="androidDevice">Android device</param>
+        /// <returns>API Builder</returns>
+        public IInstaApiBuilder SetDevice(AndroidDevice androidDevice)
+        {
+            if (androidDevice == null)
+                _device = AndroidDeviceGenerator.GetRandomAndroidDevice();
+            else
+                _device = androidDevice;
             return this;
         }
 
