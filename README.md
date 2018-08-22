@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link | |
 | ------ | ------ | ------ | ------ |  ------ |
-| Nuget | master | v1.0.3.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![travis](https://api.travis-ci.org/ramtinak/InstagramApiSharp.svg?branch=master)](https://travis-ci.org/ramtinak/InstagramApiSharp/builds/418949009) 
+| Nuget | master | v1.0.3.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![travis](https://api.travis-ci.org/ramtinak/InstagramApiSharp.svg?branch=master)](https://travis-ci.org/ramtinak/InstagramApiSharp/builds) 
 
 
 ## Note
