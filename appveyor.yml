@@ -17,7 +17,6 @@ build:
   include_nuget_references: false  # add -IncludeReferencedProjects option while packaging NuGet artifacts
   
 build_script:
-  - ps: nuget sources add -Name MyGetXunit -Source https://www.myget.org/F/xunit/api/v3/index.json
   - ps: cd InstagramApiSharp 
   - ps: dotnet --info
   - ps: dotnet restore
