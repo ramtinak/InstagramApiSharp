@@ -1,0 +1,12 @@
+language: csharp
+dist: trusty
+language: csharp
+mono: none
+dotnet: 2.0.0
+solution: InstagramApiSharp.sln
+
+script:
+  - cd InstagramApiSharp
+  - dotnet --info
+  - dotnet restore
+  - dotnet build  --framework netstandard2.0
