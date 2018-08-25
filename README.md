@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link | Travis build | AppVeyor build |
 | ------ | ------ | ------ | ------ |  ------ |  ------ |
-| Nuget | master | v1.0.3.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![travis](https://api.travis-ci.org/ramtinak/InstagramApiSharp.svg?branch=master)](https://travis-ci.org/ramtinak/InstagramApiSharp/builds) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/o793bkuvt968pkpr?svg=true)](https://ci.appveyor.com/project/ramtinak/instagramapisharp/) 
+| Nuget | master | v1.0.3.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![travis](https://api.travis-ci.org/ramtinak/InstagramApiSharp.svg?branch=master)](https://travis-ci.org/ramtinak/InstagramApiSharp/builds) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/o793bkuvt968pkpr?svg=true)](https://ci.appveyor.com/project/ramtinak/instagramapisharp/) 
 
 
 ## Note
@@ -68,7 +68,10 @@ Task<IResult<object>>
 ```
 
 ## Version changes
-v1.0.2.3
+v1.0.3.4
+- Fix challenge require (if two factor is enable)
+
+v1.0.3.3
 - Set custom device (user-agent) [Wiki example](https://github.com/ramtinak/InstagramApiSharp/wiki/Set-custom-device(user-agent))
 
 v1.0.3.2

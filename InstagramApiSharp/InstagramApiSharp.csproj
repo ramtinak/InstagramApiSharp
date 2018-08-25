@@ -10,40 +10,33 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.3.3</Version>
-    <AssemblyVersion>1.0.3.3</AssemblyVersion>
-    <FileVersion>1.0.3.3</FileVersion>
+    <Version>1.0.3.4</Version>
+    <AssemblyVersion>1.0.3.4</AssemblyVersion>
+    <FileVersion>1.0.3.4</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
 Support:
-- Create new account with phone number and email
-
-- Login with Facebook
-
+- Create new account with phone number and email.
+- Login with Facebook.
 - Edit Profile.
-
 - Change/Remove profile picture.
-
-- Upload album (videos and photos)
+- Upload album (videos and photos).
 - Live functions.
-
-- Discover functions
-
+- Discover functions.
 - Search peoples.
-
 - Can pass challenge required.
-
 - and many more.
 
-
-
-See examples to find out how can you use this library.</Description>
+See examples and wiki pages to find out how can you use this library.</Description>
     <Authors>RamtinJokar</Authors>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.2.3
+    <PackageReleaseNotes>v1.0.3.4
+- Fix challenge require (if two factor is enable)
+
+v1.0.3.3
 - Set custom device (user-agent)
 
 v1.0.3.2

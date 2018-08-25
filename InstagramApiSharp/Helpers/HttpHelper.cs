@@ -18,6 +18,7 @@ namespace InstagramApiSharp.Helpers
             request.Headers.Add(InstaApiConstants.HEADER_IG_CAPABILITIES, InstaApiConstants.IG_CAPABILITIES);
             request.Headers.Add(InstaApiConstants.HEADER_IG_CONNECTION_TYPE, InstaApiConstants.IG_CONNECTION_TYPE);
             request.Headers.Add(InstaApiConstants.HEADER_USER_AGENT, userAgent);
+            request.Headers.Add(InstaApiConstants.HEADER_IG_APP_ID, InstaApiConstants.IG_APP_ID);
             request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_XGOOGLE_AD_IDE,
                 deviceInfo.GoogleAdId.ToString()));
             return request;

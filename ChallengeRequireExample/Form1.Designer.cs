@@ -46,8 +46,13 @@
             this.LblForSmsEmail = new System.Windows.Forms.Label();
             this.GetFeedButton = new System.Windows.Forms.Button();
             this.RtBox = new System.Windows.Forms.RichTextBox();
+            this.TwoFactorGroupBox = new System.Windows.Forms.GroupBox();
+            this.TwoFactorButton = new System.Windows.Forms.Button();
+            this.txtTwoFactorCode = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.SelectMethodGroupBox.SuspendLayout();
             this.VerifyCodeGroupBox.SuspendLayout();
+            this.TwoFactorGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -232,11 +237,52 @@
             this.RtBox.Text = "";
             this.RtBox.Visible = false;
             // 
+            // TwoFactorGroupBox
+            // 
+            this.TwoFactorGroupBox.Controls.Add(this.TwoFactorButton);
+            this.TwoFactorGroupBox.Controls.Add(this.txtTwoFactorCode);
+            this.TwoFactorGroupBox.Controls.Add(this.label5);
+            this.TwoFactorGroupBox.Location = new System.Drawing.Point(71, 210);
+            this.TwoFactorGroupBox.Name = "TwoFactorGroupBox";
+            this.TwoFactorGroupBox.Size = new System.Drawing.Size(274, 87);
+            this.TwoFactorGroupBox.TabIndex = 14;
+            this.TwoFactorGroupBox.TabStop = false;
+            this.TwoFactorGroupBox.Text = "Two factor authentication required";
+            this.TwoFactorGroupBox.Visible = false;
+            // 
+            // TwoFactorButton
+            // 
+            this.TwoFactorButton.Location = new System.Drawing.Point(193, 51);
+            this.TwoFactorButton.Name = "TwoFactorButton";
+            this.TwoFactorButton.Size = new System.Drawing.Size(75, 23);
+            this.TwoFactorButton.TabIndex = 5;
+            this.TwoFactorButton.Text = "Auth";
+            this.TwoFactorButton.UseVisualStyleBackColor = true;
+            this.TwoFactorButton.Click += new System.EventHandler(this.TwoFactorButton_Click);
+
+            // 
+            // txtTwoFactorCode
+            // 
+            this.txtTwoFactorCode.Location = new System.Drawing.Point(67, 25);
+            this.txtTwoFactorCode.Name = "txtTwoFactorCode";
+            this.txtTwoFactorCode.Size = new System.Drawing.Size(201, 20);
+            this.txtTwoFactorCode.TabIndex = 4;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(35, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Code:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(416, 125);
+            this.Controls.Add(this.TwoFactorGroupBox);
             this.Controls.Add(this.RtBox);
             this.Controls.Add(this.GetFeedButton);
             this.Controls.Add(this.VerifyCodeGroupBox);
@@ -254,6 +300,8 @@
             this.SelectMethodGroupBox.PerformLayout();
             this.VerifyCodeGroupBox.ResumeLayout(false);
             this.VerifyCodeGroupBox.PerformLayout();
+            this.TwoFactorGroupBox.ResumeLayout(false);
+            this.TwoFactorGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,6 +327,10 @@
         private System.Windows.Forms.Button ResendButton;
         private System.Windows.Forms.Button GetFeedButton;
         private System.Windows.Forms.RichTextBox RtBox;
+        private System.Windows.Forms.GroupBox TwoFactorGroupBox;
+        private System.Windows.Forms.Button TwoFactorButton;
+        private System.Windows.Forms.TextBox txtTwoFactorCode;
+        private System.Windows.Forms.Label label5;
     }
 }
 

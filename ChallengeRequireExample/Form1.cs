@@ -216,32 +216,65 @@ namespace ChallengeRequireExample
             }
             try
             {
-                var verify = await InstaApi.VerifyCodeForChallengeRequireAsync(txtVerifyCode.Text);
-                if (verify.Succeeded)
+                // Note: calling VerifyCodeForChallengeRequireAsync function, 
+                // if user has two factor enabled, will wait 15 seconds and it will try to
+                // call LoginAsync.
+                
+                var verifyLogin = await InstaApi.VerifyCodeForChallengeRequireAsync(txtVerifyCode.Text);
+                if (verifyLogin.Succeeded)
                 {
-                    if (verify.Value.IsLoggedIn)
-                    {
-                        // you are logged in sucessfully.
-                        VerifyCodeGroupBox.Visible = SelectMethodGroupBox.Visible = false;
-                        Size = ChallengeSize;
-                        GetFeedButton.Visible = true;
-                        // Save session
-                        SaveSession();
-                        Text = $"{AppName} Connected";
-                    }
-                    else
-                    {
-                        // you aren't!
-                        MessageBox.Show(verify.Value.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    // you are logged in sucessfully.
+                    VerifyCodeGroupBox.Visible = SelectMethodGroupBox.Visible = false;
+                    Size = ChallengeSize;
+                    GetFeedButton.Visible = true;
+                    // Save session
+                    SaveSession();
+                    Text = $"{AppName} Connected";
                 }
                 else
-                    MessageBox.Show(verify.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                {
+                    VerifyCodeGroupBox.Visible = SelectMethodGroupBox.Visible = false;
+                    // two factor is required
+                    if (verifyLogin.Value == InstaLoginResult.TwoFactorRequired)
+                    {
+                        TwoFactorGroupBox.Visible = true;
+                    }
+                    else
+                        MessageBox.Show(verifyLogin.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                    
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "EX", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
         }
-
+        private async void TwoFactorButton_Click(object sender, EventArgs e)
+        {
+            if (InstaApi == null)
+                return;
+            if (string.IsNullOrEmpty(txtTwoFactorCode.Text))
+            {
+                MessageBox.Show("Please type your two factor code and then press Auth button.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            // send two factor code
+            var twoFactorLogin = await InstaApi.TwoFactorLoginAsync(txtTwoFactorCode.Text);
+            Debug.WriteLine(twoFactorLogin.Value);
+            if (twoFactorLogin.Succeeded)
+            {
+                // connected
+                // save session
+                SaveSession();
+                Size = ChallengeSize;
+                TwoFactorGroupBox.Visible = false;
+                GetFeedButton.Visible = true;
+                Text = $"{AppName} Connected";
+                Size = NormalSize;
+            }
+            else
+            {
+                MessageBox.Show(twoFactorLogin.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
         private async void GetFeedButton_Click(object sender, EventArgs e)
         {
             if (InstaApi == null)

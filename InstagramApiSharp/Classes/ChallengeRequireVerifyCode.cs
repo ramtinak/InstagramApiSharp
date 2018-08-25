@@ -61,6 +61,8 @@ namespace InstagramApiSharp.Classes
         public string Message { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
+        [JsonProperty("action")]
+        internal string Action { get; set; }
     }
 
 }

@@ -2,9 +2,15 @@
 using InstagramApiSharp.API;
 using InstagramApiSharp.Helpers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.Classes.Android.DeviceInfo
 {
+    internal class ApiRequestChallengeMessage : ApiRequestMessage
+    {
+        [JsonProperty("_csrftoken")]
+        public string CsrtToken { get; set; }
+    }
     public class ApiRequestMessage
     {
         public string phone_id { get; set; }
@@ -13,12 +19,29 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         public string device_id { get; set; }
         public string password { get; set; }
         public string login_attempt_count { get; set; } = "0";
+        public string adid { get; set; }
         public static ApiRequestMessage CurrentDevice { get; private set; }
         internal string GetMessageString()
         {
-            return JsonConvert.SerializeObject(this);
+            var json = JsonConvert.SerializeObject(this);
+            return json;
         }
-
+        internal string GetChallengeMessageString(string csrfToken)
+        {
+            var api = new ApiRequestChallengeMessage
+            {
+                CsrtToken = csrfToken,
+                device_id = device_id,
+                guid = guid,
+                login_attempt_count = "1",
+                password = password,
+                phone_id = phone_id,
+                username = username,
+                adid = adid
+            };
+            var json = JsonConvert.SerializeObject(api);
+            return json;
+        }
         internal string GetMessageStringForChallengeVerificationCodeSend(int Choice = 1)
         {
             return JsonConvert.SerializeObject(new { choice = Choice.ToString(), _csrftoken = "ReplaceCSRF", guid, device_id });
@@ -36,7 +59,26 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             deviceid = device_id;
             return res;
         }
-
+        internal string GenerateChallengeSignature(string signatureKey,string csrfToken, out string deviceid)
+        {
+            if (string.IsNullOrEmpty(signatureKey))
+                signatureKey = InstaApiConstants.IG_SIGNATURE_KEY;
+            var api = new ApiRequestChallengeMessage
+            {
+                CsrtToken = csrfToken,
+                device_id = device_id,
+                guid = guid,
+                login_attempt_count = "1",
+                password = password,
+                phone_id = phone_id,
+                username = username,
+                adid = adid
+            };
+            var res = CryptoHelper.CalculateHash(signatureKey,
+                JsonConvert.SerializeObject(api));
+            deviceid = device_id;
+            return res;
+        }
         internal bool IsEmpty()
         {
             if (string.IsNullOrEmpty(phone_id)) return true;

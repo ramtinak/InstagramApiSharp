@@ -34,9 +34,9 @@
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.LoginButton = new System.Windows.Forms.Button();
             this.TwoFactorGroupBox = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtTwoFactorCode = new System.Windows.Forms.TextBox();
             this.TwoFactorButton = new System.Windows.Forms.Button();
+            this.txtTwoFactorCode = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.TwoFactorGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,22 +94,6 @@
             this.TwoFactorGroupBox.TabStop = false;
             this.TwoFactorGroupBox.Text = "Two factor authentication required";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 28);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Code:";
-            // 
-            // txtTwoFactorCode
-            // 
-            this.txtTwoFactorCode.Location = new System.Drawing.Point(67, 25);
-            this.txtTwoFactorCode.Name = "txtTwoFactorCode";
-            this.txtTwoFactorCode.Size = new System.Drawing.Size(201, 20);
-            this.txtTwoFactorCode.TabIndex = 4;
-            // 
             // TwoFactorButton
             // 
             this.TwoFactorButton.Location = new System.Drawing.Point(193, 51);
@@ -119,6 +103,22 @@
             this.TwoFactorButton.Text = "Auth";
             this.TwoFactorButton.UseVisualStyleBackColor = true;
             this.TwoFactorButton.Click += new System.EventHandler(this.TwoFactorButton_Click);
+            // 
+            // txtTwoFactorCode
+            // 
+            this.txtTwoFactorCode.Location = new System.Drawing.Point(67, 25);
+            this.txtTwoFactorCode.Name = "txtTwoFactorCode";
+            this.txtTwoFactorCode.Size = new System.Drawing.Size(201, 20);
+            this.txtTwoFactorCode.TabIndex = 4;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 28);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Code:";
             // 
             // Form1
             // 

@@ -98,7 +98,7 @@ namespace InstagramApiSharp.API
         Task<IResult<ChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync();
         Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
         Task<IResult<ChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync();
-        Task<IResult<ChallengeRequireVerifyCode>> VerifyCodeForChallengeRequireAsync(string verifyCode);
+        Task<IResult<InstaLoginResult>> VerifyCodeForChallengeRequireAsync(string verifyCode);
         /// <summary>
         ///     Set cookie and html document to verify login information.
         /// </summary>

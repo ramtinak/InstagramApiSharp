@@ -570,10 +570,13 @@ namespace InstagramApiSharp.API
               
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
                 _user.CsrfToken = csrftoken;
-                Debug.WriteLine("login token: " + csrftoken);
                 var instaUri = UriCreator.GetLoginUri();
-                var signature =
-                    $"{_httpRequestProcessor.RequestMessage.GenerateSignature(InstaApiConstants.IG_SIGNATURE_KEY, out string devid)}.{_httpRequestProcessor.RequestMessage.GetMessageString()}";
+                var signature = string.Empty;
+                string devid = string.Empty;
+                if (isNewLogin)
+                    signature = $"{_httpRequestProcessor.RequestMessage.GenerateSignature(InstaApiConstants.IG_SIGNATURE_KEY, out devid)}.{_httpRequestProcessor.RequestMessage.GetMessageString()}";
+                else
+                    signature = $"{_httpRequestProcessor.RequestMessage.GenerateChallengeSignature(InstaApiConstants.IG_SIGNATURE_KEY,csrftoken, out devid)}.{_httpRequestProcessor.RequestMessage.GetChallengeMessageString(csrftoken)}";
                 _deviceInfo.DeviceId = devid;
                 var fields = new Dictionary<string, string>
                 {
@@ -581,6 +584,7 @@ namespace InstagramApiSharp.API
                     {InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION}
                 };
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                request.Headers.Add("Host", "i.instagram.com");
                 request.Content = new FormUrlEncodedContent(fields);
                 request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE, signature);
                 request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
@@ -752,14 +756,6 @@ namespace InstagramApiSharp.API
                 return Result.Fail(exception, false);
             }
         }
-        ///// <summary>
-        /////     Get Challenge information
-        ///// </summary>
-        ///// <returns></returns>
-        //public InstaChallengeLoginInfo GetChallenge()
-        //{
-        //    return _challengeinfo;
-        //}
         string _challengeGuid, _challengeDeviceId;
         public async Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync()
         {
@@ -931,13 +927,13 @@ namespace InstagramApiSharp.API
             }
         }
 
-        public async Task<IResult<ChallengeRequireVerifyCode>> VerifyCodeForChallengeRequireAsync(string verifyCode)
+        public async Task<IResult<InstaLoginResult>> VerifyCodeForChallengeRequireAsync(string verifyCode)
         {
             if(verifyCode.Length != 6)
-                return Result.Fail("Verify code must be an 6 digit number.", (ChallengeRequireVerifyCode)null);
+                return Result.Fail("Verify code must be an 6 digit number.", InstaLoginResult.Exception);
 
             if (_challengeinfo == null)
-                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (ChallengeRequireVerifyCode)null);
+                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", InstaLoginResult.Exception);
 
             try
             {
@@ -946,8 +942,6 @@ namespace InstagramApiSharp.API
                 .BaseAddress);
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
                 _user.CsrfToken = csrftoken;
-                Debug.WriteLine("verify token: " + csrftoken);
-
                 var instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
                 if (string.IsNullOrEmpty(_challengeGuid))
                     _challengeGuid = Guid.NewGuid().ToString();
@@ -973,7 +967,7 @@ namespace InstagramApiSharp.API
                         msg = j.Message;
                     }
                     catch { }
-                    return Result.Fail(msg, (ChallengeRequireVerifyCode)null);
+                    return Result.UnExpectedResponse<InstaLoginResult>(response, msg + "\t"+ json);
                 }
                 else
                 {
@@ -983,23 +977,26 @@ namespace InstagramApiSharp.API
                         if (obj.LoggedInUser != null)
                         {
                             ValidateUserAsync(obj.LoggedInUser, csrftoken);
-                            await Task.Delay(1500);
+                            await Task.Delay(3000);
                             await _messagingProcessor.GetDirectInboxAsync();
                             await _feedProcessor.GetRecentActivityFeedAsync(PaginationParameters.MaxPagesToLoad(1));
-                        }
-                        else
-                        {
 
+                            return Result.Success(InstaLoginResult.Success);
+                        }
+                        else if (!string.IsNullOrEmpty(obj.Action))
+                        {
+                            // we should wait at least 15 seconds and then trying to login again
+                            await Task.Delay(15000);
+                            return await LoginAsync(false);
                         }
                     }
-                    
-
-                    return Result.Success(obj);
+                    return Result.UnExpectedResponse<InstaLoginResult>(response, json);
                 }
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex, (ChallengeRequireVerifyCode)null);
+                LogException(ex);
+                return Result.Fail(ex, InstaLoginResult.Exception);
             }
         }
 
@@ -1200,6 +1197,7 @@ namespace InstagramApiSharp.API
             _httpRequestProcessor.RequestMessage.device_id = data.DeviceInfo.DeviceId;
             _httpRequestProcessor.RequestMessage.phone_id = data.DeviceInfo.PhoneGuid.ToString();
             _httpRequestProcessor.RequestMessage.guid = data.DeviceInfo.DeviceGuid;
+            _httpRequestProcessor.RequestMessage.adid = data.DeviceInfo.AdId.ToString();
 
             foreach (Cookie cookie in data.RawCookies)
             {
@@ -1227,6 +1225,7 @@ namespace InstagramApiSharp.API
             _httpRequestProcessor.RequestMessage.device_id = data.DeviceInfo.DeviceId;
             _httpRequestProcessor.RequestMessage.phone_id = data.DeviceInfo.PhoneGuid.ToString();
             _httpRequestProcessor.RequestMessage.guid = data.DeviceInfo.DeviceGuid;
+            _httpRequestProcessor.RequestMessage.adid = data.DeviceInfo.AdId.ToString();
 
             foreach (Cookie cookie in data.RawCookies)
             {
@@ -1261,11 +1260,6 @@ namespace InstagramApiSharp.API
             _discoverProcessor = new DiscoverProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
             _accountProcessor = new AccountProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate);
 
-        }
-        internal void ValidateUserAndLogin()
-        {
-            ValidateUser();
-            ValidateLoggedIn();
         }
         private void ValidateUser()
         {

@@ -45,7 +45,8 @@ namespace InstagramApiSharp.API.Builder
                     guid = _device.DeviceGuid,
                     password = _user?.Password,
                     username = _user?.UserName,
-                    device_id = ApiRequestMessage.GenerateDeviceId()
+                    device_id = ApiRequestMessage.GenerateDeviceId(),
+                    adid = _device.AdId.ToString()
                 };
             }
 
@@ -153,10 +154,7 @@ namespace InstagramApiSharp.API.Builder
         /// <returns>API Builder</returns>
         public IInstaApiBuilder SetDevice(AndroidDevice androidDevice)
         {
-            if (androidDevice == null)
-                _device = AndroidDeviceGenerator.GetRandomAndroidDevice();
-            else
-                _device = androidDevice;
+            _device = androidDevice;
             return this;
         }
 
