@@ -69,7 +69,7 @@ Task<IResult<object>>
 
 ## Version changes
 v1.0.3.5
-- Support NET Core for uploading video/image as bytes
+- Support NET Core for uploading video/image as bytes [Example project](https://github.com/ramtinak/InstagramApiSharp/tree/master/UwpExample)
 
 v1.0.3.4
 - Fix challenge require (if two factor is enable)
