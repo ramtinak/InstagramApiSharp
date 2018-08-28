@@ -147,7 +147,7 @@ You can download source code or app from [InstaPost](https://github.com/ramtinak
 
 ## Language
 You can ask questions or report issues in Persian or English language.
-I can't answer to other languages, because I don't understand other languages.
+I can't answer to other languages, because I don't understand them.
 
 ## License
 Do whatever you want to do! Except changing library name!!!!
@@ -172,7 +172,7 @@ This code is in no way affiliated with, authorized, maintained, sponsored or end
 
 
 ## About me
-First and last name: Ramtin Jokar
+Ramtin Jokar
 
 Born: 1995 (Bushehr city, Iran)
 
