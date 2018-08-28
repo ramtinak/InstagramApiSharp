@@ -22,7 +22,7 @@ namespace Examples.Samples
                 // leave zero, if you don't know how height and width is it.
                 Height = 1080,
                 Width = 1080,
-                URI = @"c:\someawesomepicture.jpg"
+                Uri = @"c:\someawesomepicture.jpg"
             };
             var result = await _instaApi.MediaProcessor.UploadPhotoAsync(mediaImage, "someawesomepicture");
             Console.WriteLine(result.Succeeded

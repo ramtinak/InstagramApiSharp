@@ -102,7 +102,12 @@ namespace InstagramApiSharp.API.Processors
                         "\"image_compression\""
                     }
                 };
-                var imageContent = new ByteArrayContent(File.ReadAllBytes(image.URI));
+                byte[] imageBytes;
+                if (image.ImageBytes == null)
+                    imageBytes = File.ReadAllBytes(image.Uri);
+                else
+                    imageBytes = image.ImageBytes;
+                var imageContent = new ByteArrayContent(imageBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
                 requestContent.Add(imageContent, "photo", $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");

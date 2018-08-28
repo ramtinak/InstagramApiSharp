@@ -27,14 +27,14 @@ namespace Examples.Samples
                     // leave zero, if you don't know how height and width is it.
                     Height = 0,
                     Width = 0,
-                    URI = @"c:\image1.jpg"
+                    Uri = @"c:\image1.jpg"
                 },
                 new InstaImage
                 {
                     // leave zero, if you don't know how height and width is it.
                     Height = 0,
                     Width = 0,
-                    URI = @"c:\image2.jpg"
+                    Uri = @"c:\image2.jpg"
                 }
             };
 

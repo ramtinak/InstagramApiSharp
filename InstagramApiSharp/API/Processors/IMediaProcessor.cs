@@ -33,24 +33,12 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video and thumbnail to upload</param>
         /// <param name="caption">Caption</param>
         Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption);
-
-        //Task<IResult<bool>> UploadVideoThumbnailAsync(InstaImage image, string uploadId);
-        //Task<IResult<InstaMedia>> ConfigureVideoAsync(InstaVideo video, string uploadId, string caption);
-        //Task<IResult<InstaMedia>> ExposeVideoAsync(string uploadId);
-
         /// <summary>
         ///     Upload photo
         /// </summary>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption);
-        [Obsolete("UploadPhotosAlbumAsync is deprecated, please use UploadAlbumAsync instead.\r\nThis will be deleted in the next update.",false)]
-        /// <summary>
-        ///     Upload photo
-        /// </summary>
-        /// <param name="images">Array of photos to upload</param>
-        /// <param name="caption">Caption</param>
-        Task<IResult<InstaMedia>> UploadPhotosAlbumAsync(InstaImage[] images, string caption);
         /// <summary>
         ///     Upload album (videos and photos)
         /// </summary>
@@ -58,9 +46,6 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="videos">Array of videos to upload</param>
         /// <param name="caption">Caption</param>
         Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideoUpload[] videos, string caption);
-        //Task<IResult<InstaMedia>> ConfigurePhotoAsync(InstaImage image, string uploadId, string caption);
-        //Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] uploadId, string caption);
-
         /// <summary>
         ///     Get users (short) who liked certain media. Normaly it return around 1000 last users.
         /// </summary>

@@ -10,9 +10,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.3.4</Version>
-    <AssemblyVersion>1.0.3.4</AssemblyVersion>
-    <FileVersion>1.0.3.4</FileVersion>
+    <Version>1.0.3.5</Version>
+    <AssemblyVersion>1.0.3.5</AssemblyVersion>
+    <FileVersion>1.0.3.5</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -33,7 +33,10 @@ See examples and wiki pages to find out how can you use this library.</Descripti
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.3.4
+    <PackageReleaseNotes>v1.0.3.5
+- Support NET Core for uploading video/image
+
+v1.0.3.4
 - Fix challenge require (if two factor is enable)
 
 v1.0.3.3
