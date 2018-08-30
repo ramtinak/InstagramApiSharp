@@ -647,5 +647,66 @@ namespace InstagramApiSharp.API.Processors
             return Result.UnExpectedResponse<InstaUserListShortResponse>(response, json);
         }
 
+        public async Task<IResult<InstaActivityFeed>> GetFollowingRecentActivityFeedAsync(PaginationParameters paginationParameters)
+        {
+            var uri = UriCreator.GetFollowingRecentActivityUri();
+            return await GetRecentActivityInternalAsync(uri, paginationParameters);
+        }
+
+        public async Task<IResult<InstaActivityFeed>> GetRecentActivityFeedAsync(
+            PaginationParameters paginationParameters)
+        {
+            var uri = UriCreator.GetRecentActivityUri();
+            return await GetRecentActivityInternalAsync(uri, paginationParameters);
+        }
+
+        private async Task<IResult<InstaActivityFeed>> GetRecentActivityInternalAsync(Uri uri,
+            PaginationParameters paginationParameters)
+        {
+            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+            var response = await _httpRequestProcessor.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+            var activityFeed = new InstaActivityFeed();
+            var json = await response.Content.ReadAsStringAsync();
+            if (response.StatusCode != HttpStatusCode.OK)
+                return Result.UnExpectedResponse<InstaActivityFeed>(response, json);
+            var feedPage = JsonConvert.DeserializeObject<InstaRecentActivityResponse>(json,
+                new Converters.Json.InstaRecentActivityConverter());
+            activityFeed.IsOwnActivity = feedPage.IsOwnActivity;
+            var nextId = feedPage.NextMaxId;
+            activityFeed.Items.AddRange(
+                feedPage.Stories.Select(ConvertersFabric.Instance.GetSingleRecentActivityConverter)
+                    .Select(converter => converter.Convert()));
+            paginationParameters.PagesLoaded++;
+            activityFeed.NextId = paginationParameters.NextId = feedPage.NextMaxId;
+            while (!string.IsNullOrEmpty(nextId)
+                   && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+            {
+                var nextFollowingFeed = await GetFollowingActivityWithMaxIdAsync(nextId);
+                if (!nextFollowingFeed.Succeeded)
+                    return Result.Fail(nextFollowingFeed.Info, activityFeed);
+                nextId = nextFollowingFeed.Value.NextMaxId;
+                activityFeed.Items.AddRange(
+                    feedPage.Stories.Select(ConvertersFabric.Instance.GetSingleRecentActivityConverter)
+                        .Select(converter => converter.Convert()));
+                paginationParameters.PagesLoaded++;
+                activityFeed.NextId = paginationParameters.NextId = nextId;
+            }
+
+            return Result.Success(activityFeed);
+        }
+
+        private async Task<IResult<InstaRecentActivityResponse>> GetFollowingActivityWithMaxIdAsync(string maxId)
+        {
+            var uri = UriCreator.GetFollowingRecentActivityUri(maxId);
+            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+            var response = await _httpRequestProcessor.SendAsync(request);
+            var json = await response.Content.ReadAsStringAsync();
+            if (response.StatusCode != HttpStatusCode.OK)
+                return Result.UnExpectedResponse<InstaRecentActivityResponse>(response, json);
+            var followingActivity = JsonConvert.DeserializeObject<InstaRecentActivityResponse>(json,
+                new Converters.Json.InstaRecentActivityConverter());
+            return Result.Success(followingActivity);
+        }
+        
     }
 }

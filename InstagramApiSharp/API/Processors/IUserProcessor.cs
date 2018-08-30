@@ -134,5 +134,17 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User id (pk)</param>
         Task<IResult<InstaFriendshipStatus>> IgnoreFriendshipRequestAsync(long userId);
+
+        /// <summary>
+        ///     Get activity of following asynchronously
+        /// </summary>
+        /// <param name="paginationParameters"></param>
+        Task<IResult<InstaActivityFeed>> GetFollowingRecentActivityFeedAsync(PaginationParameters paginationParameters);
+        
+        /// <summary>
+        ///     Get activity of current user asynchronously
+        /// </summary>
+        /// <param name="paginationParameters"></param>
+        Task<IResult<InstaActivityFeed>> GetRecentActivityFeedAsync(PaginationParameters paginationParameters);
     }
 }
