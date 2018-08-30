@@ -177,7 +177,7 @@ Special thanks to [mgp25](https://github.com/mgp25) and his [php wrapper](https:
 This code is in no way affiliated with, authorized, maintained, sponsored or endorsed by Instagram or any of its affiliates or subsidiaries. This is an independent and unofficial API wrapper.
 
 
-## öDevelopers
+## Developers
 
 | Name | Email | Telegram | Instagram |
 | ------ | ------ | ------ | ------ |
