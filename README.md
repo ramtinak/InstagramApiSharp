@@ -179,10 +179,10 @@ This code is in no way affiliated with, authorized, maintained, sponsored or end
 
 ## Developers
 
-| Name | Email | Telegram | Instagram |
-| ------ | ------ | ------ | ------ |
-| [Ramtin Jokar](https://github.com/ramtinak) | [Ramtinak@live.com](mailto:ramtinak@live.com) | https://t.me/Ramtinak | https://instagram.com/Rmt4006 |
-| [Ali Noshahi](https://github.com/NGame1) | [NGame1390@hotmail.com](mailto:ngame1390@hotmail.com) | https://t.me/NGameW | https://instagram.com/alingame |
+| Name | Github | Email | Telegram | Instagram |
+| ------ | ------ | ------ | ------ | ------ |
+| Ramtin Jokar | [@ramtinak](https://github.com/ramtinak) | [Ramtinak@live.com](mailto:ramtinak@live.com) | https://t.me/Ramtinak | https://instagram.com/Rmt4006 |
+| Ali Noshahi | [@NGame1](https://github.com/NGame1) | [NGame1390@hotmail.com](mailto:ngame1390@hotmail.com) | https://t.me/NGameW | https://instagram.com/alingame |
 
 
 
