@@ -96,6 +96,7 @@ v1.0.2.8
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+    <DefaultLanguage>en-US</DefaultLanguage>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <NugetTargetMoniker>UAP,Version=v10.0</NugetTargetMoniker>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
