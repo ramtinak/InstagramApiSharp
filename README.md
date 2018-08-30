@@ -177,20 +177,13 @@ Special thanks to [mgp25](https://github.com/mgp25) and his [php wrapper](https:
 This code is in no way affiliated with, authorized, maintained, sponsored or endorsed by Instagram or any of its affiliates or subsidiaries. This is an independent and unofficial API wrapper.
 
 
-## About me
-Ramtin Jokar
+## öDevelopers
 
-Born: 1995 (Bushehr city, Iran)
+| Name | Email | Telegram | Instagram |
+| ------ | ------ | ------ | ------ |
+| [Ramtin Jokar](https://github.com/ramtinak) | [Ramtinak@live.com](mailto:ramtinak@live.com) | https://t.me/Ramtinak | https://instagram.com/Rmt4006 |
+| [Ali Noshahi](https://github.com/NGame1) | [NGame1390@hotmail.com](mailto:ngame1390@hotmail.com) | https://t.me/NGameW | https://instagram.com/alingame |
 
-Live in: Kazeroun city, Fars state, Iran
-
-Bio: I hate programming and developing apps/libraries:|!
-
-Email: [Ramtinak@live.com](mailto:ramtinak@live.com)
-
-Telegram: https://t.me/Ramtinak
-
-Instagram: https://instagram.com/Rmt4006
 
 
 Iranian developers - (c) 2018
