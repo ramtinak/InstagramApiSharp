@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 
@@ -21,8 +22,13 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(InstaImage image, string caption);
-
-        //Task<IResult<InstaStoryMedia>> ConfigureStoryPhotoAsync(InstaImage image, string uploadId, string caption);
+        [Obsolete("It's not completed YET")]
+        /// <summary>
+        ///     Upload story video |It's not completed YET
+        /// </summary>
+        /// <param name="video">Video to upload</param>
+        /// <param name="caption">Caption</param>
+        Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(InstaVideoUpload video, string caption);
         /// <summary>
         ///     Get user story reel feed. Contains user info last story including all story items.
         /// </summary>

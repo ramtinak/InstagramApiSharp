@@ -165,7 +165,9 @@ namespace UwpExample
                 var img = new InstaImage
                 {
                     // Set image bytes
-                    ImageBytes = fileBytes
+                    ImageBytes = fileBytes,
+                    // Note: you should set Uri path !
+                    Uri = file.Path
                 };
                 var up = await InstaApi.MediaProcessor.UploadPhotoAsync(img, caption);
                 if (up.Succeeded)
@@ -188,12 +190,16 @@ namespace UwpExample
                 //    {
                 //        // set video bytes
                 //        VideoBytes = VIDEOBYTES
+                //        // Note: you should set Uri path ! you can set a random path
+                //        //Uri = VIDEO PATH 
                 //    },
                 //    // video thumbnail image 
                 //    VideoThumbnail = new InstaImage
                 //    {
                 //        // set video thumbnail image bytes
-                //        ImageBytes = THUMBNAILIMAGEBYTES
+                //        ImageBytes = THUMBNAILIMAGEBYTES,
+                //        // Note: you should set Uri path ! you can set a random path
+                //        //Uri = THUMBNAIL PATH 
                 //    }
                 //});
                 foreach (var file in SelectedFiles)
@@ -202,7 +208,9 @@ namespace UwpExample
                     var img = new InstaImage
                     {
                         // Set image bytes
-                        ImageBytes = fileBytes
+                        ImageBytes = fileBytes,
+                        // Note: you should set Uri path ! you can set random path
+                        Uri = file.Path
                     };
                     images.Add(img);
                 }

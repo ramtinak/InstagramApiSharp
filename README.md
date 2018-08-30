@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link | Travis build | AppVeyor build |
 | ------ | ------ | ------ | ------ |  ------ |  ------ |
-| Nuget | master | v1.0.3.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![travis](https://api.travis-ci.org/ramtinak/InstagramApiSharp.svg?branch=master)](https://travis-ci.org/ramtinak/InstagramApiSharp/builds) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/o793bkuvt968pkpr?svg=true)](https://ci.appveyor.com/project/ramtinak/instagramapisharp/) 
+| Nuget | master | v1.0.4.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![travis](https://api.travis-ci.org/ramtinak/InstagramApiSharp.svg?branch=master)](https://travis-ci.org/ramtinak/InstagramApiSharp/builds) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/o793bkuvt968pkpr?svg=true)](https://ci.appveyor.com/project/ramtinak/instagramapisharp/) 
 
 
 ## Note
@@ -68,6 +68,9 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.4.0
+- Build UWP(NET CORE) library
+
 v1.0.3.5
 - Support NET Core for uploading video/image as bytes [Example project](https://github.com/ramtinak/InstagramApiSharp/tree/master/UwpExample)
 - UploadPhotosAlbumAsync removed from MediaProcessor

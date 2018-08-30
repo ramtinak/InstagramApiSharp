@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.2.6</VersionPrefix>
+    <TargetFrameworks>netstandard2.0;net452;uap10.0</TargetFrameworks>
+    <VersionPrefix>1.0.3.5</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -10,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.3.5</Version>
-    <AssemblyVersion>1.0.3.5</AssemblyVersion>
-    <FileVersion>1.0.3.5</FileVersion>
+    <Version>1.0.4.0</Version>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <FileVersion>1.0.4.0</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -33,7 +34,10 @@ See examples and wiki pages to find out how can you use this library.</Descripti
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.3.5
+    <PackageReleaseNotes>v1.0.4
+- Build option for uwp(NET CORE)
+
+v1.0.3.5
 - Support NET Core for uploading video/image
 
 v1.0.3.4
@@ -44,7 +48,7 @@ v1.0.3.3
 
 v1.0.3.2
 - Bugfix for random device (in user-agent)
-- Bugfix for Decline DeclineAllDirectPendingRequests
+- Bugfix for DeclineAllDirectPendingRequests
 
 v1.0.3.1
 - Upload album (videos and photos together) added
@@ -67,36 +71,6 @@ v1.0.2.9
 v1.0.2.8
 - Bugfix for ResetChallengeRequireVerifyMethodAsync
 - Bugfix for VerifyCodeForChallengeRequireAsync
-
-v1.0.2.7
-- Bugfix for Challenge require
-
-v1.0.2.6
-- Change challenge require function(now it's works perfectly).
-- IsCommentsDisabled added to InstaMedia class.
-
-v1.0.2.5
-- Bugfix for facebook login(now you can do anything after you logged in with facebook)
-
-v1.0.2.4
-- Enable/disable media comments.
-
-v1.0.2.3
-- Facebook login added.
-- Fix GetPendingFriendRequests response issue.
-
-v1.0.2.2
-- Share story added.
-- Access to StoryProcessor added.
-
-v1.0.2.1
-- GetStateDataAsString and LoadStateDataFromString added.
-
-v1.0.2
-- Inline comments support(send and get).
-
-v1.0.1
-- Fix Challenge required api. Now you can verify your email or phone number with challenge required functions.
 </PackageReleaseNotes>
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -107,7 +81,7 @@ v1.0.1
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-      <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+      <TargetFrameworks>netstandard2.0;net452;uap10.0</TargetFrameworks>
     </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
@@ -121,11 +95,24 @@ v1.0.1
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="API\Processors\AuthenticationProcessor.cs" />
-    <Compile Remove="API\Processors\IAuthenticationProcessor.cs" />
+  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <NugetTargetMoniker>UAP,Version=v10.0</NugetTargetMoniker>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
+    <TargetFrameworkIdentifier>.NETCore</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <DefineConstants>$(DefineConstants);WINDOWS_UWP</DefineConstants>
+    <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</LanguageTargets>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.2.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
@@ -133,5 +120,4 @@ v1.0.1
   <ItemGroup>
     <PackageReference Update="NETStandard.Library" Version="2.0" />
   </ItemGroup>
-
 </Project>

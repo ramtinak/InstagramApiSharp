@@ -453,7 +453,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Can't create URI for configuring story media");
             return instaUri;
         }
-
+        public static Uri GetVideoStoryConfigureUri(bool isVideo = false)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, isVideo ? InstaApiConstants.STORY_CONFIGURE_VIDEO : InstaApiConstants.STORY_CONFIGURE_VIDEO2, out var instaUri))
+                throw new Exception("Can't create URI for configuring story media");
+            return instaUri;
+        }
         public static Uri GetChangePasswordUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CHANGE_PASSWORD, out var instaUri))
@@ -986,6 +991,24 @@ namespace InstagramApiSharp.Helpers
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_SHARE_USER, out var instaUri))
                 throw new Exception("Cant create URI for share user");
+            return instaUri;
+        }
+        public static Uri GetStoryMediaInfoUploadUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.STORY_MEDIA_INFO_UPLOAD, out var instaUri))
+                throw new Exception("Cant create URI for story media info");
+            return instaUri;
+        }
+        public static Uri GetStoryUploadVideoUri(string uploadId, int fileHashCode)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.STORY_UPLOAD_VIDEO, uploadId, fileHashCode), out var instaUri))
+                throw new Exception("Cant create URI for story upload video");
+            return instaUri;
+        }
+        public static Uri GetStoryUploadPhotoUri(string uploadId, int fileHashCode)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.STORY_UPLOAD_PHOTO, uploadId, fileHashCode), out var instaUri))
+                throw new Exception("Cant create URI for story upload photo");
             return instaUri;
         }
     }

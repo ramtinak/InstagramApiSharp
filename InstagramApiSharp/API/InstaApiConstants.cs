@@ -131,6 +131,8 @@ namespace InstagramApiSharp.API
         public const string GET_STORY_TRAY = API_SUFFIX + "/feed/reels_tray/";
         public const string GET_USER_STORY = API_SUFFIX + "/feed/user/{0}/reel_media/";
         public const string STORY_CONFIGURE = API_SUFFIX + "/media/configure_to_reel/";
+        public const string STORY_CONFIGURE_VIDEO = API_SUFFIX + "/media/configure_to_story/?video=1";
+        public const string STORY_CONFIGURE_VIDEO2 = API_SUFFIX + "/media/configure_to_story/";
         public const string LOCATION_SEARCH = API_SUFFIX + "/location_search/";
         public const string FRIENDSHIPSTATUS = API_SUFFIX + "/friendships/show/";
         public const string LIKE_FEED = API_SUFFIX + "/feed/liked/";
@@ -203,6 +205,9 @@ namespace InstagramApiSharp.API
         public const string LIVE_START = API_SUFFIX + "/live/{0}/start/";
         public const string LIVE_END = API_SUFFIX + "/live/{0}/end_broadcast/";
 
+        public const string STORY_MEDIA_INFO_UPLOAD = API_SUFFIX + "/media/mas_opt_in_info/";
+        public const string STORY_UPLOAD_VIDEO = INSTAGRAM_URL + "/rupload_igvideo/{0}_0_{1}";
+        public const string STORY_UPLOAD_PHOTO = INSTAGRAM_URL + "/rupload_igphoto/{0}_0_{1}";
         public const string DYNAMIC_ONBOARDING_GET_STEPS = API_SUFFIX + "/dynamic_onboarding/get_steps/";
 
         public const string FB_FACEBOOK_SIGNUP = API_SUFFIX + "/fb/facebook_signup/";

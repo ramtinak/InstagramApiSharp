@@ -524,7 +524,7 @@ namespace InstagramApiSharp.API.Processors
                         if (video.VideoThumbnail.ImageBytes == null)
                             imageBytes = File.ReadAllBytes(video.VideoThumbnail.Uri);
                         else
-                            imageBytes = video.Video.VideoBytes;
+                            imageBytes = video.VideoThumbnail.ImageBytes;
                         var imageContent = new ByteArrayContent(imageBytes);
                         imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                         imageContent.Headers.Add("Content-Type", "application/octet-stream");
@@ -622,7 +622,7 @@ namespace InstagramApiSharp.API.Processors
                 foreach (var id in imagesUploadId)
                     childrenArray.Add(new JObject
                     {
-                        { "timezone_offset", "16200"},
+                        {"timezone_offset", "16200"},
                         {"source_type", 4},
                         {"upload_id", id},
                         {"caption", ""},
@@ -659,10 +659,10 @@ namespace InstagramApiSharp.API.Processors
                         },
                         {
                             "device", JsonConvert.SerializeObject(new JObject{
-                                {"manufacturer", "HUAWEI"},
-                                {"model", "PRA-LA1"},
+                                {"manufacturer", _deviceInfo.HardwareManufacturer},
+                                {"model", _deviceInfo.DeviceModelIdentifier},
                                 {"android_release", "7.0"},
-                                {"source_height", 24}
+                                {"android_version", 24}
                             })
                         },
                         {"length", id.Value.Length},
@@ -683,10 +683,10 @@ namespace InstagramApiSharp.API.Processors
                     {
                         "device", new JObject
                         {
-                            {"manufacturer", "HUAWEI"},
-                            {"model", "PRA-LA1"},
+                            {"manufacturer", _deviceInfo.HardwareManufacturer},
+                            {"model", _deviceInfo.DeviceModelIdentifier},
                             {"android_release", "7.0"},
-                            {"source_height", 24}
+                            {"android_version", 24}
                         }
                     },
                     {"children_metadata", childrenArray},
