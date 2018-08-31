@@ -89,15 +89,27 @@ namespace InstagramApiSharp.API
         /// </summary>
         void LoadStateDataFromString(string data);
 
-
+        #region Async Members
         /// <summary>
-        ///     Get challenge require(checkpoint required) options.
+        ///     Get challenge require (checkpoint required) options
         /// </summary>
-        /// <returns></returns>
         Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync();
+        /// <summary>
+        ///     Reset challenge require (checkpoint required) method
+        /// </summary>
         Task<IResult<ChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync();
+        /// <summary>
+        ///     Request verification code sms for challenge require (checkpoint required)
+        /// </summary>
         Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
+        /// <summary>
+        ///     Request verification code email for challenge require (checkpoint required)
+        /// </summary>
         Task<IResult<ChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync();
+        /// <summary>
+        ///     Verify verification code for challenge require (checkpoint required)
+        /// </summary>
+        /// <param name="verifyCode">Verification code</param>
         Task<IResult<InstaLoginResult>> VerifyCodeForChallengeRequireAsync(string verifyCode);
         /// <summary>
         ///     Set cookie and html document to verify login information.
@@ -113,9 +125,6 @@ namespace InstagramApiSharp.API
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
         Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(WebBrowserResponse webBrowserResponse, string cookies, bool validate = false);
-
-
-        #region Async Members
         /// <summary>
         ///     Check email availability
         /// </summary>
@@ -171,7 +180,6 @@ namespace InstagramApiSharp.API
         ///     Exception --> Something wrong happened
         /// </returns>
         Task<IResult<InstaLoginResult>> LoginAsync(bool isNewLogin = true);
-
         /// <summary>
         ///     2-Factor Authentication Login using a verification code
         ///     Before call this method, please run LoginAsync first.

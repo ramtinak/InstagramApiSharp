@@ -93,6 +93,9 @@ namespace InstagramApiSharp.API
         ///     Hashtag api functions.
         /// </summary>
         public IHashtagProcessor HashtagProcessor => _hashtagProcessor;
+        /// <summary>
+        ///     User api functions.
+        /// </summary>
         public IUserProcessor UserProcessor => _userProcessor;
         public InstaApi(UserSessionData user, IInstaLogger logger, AndroidDevice deviceInfo,
             IHttpRequestProcessor httpRequestProcessor)
