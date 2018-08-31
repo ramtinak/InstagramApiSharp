@@ -169,7 +169,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for sending message");
             return instaUri;
         }
-
+        public static Uri GetDirectSendPhotoUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_UPLOAD_PHOTO, out var instaUri))
+                throw new Exception("Cant create URI for sending photo to direct");
+            return instaUri;
+        }
         public static Uri GetDirectInboxUri(string NextId = "")
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_INBOX, out var instaUri))

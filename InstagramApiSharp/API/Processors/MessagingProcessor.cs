@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -86,7 +87,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
-                
+
 
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaDirectInboxThread>(response, json);
@@ -98,7 +99,7 @@ namespace InstagramApiSharp.API.Processors
                 //
                 var converter = ConvertersFabric.Instance.GetDirectThreadConverter(threadResponse);
 
-                
+
                 return Result.Success(converter.Convert());
             }
             catch (Exception exception)
@@ -114,14 +115,14 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="username">Username to send</param>
         /// <param name="text">Message text</param>
         /// <returns>List of threads</returns>
-        public async Task<IResult<InstaDirectInboxThreadList>> SendNewDirectMessage(string username, string text)
+        public async Task<IResult<InstaDirectInboxThreadList>> SendNewDirectMessageAsync(string username, string text)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetRankRecipientsByUserUri(username);
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-      
+
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -133,7 +134,7 @@ namespace InstagramApiSharp.API.Processors
                 var recipients = converter.Convert();
 
                 var firstRecipient = recipients.Users?.FirstOrDefault(rec => rec?.UserName.ToLower() == username.ToLower());
-                if(firstRecipient == null)
+                if (firstRecipient == null)
                     return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
 
                 instaUri = UriCreator.GetParticipantRecipientUserUri(firstRecipient.Pk);
@@ -146,7 +147,7 @@ namespace InstagramApiSharp.API.Processors
 
                 var respParticipant = JsonConvert.DeserializeObject<InstaDefault>(json);
 
-                if(respParticipant.Status.ToLower() != "ok")
+                if (respParticipant.Status.ToLower() != "ok")
                     return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
 
 
@@ -160,8 +161,8 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
 
 
-                var result = await SendDirectMessage(firstRecipient.Pk.ToString(), null, text);
-               
+                var result = await SendDirectMessageAsync(firstRecipient.Pk.ToString(), null, text);
+
                 return result;
             }
             catch (Exception exception)
@@ -177,7 +178,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadIds">Message thread ids</param>
         /// <param name="text">Message text</param>
         /// <returns>List of threads</returns>
-        public async Task<IResult<InstaDirectInboxThreadList>> SendDirectMessage(string recipients, string threadIds,
+        public async Task<IResult<InstaDirectInboxThreadList>> SendDirectMessageAsync(string recipients, string threadIds,
             string text)
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -186,7 +187,7 @@ namespace InstagramApiSharp.API.Processors
             {
                 var directSendMessageUri = UriCreator.GetDirectSendMessageUri();
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, directSendMessageUri, _deviceInfo);
-                var fields = new Dictionary<string, string> {{"text", text}};
+                var fields = new Dictionary<string, string> { { "text", text } };
                 if (!string.IsNullOrEmpty(recipients))
                     fields.Add("recipient_users", "[[" + recipients + "]]");
                 else
@@ -270,7 +271,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Approve direct pending request
         /// </summary>
         /// <param name="threadId">Thread id</param>
-        public async Task<IResult<bool>> ApproveDirectPendingRequest(string threadId)
+        public async Task<IResult<bool>> ApproveDirectPendingRequestAsync(string threadId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -303,7 +304,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Decline all direct pending requests
         /// </summary>
-        public async Task<IResult<bool>> DeclineAllDirectPendingRequests()
+        public async Task<IResult<bool>> DeclineAllDirectPendingRequestsAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -401,6 +402,250 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        /// <summary>
+        ///     Send photo to direct thread (single user)
+        /// </summary>
+        /// <param name="image">Image to upload</param>
+        /// <param name="threadId">Thread id</param>
+        /// <returns>Returns True is sent</returns>
+        public async Task<IResult<bool>> SendDirectPhotoAsync(InstaImage image, string threadId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await SendDirectPhoto(null, threadId, image);
+        }
+        /// <summary>
+        ///     Send photo to multiple recipients (multiple user)
+        /// </summary>
+        /// <param name="image">Image to upload</param>
+        /// <param name="recipients">Recipients (user ids/pk)</param>
+        /// <returns>Returns True is sent</returns>
+        public async Task<IResult<bool>> SendDirectPhotoToRecipientsAsync(InstaImage image, params string[] recipients)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await SendDirectPhoto(string.Join(",", recipients), null, image);
+        }
+        private async Task<IResult<bool>> SendDirectPhoto(string recipients, string threadId, InstaImage image)
+        {
+            try
+            {
+                Debug.WriteLine(threadId);
+                Debug.WriteLine(recipients);
+                var instaUri = UriCreator.GetDirectSendPhotoUri();
+                var uploadId = ApiRequestMessage.GenerateRandomUploadId();
+                var clientContext = Guid.NewGuid();
+                var requestContent = new MultipartFormDataContent(uploadId)
+                {
+                    {new StringContent("send_item"), "\"action\""},
+                    {new StringContent(clientContext.ToString()), "\"client_context\""},
+                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""}
+                };
+                if (!string.IsNullOrEmpty(recipients))
+                    requestContent.Add(new StringContent($"[[{recipients}]]"), "recipient_users");
+                else
+                    requestContent.Add(new StringContent($"[{threadId}]"), "thread_ids");
+                byte[] fileBytes;
+                if (image.ImageBytes == null)
+                    fileBytes = File.ReadAllBytes(image.Uri);
+                else
+                    fileBytes = image.ImageBytes;
+                var imageContent = new ByteArrayContent(fileBytes);
+                imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                requestContent.Add(imageContent, "photo",
+                    $"direct_temp_photo_{ApiRequestMessage.GenerateUploadId()}.jpg");
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                request.Content = requestContent;
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                //{"action": "item_ack", "status_code": "400", "payload": {"client_context": "a9cdd3c6-34fb-4bf2-b07e-b0cbce2e1eaf", "message": "Need to specify thread ID or recipient users"}, "status": "fail"}
+                //{"message": "Unknown Server Error.", "status": "fail"}
+                //{
+                //	"action": "item_ack",
+                //	"status_code": "200",
+                //	"payload": {
+                //		"client_context": "8debdb7d-ad8f-402f-a127-6c6350b28567",
+                //		"item_id": "28329111803064060462073610963517440",
+                //		"timestamp": "1535724228073340",
+                //		"thread_id": "340282366841710300949128132202173515958"
+                //	},
+                //	"status": "ok"
+                //}
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                if (obj.Status.ToLower() == "ok")
+                    return Result.Success(true);
+                else
+                    return Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        [Obsolete("It's not completed YET")]
+        public async Task<IResult<bool>> SendDirectVideoAsync(InstaVideoUpload video, string threadId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var uploadId = ApiRequestMessage.GenerateRandomUploadId();
+                var videoHashCode = Path.GetFileName(video.Video.Uri).GetHashCode();
+                var waterfallId = Guid.NewGuid().ToString();
+                var clientContext = Guid.NewGuid().ToString();
+                var videoEntityName = string.Format("{0}_0_{1}", uploadId, videoHashCode);
+                var cookies =
+          _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+          .BaseAddress);
+                var rur = cookies["rur"]?.Value;
+
+                var videoUri = new Uri(UriCreator.GetStoryUploadVideoUri(uploadId, videoHashCode).ToString() /*+ $"?target={rur}"*/);
+                // prepare video for upload
+                //{
+                //	"upload_media_height": "480",
+                //	"direct_v2": "1",
+                //	"upload_media_width": "480",
+                //	"upload_media_duration_ms": "59952",
+                //	"upload_id": "202151018522798",
+                //	"retry_context": "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}",
+                //	"media_type": "2"
+                //}
+                //var videoMediaInfoData = new JObject
+                //{
+                //    {"_csrftoken", _user.CsrfToken},
+                //    {"_uid", _user.LoggedInUser.Pk},
+                //    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                //    {"media_info", new JObject
+                //    {
+                //            {"capture_mode", "normal"},
+                //            {"media_type", 2},
+                //            {"direct_v2", "1"}
+                //    }
+                //    }
+                //};
+
+                //var request = HttpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetStoryMediaInfoUploadUri(), _deviceInfo, videoMediaInfoData);
+                //var response = await _httpRequestProcessor.SendAsync(request);
+                //var json = await response.Content.ReadAsStringAsync();
+                //Debug.WriteLine(json);
+                //{
+                //	"upload_media_height": "480",
+                //	"direct_v2": "1",
+                //	"upload_media_width": "480",
+                //	"upload_media_duration_ms": "59952",
+                //	"upload_id": "202151018522798",
+                //	"retry_context": "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}",
+                //	"media_type": "2"
+                //}
+                var videoUploadParamsObj = new JObject
+                {
+                    {"upload_media_height", "480"},
+                    {"direct_v2", "1"},
+                    {"upload_media_width", "480"},
+                    {"upload_media_duration_ms", "13000"},
+                    {"upload_id", uploadId},
+                    {"retry_context", "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}"},
+                    {"media_type", "2"},
+                    {"potential_share_types","not supported type"},
+                    {"rotate","0"},
+                    {"hflip","false"},
+                };
+                var videoUploadParams = JsonConvert.SerializeObject(videoUploadParamsObj);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, videoUri, _deviceInfo);
+                request.Headers.Add("X_FB_VIDEO_WATERFALL_ID", waterfallId);
+                request.Headers.Add("X-Instagram-Rupload-Params", videoUploadParams);
+                request.Headers.Add("X-FB-HTTP-Engine", "Liger");
+                request.Headers.Add("Host", "i.instagram.com");
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(json);
+                //{"offset":0}
+
+
+                // upload video
+                byte[] videoBytes;
+                if (video.Video.VideoBytes == null)
+                    videoBytes = File.ReadAllBytes(video.Video.Uri);
+                else
+                    videoBytes = video.Video.VideoBytes;
+
+                var requestContent = new MultipartFormDataContent/*(uploadId)*/
+                {
+                    //{new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                    //{new StringContent("\"0\""), "upload_media_height"},
+                    //{new StringContent("\"0\""), "upload_media_width"},
+                    //{new StringContent($"\"{uploadId}\""), "upload_id"},
+                    //{new StringContent("\"2\""), "media_type"},
+                    //{new StringContent("\"0\""), "upload_media_duration_ms"},
+                    //{new StringContent("\"{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}\""), "retry_context"},
+                };
+                var videoContent = new ByteArrayContent(videoBytes);
+                //videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                //videoContent.Headers.Add("Content-Type", "application/octet-stream");
+                //videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri)}\"");
+
+                requestContent.Add(videoContent);//, "video", $"pending_media_{Path.GetFileName(video.Video.Uri)}");
+                request = HttpHelper.GetDefaultRequest(HttpMethod.Post, videoUri, _deviceInfo);
+                request.Content = requestContent;
+                var vidExt = Path.GetExtension(video.Video.Uri).Replace(".", "").ToLower();
+                if (vidExt == "mov")
+                    request.Headers.Add("X-Entity-Type", "video/quicktime");
+                else
+                    request.Headers.Add("X-Entity-Type", "video/mp4");
+                request.Headers.Add("Offset", "0");
+                request.Headers.Add("X-Instagram-Rupload-Params", videoUploadParams);
+                request.Headers.Add("X-Entity-Name", videoEntityName);
+                request.Headers.Add("X-Entity-Length", videoBytes.Length.ToString());
+                request.Headers.Add("X_FB_VIDEO_WATERFALL_ID", waterfallId);
+                request.Headers.Add("X-FB-HTTP-Engine", "Liger");
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(json);
+                //{"xsharing_nonces": {}, "status": "ok"}
+
+                //action=send_item&thread_ids=[340282366841710300949128132202173515958]&client_context=821c66a6-e712-42b0-9efe-b6af94c37c89&_csrftoken=trGjCGXoi7BJZAdqL80ixzP9UBKZVo9x&video_result=&_uuid=6324ecb2-e663-4dc8-a3a1-289c699cc876&upload_id=202151018522798
+                
+                //action=send_item&
+                //thread_ids=[340282366841710300949128132202173515958]
+                //&client_context=821c66a6-e712-42b0-9efe-b6af94c37c89
+                //&_csrftoken=trGjCGXoi7BJZAdqL80ixzP9UBKZVo9x&
+                //video_result=
+                //&_uuid=6324ecb2-e663-4dc8-a3a1-289c699cc876
+                //&upload_id=202151018522798
+                var data = new Dictionary<string, string>()
+                {
+                     {"action","send_item"},
+                     {"thread_ids",$"[{threadId}]"},
+                     {"client_context",clientContext.ToString()},
+                     {"_csrftoken",_user.CsrfToken},
+                     {"video_result",""},
+                     {"_uuid",_deviceInfo.DeviceGuid.ToString()},
+                     {"upload_id",uploadId}
+                };
+                
+                request = HttpHelper.GetDefaultRequest(HttpMethod.Post, new Uri("https://i.instagram.com/api/v1/direct_v2/threads/broadcast/configure_video/"), _deviceInfo);
+                request.Content = requestContent;
+                request.Content = new FormUrlEncodedContent(data);
+                request.Headers.Add("X-FB-HTTP-Engine", "Liger");
+                request.Headers.Add("retry_context", "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}");
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(json);
+                // gaeidi maro ba in erroret:|
+                //{"message": "Transcode error: Video file does not contain duration", "status": "fail"}
+                return Result.Success(true);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
 
     }
 }

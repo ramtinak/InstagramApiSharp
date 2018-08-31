@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 
@@ -27,7 +28,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="username">Username to send</param>
         /// <param name="text">Message text</param>
         /// <returns>List of threads</returns>
-        Task<IResult<InstaDirectInboxThreadList>> SendNewDirectMessage(string username, string text);
+        Task<IResult<InstaDirectInboxThreadList>> SendNewDirectMessageAsync(string username, string text);
         /// <summary>
         ///     Send direct message to provided users and threads
         /// </summary>
@@ -35,7 +36,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadIds">Message thread ids</param>
         /// <param name="text">Message text</param>
         /// <returns>List of threads</returns>
-        Task<IResult<InstaDirectInboxThreadList>> SendDirectMessage(string recipients, string threadIds,
+        Task<IResult<InstaDirectInboxThreadList>> SendDirectMessageAsync(string recipients, string threadIds,
             string text);
         /// <summary>
         ///     Get recent recipients (threads and users) asynchronously
@@ -55,11 +56,11 @@ namespace InstagramApiSharp.API.Processors
         ///     Approve direct pending request
         /// </summary>
         /// <param name="threadId">Thread id</param>
-        Task<IResult<bool>> ApproveDirectPendingRequest(string threadId);
+        Task<IResult<bool>> ApproveDirectPendingRequestAsync(string threadId);
         /// <summary>
         ///     Decline all direct pending requests
         /// </summary>
-        Task<IResult<bool>> DeclineAllDirectPendingRequests();
+        Task<IResult<bool>> DeclineAllDirectPendingRequestsAsync();
         /// <summary>
         ///     Get direct pending inbox threads for current user asynchronously
         /// </summary>
@@ -73,5 +74,22 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="userIdToSend">User id(PK)</param>
         /// <param name="threadId">Thread id</param>
         Task<IResult<InstaSharing>> ShareUserAsync(string userIdToSend, string threadId);
+        /// <summary>
+        ///     Send photo to direct thread (single user)
+        /// </summary>
+        /// <param name="image">Image to upload</param>
+        /// <param name="threadId">Thread id</param>
+        /// <returns>Returns True is sent</returns>
+        Task<IResult<bool>> SendDirectPhotoAsync(InstaImage image, string threadId);
+        /// <summary>
+        ///     Send photo to multiple recipients (multiple user)
+        /// </summary>
+        /// <param name="image">Image to upload</param>
+        /// <param name="recipients">Recipients (user ids/pk)</param>
+        /// <returns>Returns True is sent</returns>
+        Task<IResult<bool>> SendDirectPhotoToRecipientsAsync(InstaImage image, params string[] recipients);
+        [Obsolete("It's not completed YET")]
+        Task<IResult<bool>> SendDirectVideoAsync(InstaVideoUpload video, string threadId);
+
     }
 }
