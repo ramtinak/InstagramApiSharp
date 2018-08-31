@@ -69,6 +69,12 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.4.3
+- Added RegenerateTwoFactorBackupCodesAsync to AccountProcessor
+
+v1.0.4.2
+- public GetRequestForEditProfileAsync method
+
 v1.0.4.1
 - GetRecentActivityFeedAsync added to UserProcessor
 
