@@ -8,6 +8,7 @@
  */
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.ResponseWrappers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -164,6 +165,8 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="verificationCode">Verification code</param>
         /// <returns></returns>
         Task<IResult<AccountVerifySmsResponse>> VerifySmsCodeAsync(string phoneNumber, string verificationCode);
+
+        Task<IResult<TwoFactorRegenBackupCodesResponse>> RegenerateTwoFactorBackupCodesAsync();
 
 
 

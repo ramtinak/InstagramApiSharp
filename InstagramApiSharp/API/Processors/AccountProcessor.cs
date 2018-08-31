@@ -1035,5 +1035,42 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        public async Task<IResult<TwoFactorRegenBackupCodesResponse>> RegenerateTwoFactorBackupCodesAsync()
+        {
+            try
+            {
+                var instaUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + $"accounts/regen_backup_codes/");
+                Debug.WriteLine(instaUri.ToString());
+                var data = new JObject
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    { "_csrftoken", _user.CsrfToken}
+                };
+
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Add("Host", "i.instagram.com");
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.Fail<TwoFactorRegenBackupCodesResponse>("Status code: " + response.StatusCode);
+                Debug.WriteLine(json);
+                //{"status": "ok"}
+                var obj = JsonConvert.DeserializeObject<TwoFactorRegenBackupCodesResponse>(json);
+                if (obj.Status.ToLower() == "ok")
+                    return Result.Success("No errors detected.", obj);
+                else
+                    return Result.Fail("", obj);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<TwoFactorRegenBackupCodesResponse>(exception);
+            }
+        }
+
+
     }
 }
