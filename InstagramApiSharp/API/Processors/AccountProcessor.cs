@@ -232,7 +232,7 @@ namespace InstagramApiSharp.API.Processors
         /// Get request for edit profile.
         /// </summary>
         /// <returns></returns>
-        private async Task<IResult<AccountUserResponse>> GetRequestForEditProfileAsync()
+        public async Task<IResult<AccountUserResponse>> GetRequestForEditProfileAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try

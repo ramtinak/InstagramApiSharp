@@ -52,7 +52,7 @@ namespace InstagramApiSharp.API.Processors
         /// Get request for edit profile.
         /// </summary>
         /// <returns></returns>
-        //Task<IResult<AccountUserResponse>> GetRequestForEditProfileAsync();
+        Task<IResult<AccountUserResponse>> GetRequestForEditProfileAsync();
         /// <summary>
         /// Set name and phone number.
         /// </summary>
