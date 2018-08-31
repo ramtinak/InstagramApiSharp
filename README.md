@@ -3,9 +3,9 @@ An complete Private Instagram Api for .NET (C#, VB.NET).
 
 Supports: Create new account, verify account, edit profile, set profile picture and many more...
 
-| Target | Branch | Version | Download link | Travis build | AppVeyor build |
-| ------ | ------ | ------ | ------ |  ------ |  ------ |
-| Nuget | master | v1.0.4.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![travis](https://api.travis-ci.org/ramtinak/InstagramApiSharp.svg?branch=master)](https://travis-ci.org/ramtinak/InstagramApiSharp/builds) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/o793bkuvt968pkpr?svg=true)](https://ci.appveyor.com/project/ramtinak/instagramapisharp/) 
+| Target | Branch | Version | Download link |
+| ------ | ------ | ------ | ------ |
+| Nuget | master | v1.0.4.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
