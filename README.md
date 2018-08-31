@@ -26,6 +26,7 @@ Note: this library uses [Json.NET v10.0.3 and above](https://www.nuget.org/packa
 | ------ | ------ |
 | .NET Framework | 4.5.2 |
 | .NET Standard | 2.0 |
+| .NET Core(UWP) | 10.0.14393 |
 
 ## Overview
 There's a lot of functions and bug fix me and [NGame1](https://github.com/NGame1) added to this library.
