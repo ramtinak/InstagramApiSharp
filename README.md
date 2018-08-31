@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link | Travis build | AppVeyor build |
 | ------ | ------ | ------ | ------ |  ------ |  ------ |
-| Nuget | master | v1.0.4.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![travis](https://api.travis-ci.org/ramtinak/InstagramApiSharp.svg?branch=master)](https://travis-ci.org/ramtinak/InstagramApiSharp/builds) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/o793bkuvt968pkpr?svg=true)](https://ci.appveyor.com/project/ramtinak/instagramapisharp/) 
+| Nuget | master | v1.0.4.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![travis](https://api.travis-ci.org/ramtinak/InstagramApiSharp.svg?branch=master)](https://travis-ci.org/ramtinak/InstagramApiSharp/builds) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/o793bkuvt968pkpr?svg=true)](https://ci.appveyor.com/project/ramtinak/instagramapisharp/) 
 
 
 ## Note
@@ -68,6 +68,9 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.4.1
+- GetRecentActivityFeedAsync added to UserProcessor
+
 v1.0.4.0
 - Build UWP(NET CORE) library
 
@@ -174,20 +177,13 @@ Special thanks to [mgp25](https://github.com/mgp25) and his [php wrapper](https:
 This code is in no way affiliated with, authorized, maintained, sponsored or endorsed by Instagram or any of its affiliates or subsidiaries. This is an independent and unofficial API wrapper.
 
 
-## About me
-Ramtin Jokar
+## Developers
 
-Born: 1995 (Bushehr city, Iran)
+| Name | Github | Email | Telegram | Instagram |
+| ------ | ------ | ------ | ------ | ------ |
+| Ramtin Jokar | [@ramtinak](https://github.com/ramtinak) | [Ramtinak@live.com](mailto:ramtinak@live.com) | https://t.me/Ramtinak | https://instagram.com/Rmt4006 |
+| Ali Noshahi | [@NGame1](https://github.com/NGame1) | [NGame1390@hotmail.com](mailto:ngame1390@hotmail.com) | https://t.me/NGameW | https://instagram.com/alingame |
 
-Live in: Kazeroun city, Fars state, Iran
-
-Bio: I hate programming and developing apps/libraries:|!
-
-Email: [Ramtinak@live.com](mailto:ramtinak@live.com)
-
-Telegram: https://t.me/Ramtinak
-
-Instagram: https://instagram.com/Rmt4006
 
 
 Iranian developers - (c) 2018
