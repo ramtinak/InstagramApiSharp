@@ -282,10 +282,6 @@ namespace ChallengeRequireExample
             if (!InstaApi.IsUserAuthenticated)
                 MessageBox.Show("Login first.");
 
-            var inbox = await InstaApi.MessagingProcessor.GetDirectInboxAsync();
-
-
-            return;
             var x = await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
             if (x.Succeeded)
