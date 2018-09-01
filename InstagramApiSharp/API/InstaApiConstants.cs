@@ -105,6 +105,7 @@ namespace InstagramApiSharp.API
         public const string GET_DIRECT_PENDING_INBOX = API_SUFFIX + "/direct_v2/pending_inbox/";
         public const string GET_DIRECT_TEXT_BROADCAST = API_SUFFIX + "/direct_v2/threads/broadcast/text/";
         public const string DIRECT_BROADCAST_UPLOAD_PHOTO = API_SUFFIX + "/direct_v2/threads/broadcast/upload_photo/";
+        public const string DIRECT_BROADCAST_CONFIGURE_VIDEO = API_SUFFIX + "/direct_v2/threads/broadcast/configure_video/";
         public const string GET_RECENT_ACTIVITY = API_SUFFIX + "/news/inbox/";
         public const string GET_FOLLOWING_RECENT_ACTIVITY = API_SUFFIX + "/news/";
         public const string LIKE_MEDIA = API_SUFFIX + "/media/{0}/like/";
@@ -129,11 +130,14 @@ namespace InstagramApiSharp.API
         public const string MEDIA_ALBUM_CONFIGURE = API_SUFFIX + "/media/configure_sidecar/";
         public const string DELETE_MEDIA = API_SUFFIX + "/media/{0}/delete/?media_type={1}";
         public const string EDIT_MEDIA = API_SUFFIX + "/media/{0}/edit_media/";
+        public const string SEEN_MEDIA = API_SUFFIX + "/media/seen/";
+        public const string SEEN_MEDIA_STORY = SEEN_MEDIA + "?reel=1&live_vod=0";
         public const string GET_STORY_TRAY = API_SUFFIX + "/feed/reels_tray/";
         public const string GET_USER_STORY = API_SUFFIX + "/feed/user/{0}/reel_media/";
         public const string STORY_CONFIGURE = API_SUFFIX + "/media/configure_to_reel/";
         public const string STORY_CONFIGURE_VIDEO = API_SUFFIX + "/media/configure_to_story/?video=1";
         public const string STORY_CONFIGURE_VIDEO2 = API_SUFFIX + "/media/configure_to_story/";
+        public const string STORY_SHARE = API_SUFFIX + "/direct_v2/threads/broadcast/story_share/?media_type={0}";
         public const string LOCATION_SEARCH = API_SUFFIX + "/location_search/";
         public const string FRIENDSHIPSTATUS = API_SUFFIX + "/friendships/show/";
         public const string LIKE_FEED = API_SUFFIX + "/feed/liked/";

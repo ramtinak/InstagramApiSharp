@@ -5,6 +5,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaStoryResponse
     {
+        [JsonProperty("taken_at")] public long TakenAtUnixLike { get; set; }
+
         [JsonProperty("can_reply")] public bool CanReply { get; set; }
 
         [JsonProperty("expiring_at")] public long ExpiringAt { get; set; }

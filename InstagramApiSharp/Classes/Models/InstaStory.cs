@@ -5,6 +5,8 @@ namespace InstagramApiSharp.Classes.Models
 {
     public class InstaStory
     {
+        public long TakenAtUnix { get; set; }
+
         public bool CanReply { get; set; }
 
         public DateTime ExpiringAt { get; set; }

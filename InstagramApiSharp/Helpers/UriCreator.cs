@@ -478,7 +478,13 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Can't create URI for deleting media");
             return instaUri;
         }
-
+        public static Uri GetDeleteStoryMediaUri(string mediaId, SharingType mediaType)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.DELETE_MEDIA, mediaId, mediaType.ToString().ToUpper()), out var instaUri))
+                throw new Exception("Can't create URI for deleting media story");
+            return instaUri;
+        }
         public static Uri GetEditMediaUri(string mediaId)
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.EDIT_MEDIA, mediaId),
@@ -1014,6 +1020,30 @@ namespace InstagramApiSharp.Helpers
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.STORY_UPLOAD_PHOTO, uploadId, fileHashCode), out var instaUri))
                 throw new Exception("Cant create URI for story upload photo");
+            return instaUri;
+        }
+        public static Uri GetDirectConfigVideoUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_CONFIGURE_VIDEO, out var instaUri))
+                throw new Exception("Cant create URI for direct config video");
+            return instaUri;
+        }
+        public static Uri GetStoryShareUri(string mediaType)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.STORY_SHARE, mediaType), out var instaUri))
+                throw new Exception("Cant create URI for story share");
+            return instaUri;
+        }
+        public static Uri GetSeenMediaUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.SEEN_MEDIA, out var instaUri))
+                throw new Exception("Cant create URI for seen media");
+            return instaUri;
+        }
+        public static Uri GetSeenMediaStoryUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.SEEN_MEDIA_STORY, out var instaUri))
+                throw new Exception("Cant create URI for seen media story");
             return instaUri;
         }
     }

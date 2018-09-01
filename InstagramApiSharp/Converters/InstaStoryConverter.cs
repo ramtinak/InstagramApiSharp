@@ -24,7 +24,8 @@ namespace InstagramApiSharp.Converters
                 Seen = (SourceObject.Seen ?? 0).FromUnixTimeSeconds(),
                 SeenRankedPosition = SourceObject.SeenRankedPosition,
                 SocialContext = SourceObject.SocialContext,
-                SourceToken = SourceObject.SourceToken
+                SourceToken = SourceObject.SourceToken,
+                TakenAtUnix = SourceObject.TakenAtUnixLike
             };
             if (SourceObject.Owner != null)
                 story.Owner = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.Owner).Convert();

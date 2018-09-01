@@ -6,6 +6,7 @@ namespace InstagramApiSharp.Classes.Models
 {
     public class InstaMedia : INotifyPropertyChanged
     {
+        public long TakenAtUnix { get; set; }
         public DateTime TakenAt { get; set; }
         public string Pk { get; set; }
 

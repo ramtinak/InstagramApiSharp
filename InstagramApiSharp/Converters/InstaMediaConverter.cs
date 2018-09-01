@@ -25,6 +25,7 @@ namespace InstagramApiSharp.Converters
                 PhotoOfYou = SourceObject.PhotoOfYou,
                 TrackingToken = SourceObject.TrackingToken,
                 TakenAt = DateTimeHelper.UnixTimestampToDateTime(SourceObject.TakenAtUnixLike),
+                TakenAtUnix = long.Parse(SourceObject.TakenAtUnixLike),
                 Height = SourceObject.Height,
                 LikesCount = SourceObject.LikesCount,
                 MediaType = SourceObject.MediaType,

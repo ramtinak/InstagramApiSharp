@@ -75,7 +75,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadId">Thread id</param>
         Task<IResult<InstaSharing>> ShareUserAsync(string userIdToSend, string threadId);
         /// <summary>
-        ///     Send photo to direct thread (single user)
+        ///     Send photo to direct thread (single)
         /// </summary>
         /// <param name="image">Image to upload</param>
         /// <param name="threadId">Thread id</param>
@@ -88,8 +88,19 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="recipients">Recipients (user ids/pk)</param>
         /// <returns>Returns True is sent</returns>
         Task<IResult<bool>> SendDirectPhotoToRecipientsAsync(InstaImage image, params string[] recipients);
-        [Obsolete("It's not completed YET")]
+        /// <summary>
+        ///     Send video to direct thread (single)
+        /// </summary>
+        /// <param name="video">Video to upload (no need to set thumbnail)</param>
+        /// <param name="threadId">Thread id</param>
         Task<IResult<bool>> SendDirectVideoAsync(InstaVideoUpload video, string threadId);
+        /// <summary>
+        ///     Send video to multiple recipients (multiple user)
+        /// </summary>
+        /// <param name="video">Video to upload (no need to set thumbnail)</param>
+        /// <param name="recipients">Recipients (user ids/pk)</param>
+        Task<IResult<bool>> SendDirectVideoToRecipientsAsync(InstaVideoUpload video, params string[] recipients);
+
 
     }
 }

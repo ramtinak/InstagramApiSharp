@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.4.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.0.4.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -69,6 +69,11 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.4.4
+- Send video to story (self story, direct story and both) added
+- Seen story added
+- Send direct photo/video added
+
 v1.0.4.3
 - Added RegenerateTwoFactorBackupCodesAsync to AccountProcessor
 
