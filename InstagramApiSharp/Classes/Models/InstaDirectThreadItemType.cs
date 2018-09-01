@@ -7,7 +7,9 @@
         Like = 2,
         Link = 3,
         Media = 4,
-        reel_share = 5,
-        placeholder = 6
+        ReelShare = 5,
+        Placeholder = 6,
+        RavenMedia = 7,
+        StoryShare = 8,
     }
 }

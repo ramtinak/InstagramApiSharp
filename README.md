@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.4.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.0.4.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -46,9 +46,9 @@ Some of features:
 | Get recent activity | Like media | Unlike media | Follow user |
 | Unfollow user | Set account private | Set account public | Send comment |
 | Delete comment | Upload photo | Upload video | Get followings list |
-| Delete media (photo/video) | Upload story (photo) | Change password | Send direct message |
+| Delete media (photo/video) | Upload story (photo/video) | Change password | Send direct message |
 | Search location | Get location feed | Collection create/get by id/get all/add items | Support challenge required |
-| Upload album (videos/photo) |
+| Upload album (videos/photo) | Send direct photo/video | Share story |
 ## Usage
 #### Use builder to get Insta API instance:
 ```c#
@@ -69,6 +69,10 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.4.5
+- Support raven media in direct messages
+- Support share media in direct messages
+
 v1.0.4.4
 - Send video to story (self story, direct story and both) added
 - Seen story added

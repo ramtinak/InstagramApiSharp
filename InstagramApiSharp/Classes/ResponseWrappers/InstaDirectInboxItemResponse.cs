@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using InstagramApiSharp.Classes.ResponseWrappers.BaseResponse;
 using Newtonsoft.Json;
 
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaDirectInboxItemResponse : BaseStatusResponse
-    {
+    { 
         [JsonProperty("text")] public string Text { get; set; }
 
         [JsonProperty("like")] public string Like { get; set; }
@@ -24,6 +25,31 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("link")] public InstaWebLinkResponse Link { get; set; }
 
-        [JsonProperty("client_context")] public Guid ClientContext { get; set; }
+        [JsonProperty("client_context")] public string ClientContext { get; set; }
+
+        [JsonProperty("story_share")] public InstaStoryShareResponse StoryShare { get; set; }
+
+        [JsonProperty("raven_media")] public InstaRavenMediaResponse RavenMedia { get; set; }
+        // raven media properties
+        [JsonProperty("view_mode")] public string RavenViewMode { get; set; }
+
+        [JsonProperty("seen_user_ids")] public List<long> RavenSeenUserIds { get; set; }
+
+        [JsonProperty("reply_chain_count")] public int RavenReplayChainCount { get; set; }
+
+        [JsonProperty("seen_count")] public int RavenSeenCount { get; set; }
+
+        [JsonProperty("expiring_media_action_summary")] public InstaRavenMediaActionSummaryResponse RavenExpiringMediaActionSummary { get; set; }
+        //"seen_user_ids": [ "1647718432" ],
+        //"reply_chain_count": 0,
+        //"expiring_media_action_summary": {
+        //    "type": "raven_delivered",
+        //    "timestamp": 1535798308475370,
+        //    "count": 1
+        //},
+        //"view_mode": "replayable",
+        //"replay_expiring_at_us": 1535798304361299,
+        //"seen_count": 1
+
     }
 }

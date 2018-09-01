@@ -61,6 +61,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaDirectInboxContainer>(response, json);
+                Debug.WriteLine(json);
                 var inboxResponse = JsonConvert.DeserializeObject<InstaDirectInboxContainerResponse>(json);
                 return Result.Success(ConvertersFabric.Instance.GetDirectInboxConverter(inboxResponse).Convert());
             }

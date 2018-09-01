@@ -750,8 +750,9 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="reelId">Reel id</param>
         /// <param name="storyMediaId">Story media id</param>
         /// <param name="threadId">Thread id</param>
+        /// <param name="text">Text to send (optional</param>
         /// <param name="sharingType">Sharing type</param>
-        public async Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, SharingType sharingType = SharingType.Video)
+        public async Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, string text, SharingType sharingType = SharingType.Video)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -763,6 +764,7 @@ namespace InstagramApiSharp.API.Processors
                     {"thread_ids", $"[{threadId}]"},
                     {"unified_broadcast_format", "1"},
                     {"reel_id", reelId},
+                    {"text", text ?? ""},
                     {"story_media_id", storyMediaId},
                     {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},

@@ -54,7 +54,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="storyMediaId">Story media id</param>
         /// <param name="threadId">Thread id</param>
         /// <param name="sharingType">Sharing type</param>
-        Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, SharingType sharingType = SharingType.Video);
+        Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, string text, SharingType sharingType = SharingType.Video);
         /// <summary>
         ///     Delete a media story (photo or video)
         /// </summary>

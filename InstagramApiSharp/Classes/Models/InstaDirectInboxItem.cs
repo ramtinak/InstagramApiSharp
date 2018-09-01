@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InstagramApiSharp.Classes.ResponseWrappers;
+using System;
 
 namespace InstagramApiSharp.Classes.Models
 {
@@ -8,12 +9,9 @@ namespace InstagramApiSharp.Classes.Models
 
         public long UserId { get; set; }
 
-
         public DateTime TimeStamp { get; set; }
 
-
         public string ItemId { get; set; }
-
 
         public InstaDirectThreadItemType ItemType { get; set; } = InstaDirectThreadItemType.Text;
 
@@ -21,6 +19,21 @@ namespace InstagramApiSharp.Classes.Models
 
         public InstaMedia MediaShare { get; set; }
 
-        public Guid ClientContext { get; set; }
+        public string ClientContext { get; set; }
+
+        public InstaStoryShare StoryShare { get; set; }
+
+        public InstaRavenMedia RavenMedia { get; set; }
+
+        // raven media properties
+        public string RavenViewMode { get; set; }
+
+        public System.Collections.Generic.List<long> RavenSeenUserIds { get; set; }
+
+        public int RavenReplayChainCount { get; set; }
+
+        public int RavenSeenCount { get; set; }
+
+        public InstaRavenMediaActionSummary RavenExpiringMediaActionSummary { get; set; }
     }
 }
