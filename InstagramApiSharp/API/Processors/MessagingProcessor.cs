@@ -61,7 +61,6 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaDirectInboxContainer>(response, json);
-                Debug.WriteLine(json);
                 var inboxResponse = JsonConvert.DeserializeObject<InstaDirectInboxContainerResponse>(json);
                 return Result.Success(ConvertersFabric.Instance.GetDirectInboxConverter(inboxResponse).Convert());
             }
@@ -87,7 +86,6 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
 
 
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -97,7 +95,6 @@ namespace InstagramApiSharp.API.Processors
 
                 //Reverse for Chat Order
                 threadResponse.Items.Reverse();
-                //
                 var converter = ConvertersFabric.Instance.GetDirectThreadConverter(threadResponse);
 
 
