@@ -213,10 +213,31 @@ namespace InstagramApiSharp.Helpers
                     out var instaUri)) throw new Exception("Cant create URI for approve inbox thread");
             return instaUri;
         }
+        public static Uri GetApprovePendingMultipleDirectRequestUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_THREAD_APPROVE_MULTIPLE,
+                    out var instaUri)) throw new Exception("Cant create URI for approve multiple inbox threads");
+            return instaUri;
+        }
         public static Uri GetDeclineAllPendingDirectRequestsUri()
         {
             if (
                 !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_THREAD_DECLINEALL,
+                    out var instaUri)) throw new Exception("Cant create URI for decline all pending direct requests");
+            return instaUri;
+        }
+        public static Uri GetDeclinePendingDirectRequestUri(string threadId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_DIRECT_THREAD_DECLINE, threadId),
+                    out var instaUri)) throw new Exception("Cant create URI for decline pending direct request");
+            return instaUri;
+        }
+        public static Uri GetDeclineMultplePendingDirectRequestsUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_THREAD_DECLINE_MULTIPLE,
                     out var instaUri)) throw new Exception("Cant create URI for decline all pending direct requests");
             return instaUri;
         }
@@ -1044,6 +1065,36 @@ namespace InstagramApiSharp.Helpers
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.SEEN_MEDIA_STORY, out var instaUri))
                 throw new Exception("Cant create URI for seen media story");
+            return instaUri;
+        }
+        public static Uri GetDirectThreadSeenUri(string threadId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_THREAD_ITEM_SEEN, threadId), out var instaUri))
+                throw new Exception("Cant create URI for story share");
+            return instaUri;
+        }
+        public static Uri GetDirectThreadUpdateTitleUri(string threadId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_THREAD_UPDATE_TITLE, threadId), out var instaUri))
+                throw new Exception("Cant create URI for update thread title");
+            return instaUri;
+        }
+        public static Uri GetMuteDirectThreadUri(string threadId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_THREAD_MUTE, threadId), out var instaUri))
+                throw new Exception("Cant create URI for mute direct thread");
+            return instaUri;
+        }
+        public static Uri GetUnMuteDirectThreadUri(string threadId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_THREAD_UNMUTE, threadId), out var instaUri))
+                throw new Exception("Cant create URI for unmute direct thread");
+            return instaUri;
+        }
+        public static Uri GetSendDirectProfileUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,InstaApiConstants.DIRECT_BROADCAST_PROFILE, out var instaUri))
+                throw new Exception("Cant create URI for send profile to direct thread");
             return instaUri;
         }
     }

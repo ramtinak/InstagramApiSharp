@@ -1,5 +1,6 @@
 ﻿using InstagramApiSharp.Classes.ResponseWrappers;
 using System;
+using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models
 {
@@ -28,13 +29,18 @@ namespace InstagramApiSharp.Classes.Models
         // raven media properties
         public string RavenViewMode { get; set; }
 
-        public System.Collections.Generic.List<long> RavenSeenUserIds { get; set; }
+        public List<long> RavenSeenUserIds { get; set; }
 
         public int RavenReplayChainCount { get; set; }
 
         public int RavenSeenCount { get; set; }
 
         public InstaRavenMediaActionSummary RavenExpiringMediaActionSummary { get; set; }
-        public InstaActionLog ActionLog { get; set; }
+
+        public InstaActionLog ActionLogMedia { get; set; }
+
+        public InstaUserShort ProfileMedia { get; set; }
+
+        public List<InstaMedia> ProfileMediasPreview { get; set; }
     }
 }

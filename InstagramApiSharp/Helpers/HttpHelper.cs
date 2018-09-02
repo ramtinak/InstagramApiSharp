@@ -23,7 +23,12 @@ namespace InstagramApiSharp.Helpers
                 deviceInfo.GoogleAdId.ToString()));
             return request;
         }
-
+        public static HttpRequestMessage GetDefaultRequest(HttpMethod method, Uri uri, AndroidDevice deviceInfo, Dictionary<string, string> data)
+        {
+            var request = GetDefaultRequest(HttpMethod.Post, uri, deviceInfo);
+            request.Content = new FormUrlEncodedContent(data);
+            return request;
+        }
         public static HttpRequestMessage GetSignedRequest(HttpMethod method,
             Uri uri,
             AndroidDevice deviceInfo,

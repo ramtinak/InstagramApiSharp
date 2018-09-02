@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.4.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.0.4.6 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -69,6 +69,18 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.4.6
+- [Add] ActionLog support for direct threads
+- [Add] Profile support for direct threads
+- [Add] Send profile as direct message 
+- [Add] UpdateDirectThreadAsync to Messaging
+- [Add] mute/unmute thread to Messaging
+- [Add] DeclineDirectPendingRequestsAsync to Messaging
+- [Bugfix] for GetDirectInboxThreadAsync
+- [Bugfix] for ApproveDirectPendingRequestAsync
+- [Bugfix] for DeclineAllDirectPendingRequestsAsync
+- [Bugfix] for DicoverProccesor.GetSuggestedSearchesAsync
+
 v1.0.4.5
 - Support raven media in direct messages
 - Support share media in direct messages

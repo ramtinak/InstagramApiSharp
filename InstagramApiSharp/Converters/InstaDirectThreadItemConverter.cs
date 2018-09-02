@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
@@ -66,7 +68,7 @@ namespace InstagramApiSharp.Converters
             else if (threadItem.ItemType == InstaDirectThreadItemType.Text)
             {
                 threadItem.Text = SourceObject.Text;
-            }
+            } 
             else if (threadItem.ItemType == InstaDirectThreadItemType.RavenMedia &&
                 SourceObject.RavenMedia != null)
             {
@@ -90,12 +92,29 @@ namespace InstagramApiSharp.Converters
 
                 }
             }
-            else if (threadItem.ItemType == InstaDirectThreadItemType.ActionLog && SourceObject.ActionLog != null)
+            else if (threadItem.ItemType == InstaDirectThreadItemType.ActionLog && SourceObject.ActionLogMedia != null)
             {
-                threadItem.ActionLog = new InstaActionLog
+                threadItem.ActionLogMedia = new InstaActionLog
                 {
-                    Description = SourceObject.ActionLog.Description
+                    Description = SourceObject.ActionLogMedia.Description
                 };
+            }
+            else if (threadItem.ItemType == InstaDirectThreadItemType.Profile && SourceObject.ProfileMedia != null)
+            {
+                var converter = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.ProfileMedia);
+                threadItem.ProfileMedia = converter.Convert(); 
+                if(SourceObject.ProfileMediasPreview!= null && SourceObject.ProfileMediasPreview.Any())
+                {
+                    try
+                    {
+                        var previewMedias = new List<InstaMedia>();
+                        foreach(var item in SourceObject.ProfileMediasPreview)
+                            previewMedias.Add( ConvertersFabric.Instance.GetSingleMediaConverter(item).Convert());
+
+                        threadItem.ProfileMediasPreview = previewMedias;
+                    }
+                    catch { }
+                }
             }
             return threadItem;
         }

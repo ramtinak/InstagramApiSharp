@@ -55,12 +55,17 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Approve direct pending request
         /// </summary>
-        /// <param name="threadId">Thread id</param>
-        Task<IResult<bool>> ApproveDirectPendingRequestAsync(string threadId);
+        /// <param name="threadId">Thread ids</param>
+        Task<IResult<bool>> ApproveDirectPendingRequestAsync(params string[] threadIds);
         /// <summary>
         ///     Decline all direct pending requests
         /// </summary>
         Task<IResult<bool>> DeclineAllDirectPendingRequestsAsync();
+        /// <summary>
+        ///     Decline direct pending requests
+        /// </summary>
+        /// <param name="threadIds">Thread ids</param>
+        Task<IResult<bool>> DeclineDirectPendingRequestsAsync(params string[] threadIds);
         /// <summary>
         ///     Get direct pending inbox threads for current user asynchronously
         /// </summary>
@@ -100,7 +105,29 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload (no need to set thumbnail)</param>
         /// <param name="recipients">Recipients (user ids/pk)</param>
         Task<IResult<bool>> SendDirectVideoToRecipientsAsync(InstaVideoUpload video, params string[] recipients);
+        /// <summary>
+        ///     Mark direct message as seen
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="itemId">Message id (item id)</param>
+        Task<IResult<bool>> MarkDirectThreadAsSeenAsync(string threadId, string itemId);
+        /// <summary>
+        ///     Update direct thread title (for groups)
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="title">New title</param>
+        Task<IResult<bool>> UpdateDirectThreadAsync(string threadId, string title);
+        /// <summary>
+        ///     Mute direct thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        Task<IResult<bool>> MuteDirectThreadAsync(string threadId);
+        /// <summary>
+        ///     Unmute direct thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        Task<IResult<bool>> UnMuteDirectThreadAsync(string threadId);
 
-
+        Task<IResult<bool>> SendDirectProfileAsync(long userIdToSend, params string[] threadIds);
     }
 }

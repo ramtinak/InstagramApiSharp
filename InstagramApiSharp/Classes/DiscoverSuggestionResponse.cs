@@ -16,5 +16,7 @@ namespace InstagramApiSharp.Classes
     {
         [JsonProperty("rank_token")]
         public string RankToken { get; set; }
+        [JsonProperty("suggested")]
+        public List<RecentSearchs> Suggested { get; set; }
     }
 }

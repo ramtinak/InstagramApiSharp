@@ -41,8 +41,10 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("expiring_media_action_summary")] public InstaRavenMediaActionSummaryResponse RavenExpiringMediaActionSummary { get; set; }
         // end
-        [JsonProperty("action_log")] public InstaActionLogResponse ActionLog { get; set; }
+        [JsonProperty("action_log")] public InstaActionLogResponse ActionLogMedia { get; set; }
 
+        [JsonProperty("profile")] public InstaUserShortResponse ProfileMedia { get; set; }
 
+        [JsonProperty("preview_medias")] public List<InstaMediaItemResponse> ProfileMediasPreview { get; set; }
     }
 }

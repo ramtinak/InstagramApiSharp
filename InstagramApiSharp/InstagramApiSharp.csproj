@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.4.5</Version>
-    <AssemblyVersion>1.0.4.5</AssemblyVersion>
-    <FileVersion>1.0.4.5</FileVersion>
+    <Version>1.0.4.6</Version>
+    <AssemblyVersion>1.0.4.6</AssemblyVersion>
+    <FileVersion>1.0.4.6</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -30,11 +30,23 @@ Support:
 - and many more.
 
 See examples and wiki pages to find out how can you use this library.</Description>
-    <Authors>RamtinJokar</Authors>
+    <Authors>Ramtin Jokar, Ali NGame1</Authors>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.4.5
+    <PackageReleaseNotes>v1.0.4.6
+- [Add] ActionLog support for direct threads
+- [Add] Profile support for direct threads
+- [Add] Send profile as direct message 
+- [Add] UpdateDirectThreadAsync to Messaging
+- [Add] mute/unmute thread to Messaging
+- [Add] DeclineDirectPendingRequestsAsync to Messaging
+- [Bugfix] for GetDirectInboxThreadAsync
+- [Bugfix] for ApproveDirectPendingRequestAsync
+- [Bugfix] for DeclineAllDirectPendingRequestsAsync
+- [Bugfix] for DicoverProccesor.GetSuggestedSearchesAsync
+
+v1.0.4.5
 - Support raven media in direct messages
 - Support share media in direct messages
 

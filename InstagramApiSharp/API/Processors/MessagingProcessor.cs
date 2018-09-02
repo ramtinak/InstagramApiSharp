@@ -269,19 +269,26 @@ namespace InstagramApiSharp.API.Processors
         ///     Approve direct pending request
         /// </summary>
         /// <param name="threadId">Thread id</param>
-        public async Task<IResult<bool>> ApproveDirectPendingRequestAsync(string threadId)
+        public async Task<IResult<bool>> ApproveDirectPendingRequestAsync(params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetApprovePendingDirectRequestUri(threadId);
 
-                var data = new JObject
+                var data = new Dictionary<string, string>
                 {
                     {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                Uri instaUri;
+                if (threadIds.Length == 1)
+                    instaUri = UriCreator.GetApprovePendingDirectRequestUri(threadIds.FirstOrDefault());
+                else
+                {
+                    instaUri = UriCreator.GetApprovePendingMultipleDirectRequestUri();
+                    data.Add("thread_ids", threadIds.EncodeList(false));
+                }
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -304,17 +311,35 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         public async Task<IResult<bool>> DeclineAllDirectPendingRequestsAsync()
         {
+            return await DeclineDirectPendingRequests(true);
+        }
+        public async Task<IResult<bool>> DeclineDirectPendingRequestsAsync(params string[] threadIds)
+        {
+            return await DeclineDirectPendingRequests(false, threadIds);
+        }
+        private async Task<IResult<bool>> DeclineDirectPendingRequests(bool all, params string[] threadIds)
+        {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetDeclineAllPendingDirectRequestsUri();
 
-                var data = new JObject
+                var data = new Dictionary<string, string>
                 {
                     {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                if(!all)
+                {
+                    if(threadIds.Length == 1)
+                        instaUri = UriCreator.GetDeclinePendingDirectRequestUri(threadIds.FirstOrDefault());
+                    else
+                    {
+                        instaUri = UriCreator.GetDeclineMultplePendingDirectRequestsUri();
+                        data.Add("thread_ids", threadIds.EncodeList(false));
+                    }
+                }
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -585,7 +610,166 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+        /// <summary>
+        ///     Mark direct message as seen
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="itemId">Message id (item id)</param>
+        public async Task<IResult<bool>> MarkDirectThreadAsSeenAsync(string threadId, string itemId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetDirectThreadSeenUri(threadId);
 
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"item_ids", $"[{itemId}]"},
+                };
+                var request =
+                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+        /// <summary>
+        ///     Update direct thread title (for groups)
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="title">New title</param>
+        public async Task<IResult<bool>> UpdateDirectThreadAsync(string threadId, string title)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetDirectThreadUpdateTitleUri(threadId);
+
+                var data = new Dictionary<string,string>
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"title", title},
+                };
+                var request =
+                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+        /// <summary>
+        ///     Mute direct thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        public async Task<IResult<bool>> MuteDirectThreadAsync(string threadId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetMuteDirectThreadUri(threadId);
+
+                var data = new Dictionary<string, string>
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                var request =
+                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+        /// <summary>
+        ///     Unmute direct thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        public async Task<IResult<bool>> UnMuteDirectThreadAsync(string threadId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetUnMuteDirectThreadUri(threadId);
+
+                var data = new Dictionary<string, string>
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                var request =
+                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+        public async Task<IResult<bool>> SendDirectProfileAsync(long userIdToSend, params string[] threadIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetSendDirectProfileUri();
+                var clientContext = Guid.NewGuid().ToString();
+                var data = new Dictionary<string, string>
+                {
+                    {"profile_user_id", userIdToSend.ToString()},
+                    {"action", "send_item"},
+                    {"thread_ids", $"[{threadIds.EncodeList(false)}]"},
+                    {"thread_ids", clientContext},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                var request =
+                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
 
     }
 }

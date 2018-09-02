@@ -830,7 +830,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="storyMediaId">Story media identifier</param>
         /// <param name="takenAtUnix">Taken at unix</param>
-        public async Task<IResult<bool>> SeenStoryAsync(string storyMediaId, long takenAtUnix)
+        public async Task<IResult<bool>> MarkStoryAsSeenAsync(string storyMediaId, long takenAtUnix)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
