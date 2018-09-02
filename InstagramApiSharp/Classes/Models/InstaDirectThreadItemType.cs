@@ -11,5 +11,6 @@
         Placeholder = 6,
         RavenMedia = 7,
         StoryShare = 8,
+        ActionLog = 9
     }
 }

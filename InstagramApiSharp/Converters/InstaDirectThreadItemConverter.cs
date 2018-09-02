@@ -52,10 +52,16 @@ namespace InstagramApiSharp.Converters
                 {
                     IsReelPersisted = SourceObject.StoryShare.IsReelPersisted,
                     ReelType = SourceObject.StoryShare.ReelType,
-                    Text = SourceObject.StoryShare.Text
+                    Text = SourceObject.StoryShare.Text,
+                    IsLinked = SourceObject.StoryShare.IsLinked,
+                    Message = SourceObject.StoryShare.Message,
+                    Title = SourceObject.StoryShare.Title
                 };
-                var converter = ConvertersFabric.Instance.GetSingleMediaConverter(SourceObject.StoryShare.Media);
-                threadItem.StoryShare.Media = converter.Convert();
+                if (SourceObject.StoryShare.Media != null)
+                {
+                    var converter = ConvertersFabric.Instance.GetSingleMediaConverter(SourceObject.StoryShare.Media);
+                    threadItem.StoryShare.Media = converter.Convert();
+                }
             }
             else if (threadItem.ItemType == InstaDirectThreadItemType.Text)
             {
@@ -64,20 +70,31 @@ namespace InstagramApiSharp.Converters
             else if (threadItem.ItemType == InstaDirectThreadItemType.RavenMedia &&
                 SourceObject.RavenMedia != null)
             {
-                threadItem.RavenMedia = new InstaRavenMedia
-                {
-                    MediaType =  SourceObject.RavenMedia.MediaType
-                };
+                var converter = ConvertersFabric.Instance.GetSingleMediaConverter(SourceObject.RavenMedia);
+                threadItem.RavenMedia = converter.Convert();
                 threadItem.RavenSeenUserIds = SourceObject.RavenSeenUserIds;
                 threadItem.RavenViewMode = SourceObject.RavenViewMode;
                 threadItem.RavenReplayChainCount = SourceObject.RavenReplayChainCount;
                 threadItem.RavenSeenCount = SourceObject.RavenSeenCount;
-                InstaRavenType ravenType = SourceObject.RavenExpiringMediaActionSummary.Type.ToLower() == "raven_delivered" ? InstaRavenType.Delivered : InstaRavenType.Opened;
-                threadItem.RavenExpiringMediaActionSummary = new InstaRavenMediaActionSummary
+                if (SourceObject.RavenExpiringMediaActionSummary != null)
                 {
-                    Count = SourceObject.RavenExpiringMediaActionSummary.Count,
-                    ExpireTime = DateTimeHelper.UnixTimestampMilisecondsToDateTime(SourceObject.RavenExpiringMediaActionSummary.TimeStamp),
-                    Type = ravenType
+                    InstaRavenType ravenType = SourceObject.RavenExpiringMediaActionSummary.Type.ToLower() == "raven_delivered" ? InstaRavenType.Delivered : InstaRavenType.Opened;
+                    threadItem.RavenExpiringMediaActionSummary = new InstaRavenMediaActionSummary
+                    {
+                        Count = SourceObject.RavenExpiringMediaActionSummary.Count,
+                        Type = ravenType
+                    };
+                    if (!string.IsNullOrEmpty(SourceObject.RavenExpiringMediaActionSummary.TimeStamp))
+                        threadItem.RavenExpiringMediaActionSummary.
+                            ExpireTime = DateTimeHelper.UnixTimestampMilisecondsToDateTime(SourceObject.RavenExpiringMediaActionSummary.TimeStamp);
+
+                }
+            }
+            else if (threadItem.ItemType == InstaDirectThreadItemType.ActionLog && SourceObject.ActionLog != null)
+            {
+                threadItem.ActionLog = new InstaActionLog
+                {
+                    Description = SourceObject.ActionLog.Description
                 };
             }
             return threadItem;

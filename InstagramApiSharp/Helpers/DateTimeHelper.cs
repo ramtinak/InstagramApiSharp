@@ -14,8 +14,13 @@ namespace InstagramApiSharp.Helpers
 
         public static DateTime UnixTimestampToDateTime(double unixTime)
         {
-            var time = (long) unixTime;
-            return time.FromUnixTimeSeconds();
+            try
+            {
+                var time = (long)unixTime;
+                return time.FromUnixTimeSeconds();
+            }
+            catch { }
+            return DateTime.Now;
         }
 
         public static DateTime UnixTimestampToDateTime(string unixTime)
@@ -30,8 +35,13 @@ namespace InstagramApiSharp.Helpers
 
         public static DateTime UnixTimestampMilisecondsToDateTime(string unixTime)
         {
-            var time = (long) Convert.ToDouble(unixTime) / 1000000;
-            return time.FromUnixTimeSeconds();
+            try
+            {
+                var time = (long)Convert.ToDouble(unixTime) / 1000000;
+                return time.FromUnixTimeSeconds();
+            }
+            catch { }
+            return DateTime.Now;
         }
 
         public static DateTime FromUnixTimeSeconds(this long unixTime)

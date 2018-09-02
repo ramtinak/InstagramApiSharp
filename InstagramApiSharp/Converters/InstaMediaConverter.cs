@@ -20,12 +20,10 @@ namespace InstagramApiSharp.Converters
                 Pk = SourceObject.Pk,
                 ClientCacheKey = SourceObject.ClientCacheKey,
                 CommentsCount = SourceObject.CommentsCount,
-                DeviceTimeStamp = DateTimeHelper.UnixTimestampToDateTime(SourceObject.DeviceTimeStampUnixLike),
                 HasLiked = SourceObject.HasLiked,
                 PhotoOfYou = SourceObject.PhotoOfYou,
                 TrackingToken = SourceObject.TrackingToken,
-                TakenAt = DateTimeHelper.UnixTimestampToDateTime(SourceObject.TakenAtUnixLike),
-                TakenAtUnix = long.Parse(SourceObject.TakenAtUnixLike),
+                TakenAtUnix = long.Parse(string.IsNullOrEmpty(SourceObject.TakenAtUnixLike) ? "0" : SourceObject.TakenAtUnixLike),
                 Height = SourceObject.Height,
                 LikesCount = SourceObject.LikesCount,
                 MediaType = SourceObject.MediaType,
@@ -35,6 +33,10 @@ namespace InstagramApiSharp.Converters
                 ViewCount = int.Parse(SourceObject.ViewCount.ToString(CultureInfo.InvariantCulture)),
                 IsCommentsDisabled = SourceObject.IsCommentsDisabled
             };
+            if (!string.IsNullOrEmpty(SourceObject.TakenAtUnixLike))
+                media.TakenAt = DateTimeHelper.UnixTimestampToDateTime(SourceObject.TakenAtUnixLike);
+            if (!string.IsNullOrEmpty(SourceObject.DeviceTimeStampUnixLike))
+                media.DeviceTimeStamp = DateTimeHelper.UnixTimestampToDateTime(SourceObject.DeviceTimeStampUnixLike);
             if (SourceObject.CarouselMedia != null)
                 media.Carousel = ConvertersFabric.Instance.GetCarouselConverter(SourceObject.CarouselMedia).Convert();
             if (SourceObject.User != null)

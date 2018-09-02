@@ -29,7 +29,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("story_share")] public InstaStoryShareResponse StoryShare { get; set; }
 
-        [JsonProperty("raven_media")] public InstaRavenMediaResponse RavenMedia { get; set; }
+        [JsonProperty("raven_media")] public InstaMediaItemResponse/*InstaRavenMediaResponse*/ RavenMedia { get; set; }
         // raven media properties
         [JsonProperty("view_mode")] public string RavenViewMode { get; set; }
 
@@ -40,16 +40,9 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("seen_count")] public int RavenSeenCount { get; set; }
 
         [JsonProperty("expiring_media_action_summary")] public InstaRavenMediaActionSummaryResponse RavenExpiringMediaActionSummary { get; set; }
-        //"seen_user_ids": [ "1647718432" ],
-        //"reply_chain_count": 0,
-        //"expiring_media_action_summary": {
-        //    "type": "raven_delivered",
-        //    "timestamp": 1535798308475370,
-        //    "count": 1
-        //},
-        //"view_mode": "replayable",
-        //"replay_expiring_at_us": 1535798304361299,
-        //"seen_count": 1
+        // end
+        [JsonProperty("action_log")] public InstaActionLogResponse ActionLog { get; set; }
+
 
     }
 }

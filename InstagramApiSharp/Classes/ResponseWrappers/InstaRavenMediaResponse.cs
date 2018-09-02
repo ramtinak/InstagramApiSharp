@@ -5,11 +5,11 @@ using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    public class InstaRavenMediaResponse
-    {
-        [JsonProperty("media_type")]
-        public InstaMediaType MediaType { get; set; }
-    }
+    //public class InstaRavenMediaResponse
+    //{
+    //    //[JsonProperty("media_type")]
+    //    //public InstaMediaType MediaType { get; set; }
+    //}
     public class InstaRavenMediaActionSummaryResponse
     {
         [JsonProperty("type")]
