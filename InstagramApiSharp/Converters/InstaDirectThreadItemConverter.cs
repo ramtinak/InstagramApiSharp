@@ -103,18 +103,26 @@ namespace InstagramApiSharp.Converters
             {
                 var converter = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.ProfileMedia);
                 threadItem.ProfileMedia = converter.Convert(); 
-                if(SourceObject.ProfileMediasPreview!= null && SourceObject.ProfileMediasPreview.Any())
+                if(SourceObject.ProfileMediasPreview != null && SourceObject.ProfileMediasPreview.Any())
                 {
                     try
                     {
                         var previewMedias = new List<InstaMedia>();
                         foreach(var item in SourceObject.ProfileMediasPreview)
-                            previewMedias.Add( ConvertersFabric.Instance.GetSingleMediaConverter(item).Convert());
+                            previewMedias.Add(ConvertersFabric.Instance.GetSingleMediaConverter(item).Convert());
 
                         threadItem.ProfileMediasPreview = previewMedias;
                     }
                     catch { }
                 }
+            }
+            else if (threadItem.ItemType == InstaDirectThreadItemType.Placeholder && SourceObject.Placeholder != null)
+            {
+                threadItem.Placeholder = new InstaPlaceholder
+                {
+                    IsLinked = SourceObject.Placeholder.IsLinked,
+                    Message = SourceObject.Placeholder.Message
+                };
             }
             return threadItem;
         }

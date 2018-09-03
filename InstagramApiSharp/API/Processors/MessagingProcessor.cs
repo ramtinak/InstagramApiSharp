@@ -739,6 +739,11 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+        /// <summary>
+        ///     Send profile to direct thrad
+        /// </summary>
+        /// <param name="userIdToSend">User id to send</param>
+        /// <param name="threadIds">Thread ids</param>
         public async Task<IResult<bool>> SendDirectProfileAsync(long userIdToSend, params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);

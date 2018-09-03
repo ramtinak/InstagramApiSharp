@@ -127,7 +127,11 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="threadId">Thread id</param>
         Task<IResult<bool>> UnMuteDirectThreadAsync(string threadId);
-
+        /// <summary>
+        ///     Send profile to direct thrad
+        /// </summary>
+        /// <param name="userIdToSend">User id to send</param>
+        /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> SendDirectProfileAsync(long userIdToSend, params string[] threadIds);
     }
 }
