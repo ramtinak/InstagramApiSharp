@@ -10,3 +10,4 @@ script:
   - dotnet --info
   - dotnet restore
   - dotnet build  --framework netstandard2.0
+  - dotnet build  --framework netframework4.5.2
