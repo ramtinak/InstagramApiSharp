@@ -48,7 +48,7 @@ Some of features:
 | Delete comment | Upload photo | Upload video | Get followings list |
 | Delete media (photo/video) | Upload story (photo/video) | Change password | Send direct message |
 | Search location | Get location feed | Collection create/get by id/get all/add items | Support challenge required |
-| Upload album (videos/photo) | Send direct photo/video | Share story |
+| Upload album (videos/photo) | Send direct photo/video | Share story | Send direct photo/video/stories/profile |
 ## Usage
 #### Use builder to get Insta API instance:
 ```c#
