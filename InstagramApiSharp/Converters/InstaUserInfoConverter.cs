@@ -38,7 +38,10 @@ namespace InstagramApiSharp.Converters
                 IsBusiness = SourceObject.User.IsBusiness,
                 IncludeDirectBlacklistStatus = SourceObject.User.IncludeDirectBlacklistStatus,
                 HasUnseenBestiesMedia = SourceObject.User.HasUnseenBestiesMedia,
-                AutoExpandChaining = SourceObject.User.AutoExpandChaining
+                AutoExpandChaining = SourceObject.User.AutoExpandChaining,
+                ContactPhoneNumber = SourceObject.User.ContactPhoneNumber,
+                PublicPhoneNumber = SourceObject.User.PublicPhoneNumber,
+                PublicPhoneCountryCode = SourceObject.User.PublicPhoneCountryCode
             };
             return userInfo;
         }

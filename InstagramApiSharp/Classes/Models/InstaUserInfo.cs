@@ -48,5 +48,9 @@ namespace InstagramApiSharp.Classes.Models
         public bool IncludeDirectBlacklistStatus { get; set; }
         public bool HasUnseenBestiesMedia { get; set; }
         public bool AutoExpandChaining { get; set; }
+
+        public string PublicPhoneNumber { get; set; }
+        public string ContactPhoneNumber { get; set; }
+        public string PublicPhoneCountryCode { get; set; }
     }
 }
