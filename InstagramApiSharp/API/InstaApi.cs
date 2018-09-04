@@ -520,22 +520,47 @@ namespace InstagramApiSharp.API
             AccountCreation createResponse = new AccountCreation();
             try
             {
+                var _deviceIdReg = ApiRequestMessage.GenerateDeviceId();
+                var _phoneIdReg = Guid.NewGuid().ToString();
+                var _waterfallIdReg = Guid.NewGuid().ToString();
+                var _guidReg = Guid.NewGuid().ToString();
+
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
                 var postData = new Dictionary<string, string>
                 {
-                    {"email",     email },
-                    {"username",    username},
-                    {"password",    password},
-                    {"device_id",   ApiRequestMessage.GenerateDeviceId()},
-                    {"guid",        _deviceInfo.DeviceGuid.ToString()},
-                    {"first_name",  firstName}
+                    {"allow_contacts_sync",       "true"},
+                    {"sn_result",                 "API_ERROR:+null"},
+                    {"phone_id",                  _phoneIdReg},
+                    {"_csrftoken",                csrftoken},
+                    {"username",                  username},
+                    {"first_name",                firstName},
+                    {"adid",                      Guid.NewGuid().ToString()},
+                    {"guid",                      _guidReg},
+                    {"device_id",                 _deviceIdReg},
+                    {"email",                     email},
+                    {"sn_nonce",                  ""},
+                    {"force_sign_up_code",        ""},
+                    {"waterfall_id",              _waterfallIdReg},
+                    {"qs_stamp",                  ""},
+                    {"password",                  password},
                 };
-
                 var instaUri = UriCreator.GetCreateAccountUri();
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
                 var response = await _httpRequestProcessor.SendAsync(request);
-                var result = await response.Content.ReadAsStringAsync();
+                var json = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(response.StatusCode);
+                Debug.WriteLine(json);
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<AccountCreation>(response, json);
+                var o = JsonConvert.DeserializeObject<AccountCreation>(json);
+                //{"account_created": false, "errors": {"email": ["Another account is using iranramtin73jokar@live.com."], "username": ["This username isn't available. Please try another."]}, "allow_contacts_sync": true, "status": "ok", "error_type": "email_is_taken, username_is_taken"}
+                //{"message": "feedback_required", "spam": true, "feedback_title": "Signup Error", "feedback_message": "Sorry! There\u2019s a problem signing you up right now. Please try again later. We restrict certain content and actions to protect our community. Tell us if you think we made a mistake.", "feedback_url": "repute/report_problem/instagram_signup/", "feedback_appeal_label": "Report problem", "feedback_ignore_label": "OK", "feedback_action": "report_problem", "status": "fail", "error_type": "signup_block"}
 
-                return Result.Success(JsonConvert.DeserializeObject<AccountCreation>(result));
+                Debug.WriteLine(json);
+                return Result.Success(o);
             }
             catch (Exception exception)
             {
