@@ -129,7 +129,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        Task<IResult<BroadcastDefaultResponse>> DeletePostLiveAsync(string broadcastId);
+        Task<IResult<InstaDefault>> DeletePostLiveAsync(string broadcastId);
 
         // broadcast create, start, end
         /// <summary>
@@ -153,7 +153,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="endAfterCopyrightWarning">Copyright warning</param>
         /// <returns></returns>
-        Task<IResult<BroadcastDefaultResponse>> EndAsync(string broadcastId, bool endAfterCopyrightWarning = false);
+        Task<IResult<InstaDefault>> EndAsync(string broadcastId, bool endAfterCopyrightWarning = false);
 
 
 

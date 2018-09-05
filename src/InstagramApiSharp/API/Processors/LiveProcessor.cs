@@ -541,7 +541,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        public async Task<IResult<BroadcastDefaultResponse>> DeletePostLiveAsync(string broadcastId)
+        public async Task<IResult<InstaDefault>> DeletePostLiveAsync(string broadcastId)
         {
             try
             {
@@ -557,14 +557,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastDefaultResponse)null);
-                var obj = JsonConvert.DeserializeObject<BroadcastDefaultResponse>(json);
+                    return Result.Fail("Status code: " + response.StatusCode, (InstaDefault)null);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<BroadcastDefaultResponse>(exception);
+                return Result.Fail<InstaDefault>(exception);
             }
         }
 
@@ -644,7 +644,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="endAfterCopyrightWarning">Copyright warning</param>
         /// <returns></returns>
-        public async Task<IResult<BroadcastDefaultResponse>> EndAsync(string broadcastId, bool endAfterCopyrightWarning = false)
+        public async Task<IResult<InstaDefault>> EndAsync(string broadcastId, bool endAfterCopyrightWarning = false)
         {
             try
             {
@@ -660,14 +660,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastDefaultResponse)null);
-                var obj = JsonConvert.DeserializeObject<BroadcastDefaultResponse>(json);
+                    return Result.Fail("Status code: " + response.StatusCode, (InstaDefault)null);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<BroadcastDefaultResponse>(exception);
+                return Result.Fail<InstaDefault>(exception);
             }
         }
 
