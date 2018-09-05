@@ -30,7 +30,7 @@ Note: this library uses [Json.NET v10.0.3 and above](https://www.nuget.org/packa
 
 ## Overview
 There's a lot of functions and bug fix me and [NGame1](https://github.com/NGame1) added to this library.
-I've added an [Examples](https://github.com/ramtinak/InstagramApiSharp/tree/master/Examples) to show you what's new and how it's works, you can see [Samples/Account.cs](https://github.com/ramtinak/InstagramApiSharp/blob/master/Examples/Samples/Account.cs), [Samples/Discover.cs](https://github.com/ramtinak/InstagramApiSharp/blob/master/Examples/Samples/Discover.cs) and [Samples/Live.cs](https://github.com/ramtinak/InstagramApiSharp/blob/master/Examples/Samples/Live.cs) to see how it's works.
+Check [sample projects](https://github.com/ramtinak/InstagramApiSharp/tree/master/samples) and [wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) to see how it's works.
 
 ## Features
 Some of features:
