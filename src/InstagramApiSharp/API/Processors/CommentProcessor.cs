@@ -85,7 +85,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="targetCommentId">Target comment id</param>
         /// <param name="paginationParameters">Maximum amount of pages to load and start id</param>
         /// <returns></returns>
-        public async Task<IResult<InstaInlineCommentListResponse>> GetMediaInlineCommentsAsync(string mediaId, string targetCommentId,
+        public async Task<IResult<InstaInlineCommentListResponse>> GetMediaRepliesCommentsAsync(string mediaId, string targetCommentId,
 PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -166,7 +166,7 @@ PaginationParameters paginationParameters)
         /// <param name="mediaId">Media id</param>
         /// <param name="targetCommentId">Target comment id</param>
         /// <param name="text">Comment text</param>
-        public async Task<IResult<InstaComment>> InlineCommentMediaAsync(string mediaId, string targetCommentId, string text)
+        public async Task<IResult<InstaComment>> ReplyCommentMediaAsync(string mediaId, string targetCommentId, string text)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try

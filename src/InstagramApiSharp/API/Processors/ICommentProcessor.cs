@@ -21,7 +21,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="targetCommentId">Target comment id</param>
         /// <param name="paginationParameters">Maximum amount of pages to load and start id</param>
         Task<IResult<InstaInlineCommentListResponse>>
-           GetMediaInlineCommentsAsync(string mediaId, string targetCommentId, PaginationParameters paginationParameters);
+           GetMediaRepliesCommentsAsync(string mediaId, string targetCommentId, PaginationParameters paginationParameters);
         /// <summary>
         ///     Comment media
         /// </summary>
@@ -40,7 +40,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="mediaId">Media id</param>
         /// <param name="targetCommentId">Target comment id</param>
         /// <param name="text">Comment text</param>
-        Task<IResult<InstaComment>> InlineCommentMediaAsync(string mediaId, string targetCommentId, string text);
+        Task<IResult<InstaComment>> ReplyCommentMediaAsync(string mediaId, string targetCommentId, string text);
         /// <summary>
         ///     Allow media comments
         /// </summary>
