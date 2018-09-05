@@ -56,5 +56,9 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public bool HasUnseenBestiesMedia { get; set; }
 
         [JsonProperty("auto_expand_chaining")] public bool AutoExpandChaining { get; set; }
+
+        [JsonProperty("public_phone_number")] public string PublicPhoneNumber { get; set; }
+        [JsonProperty("contact_phone_number")] public string ContactPhoneNumber { get; set; }
+        [JsonProperty("public_phone_country_code")] public string PublicPhoneCountryCode { get; set; }
     }
 }
