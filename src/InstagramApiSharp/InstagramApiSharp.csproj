@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.4.6</Version>
-    <AssemblyVersion>1.0.4.6</AssemblyVersion>
-    <FileVersion>1.0.4.6</FileVersion>
+    <Version>1.0.4.7</Version>
+    <AssemblyVersion>1.0.4.7</AssemblyVersion>
+    <FileVersion>1.0.4.7</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -34,7 +34,12 @@ See examples and wiki pages to find out how can you use this library.</Descripti
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.4.6
+    <PackageReleaseNotes>v1.0.4.7
+- [Add] Placeholder support for direct threads
+- [Add] some other info to InstaUserInfo [thx to @GormYa]
+- Some cleanup
+
+v1.0.4.6
 - [Add] ActionLog support for direct threads
 - [Add] Profile support for direct threads
 - [Add] Send profile as direct message 
