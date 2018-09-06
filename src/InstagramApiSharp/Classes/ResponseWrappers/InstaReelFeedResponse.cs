@@ -9,7 +9,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("prefetch_count")] public long PrefetchCount { get; set; }
 
-        [JsonProperty("can_reshare")] public bool CanReshare { get; set; }
+        [JsonProperty("can_reshare")] public string CanReshare { get; set; }
 
         [JsonProperty("can_reply")] public bool CanReply { get; set; }
 
@@ -17,7 +17,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("items")] public List<InstaStoryItemResponse> Items { get; set; }
 
-        [JsonProperty("id")] public long Id { get; set; }
+        [JsonProperty("id")] public string Id { get; set; }
 
         [JsonProperty("latest_reel_media")] public long? LatestReelMedia { get; set; }
 

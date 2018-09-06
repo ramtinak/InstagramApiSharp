@@ -9,7 +9,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public long PrefetchCount { get; set; }
 
-        public bool CanReshare { get; set; }
+        public bool? CanReshare { get; set; }
 
         public bool CanReply { get; set; }
 
@@ -17,7 +17,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public List<InstaStoryItem> Items { get; set; } = new List<InstaStoryItem>();
 
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         public long LatestReelMedia { get; set; }
 

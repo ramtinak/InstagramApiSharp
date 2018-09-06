@@ -15,7 +15,6 @@ namespace InstagramApiSharp.Converters
             var reelFeed = new InstaReelFeed
             {
                 CanReply = SourceObject.CanReply,
-                CanReshare = SourceObject.CanReshare,
                 ExpiringAt = DateTimeHelper.UnixTimestampToDateTime(SourceObject?.ExpiringAt ?? 0),
                 HasBestiesMedia = SourceObject.HasBestiesMedia,
                 Id = SourceObject.Id,
@@ -24,7 +23,12 @@ namespace InstagramApiSharp.Converters
                 Seen = SourceObject.Seen ?? 0,
                 User = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.User).Convert()
             };
-
+            try
+            {
+                if (!string.IsNullOrEmpty(SourceObject.CanReshare))
+                    reelFeed.CanReshare = bool.Parse(SourceObject.CanReshare);
+            }
+            catch { }
             if (SourceObject.Items != null)
                 foreach (var item in SourceObject.Items)
                     reelFeed.Items.Add(ConvertersFabric.Instance.GetStoryItemConverter(item).Convert());

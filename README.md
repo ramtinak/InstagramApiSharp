@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.4.7 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.0.4.8 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -48,7 +48,7 @@ Some of features:
 | Delete comment | Upload photo | Upload video | Get followings list |
 | Delete media (photo/video) | Upload story (photo/video) | Change password | Send direct message |
 | Search location | Get location feed | Collection create/get by id/get all/add items | Support challenge required |
-| Upload album (videos/photo) | Send direct photo/video | Share story | Send direct photo/video/stories/profile |
+| Upload album (videos/photo) | Highlight support | Share story | Send direct photo/video/stories/profile |
 ## Usage
 #### Use builder to get Insta API instance:
 ```c#
@@ -69,6 +69,9 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.4.8
+- [Add] Highlight support (create, delete, get) to StoryProcessor
+
 v1.0.4.7
 - [Add] Placeholder support for direct threads
 - [Add] some other info to InstaUserInfo [thx to @GormYa]

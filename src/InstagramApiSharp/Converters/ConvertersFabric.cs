@@ -220,7 +220,16 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaStoryFeedConverter {SourceObject = response};
         }
-
+        public IObjectConverter<InstaHighlightFeeds, InstaHighlightFeedsResponse> GetHighlightFeedsConverter(
+    InstaHighlightFeedsResponse response)
+        {
+            return new InstaHighlightConverter { SourceObject = response };
+        }
+        public IObjectConverter<InstaHighlightSingleFeed, InstaHighlightReelResponse> GetHighlightReelConverter(
+InstaHighlightReelResponse response)
+        {
+            return new InstaHighlightReelConverter { SourceObject = response };
+        }
         public IObjectConverter<InstaCollectionItem, InstaCollectionItemResponse> GetCollectionConverter(
             InstaCollectionItemResponse response)
         {

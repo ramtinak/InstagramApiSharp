@@ -869,5 +869,128 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+
+        /// <summary>
+        ///     Get user highlight feeds by user id (pk)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<InstaHighlightFeeds>> GetHighlightFeedsAsync(long userId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var storyFeedUri = UriCreator.GetHighlightFeedsUri(userId);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, storyFeedUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(json);
+                if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaHighlightFeeds>(response, json);
+                var highlightFeedResponse = JsonConvert.DeserializeObject<InstaHighlightFeedsResponse>(json);
+                var highlightStoryFeed = ConvertersFabric.Instance.GetHighlightFeedsConverter(highlightFeedResponse).Convert();
+                return Result.Success(highlightStoryFeed);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaHighlightFeeds>(exception.Message);
+            }
+        }
+        /// <summary>
+        ///     Create new highlight
+        /// </summary>
+        /// <param name="mediaId">Story media id</param>
+        /// <param name="title">Highlight title</param>
+        public async Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var cover = new JObject
+                {
+                    {"media_id", mediaId},
+                    {"crop_rect", new JArray { 0.0, 0.20198676, 1.0, 0.79801327 }.ToString(Formatting.None) }
+                }.ToString(Formatting.None);
+                var data = new JObject
+                {
+                    {"source", "self_profile"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"cover", cover},
+                    {"title", title},
+                    {"media_ids", $"[{ExtensionHelper.EncodeList(new string[] { mediaId.ToString() })}]"}
+                };
+
+                var storyFeedUri = UriCreator.GetHighlightCreateUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, storyFeedUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaHighlightFeed>(response, json);
+
+                var highlightFeedResponse = JsonConvert.DeserializeObject<InstaHighlightReelResponse>(json);
+                var highlightStoryFeed = ConvertersFabric.Instance.GetHighlightReelConverter(highlightFeedResponse).Convert();
+                return Result.Success(highlightStoryFeed);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaHighlightFeed>(exception.Message);
+            }
+        }
+        /// <summary>
+        ///     Append to existing highlight
+        /// </summary>
+        /// <param name="highlightId">Highlight id</param>
+        /// <param name="mediaId">Media id (CoverMedia.MediaId)</param>
+        public async Task<IResult<bool>> AppendToHighlightFeedAsync(string highlightId, string mediaId)
+        {
+            return await AppendOrDeleteHighlight(highlightId, mediaId, false);
+        }
+        /// <summary>
+        ///     Delete highlight feed
+        /// </summary>
+        /// <param name="highlightId">Highlight id</param>
+        /// <param name="mediaId">Media id (CoverMedia.MediaId)</param>
+        public async Task<IResult<bool>> DeleteHighlightFeedAsync(string highlightId, string mediaId)
+        {
+            return await AppendOrDeleteHighlight(highlightId, mediaId, true);
+        }
+
+        private async Task<IResult<bool>> AppendOrDeleteHighlight(string highlightId, string mediaId, bool delete)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var data = new JObject
+                {
+                    {"source", "story_viewer"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                if (delete)
+                {
+                    data.Add("added_media_ids", "[]");
+                    data.Add("removed_media_ids", $"[{ExtensionHelper.EncodeList(new string[] { mediaId.ToString() })}]");
+                }
+                else
+                {
+                    data.Add("added_media_ids", $"[{ExtensionHelper.EncodeList(new string[] { mediaId.ToString() })}]");
+                    data.Add("removed_media_ids", "[]");
+                }
+                var storyFeedUri = UriCreator.GetHighlightEditUri(highlightId);
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, storyFeedUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception.Message);
+            }
+        }
     }
 }

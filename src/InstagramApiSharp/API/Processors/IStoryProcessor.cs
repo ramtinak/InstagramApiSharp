@@ -68,5 +68,22 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="storyMediaId">Story media identifier</param>
         /// <param name="takenAtUnix">Taken at unix</param>
         Task<IResult<bool>> MarkStoryAsSeenAsync(string storyMediaId, long takenAtUnix);
+        /// <summary>
+        ///     Get user highlight feeds by user id (pk)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<InstaHighlightFeeds>> GetHighlightFeedsAsync(long userId);
+        /// <summary>
+        ///     Create new highlight
+        /// </summary>
+        /// <param name="mediaId">Story media id</param>
+        /// <param name="title">Highlight title</param>
+        Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title);
+        /// <summary>
+        ///     Delete highlight feed
+        /// </summary>
+        /// <param name="highlightId">Highlight id</param>
+        /// <param name="mediaId">Media id (CoverMedia.MediaId)</param>
+        Task<IResult<bool>> DeleteHighlightFeedAsync(string highlightId, string mediaId);
     }
 }

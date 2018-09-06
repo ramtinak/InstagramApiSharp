@@ -1097,5 +1097,24 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for send profile to direct thread");
             return instaUri;
         }
+        public static Uri GetHighlightFeedsUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.HIGHLIGHT_TRAY, userId), out var instaUri))
+                throw new Exception("Cant create URI for highlight feeds");
+            return instaUri;
+        }
+        public static Uri GetHighlightEditUri(string highlightId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.HIGHLIGHT_EDIT_REEL, highlightId), out var instaUri))
+                throw new Exception("Cant create URI for highlight edit reel");
+            return instaUri;
+        }
+
+        public static Uri GetHighlightCreateUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.HIGHLIGHT_CREATE_REEL, out var instaUri))
+                throw new Exception("Cant create URI for highlight create reel");
+            return instaUri;
+        }
     }
 }
