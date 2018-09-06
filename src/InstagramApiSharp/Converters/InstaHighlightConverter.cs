@@ -38,8 +38,10 @@ namespace InstagramApiSharp.Converters
                      CropRect = item.CoverMedia.CropRect,
                      MediaId = item.CoverMedia.MediaId
                 };
-                hLight.CoverMedia.CroppedImage = new InstaImage(item.CoverMedia.CroppedImageVersion.Url, int.Parse(item.CoverMedia.CroppedImageVersion.Width),int.Parse(item.CoverMedia.CroppedImageVersion.Height));
-                hLight.CoverMedia.Image = new InstaImage(item.CoverMedia.FullImageVersion.Url, int.Parse(item.CoverMedia.FullImageVersion.Width), int.Parse(item.CoverMedia.FullImageVersion.Height));
+                if(item.CoverMedia.CroppedImageVersion!= null)
+                    hLight.CoverMedia.CroppedImage = new InstaImage(item.CoverMedia.CroppedImageVersion.Url, int.Parse(item.CoverMedia.CroppedImageVersion.Width),int.Parse(item.CoverMedia.CroppedImageVersion.Height));
+                if (item.CoverMedia.FullImageVersion != null)
+                    hLight.CoverMedia.Image = new InstaImage(item.CoverMedia.FullImageVersion.Url, int.Parse(item.CoverMedia.FullImageVersion.Width), int.Parse(item.CoverMedia.FullImageVersion.Height));
                 var userConverter = ConvertersFabric.Instance.GetUserShortConverter(item.User);
                 hLight.User = userConverter.Convert();
 

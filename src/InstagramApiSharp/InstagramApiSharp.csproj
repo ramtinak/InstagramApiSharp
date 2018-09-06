@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.4.8</Version>
-    <AssemblyVersion>1.0.4.8</AssemblyVersion>
-    <FileVersion>1.0.4.8</FileVersion>
+    <Version>1.0.4.9</Version>
+    <AssemblyVersion>1.0.4.9</AssemblyVersion>
+    <FileVersion>1.0.4.9</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -34,7 +34,10 @@ See examples and wiki pages to find out how can you use this library.</Descripti
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.4.8
+    <PackageReleaseNotes>v1.0.4.9
+- [Bugfix] for highlight
+
+v1.0.4.8
 - [Add] Highlight support (create, delete, get) to StoryProcessor
 
 v1.0.4.7
