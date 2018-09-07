@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.4.9</Version>
-    <AssemblyVersion>1.0.4.9</AssemblyVersion>
-    <FileVersion>1.0.4.9</FileVersion>
+    <Version>1.0.5.0</Version>
+    <AssemblyVersion>1.0.5.0</AssemblyVersion>
+    <FileVersion>1.0.5.0</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -34,7 +34,14 @@ See examples and wiki pages to find out how can you use this library.</Descripti
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.4.9
+    <PackageReleaseNotes>v1.0.5.0
+- [Add] link support for direct threads
+- [Add] Send link as direct message
+- [Add] location support for direct threads
+- [Add] Send location as direct message
+- [Bugfix] for SendDirectProfileAsync
+
+v1.0.4.9
 - [Bugfix] for highlight
 
 v1.0.4.8
@@ -115,7 +122,9 @@ v1.0.2.8
 </PackageReleaseNotes>
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp</PackageTags>
+    <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo</PackageTags>
+    <PackageIconUrl>http://s9.picofile.com/file/8336165642/insta5.png</PackageIconUrl>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
   
    <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
