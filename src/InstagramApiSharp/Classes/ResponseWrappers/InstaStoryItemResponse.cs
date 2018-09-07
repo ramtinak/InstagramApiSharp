@@ -99,5 +99,25 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("video_duration")] public double? VideoDuration { get; set; }
 
         [JsonProperty("video_versions")] public List<InstaVideoResponse> VideoVersions { get; set; }
+
+        [JsonProperty("story_cta")] public List<StoryCTA> StoryCTA { get; set; }
+    }
+
+    public class StoryCTA
+    {
+        [JsonProperty("links")] public Link[] Links { get; set; }
+    }
+
+    public class Link
+    {
+        [JsonProperty("linkType")] public int LinkType { get; set; }
+        [JsonProperty("webUri")] public string WebUri { get; set; }
+        [JsonProperty("androidClass")] public string AndroidClass { get; set; }
+        [JsonProperty("package")] public string Package { get; set; }
+        [JsonProperty("deeplinkUri")] public string DeeplinkUri { get; set; }
+        [JsonProperty("callToActionTitle")] public string CallToActionTitle { get; set; }
+        [JsonProperty("redirectUri")] public object RedirectUri { get; set; }
+        [JsonProperty("leadGenFormId")] public string LeadGenFormId { get; set; }
+        [JsonProperty("igUserId")] public string IgUserId { get; set; }
     }
 }

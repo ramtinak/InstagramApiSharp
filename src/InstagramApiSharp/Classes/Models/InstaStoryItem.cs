@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InstagramApiSharp.Classes.ResponseWrappers;
+using System;
 using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models
@@ -74,6 +75,8 @@ namespace InstagramApiSharp.Classes.Models
         public string VideoDashManifest { get; set; }
 
         public bool SupportsReelReactions { get; set; }
+
+        public List<StoryCTA> StoryCTA { get; set; }
 
         public InstaUserShort User { get; set; }
 
