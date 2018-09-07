@@ -1135,5 +1135,11 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for send location to direct thread");
             return instaUri;
         }
+        public static Uri GetSetBiographyUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_SET_BIOGRAPHY, out var instaUri))
+                throw new Exception("Cant create URI for set biography");
+            return instaUri;
+        }
     }
 }

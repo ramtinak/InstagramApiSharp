@@ -20,6 +20,7 @@ namespace InstagramApiSharp.API.Processors
 {
     public interface IAccountProcessor
     {
+        #region Edit profile
         /// <summary>
         ///     Set current account private
         /// </summary>
@@ -39,160 +40,139 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>Return true if the password is changed</returns>
         Task<IResult<bool>> ChangePasswordAsync(string oldPassword, string newPassword);
         /// <summary>
-        /// Edit profile.
+        ///     Edit profile
         /// </summary>
-        /// <param name="url">Url</param>
-        /// <param name="phone">Phone number</param>
-        /// <param name="name">Name</param>
-        /// <param name="biography">Biography</param>
-        /// <param name="email">Email</param>
-        /// <param name="gender">Gender type</param>
-        /// <param name="newUsername">New username (optional)</param>
-        /// <returns></returns>
-        Task<IResult<AccountUserResponse>> EditProfileAsync(string url, string phone, string name, string biography, string email, InstaGenderType gender, string newUsername = null);
+        /// <param name="name">Name (leave null if you don't want to change it)</param>
+        /// <param name="biography">Biography (leave null if you don't want to change it)</param>
+        /// <param name="url">Url (leave null if you don't want to change it)</param>
+        /// <param name="email">Email (leave null if you don't want to change it)</param>
+        /// <param name="phone">Phone number (leave null if you don't want to change it)</param>
+        /// <param name="gender">Gender type (leave null if you don't want to change it)</param>
+        /// <param name="newUsername">New username (optional) (leave null if you don't want to change it)</param>
+        Task<IResult<InstaAccountUserResponse>> EditProfileAsync(string name, string biography, string url, string email, string phone, InstaGenderType? gender, string newUsername = null);
+        /// <summary>
+        ///     Set biography (support hashtags and user mentions)
+        /// </summary>
+        /// <param name="bio">Biography text, hashtags or user mentions</param>
+        Task<IResult<InstaBiography>> SetBiographyAsync(string bio);
         /// <summary>
         /// Get request for edit profile.
-        /// </summary>
-        /// <returns></returns>
-        Task<IResult<AccountUserResponse>> GetRequestForEditProfileAsync();
+        /// </summary>        
+        Task<IResult<InstaAccountUserResponse>> GetRequestForEditProfileAsync();
         /// <summary>
-        /// Set name and phone number.
+        ///     Set name and phone number.
         /// </summary>
         /// <param name="name">Name</param>
-        /// <param name="phoneNumber">Phone number</param>
-        /// <returns></returns>
+        /// <param name="phoneNumber">Phone number</param>        
         Task<IResult<bool>> SetNameAndPhoneNumberAsync(string name, string phoneNumber = "");
         /// <summary>
-        /// Remove profile picture.
-        /// </summary>
-        /// <returns></returns>
-        Task<IResult<AccountUserResponse>> RemoveProfilePictureAsync();
+        ///     Remove profile picture.
+        /// </summary>        
+        Task<IResult<InstaAccountUserResponse>> RemoveProfilePictureAsync();
         /// <summary>
-        /// Change profile picture(only jpg and jpeg formats).
+        ///     Change profile picture(only jpg and jpeg formats).
         /// </summary>
-        /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>
-        /// <returns></returns>
-        Task<IResult<AccountUserResponse>> ChangeProfilePictureAsync(byte[] pictureBytes);
-        
+        /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>        
+        Task<IResult<InstaAccountUserResponse>> ChangeProfilePictureAsync(byte[] pictureBytes);
+        #endregion Edit profile
 
+        #region Story settings
         // Story settings
         /// <summary>
-        /// Get story settings.
-        /// </summary>
-        /// <returns></returns>
+        ///     Get story settings.
+        /// </summary>        
         Task<IResult<AccountSettingsResponse>> GetStorySettingsAsync();
         /// <summary>
-        /// Enable Save story to gallery.
-        /// </summary>
-        /// <returns></returns>
+        ///     Enable Save story to gallery.
+        /// </summary>        
         Task<IResult<bool>> EnableSaveStoryToGalleryAsync();
         /// <summary>
-        /// Disable Save story to gallery.
-        /// </summary>
-        /// <returns></returns>
+        ///     Disable Save story to gallery.
+        /// </summary>        
         Task<IResult<bool>> DisableSaveStoryToGalleryAsync();
         /// <summary>
-        /// Enable Save story to archive.
-        /// </summary>
-        /// <returns></returns>
+        ///     Enable Save story to archive.
+        /// </summary>        
         Task<IResult<bool>> EnableSaveStoryToArchiveAsync();
         /// <summary>
-        /// Disable Save story to archive.
-        /// </summary>
-        /// <returns></returns>
+        ///     Disable Save story to archive.
+        /// </summary>        
         Task<IResult<bool>> DisableSaveStoryToArchiveAsync();
         /// <summary>
-        /// Allow story sharing.
+        ///     Allow story sharing.
         /// </summary>
-        /// <param name="allow"></param>
-        /// <returns></returns>
+        /// <param name="allow">Allow or disallow story sharing</param>        
         Task<IResult<bool>> AllowStorySharingAsync(bool allow = true);
         /// <summary>
-        /// Allow story message replies.
+        ///     Allow story message replies.
         /// </summary>
-        /// <param name="repliesType">Reply typo</param>
-        /// <returns></returns>
+        /// <param name="repliesType">Reply typo</param>        
         Task<IResult<bool>> AllowStoryMessageRepliesAsync(InstaMessageRepliesType repliesType);
         /// <summary>
-        /// Check username availablity.
+        ///     Check username availablity.
         /// </summary>
-        /// <param name="desiredUsername">Desired username</param>
-        /// <returns></returns>
+        /// <param name="desiredUsername">Desired username</param>        
         Task<IResult<AccountCheckResponse>> CheckUsernameAsync(string desiredUsername);
+        #endregion Story settings
 
+        #region two factor authentication enable/disable
         // two factor authentication enable/disable
         /// <summary>
-        /// Get security settings info & backup codes
+        ///     Get Security settings (two factor authentication and backup codes).
         /// </summary>
-        /// <returns></returns>
-        /// <summary>
-        /// Get Security settings (two factor authentication and backup codes).
-        /// </summary>
-        /// <returns></returns>
         Task<IResult<AccountSecuritySettingsResponse>> GetSecuritySettingsInfoAsync();
         /// <summary>
-        /// Disable two factor authentication.
+        ///     Disable two factor authentication.
         /// </summary>
-        /// <returns></returns>
         Task<IResult<bool>> DisableTwoFactorAuthenticationAsync();
         /// <summary>
-        /// Send two factor enable sms.
+        ///     Send two factor enable sms.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        /// <returns></returns>
         Task<IResult<AccountTwoFactorSmsResponse>> SendTwoFactorEnableSmsAsync(string phoneNumber);
         /// <summary>
-        /// Verify enable two factor.
+        ///     Verify enable two factor.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
         /// <param name="verificationCode">Verification code</param>
-        /// <returns></returns>
         Task<IResult<AccountTwoFactorResponse>> TwoFactorEnableAsync(string phoneNumber, string verificationCode);
         /// <summary>
-        /// Send confirm email.
+        ///     Send confirm email.
         /// </summary>
-        /// <returns></returns>
         Task<IResult<AccountConfirmEmailResponse>> SendConfirmEmailAsync();
         /// <summary>
-        /// Send sms code.
+        ///     Send sms code.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        /// <returns></returns>
         Task<IResult<AccountSendSmsResponse>> SendSmsCodeAsync(string phoneNumber);
         /// <summary>
-        /// Verify sms code.
+        ///     Verify sms code.
         /// </summary>
         /// <param name="phoneNumber">Phone number (ex: +9891234...)</param>
         /// <param name="verificationCode">Verification code</param>
-        /// <returns></returns>
         Task<IResult<AccountVerifySmsResponse>> VerifySmsCodeAsync(string phoneNumber, string verificationCode);
-
+        /// <summary>
+        ///     Regenerate two factor backup codes
+        /// </summary>
         Task<IResult<TwoFactorRegenBackupCodesResponse>> RegenerateTwoFactorBackupCodesAsync();
+        #endregion two factor authentication enable/disable
 
 
 
 
-
+        #region NOT COMPLETE FUNCTIONS
         /// <summary>
-        /// NOT COMPLETE
+        ///     NOT COMPLETE dastrasi last activity
         /// </summary>
-        /// <returns></returns>
-        //Task<IResult<object>> SetBiographyAsync(string bio);
-        /// <summary>
-        /// NOT COMPLETE dastrasi last activity
-        /// </summary>
-        /// <returns></returns>
         //Task<IResult<object>> EnablePresenceAsync();
         /// <summary>
-        /// NOT COMPLETE dastrasi last activity
+        ///     NOT COMPLETE dastrasi last activity
         /// </summary>
-        /// <returns></returns>
         //Task<IResult<object>> DisablePresenceAsync();
         /// <summary>
-        /// NOT COMPLETE dastrasi last activity
+        ///     NOT COMPLETE dastrasi last activity
         /// </summary>
-        /// <returns></returns>
         //Task<IResult<object>> GetCommentFilterAsync();
-
+        #endregion NOT COMPLETE FUNCTIONS
     }
 }

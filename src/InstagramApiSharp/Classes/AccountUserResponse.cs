@@ -11,21 +11,24 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using InstagramApiSharp.Classes.ResponseWrappers;
+using InstagramApiSharp.Enums;
 namespace InstagramApiSharp.Classes
 {
-    public class AccountUserResponse
+    public class InstaAccountUserResponse
     {
         [JsonProperty("user")]
-        public AccountUser User { get; set; }
+        public InstaUserEdit User { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
     }
 
-    public class AccountUser
+    public class InstaUserEdit
     {
         [JsonProperty("has_biography_translation")]
         public bool HasBiographyTranslation { get; set; }
-        //public School school { get; set; }
+        [JsonProperty("biography_with_entities")]
+        public InstaBiographyEntities BiographyWithEntities { get; set; }
         [JsonProperty("show_conversion_edit_entry")]
         public bool ShowConversionEditEntry { get; set; }
         [JsonProperty("pk")]
@@ -52,10 +55,6 @@ namespace InstagramApiSharp.Classes
         public string ExternalUrl { get; set; }
         [JsonProperty("external_lynx_url")]
         public string ExternalLynxUrl { get; set; }
-        //public Hd_Profile_Pic_Url_Info hd_profile_pic_url_info { get; set; }
-        //public Hd_Profile_Pic_Versions[] hd_profile_pic_versions { get; set; }
-
-
         [JsonProperty("reel_auto_archive")]
         public string ReelAutoArchive { get; set; }
         [JsonProperty("birthday")]
@@ -66,32 +65,39 @@ namespace InstagramApiSharp.Classes
         public int CountryCode { get; set; }
         [JsonProperty("national_number")]
         public long NationalNumber { get; set; }
-        [JsonProperty("gender")]
-        public int Gender { get; set; }
         [JsonProperty("email")]
         public string Email { get; set; }
         [JsonProperty("can_link_entities_in_bio")]
         public bool CanLinkEntitiesInBio { get; set; }
         [JsonProperty("max_num_linked_entities_in_bio")]
         public int MaxNumLinkedEntitiesInBio { get; set; }
+        [JsonProperty("hd_profile_pic_versions")]
+        public ImageResponse[] ProfilePicture { get; set; }
+        [JsonProperty("hd_profile_pic_url_info")]
+        public ImageResponse ProfilePictureUrlInfo { get; set; }
+        [JsonProperty("has_persistent_profile_school")]
+        public bool HasPersistentProfileSchool { get; set; }
+        [JsonProperty("can_boost_post")]
+        public bool CanBoostPost { get; set; }
+        [JsonProperty("has_placed_orders")]
+        public bool HasPlacedOrders { get; set; }
+        [JsonProperty("show_insights_terms")]
+        public bool ShowInsightsTerms { get; set; }
+        [JsonProperty("can_see_organic_insights")]
+        public bool CanSeeOrganicInsights { get; set; }
+        [JsonProperty("is_eligible_for_school")]
+        public bool IsEligibleForSchool { get; set; }
+        [JsonProperty("gender")]
+        internal int GenderNum { get; set; }
+
+        [JsonIgnore]
+        public InstaGenderType Gender
+        {
+            get
+            {
+                //return (InstaGenderType)Enum.ToObject(typeof(InstaGenderType), GenderNum);
+                return (InstaGenderType)GenderNum;
+            }
+        }
     }
-
-    //public class School
-    //{
-    //}
-
-    //public class Hd_Profile_Pic_Url_Info
-    //{
-    //    public int height { get; set; }
-    //    public string url { get; set; }
-    //    public int width { get; set; }
-    //}
-
-    //public class Hd_Profile_Pic_Versions
-    //{
-    //    public int height { get; set; }
-    //    public string url { get; set; }
-    //    public int width { get; set; }
-    //}
-
 }

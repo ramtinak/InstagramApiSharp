@@ -60,16 +60,16 @@ VerifySmsCodeAsync");
 
         public async void EditProfile()
         {
-            string name = "Ramtin Jokar";
-            InstaGenderType gender = InstaGenderType.Male;
-            string email = "Ramtinak@live.com";
-            string url = ""; // leave empty if you have no site/blog
-            string phone = "+989171234567";
-            string biography = "C# Programmer\n\nIRaN/FARS/KaZeRouN";
+            string name = "Ramtin Jokar"; // leave null if you don't want to change it
+            InstaGenderType? gender = InstaGenderType.Male; // leave null if you don't want to change it
+            string email = "Ramtinak@live.com"; // leave null if you don't want to change it
+            string url = ""; // leave empty if you have no site/blog | leave null if you don't want to change it
+            string phone = "+989171234567"; // leave null if you don't want to change it
+            string biography = "C# Programmer\n\nIRaN/FARS/KaZeRouN"; // leave null if you don't want to change it
             string newUsername = ""; // leave empty if you don't want to change your username
 
-            var result = await _instaApi.AccountProcessor.EditProfileAsync(url, phone, name,
-                                         biography, email, gender, newUsername);
+            var result = await _instaApi.AccountProcessor.EditProfileAsync(name, biography, url, email, phone, gender, newUsername);
+
             if (result.Succeeded)
             {
                 Console.WriteLine("Profile changed");
@@ -79,7 +79,7 @@ VerifySmsCodeAsync");
                 Console.WriteLine("Email: " + result.Value.User.Email);
                 Console.WriteLine("PhoneNumber: " + result.Value.User.PhoneNumber);
                 Console.WriteLine("Url: " + result.Value.User.ExternalUrl);
-                Console.WriteLine("Gender: " + (InstaGenderType)result.Value.User.Gender);
+                Console.WriteLine("Gender: " + result.Value.User.Gender);
                 Console.WriteLine();
             }
             else
