@@ -100,27 +100,6 @@ v1.0.4.6
 - [Bugfix] for DeclineAllDirectPendingRequestsAsync
 - [Bugfix] for DicoverProccesor.GetSuggestedSearchesAsync
 
-v1.0.4.5
-- Support raven media in direct messages
-- Support share media in direct messages
-
-v1.0.4.4
-- Send video to story (self story, direct story and both) added
-- Seen story added
-- Send direct photo/video added
-
-v1.0.4.3
-- Added RegenerateTwoFactorBackupCodesAsync to AccountProcessor
-
-v1.0.4.2
-- public GetRequestForEditProfileAsync method
-
-v1.0.4.1
-- GetRecentActivityFeedAsync added to UserProcessor
-
-v1.0.4.0
-- Build UWP(NET CORE) library
-
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
 ## Known Issues
