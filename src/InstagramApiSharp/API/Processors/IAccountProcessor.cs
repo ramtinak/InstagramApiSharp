@@ -9,6 +9,7 @@
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
+using InstagramApiSharp.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -48,7 +49,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="gender">Gender type</param>
         /// <param name="newUsername">New username (optional)</param>
         /// <returns></returns>
-        Task<IResult<AccountUserResponse>> EditProfileAsync(string url, string phone, string name, string biography, string email, GenderType gender, string newUsername = null);
+        Task<IResult<AccountUserResponse>> EditProfileAsync(string url, string phone, string name, string biography, string email, InstaGenderType gender, string newUsername = null);
         /// <summary>
         /// Get request for edit profile.
         /// </summary>

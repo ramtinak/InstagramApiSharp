@@ -25,6 +25,7 @@ using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.Models;
 using System.Net;
 using InstagramApiSharp.Converters.Json;
+using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -185,7 +186,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="gender">Gender type</param>
         /// <param name="newUsername">New username (optional)</param>
         /// <returns></returns>
-        public async Task<IResult<AccountUserResponse>> EditProfileAsync(string url, string phone, string name, string biography, string email, GenderType gender, string newUsername = null)
+        public async Task<IResult<AccountUserResponse>> EditProfileAsync(string url, string phone, string name, string biography, string email, InstaGenderType gender, string newUsername = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -592,7 +593,7 @@ namespace InstagramApiSharp.API.Processors
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.Fail("Status code: " + response.StatusCode, false);
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
-                if (obj.MessagePrefs.ToLower() == "anyone" && repliesType == InstaMessageRepliesType.Anyone)
+                if (obj.MessagePrefs.ToLower() == "anyone" && repliesType == InstaMessageRepliesType.Everyone)
                     return Result.Success(true);
                 else if (obj.MessagePrefs.ToLower() == "following" && repliesType == InstaMessageRepliesType.Following)
                     return Result.Success(true);

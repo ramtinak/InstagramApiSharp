@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -149,5 +150,8 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadIds">Thread ids</param>
         /// <returns>Returns True if location sent</returns>
         Task<IResult<bool>> SendDirectLocationAsync(string externalId, params string[] threadIds);
+
+        Task<IResult<bool>> SendDirectDisappearingVideoAsync(InstaVideoUpload video,
+       InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -35,7 +36,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="storyType">Story type</param>
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> UploadStoryVideoAsync(InstaVideoUpload video,
-            StoryProcessor.InstaStoryType storyType = StoryProcessor.InstaStoryType.SelfStory, params string[] threadIds);
+            InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
         /// <summary>
         ///     Get user story reel feed. Contains user info last story including all story items.
         /// </summary>
@@ -54,14 +55,14 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="storyMediaId">Story media id</param>
         /// <param name="threadId">Thread id</param>
         /// <param name="sharingType">Sharing type</param>
-        Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, string text, SharingType sharingType = SharingType.Video);
+        Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, string text, InstaSharingType sharingType = InstaSharingType.Video);
         /// <summary>
         ///     Delete a media story (photo or video)
         /// </summary>
         /// <param name="mediaId">Story media id</param>
         /// <param name="sharingType">The type of the media</param>
         /// <returns>Return true if the story media is deleted</returns>
-        Task<IResult<bool>> DeleteStoryAsync(string storyMediaId, SharingType sharingType = SharingType.Video);
+        Task<IResult<bool>> DeleteStoryAsync(string storyMediaId, InstaSharingType sharingType = InstaSharingType.Video);
         /// <summary>
         ///     Seen story
         /// </summary>

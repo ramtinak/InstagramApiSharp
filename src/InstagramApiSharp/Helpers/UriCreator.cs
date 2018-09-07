@@ -1,5 +1,6 @@
 ﻿using InstagramApiSharp.API;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -499,7 +500,7 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Can't create URI for deleting media");
             return instaUri;
         }
-        public static Uri GetDeleteStoryMediaUri(string mediaId, SharingType mediaType)
+        public static Uri GetDeleteStoryMediaUri(string mediaId, InstaSharingType mediaType)
         {
             if (!Uri.TryCreate(BaseInstagramUri,
                 string.Format(InstaApiConstants.DELETE_MEDIA, mediaId, mediaType.ToString().ToUpper()), out var instaUri))

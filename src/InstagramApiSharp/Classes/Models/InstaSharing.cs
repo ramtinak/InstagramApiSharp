@@ -5,11 +5,7 @@ using System.Text;
 
 namespace InstagramApiSharp.Classes.Models
 {
-    public enum SharingType
-    {
-        Video,
-        Photo
-    }
+
     public class InstaSharing
     {
         [JsonProperty("action")]

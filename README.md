@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.5.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.0.5.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -69,6 +69,12 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.5.2
+- [Add] More properties for InstaStoryLocation (Positioning properties)
+
+v1.0.5.1
+- [Add] StoryCTA Added. This used for stories with links in see more.
+
 v1.0.5.0
 - [Add] link support for direct threads
 - [Add] Send link as direct message

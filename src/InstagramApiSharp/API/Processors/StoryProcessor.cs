@@ -9,6 +9,7 @@ using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Converters;
+using InstagramApiSharp.Enums;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
@@ -319,12 +320,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        public enum InstaStoryType
-        {
-            SelfStory,
-            Direct,
-            Both
-        }
+
         /// <summary>
         ///     Upload story video [to self story, to direct threads or both(self and direct)]
         /// </summary>
@@ -752,7 +748,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadId">Thread id</param>
         /// <param name="text">Text to send (optional</param>
         /// <param name="sharingType">Sharing type</param>
-        public async Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, string text, SharingType sharingType = SharingType.Video)
+        public async Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, string text, InstaSharingType sharingType = InstaSharingType.Video)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -793,7 +789,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="mediaId">Story media id</param>
         /// <param name="sharingType">The type of the media</param>
         /// <returns>Return true if the story media is deleted</returns>
-        public async Task<IResult<bool>> DeleteStoryAsync(string storyMediaId, SharingType sharingType = SharingType.Video)
+        public async Task<IResult<bool>> DeleteStoryAsync(string storyMediaId, InstaSharingType sharingType = InstaSharingType.Video)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try

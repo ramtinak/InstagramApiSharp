@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using InstagramApiSharp.API;
 using InstagramApiSharp.Classes;
+using InstagramApiSharp.Enums;
 
 namespace Examples.Samples
 {
@@ -60,7 +61,7 @@ VerifySmsCodeAsync");
         public async void EditProfile()
         {
             string name = "Ramtin Jokar";
-            GenderType gender = GenderType.Male;
+            InstaGenderType gender = InstaGenderType.Male;
             string email = "Ramtinak@live.com";
             string url = ""; // leave empty if you have no site/blog
             string phone = "+989171234567";
@@ -78,7 +79,7 @@ VerifySmsCodeAsync");
                 Console.WriteLine("Email: " + result.Value.User.Email);
                 Console.WriteLine("PhoneNumber: " + result.Value.User.PhoneNumber);
                 Console.WriteLine("Url: " + result.Value.User.ExternalUrl);
-                Console.WriteLine("Gender: " + (GenderType)result.Value.User.Gender);
+                Console.WriteLine("Gender: " + (InstaGenderType)result.Value.User.Gender);
                 Console.WriteLine();
             }
             else
@@ -151,9 +152,9 @@ VerifySmsCodeAsync");
                 // await _instaApi.AccountProcessor.AllowStorySharingAsync(false);
                 
                 // allow story message replies
-                await _instaApi.AccountProcessor.AllowStoryMessageRepliesAsync(MessageRepliesType.Everyone);
-                // await _instaApi.AccountProcessor.AllowStoryMessageRepliesAsync(MessageRepliesType.Following);
-                // await _instaApi.AccountProcessor.AllowStoryMessageRepliesAsync(MessageRepliesType.Off);
+                await _instaApi.AccountProcessor.AllowStoryMessageRepliesAsync(InstaMessageRepliesType.Everyone);
+                // await _instaApi.AccountProcessor.AllowStoryMessageRepliesAsync(InstaMessageRepliesType.Following);
+                // await _instaApi.AccountProcessor.AllowStoryMessageRepliesAsync(InstaMessageRepliesType.Off);
             }
         }
 

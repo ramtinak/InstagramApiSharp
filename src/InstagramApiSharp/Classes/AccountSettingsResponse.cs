@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Enums;
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes
 {
@@ -27,7 +28,7 @@ namespace InstagramApiSharp.Classes
                 {
                     default:
                     case "everyone":
-                        return InstaMessageRepliesType.Anyone;
+                        return InstaMessageRepliesType.Everyone;
                     case "following":
                         return InstaMessageRepliesType.Following;
                     case "off":
