@@ -284,12 +284,6 @@ namespace ChallengeRequireExample
             if (!InstaApi.IsUserAuthenticated)
                 MessageBox.Show("Login first.");
 
-            var threads = await InstaApi.MessagingProcessor.GetDirectInboxAsync();
-            var first = threads.Value.Inbox.Threads.FirstOrDefault();
-            var ds = await InstaApi.MessagingProcessor.GetDirectInboxThreadAsync(first.ThreadId);
-            string link = "https://t.me/ALR_KNIGHT";
-            var direct = await InstaApi.MessagingProcessor.SendDirectLinkAsync($"check this out:\r\n{link}", link, first.ThreadId);
-            return;
             var x = await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
             if (x.Succeeded)
