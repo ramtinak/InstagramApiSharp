@@ -150,7 +150,13 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadIds">Thread ids</param>
         /// <returns>Returns True if location sent</returns>
         Task<IResult<bool>> SendDirectLocationAsync(string externalId, params string[] threadIds);
-
+        /// <summary>
+        ///     Send disappearing video to direct thread (video will remove after user saw it)
+        /// </summary>
+        /// <param name="video">Video to upload</param>
+        /// <param name="viewMode">View mode</param>
+        /// <param name="threadIds">Thread ids</param>
+        /// <returns></returns>
         Task<IResult<bool>> SendDirectDisappearingVideoAsync(InstaVideoUpload video,
        InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
     }

@@ -48,6 +48,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, storyFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK) return Result.Fail("", (InstaStoryFeed) null);
                 var storyFeedResponse = JsonConvert.DeserializeObject<InstaStoryFeedResponse>(json);
                 var instaStoryFeed = ConvertersFabric.Instance.GetStoryFeedConverter(storyFeedResponse).Convert();
@@ -72,7 +73,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userStoryUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
+                
                 if (response.StatusCode != HttpStatusCode.OK) Result.UnExpectedResponse<InstaStory>(response, json);
                 var userStoryResponse = JsonConvert.DeserializeObject<InstaStoryResponse>(json);
                 var userStory = ConvertersFabric.Instance.GetStoryConverter(userStoryResponse).Convert();
@@ -182,7 +183,6 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
                 var videoHashCode = Path.GetFileName(video.Video.Uri).GetHashCode();
                 var photoHashCode = Path.GetFileName(video.VideoThumbnail.Uri).GetHashCode();
@@ -217,17 +217,6 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
-                //only direct story 
-                //{
-                //	"upload_media_height": "0",
-                //	"upload_media_width": "0",
-                //	"for_direct_story": "1",
-                //	"upload_media_duration_ms": "14930",
-                //	"upload_id": "232016032041158",
-                //	"retry_context": "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}",
-                //	"media_type": "2"
-                //}
-
                 var videoUploadParamsObj = new JObject
                 {
                     {"upload_media_height", "0"},
@@ -238,7 +227,6 @@ namespace InstagramApiSharp.API.Processors
                     {"retry_context", "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}"},
                     {"media_type", "2"},
                 };
-                //"for_direct_story": "1",
                 var videoUploadParams = JsonConvert.SerializeObject(videoUploadParamsObj);
                 request = HttpHelper.GetDefaultRequest(HttpMethod.Get, videoUri, _deviceInfo);
                 request.Headers.Add("X_FB_VIDEO_WATERFALL_ID", waterfallId);
@@ -273,9 +261,7 @@ namespace InstagramApiSharp.API.Processors
                 json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaStoryMedia>(response, json);
-
-
-                // thumbnail upload
+                
                 var photoUploadParamsObj = new JObject
                 {
                     {"retry_context", "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}"},
@@ -322,295 +308,17 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaStoryMedia>(exception.Message);
             }
         }
-
-
         /// <summary>
-        ///     Upload story video [to self story, to direct threads or both(self and direct)]
+        ///     Upload story video (to self story)
         /// </summary>
         /// <param name="video">Video to upload</param>
-        /// <param name="storyType">Story type</param>
-        /// <param name="threadIds">Thread ids</param>
+        /// <param name="caption">Caption</param>
         public async Task<IResult<bool>> UploadStoryVideoAsync(InstaVideoUpload video,
-            InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
+    InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
+            return await _instaApi.HelperProcessor.SendVideoAsync(false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video);
 
-                var uploadId = ApiRequestMessage.GenerateRandomUploadId();
-                var videoHashCode = Path.GetFileName(video.Video.Uri).GetHashCode();
-                var photoHashCode = Path.GetFileName(video.VideoThumbnail.Uri).GetHashCode();
-
-                var waterfallId = Guid.NewGuid().ToString();
-
-                var videoEntityName = string.Format("{0}_0_{1}", uploadId, videoHashCode);
-                var videoUri = UriCreator.GetStoryUploadVideoUri(uploadId, videoHashCode);
-
-                var photoEntityName = string.Format("{0}_0_{1}", uploadId, photoHashCode);
-                var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
-
-
-                var videoMediaInfoData = new JObject
-                {
-                    {"_csrftoken", _user.CsrfToken},
-                    {"_uid", _user.LoggedInUser.Pk},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"media_info", new JObject
-                        {
-                                {"capture_mode", "normal"},
-                                {"media_type", 2},
-                                {"caption", ""},
-                                {"mentions", new JArray()},
-                                {"hashtags", new JArray()},
-                                {"locations", new JArray()},
-                                {"stickers", new JArray()},
-                        }
-                    }
-                };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetStoryMediaInfoUploadUri(), _deviceInfo, videoMediaInfoData);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-
-                //only story 
-                //{
-                //	"upload_media_height": "0",
-                //	"upload_media_width": "0",
-                //	"upload_media_duration_ms": "14930",
-                //	"upload_id": "232016032041158",
-                //	"retry_context": "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}",
-                //	"media_type": "2",
-                //	"for_album": "1"
-                //}
-
-
-                //only direct story 
-                //{
-                //	"upload_media_height": "0",
-                //	"upload_media_width": "0",
-                //	"upload_media_duration_ms": "14930",
-                //	"upload_id": "232016032041158",
-                //	"retry_context": "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}",
-                //	"media_type": "2",
-                //	"for_direct_story": "1"
-                //}
-
-                // both
-                //{
-                //	"upload_media_height": "0",
-                //	"upload_media_width": "0",
-                //	"upload_media_duration_ms": "14930",
-                //	"upload_id": "234020273148665",
-                //	"retry_context": "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}",
-                //	"media_type": "2",
-                //	"for_album": "1",
-                //	"for_direct_story": "1",
-                //}
-                
-                var videoUploadParamsObj = new JObject
-                {
-                    {"upload_media_height", "0"},
-                    {"upload_media_width", "0"},
-                    {"upload_media_duration_ms", "0"},
-                    {"upload_id", uploadId},                   
-                    {"retry_context", "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}"},
-                    {"media_type", "2"}
-                };
-                //"for_direct_story": "1",
-                //{"for_album", "1"},
-                switch (storyType)
-                {
-                    case InstaStoryType.SelfStory:
-                    default:
-                        videoUploadParamsObj.Add("for_album", "1");
-                        break;
-                    case InstaStoryType.Direct:
-                        videoUploadParamsObj.Add("for_direct_story", "1");
-                        break;
-                    case InstaStoryType.Both:
-                        videoUploadParamsObj.Add("for_album", "1");
-                        videoUploadParamsObj.Add("for_direct_story", "1");
-                        break;
-                }
-                var videoUploadParams = JsonConvert.SerializeObject(videoUploadParamsObj);
-                request = HttpHelper.GetDefaultRequest(HttpMethod.Get, videoUri, _deviceInfo);
-                request.Headers.Add("X_FB_VIDEO_WATERFALL_ID", waterfallId);
-                request.Headers.Add("X-Instagram-Rupload-Params", videoUploadParams);
-                response = await _httpRequestProcessor.SendAsync(request);
-                json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<bool>(response, json);
-
-
-                byte[] videoBytes;
-                if (video.Video.VideoBytes == null)
-                    videoBytes = File.ReadAllBytes(video.Video.Uri);
-                else
-                    videoBytes = video.Video.VideoBytes;
-                var videoContent = new ByteArrayContent(videoBytes);
-                videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
-                videoContent.Headers.Add("Content-Type", "application/octet-stream");
-                request = HttpHelper.GetDefaultRequest(HttpMethod.Post, videoUri, _deviceInfo);
-                request.Content = videoContent;
-                var vidExt = Path.GetExtension(video.Video.Uri).Replace(".", "").ToLower();
-                if (vidExt == "mov")
-                    request.Headers.Add("X-Entity-Type", "video/quicktime");
-                else
-                    request.Headers.Add("X-Entity-Type", "video/mp4");
-                request.Headers.Add("Offset", "0");
-                request.Headers.Add("X-Instagram-Rupload-Params", videoUploadParams);
-                request.Headers.Add("X-Entity-Name", videoEntityName);
-                request.Headers.Add("X-Entity-Length", videoBytes.Length.ToString());
-                request.Headers.Add("X_FB_VIDEO_WATERFALL_ID", waterfallId);
-                response = await _httpRequestProcessor.SendAsync(request);
-                json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<bool>(response, json);
-
-
-                // thumbnail upload
-                var photoUploadParamsObj = new JObject
-                {
-                    {"retry_context", "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}"},
-                    {"media_type", "2"},
-                    {"upload_id", uploadId},
-                    {"image_compression", "{\"lib_name\":\"moz\",\"lib_version\":\"3.1.m\",\"quality\":\"95\"}"},
-                };
-                var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
-                request = HttpHelper.GetDefaultRequest(HttpMethod.Get, photoUri, _deviceInfo);
-                request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
-                request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
-                response = await _httpRequestProcessor.SendAsync(request);
-                json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<bool>(response, json);
-
-
-                byte[] imageBytes;
-                if (video.VideoThumbnail.ImageBytes == null)
-                    imageBytes = File.ReadAllBytes(video.VideoThumbnail.Uri);
-                else
-                    imageBytes = video.VideoThumbnail.ImageBytes;
-                var imageContent = new ByteArrayContent(imageBytes);
-                imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
-                imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                request = HttpHelper.GetDefaultRequest(HttpMethod.Post, photoUri, _deviceInfo);
-                request.Content = imageContent;
-                request.Headers.Add("X-Entity-Type", "image/jpeg");
-                request.Headers.Add("Offset", "0");
-                request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
-                request.Headers.Add("X-Entity-Name", photoEntityName);
-                request.Headers.Add("X-Entity-Length", imageBytes.Length.ToString());
-                request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
-                response = await _httpRequestProcessor.SendAsync(request);
-                json = await response.Content.ReadAsStringAsync();
-
-                if (response.IsSuccessStatusCode)
-                    return await ConfigureStoryVideoAsync(video, uploadId,storyType,threadIds);
-                return Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception.Message);
-            }
-        }
-        /// <summary>
-        ///     Configure story video
-        /// </summary>
-        /// <param name="video">Video to configure</param>
-        /// <param name="uploadId">Upload id</param>
-        /// <param name="storyType">Story type</param>
-        /// <param name="threadIds">Thread ids</param>
-        private async Task<IResult<bool>> ConfigureStoryVideoAsync(InstaVideoUpload video, string uploadId,
-            InstaStoryType storyType, params string[] threadIds)
-        {
-            try
-            {
-                var instaUri = UriCreator.GetVideoStoryConfigureUri(false);
-                Random rnd = new Random();
-                var data = new JObject
-                {
-                    {"filter_type", "0"},
-                    {"timezone_offset", "16200"},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"client_shared_at", (long.Parse(ApiRequestMessage.GenerateUploadId())- rnd.Next(25,55)).ToString()},
-                    {"story_media_creation_date", (long.Parse(ApiRequestMessage.GenerateUploadId())- rnd.Next(50,70)).ToString()},
-                    {"media_folder", "Camera"},
-                    {"source_type", "4"},
-                    {"video_result", ""},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"caption", ""},
-                    {"date_time_original", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fffZ")},
-                    {"capture_type", "normal"},
-                    {"mas_opt_in", "NOT_PROMPTED"},
-                    {"upload_id", uploadId},
-                    {"client_timestamp", ApiRequestMessage.GenerateUploadId()},
-                    {
-                        "device", new JObject{
-                            {"manufacturer", _deviceInfo.HardwareManufacturer},
-                            {"model", _deviceInfo.DeviceModelIdentifier},
-                            {"android_release", "7.0"},
-                            {"android_version", 24}
-                        }
-                    },
-                    {"length", 0},
-                    {
-                        "extra", new JObject
-                        {
-                            {"source_width", 0},
-                            {"source_height", 0}
-                        }
-                    },
-                    {"audio_muted", false},
-                    {"poster_frame_index", 0},
-                };
-
-                switch (storyType)
-                {
-                    case InstaStoryType.SelfStory:
-                    default:
-                        data.Add("configure_mode", "1");
-                        break;
-                    case InstaStoryType.Direct:
-                        data.Add("configure_mode", "2");
-                        data.Add("view_mode", "replayable");
-                        data.Add("recipient_users", "[]");
-                        var convertedThreads = ExtensionHelper.EncodeList(threadIds);
-                        data.Add("thread_ids", $"[{convertedThreads}]");
-                        break;
-                    case InstaStoryType.Both:
-                        data.Add("configure_mode", "3");
-                        data.Add("view_mode", "replayable");
-                        data.Add("recipient_users", "[]");
-                        var convertedThreadsX = ExtensionHelper.EncodeList(threadIds);
-                        data.Add("thread_ids", $"[{convertedThreadsX}]");
-                        break;
-                }
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var uploadParamsObj = new JObject
-                {
-                    {"num_step_auto_retry", 0},
-                    {"num_reupload", 0},
-                    {"num_step_manual_retry", 0}
-                };
-                var uploadParams = JsonConvert.SerializeObject(uploadParamsObj);
-                request.Headers.Add("retry_context", uploadParams);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.IsSuccessStatusCode)
-                {
-                    var mediaResponse = JsonConvert.DeserializeObject<InstaDefault>(json);
-
-                    return mediaResponse.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
-                }
-                return Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception.Message);
-            }
         }
         /// <summary>
         ///     Configure story video
@@ -702,6 +410,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaReelFeed>(response, json);
                 var feedResponse = JsonConvert.DeserializeObject<InstaReelFeedResponse>(json);
