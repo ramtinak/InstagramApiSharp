@@ -21,7 +21,12 @@ namespace InstagramApiSharp.Converters
                 Lat = SourceObject.Lat,
                 Lng = SourceObject.Lng,
                 Pk = SourceObject.Pk,
-                ShortName = SourceObject.ShortName
+                ShortName = SourceObject.ShortName,
+                Height = SourceObject.Height,
+                Rotation = SourceObject.Rotation,
+                Width = SourceObject.Width,
+                X = SourceObject.X,
+                Y = SourceObject.Y
             };
             return location;
         }

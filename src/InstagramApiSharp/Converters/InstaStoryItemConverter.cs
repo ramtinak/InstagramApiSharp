@@ -36,7 +36,8 @@ namespace InstagramApiSharp.Converters
                 TakenAt = DateTimeHelper.UnixTimestampToDateTime(SourceObject.TakenAt),
                 VideoDuration = SourceObject.VideoDuration ?? 0,
                 AdAction = SourceObject.AdAction,
-                SupportsReelReactions = SourceObject.SupportsReelReactions
+                SupportsReelReactions = SourceObject.SupportsReelReactions,
+                StoryCTA = SourceObject.StoryCTA
             };
 
             if (SourceObject.User != null)

@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.5.0</Version>
-    <AssemblyVersion>1.0.5.0</AssemblyVersion>
-    <FileVersion>1.0.5.0</FileVersion>
+    <Version>1.0.5.2</Version>
+    <AssemblyVersion>1.0.5.2</AssemblyVersion>
+    <FileVersion>1.0.5.2</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -34,7 +34,13 @@ See examples and wiki pages to find out how can you use this library.</Descripti
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.5.0
+    <PackageReleaseNotes>v1.0.5.2
+- [Add] More properties for InstaStoryLocation (Positioning properties)
+
+v1.0.5.1
+- [Add] StoryCTA Added. This used for stories with links in see more.
+
+v1.0.5.0
 - [Add] link support for direct threads
 - [Add] Send link as direct message
 - [Add] location support for direct threads
@@ -83,43 +89,7 @@ v1.0.4.1
 - GetRecentActivityFeedAsync added to UserProcessor
 
 v1.0.4.0
-- Build option for uwp(NET CORE)
-
-v1.0.3.5
-- Support NET Core for uploading video/image
-
-v1.0.3.4
-- Fix challenge require (if two factor is enable)
-
-v1.0.3.3
-- Set custom device (user-agent)
-
-v1.0.3.2
-- Bugfix for random device (in user-agent)
-- Bugfix for DeclineAllDirectPendingRequests
-
-v1.0.3.1
-- Upload album (videos and photos together) added
-- SendNewDirectMessage added
-- All deprecated functions removed
-
-1.0.3
-- Register new account via phone number!
-- SendNewDirectMessage (for users that you didn't send message before).
-- ShareUser added to MessagingProcessor.
-- Some clean up.
-- Obsolete function will remove in next version.
-
-v1.0.2.9
-- Deprecate most of functions! Please check new functions because old ones will removed in v1.0.3.
-- Approve direct pending inbox thread
-- Decline all direct pending inbox threads
-- Get direct pending inbox threads
-
-v1.0.2.8
-- Bugfix for ResetChallengeRequireVerifyMethodAsync
-- Bugfix for VerifyCodeForChallengeRequireAsync
-</PackageReleaseNotes>
+- Build option for uwp(NET CORE)</PackageReleaseNotes>
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo</PackageTags>
