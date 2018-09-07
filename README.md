@@ -37,7 +37,7 @@ Some of features:
 
 |    |    |    |    |
 | ------ | ------ | ------ | ------ |
-| Login | Login with Facebook | Logout | Create new account |
+| Login | Login with Facebook | Logout | Create new account email/phone number |
 | Edit profile | Change/remove profile picture | Story settings | Get user explore feed |
 | Get user timeline feed | Get all user media by username | Get media by its id | Get user info by its username |
 | Get current user info | Get tag feed by tag value | Get current user media | Get followers list |
