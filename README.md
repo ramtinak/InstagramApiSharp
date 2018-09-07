@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.5.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.0.5.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -69,6 +69,13 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.5.3
+- [Update] GetRequestForEditProfileAsync in AccountProcessor
+- [Update] EditProfileAsync parameters, please check updated [samples/Examples/Samples/Account.cs](https://github.com/ramtinak/InstagramApiSharp/blob/master/samples/Examples/Samples/Account.cs#L71)
+- [Add] Set biography (support hashtags and user mention) in AccountProcessor
+- [Add] Send disappering video to direct thread
+- [Cleanup] some classes and functions
+
 v1.0.5.2
 - [Add] More properties for InstaStoryLocation (Positioning properties)
 
