@@ -28,7 +28,7 @@ namespace InstagramApiSharp.Converters
                 threadItem.ItemType = type;
 
             if (threadItem.ItemType == InstaDirectThreadItemType.Link && SourceObject.Link != null)
-            { 
+            {
                 threadItem.Text = SourceObject.Link.Text;
                 try
                 {
@@ -92,7 +92,7 @@ namespace InstagramApiSharp.Converters
             else if (threadItem.ItemType == InstaDirectThreadItemType.Text)
             {
                 threadItem.Text = SourceObject.Text;
-            } 
+            }
             else if (threadItem.ItemType == InstaDirectThreadItemType.RavenMedia &&
                 SourceObject.RavenMedia != null)
             {
@@ -126,13 +126,13 @@ namespace InstagramApiSharp.Converters
             else if (threadItem.ItemType == InstaDirectThreadItemType.Profile && SourceObject.ProfileMedia != null)
             {
                 var converter = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.ProfileMedia);
-                threadItem.ProfileMedia = converter.Convert(); 
-                if(SourceObject.ProfileMediasPreview != null && SourceObject.ProfileMediasPreview.Any())
+                threadItem.ProfileMedia = converter.Convert();
+                if (SourceObject.ProfileMediasPreview != null && SourceObject.ProfileMediasPreview.Any())
                 {
                     try
                     {
                         var previewMedias = new List<InstaMedia>();
-                        foreach(var item in SourceObject.ProfileMediasPreview)
+                        foreach (var item in SourceObject.ProfileMediasPreview)
                             previewMedias.Add(ConvertersFabric.Instance.GetSingleMediaConverter(item).Convert());
 
                         threadItem.ProfileMediasPreview = previewMedias;
@@ -147,6 +147,39 @@ namespace InstagramApiSharp.Converters
                     IsLinked = SourceObject.Placeholder.IsLinked,
                     Message = SourceObject.Placeholder.Message
                 };
+            }
+            else if (threadItem.ItemType == InstaDirectThreadItemType.Location && SourceObject.LocationMedia != null)
+            {
+                try
+                {
+                    threadItem.LocationMedia = new InstaLocation();
+                    if (!string.IsNullOrEmpty(SourceObject.LocationMedia.Address))
+                        threadItem.LocationMedia.Address = SourceObject.LocationMedia.Address;
+
+                    if (!string.IsNullOrEmpty(SourceObject.LocationMedia.City))
+                        threadItem.LocationMedia.City = SourceObject.LocationMedia.City;
+
+                    if (!string.IsNullOrEmpty(SourceObject.LocationMedia.City))
+                        threadItem.LocationMedia.City = SourceObject.LocationMedia.City;
+
+                    if (!string.IsNullOrEmpty(SourceObject.LocationMedia.ExternalId))
+                        threadItem.LocationMedia.ExternalId = SourceObject.LocationMedia.ExternalId;
+
+                    if (!string.IsNullOrEmpty(SourceObject.LocationMedia.ExternalIdSource))
+                        threadItem.LocationMedia.ExternalSource = SourceObject.LocationMedia.ExternalIdSource;
+
+                    if (!string.IsNullOrEmpty(SourceObject.LocationMedia.ShortName))
+                        threadItem.LocationMedia.ShortName = SourceObject.LocationMedia.ShortName;
+
+                    if (!string.IsNullOrEmpty(SourceObject.LocationMedia.Name))
+                        threadItem.LocationMedia.Name = SourceObject.LocationMedia.Name;
+
+
+                    threadItem.LocationMedia.FacebookPlacesId = SourceObject.LocationMedia.FacebookPlacesId;
+                    threadItem.LocationMedia.Lat = SourceObject.LocationMedia.Lat;
+                    threadItem.LocationMedia.Lng = SourceObject.LocationMedia.Lng;
+                }
+                catch { }
             }
             return threadItem;
         }

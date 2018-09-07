@@ -46,5 +46,7 @@ namespace InstagramApiSharp.Classes.Models
         public InstaPlaceholder Placeholder { get; set; }
 
         public InstaWebLink LinkMedia { get; set; }
+
+        public InstaLocation LocationMedia { get; set; }
     }
 }

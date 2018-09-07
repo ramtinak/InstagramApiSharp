@@ -1128,5 +1128,11 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for send link to direct thread");
             return instaUri;
         }
+        public static Uri GetSendDirectLocationUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_LOCATION, out var instaUri))
+                throw new Exception("Cant create URI for send location to direct thread");
+            return instaUri;
+        }
     }
 }

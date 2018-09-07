@@ -12,6 +12,7 @@
         RavenMedia = 7,
         StoryShare = 8,
         ActionLog = 9,
-        Profile = 10
+        Profile = 10,
+        Location = 11
     }
 }

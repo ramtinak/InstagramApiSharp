@@ -48,5 +48,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("preview_medias")] public List<InstaMediaItemResponse> ProfileMediasPreview { get; set; }
 
         [JsonProperty("placeholder")] public InstaPlaceholderResponse Placeholder { get; set; }
+
+        [JsonProperty("location")] public InstaLocationResponse LocationMedia { get; set; }
     }
 }
