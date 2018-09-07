@@ -15,21 +15,24 @@ using Newtonsoft.Json;
 
 namespace InstagramApiSharp.API.Processors
 {
-    public class CommentProcessor : ICommentProcessor
+    internal class CommentProcessor : ICommentProcessor
     {
         private readonly AndroidDevice _deviceInfo;
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
+        private readonly InstaApi _instaApi;
         public CommentProcessor(AndroidDevice deviceInfo, UserSessionData user,
-            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger, UserAuthValidate userAuthValidate)
+            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
+            UserAuthValidate userAuthValidate, InstaApi instaApi)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
             _userAuthValidate = userAuthValidate;
+            _instaApi = instaApi;
         }
         /// <summary>
         ///     Get media comments

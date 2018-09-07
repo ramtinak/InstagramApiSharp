@@ -135,6 +135,10 @@ v1.0.4.0
   </ItemGroup>
   
   <ItemGroup>
+    <None Remove="API\Processors\CommentProcessor.cs~RF33c063e.TMP" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 

@@ -31,14 +31,17 @@ namespace InstagramApiSharp.API.Processors
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
+        private readonly InstaApi _instaApi;
         public LiveProcessor(AndroidDevice deviceInfo, UserSessionData user,
-            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger, UserAuthValidate userAuthValidate)
+            IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
+            UserAuthValidate userAuthValidate, InstaApi instaApi)
         {
             _deviceInfo = deviceInfo;
             _user = user;
             _httpRequestProcessor = httpRequestProcessor;
             _logger = logger;
             _userAuthValidate = userAuthValidate;
+            _instaApi = instaApi;
         }
 
         /// <summary>
