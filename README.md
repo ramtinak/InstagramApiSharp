@@ -1,4 +1,4 @@
-# InstagramApiSharp
+# InstagramApiSharp ![InstagramApiSharp](http://s8.picofile.com/file/8336601292/insta50x.png)
 An complete Private Instagram Api for .NET (C#, VB.NET).
 
 Supports: Create new account, verify account, edit profile, set profile picture and many more...
