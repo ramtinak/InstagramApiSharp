@@ -41,10 +41,10 @@ namespace InstagramApiSharp.Classes
         public string Status { get; set; }
     }
     
-    public enum MessageRepliesType
+    public enum InstaMessageRepliesType
     {
         [JsonProperty("everyone")]
-        Everyone,
+        Anyone,
         [JsonProperty("following")]
         Following,
         [JsonProperty("off")]

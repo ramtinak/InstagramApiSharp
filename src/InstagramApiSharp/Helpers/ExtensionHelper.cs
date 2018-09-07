@@ -16,8 +16,12 @@ namespace InstagramApiSharp
                 return string.Join(",", listOfValues);
             var list = new List<string>();
             foreach (var item in listOfValues)
-                list.Add("\"" + item + "\"");
+                list.Add(item.Encode());
             return string.Join(",", list);
+        }
+        public static string Encode(this string content)
+        {
+            return "\"" + content + "\"";
         }
     }
 }

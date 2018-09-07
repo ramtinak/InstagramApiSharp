@@ -111,7 +111,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="repliesType">Reply typo</param>
         /// <returns></returns>
-        Task<IResult<bool>> AllowStoryMessageRepliesAsync(MessageRepliesType repliesType);
+        Task<IResult<bool>> AllowStoryMessageRepliesAsync(InstaMessageRepliesType repliesType);
         /// <summary>
         /// Check username availablity.
         /// </summary>

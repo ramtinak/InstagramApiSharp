@@ -44,5 +44,7 @@ namespace InstagramApiSharp.Classes.Models
         public List<InstaMedia> ProfileMediasPreview { get; set; }
 
         public InstaPlaceholder Placeholder { get; set; }
+
+        public InstaWebLink LinkMedia { get; set; }
     }
 }

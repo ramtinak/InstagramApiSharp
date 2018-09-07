@@ -572,7 +572,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="repliesType">Reply typo</param>
         /// <returns></returns>
-        public async Task<IResult<bool>> AllowStoryMessageRepliesAsync(MessageRepliesType repliesType)
+        public async Task<IResult<bool>> AllowStoryMessageRepliesAsync(InstaMessageRepliesType repliesType)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -583,19 +583,8 @@ namespace InstagramApiSharp.API.Processors
                     { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"message_prefs", repliesType.ToString().ToLower()}
                 };
-                switch (repliesType)
-                {
-                    case MessageRepliesType.Everyone:
-                        data.Add("message_prefs", "anyone");
-                        break;
-                    case MessageRepliesType.Following:
-                        data.Add("message_prefs", "following");
-                        break;
-                    case MessageRepliesType.Off:
-                        data.Add("message_prefs", "off");
-                        break;
-                }
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -603,11 +592,11 @@ namespace InstagramApiSharp.API.Processors
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.Fail("Status code: " + response.StatusCode, false);
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
-                if (obj.MessagePrefs.ToLower() == "anyone" && repliesType == MessageRepliesType.Everyone)
+                if (obj.MessagePrefs.ToLower() == "anyone" && repliesType == InstaMessageRepliesType.Anyone)
                     return Result.Success(true);
-                else if (obj.MessagePrefs.ToLower() == "following" && repliesType == MessageRepliesType.Following)
+                else if (obj.MessagePrefs.ToLower() == "following" && repliesType == InstaMessageRepliesType.Following)
                     return Result.Success(true);
-                else if (obj.MessagePrefs.ToLower() == "off" && repliesType == MessageRepliesType.Off)
+                else if (obj.MessagePrefs.ToLower() == "off" && repliesType == InstaMessageRepliesType.Off)
                     return Result.Success(true);
                 else
                     return Result.Success(false);
@@ -1039,8 +1028,7 @@ namespace InstagramApiSharp.API.Processors
         {
             try
             {
-                var instaUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + $"accounts/regen_backup_codes/");
-                Debug.WriteLine(instaUri.ToString());
+                var instaUri = UriCreator.GetRegenerateTwoFactorBackUpCodeUri();
                 var data = new JObject
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
@@ -1054,14 +1042,10 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail<TwoFactorRegenBackupCodesResponse>("Status code: " + response.StatusCode);
-                Debug.WriteLine(json);
-                //{"status": "ok"}
+                    return Result.UnExpectedResponse<TwoFactorRegenBackupCodesResponse>(response, json);
+
                 var obj = JsonConvert.DeserializeObject<TwoFactorRegenBackupCodesResponse>(json);
-                if (obj.Status.ToLower() == "ok")
-                    return Result.Success("No errors detected.", obj);
-                else
-                    return Result.Fail("", obj);
+                return obj.Status.ToLower() == "ok" ? Result.Success(obj) : Result.UnExpectedResponse<TwoFactorRegenBackupCodesResponse>(response, json);
             }
             catch (Exception exception)
             {

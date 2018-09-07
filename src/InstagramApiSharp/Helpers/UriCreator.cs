@@ -1116,5 +1116,17 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for highlight create reel");
             return instaUri;
         }
+        public static Uri GetRegenerateTwoFactorBackUpCodeUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_REGEN_BACKUP_CODES, out var instaUri))
+                throw new Exception("Cant create URI for regenerate two factor backup codes");
+            return instaUri;
+        }
+        public static Uri GetSendDirectLinkUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_LINK, out var instaUri))
+                throw new Exception("Cant create URI for send link to direct thread");
+            return instaUri;
+        }
     }
 }

@@ -24,6 +24,8 @@ using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Logger;
 using System.Text.RegularExpressions;
 using InstagramApiSharp.Classes.Models;
+using System.Net;
+using System.Net.Sockets;
 
 namespace ChallengeRequireExample
 {
@@ -32,7 +34,7 @@ namespace ChallengeRequireExample
         // Note: the old challenge require function is not supported anymore.
         // Note: new challenge require functions is very easy to use.
         // there are 5 functions I've added to IInstaApi for challenge require (checkpoint_endpoint)
-        
+
         // here:
         // 1. Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync();
         // If your login needs challenge, first you should call this function.
@@ -55,7 +57,7 @@ namespace ChallengeRequireExample
 
         // 5. Task<IResult<ChallengeRequireVerifyCode>> VerifyCodeForChallengeRequireAsync(string verifyCode);
         // Verify sms or email verification code for login.
-  
+
         const string AppName = "Challenge Required";
         const string StateFile = "state.bin";
         readonly Size NormalSize = new Size(432, 164);
@@ -69,7 +71,7 @@ namespace ChallengeRequireExample
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Size = NormalSize;
+            Size = NormalSize; 
         }
 
         private async void LoginButton_Click(object sender, EventArgs e)
@@ -163,11 +165,11 @@ namespace ChallengeRequireExample
             try
             {
                 // Note: every request to this endpoint is limited to 60 seconds                 
-                if(isEmail)
+                if (isEmail)
                 {
                     // send verification code to email
                     var email = await InstaApi.RequestVerifyCodeToEmailForChallengeRequireAsync();
-                    if(email.Succeeded)
+                    if (email.Succeeded)
                     {
                         LblForSmsEmail.Text = $"We sent verify code to this email:\n{email.Value.StepData.ContactPoint}";
                         VerifyCodeGroupBox.Visible = true;
@@ -219,7 +221,7 @@ namespace ChallengeRequireExample
                 // Note: calling VerifyCodeForChallengeRequireAsync function, 
                 // if user has two factor enabled, will wait 15 seconds and it will try to
                 // call LoginAsync.
-                
+
                 var verifyLogin = await InstaApi.VerifyCodeForChallengeRequireAsync(txtVerifyCode.Text);
                 if (verifyLogin.Succeeded)
                 {
@@ -242,7 +244,7 @@ namespace ChallengeRequireExample
                     else
                         MessageBox.Show(verifyLogin.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                    
+
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "EX", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
@@ -282,6 +284,12 @@ namespace ChallengeRequireExample
             if (!InstaApi.IsUserAuthenticated)
                 MessageBox.Show("Login first.");
 
+            var threads = await InstaApi.MessagingProcessor.GetDirectInboxAsync();
+            var first = threads.Value.Inbox.Threads.FirstOrDefault();
+            var ds = await InstaApi.MessagingProcessor.GetDirectInboxThreadAsync(first.ThreadId);
+            string link = "https://t.me/ALR_KNIGHT";
+            var direct = await InstaApi.MessagingProcessor.SendDirectLinkAsync($"check this out:\r\n{link}", link, first.ThreadId);
+            return;
             var x = await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
             if (x.Succeeded)

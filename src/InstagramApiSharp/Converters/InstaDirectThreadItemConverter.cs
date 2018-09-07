@@ -27,9 +27,33 @@ namespace InstagramApiSharp.Converters
             if (Enum.TryParse(truncatedItemType, true, out InstaDirectThreadItemType type))
                 threadItem.ItemType = type;
 
-            if (threadItem.ItemType == InstaDirectThreadItemType.Link)
-            {
-                threadItem.Text = SourceObject.Link?.LinkContext?.LinkUrl;
+            if (threadItem.ItemType == InstaDirectThreadItemType.Link && SourceObject.Link != null)
+            { 
+                threadItem.Text = SourceObject.Link.Text;
+                try
+                {
+                    threadItem.LinkMedia = new InstaWebLink
+                    {
+                        Text = SourceObject.Link.Text
+                    };
+                    if (SourceObject.Link.LinkContext != null)
+                    {
+                        threadItem.LinkMedia.LinkContext = new InstaWebLinkContext();
+
+                        if (!string.IsNullOrEmpty(SourceObject.Link.LinkContext.LinkImageUrl))
+                            threadItem.LinkMedia.LinkContext.LinkImageUrl = SourceObject.Link.LinkContext.LinkImageUrl;
+
+                        if (!string.IsNullOrEmpty(SourceObject.Link.LinkContext.LinkSummary))
+                            threadItem.LinkMedia.LinkContext.LinkSummary = SourceObject.Link.LinkContext.LinkSummary;
+
+                        if (!string.IsNullOrEmpty(SourceObject.Link.LinkContext.LinkTitle))
+                            threadItem.LinkMedia.LinkContext.LinkTitle = SourceObject.Link.LinkContext.LinkTitle;
+
+                        if (!string.IsNullOrEmpty(SourceObject.Link.LinkContext.LinkUrl))
+                            threadItem.LinkMedia.LinkContext.LinkUrl = SourceObject.Link.LinkContext.LinkUrl;
+                    }
+                }
+                catch { }
             }
             else if (threadItem.ItemType == InstaDirectThreadItemType.Like)
             {

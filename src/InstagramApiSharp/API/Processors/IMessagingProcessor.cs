@@ -128,10 +128,17 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadId">Thread id</param>
         Task<IResult<bool>> UnMuteDirectThreadAsync(string threadId);
         /// <summary>
-        ///     Send profile to direct thrad
+        ///     Send profile to direct thread
         /// </summary>
         /// <param name="userIdToSend">User id to send</param>
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> SendDirectProfileAsync(long userIdToSend, params string[] threadIds);
+        /// <summary>
+        ///     Send link address to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="link">Link to send</param>
+        /// <param name="threadIds">Thread ids</param>
+        Task<IResult<bool>> SendDirectLinkAsync(string text, string link, params string[] threadIds);
     }
 }

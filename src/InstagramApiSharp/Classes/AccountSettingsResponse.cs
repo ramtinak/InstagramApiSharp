@@ -19,7 +19,7 @@ namespace InstagramApiSharp.Classes
         /// In dar asl hamon MessagePrefs hast ke tabdil be message replies type shode
         /// </summary>
         [JsonIgnore()]
-        public MessageRepliesType MessagePrefsType
+        public InstaMessageRepliesType MessagePrefsType
         {
             get
             {
@@ -27,11 +27,11 @@ namespace InstagramApiSharp.Classes
                 {
                     default:
                     case "everyone":
-                        return MessageRepliesType.Everyone;
+                        return InstaMessageRepliesType.Anyone;
                     case "following":
-                        return MessageRepliesType.Following;
+                        return InstaMessageRepliesType.Following;
                     case "off":
-                        return MessageRepliesType.Off;
+                        return InstaMessageRepliesType.Off;
                 }
             }
         }

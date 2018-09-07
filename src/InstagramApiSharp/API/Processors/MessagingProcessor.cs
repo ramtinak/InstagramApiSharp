@@ -756,7 +756,7 @@ namespace InstagramApiSharp.API.Processors
                     {"profile_user_id", userIdToSend.ToString()},
                     {"action", "send_item"},
                     {"thread_ids", $"[{threadIds.EncodeList(false)}]"},
-                    {"thread_ids", clientContext},
+                    {"client_context", clientContext},
                     {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
@@ -775,6 +775,44 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+        /// <summary>
+        ///     Send link address to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="link">Link to send</param>
+        /// <param name="threadIds">Thread ids</param>
+        public async Task<IResult<bool>> SendDirectLinkAsync(string text, string link, params string[] threadIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetSendDirectLinkUri();
+                var clientContext = Guid.NewGuid().ToString();
+                var data = new Dictionary<string, string>
+                {
+                    {"link_text", text},
+                    {"link_urls", $"[{ExtensionHelper.EncodeList(new string[]{ link })}]"},
+                    {"action", "send_item"},
+                    {"thread_ids", $"[{threadIds.EncodeList(false)}]"},
+                    {"client_context", clientContext},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
 
+                var request =
+                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
     }
 }
