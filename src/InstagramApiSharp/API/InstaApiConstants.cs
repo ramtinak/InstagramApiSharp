@@ -71,6 +71,9 @@ namespace InstagramApiSharp.API
         public const string ACCOUNTS_LOGIN = API_SUFFIX + "/accounts/login/";
         public const string ACCOUNTS_CREATE = API_SUFFIX + "/accounts/create/";
         public const string ACCOUNTS_2FA_LOGIN = API_SUFFIX + "/accounts/two_factor_login/";
+        public const string ACCOUNTS_2FA_LOGIN_AGAIN = API_SUFFIX + "/accounts/send_two_factor_login_sms/";
+        public const string ACCOUNTS_LOOKUP_PHONE = API_SUFFIX + "/users/lookup_phone/";
+        public const string ACCOUNTS_SEND_RECOVERY_EMAIL = API_SUFFIX + "/accounts/send_recovery_flow_email/";
         public const string CHANGE_PASSWORD = API_SUFFIX + "/accounts/change_password/";
         public const string ACCOUNTS_LOGOUT = API_SUFFIX + "/accounts/logout/";
         public const string EXPLORE = API_SUFFIX + "/discover/explore/";

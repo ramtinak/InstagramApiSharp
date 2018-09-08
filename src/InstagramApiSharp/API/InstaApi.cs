@@ -762,6 +762,162 @@ namespace InstagramApiSharp.API
                     : Result.Fail<TwoFactorLoginInfo>("No Two Factor info available."));
         }
 
+
+        /// <summary>
+        /// send Recovery Username
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <returns></returns>
+        public async Task<IResult<InstaRecovery>> SendRecoveryByUsername(string username)
+        {
+            return await SendRecoveryByEmail(username);
+        }
+
+        /// <summary>
+        /// send Recovery Email
+        /// </summary>
+        /// <param name="email">Email Address</param>
+        /// <returns></returns>
+        public async Task<IResult<InstaRecovery>> SendRecoveryByEmail(string email)
+        {
+            try
+            {
+                string token = "";
+                if (!string.IsNullOrEmpty(_user.CsrfToken))
+                    token = _user.CsrfToken;
+                else
+                {
+                    var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                    var cookies =
+                        _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                            .BaseAddress);
+                    _logger?.LogResponse(firstResponse);
+                    token = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                }
+
+                var postData = new JObject
+                {
+                    {"query", email },
+                    {"adid", _deviceInfo.GoogleAdId },
+                    {"device_id",  ApiRequestMessage.GenerateDeviceId()},
+                    {"guid",  _deviceInfo.DeviceGuid.ToString()},
+                    {"_csrftoken", token },
+                };
+
+                var instaUri = UriCreator.GetAccountRecoveryEmailUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+
+                var response = await _httpRequestProcessor.SendAsync(request);
+
+                var result = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = JsonConvert.DeserializeObject<MessageErrorsResponseRecoveryEmail>(result);
+                    return Result.Fail<InstaRecovery>(error.Message);
+                }
+
+                return Result.Success(JsonConvert.DeserializeObject<InstaRecovery>(result));
+            }
+            catch (Exception exception)
+            {
+                return Result.Fail<InstaRecovery>(exception);
+            }
+        }
+
+        /// <summary>
+        /// send Recovery Phone
+        /// </summary>
+        /// <param name="phone">Phone Number</param>
+        /// <returns></returns>
+        public async Task<IResult<InstaRecovery>> SendRecoveryByPhone(string phone)
+        {
+            try
+            {
+                string token = "";
+                if (!string.IsNullOrEmpty(_user.CsrfToken))
+                    token = _user.CsrfToken;
+                else
+                {
+                    var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                    var cookies =
+                        _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                            .BaseAddress);
+                    _logger?.LogResponse(firstResponse);
+                    token = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                }
+
+                var postData = new JObject
+                {
+                    {"query",  phone },
+                    {"_csrftoken",  _user.CsrfToken },
+                };
+
+                var instaUri = UriCreator.GetAccountRecoverPhoneUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var result = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = JsonConvert.DeserializeObject<BadStatusErrorsResponse>(result);
+                    var errors = "";
+                    error.Message.Errors.ForEach(errorContent => errors += errorContent + "\n");
+                    return Result.Fail<InstaRecovery>(errors);
+                }
+                else if (result.Contains("errors"))
+                {
+                    var error = JsonConvert.DeserializeObject<BadStatusErrorsResponseRecovery>(result);
+                    var errors = "";
+                    error.Phone_number.Errors.ForEach(errorContent => errors += errorContent + "\n");
+
+                    return Result.Fail<InstaRecovery>(errors);
+                }
+                return Result.Success(JsonConvert.DeserializeObject<InstaRecovery>(result));
+            }
+            catch (Exception exception)
+            {
+                return Result.Fail<InstaRecovery>(exception);
+            }
+        }
+
+
+        /// <summary>
+        ///    Send Two Factor Login SMS Again
+        /// </summary>
+        public async Task<IResult<TwoFactorLoginSMSResponse>> SendTwoFactorLoginSMSAsync()
+        {
+            try
+            {
+                if (_twoFactorInfo == null)
+                    return Result.Fail<TwoFactorLoginSMSResponse>("Run LoginAsync first");
+
+                var postData = new Dictionary<string, string>
+                {
+                    { "two_factor_identifier",  _twoFactorInfo.TwoFactorIdentifier },
+                    { "username",    _httpRequestProcessor.RequestMessage.username},
+                    { "device_id",   _httpRequestProcessor.RequestMessage.device_id},
+                    { "guid",        _deviceInfo.DeviceGuid.ToString()},
+                    { "_csrftoken",    _user.CsrfToken }
+                };
+
+                var instaUri = UriCreator.GetAccount2FALoginAgainUri();
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var result = await response.Content.ReadAsStringAsync();
+
+                var T = JsonConvert.DeserializeObject<TwoFactorLoginSMSResponse>(result);
+                if (!string.IsNullOrEmpty(T.TwoFactorInfo.TwoFactorIdentifier))
+                    _twoFactorInfo.TwoFactorIdentifier = T.TwoFactorInfo.TwoFactorIdentifier;
+                return Result.Success(T);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<TwoFactorLoginSMSResponse>(exception);
+            }
+        }
+
+
         /// <summary>
         ///     Logout from instagram asynchronously
         /// </summary>
