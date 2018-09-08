@@ -1141,5 +1141,23 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for set biography");
             return instaUri;
         }
+        public static Uri GetAccount2FALoginAgainUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_2FA_LOGIN_AGAIN, out var instaUri))
+                throw new Exception("Cant create URI for Account 2FA Login Again");
+            return instaUri;
+        }
+        public static Uri GetAccountRecoveryEmailUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_SEND_RECOVERY_EMAIL, out var instaUri))
+                throw new Exception("Cant create URI for Account Recovery Email");
+            return instaUri;
+        }
+        public static Uri GetAccountRecoverPhoneUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_LOOKUP_PHONE, out var instaUri))
+                throw new Exception("Cant create URI for Account Recovery phone");
+            return instaUri;
+        }
     }
 }

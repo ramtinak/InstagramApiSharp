@@ -202,7 +202,29 @@ namespace InstagramApiSharp.API
         ///     required, if not, don't run this method
         /// </returns>
         Task<IResult<TwoFactorLoginInfo>> GetTwoFactorInfoAsync();
-
+        /// <summary>
+        /// send Recovery Username
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <returns></returns>
+        Task<IResult<InstaRecovery>> SendRecoveryByUsername(string username);
+        /// <summary>
+        /// send Recovery Email
+        /// </summary>
+        /// <param name="email">Email Address</param>
+        /// <returns></returns>
+        Task<IResult<InstaRecovery>> SendRecoveryByEmail(string email);
+        /// <summary>
+        /// send Recovery Phone
+        /// </summary>
+        /// <param name="phone">Phone Number</param>
+        /// <returns></returns>
+        Task<IResult<InstaRecovery>> SendRecoveryByPhone(string phone);
+        /// <summary>
+        ///    Send Two Factor Login SMS Again
+        /// </summary>
+        /// <returns></returns>
+        Task<IResult<TwoFactorLoginSMSResponse>> SendTwoFactorLoginSMSAsync();
         /// <summary>
         ///     Logout from instagram asynchronously
         /// </summary>
