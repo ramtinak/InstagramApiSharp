@@ -1,0 +1,155 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net452;uap10.0</TargetFrameworks>
+    <VersionPrefix>1.0.5.3</VersionPrefix>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <AssemblyName>InstagramApiSharp</AssemblyName>
+    <PackageId>InstagramApiSharp</PackageId>
+    <NetStandardImplicitPackageVersion>2.0</NetStandardImplicitPackageVersion>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.0.5.3</Version>
+    <AssemblyVersion>1.0.5.3</AssemblyVersion>
+    <FileVersion>1.0.5.3</FileVersion>
+    <Description>An complete Private Instagram Api for .NET.
+
+
+Support:
+- Create new account with phone number and email.
+- Login with Facebook.
+- Edit Profile.
+- Change/Remove profile picture.
+- Upload album (videos and photos).
+- Live functions.
+- Discover functions.
+- Search peoples.
+- Can pass challenge required.
+- and many more.
+
+See examples and wiki pages to find out how can you use this library.</Description>
+    <Authors>Ramtin Jokar, Ali NGame1</Authors>
+    <RepositoryType></RepositoryType>
+    <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
+    <PackageReleaseNotes>v1.0.5.3
+- [Update] GetRequestForEditProfileAsync in AccountProcessor
+- [Update] EditProfileAsync parameters, please check updated /samples/Examples/Samples/Account.cs
+- [Add] Set biography (support hashtags and user mention) in AccountProcessor
+- [Add] Send disappering video to direct thread
+- [Cleanup] some classes and functions
+
+v1.0.5.2
+- [Add] More properties for InstaStoryLocation (Positioning properties)
+
+v1.0.5.1
+- [Add] StoryCTA Added. This used for stories with links in see more.
+
+v1.0.5.0
+- [Add] link support for direct threads
+- [Add] Send link as direct message
+- [Add] location support for direct threads
+- [Add] Send location as direct message
+- [Bugfix] for SendDirectProfileAsync
+
+v1.0.4.9
+- [Bugfix] for highlight
+
+v1.0.4.8
+- [Add] Highlight support (create, delete, get) to StoryProcessor
+
+v1.0.4.7
+- [Add] Placeholder support for direct threads
+- [Add] some other info to InstaUserInfo [thx to @GormYa]
+- Some cleanup
+
+v1.0.4.6
+- [Add] ActionLog support for direct threads
+- [Add] Profile support for direct threads
+- [Add] Send profile as direct message 
+- [Add] UpdateDirectThreadAsync to Messaging
+- [Add] mute/unmute thread to Messaging
+- [Add] DeclineDirectPendingRequestsAsync to Messaging
+- [Bugfix] for GetDirectInboxThreadAsync
+- [Bugfix] for ApproveDirectPendingRequestAsync
+- [Bugfix] for DeclineAllDirectPendingRequestsAsync
+- [Bugfix] for DicoverProccesor.GetSuggestedSearchesAsync
+
+v1.0.4.5
+- Support raven media in direct messages
+- Support share media in direct messages
+
+v1.0.4.4
+- Send video to story (self story, direct story and both) added
+- Seen story added
+- Send direct photo/video added
+
+v1.0.4.3
+- Added RegenerateTwoFactorBackupCodesAsync to AccountProcessor
+
+v1.0.4.2
+- public GetRequestForEditProfileAsync method
+
+v1.0.4.1
+- GetRecentActivityFeedAsync added to UserProcessor
+
+v1.0.4.0
+- Build option for uwp(NET CORE)</PackageReleaseNotes>
+    <Copyright>Ramtin Jokar</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo</PackageTags>
+    <PackageIconUrl>http://s9.picofile.com/file/8336165642/insta5.png</PackageIconUrl>
+    <NeutralLanguage>en-US</NeutralLanguage>
+  </PropertyGroup>
+  
+   <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+      <TargetFrameworks>netstandard2.0;net452;uap10.0</TargetFrameworks>
+    </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <TreatSpecificWarningsAsErrors />
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' OR  '$(TargetFramework)' == 'net471'">
+    <Reference Include="System" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <NugetTargetMoniker>UAP,Version=v10.0</NugetTargetMoniker>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
+    <TargetFrameworkIdentifier>.NETCore</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <DefineConstants>$(DefineConstants);WINDOWS_UWP</DefineConstants>
+    <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</LanguageTargets>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.2.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="API\Processors\CommentProcessor.cs~RF33c063e.TMP" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="NETStandard.Library" Version="2.0" />
+  </ItemGroup>
+</Project>

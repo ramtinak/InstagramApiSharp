@@ -1,11 +1,11 @@
-# InstagramApiSharp
+# InstagramApiSharp ![InstagramApiSharp](http://s8.picofile.com/file/8336601292/insta50x.png)
 An complete Private Instagram Api for .NET (C#, VB.NET).
 
 Supports: Create new account, verify account, edit profile, set profile picture and many more...
 
-| Target | Branch | Version | Download link | Travis build | AppVeyor build |
-| ------ | ------ | ------ | ------ |  ------ |  ------ |
-| Nuget | master | v1.0.3.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![travis](https://api.travis-ci.org/ramtinak/InstagramApiSharp.svg?branch=master)](https://travis-ci.org/ramtinak/InstagramApiSharp/builds) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/o793bkuvt968pkpr?svg=true)](https://ci.appveyor.com/project/ramtinak/instagramapisharp/) 
+| Target | Branch | Version | Download link |
+| ------ | ------ | ------ | ------ |
+| Nuget | master | v1.0.5.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -26,17 +26,18 @@ Note: this library uses [Json.NET v10.0.3 and above](https://www.nuget.org/packa
 | ------ | ------ |
 | .NET Framework | 4.5.2 |
 | .NET Standard | 2.0 |
+| .NET Core(UWP) | 10.0.14393 |
 
 ## Overview
 There's a lot of functions and bug fix me and [NGame1](https://github.com/NGame1) added to this library.
-I've added an [Examples](https://github.com/ramtinak/InstagramApiSharp/tree/master/Examples) to show you what's new and how it's works, you can see [Samples/Account.cs](https://github.com/ramtinak/InstagramApiSharp/blob/master/Examples/Samples/Account.cs), [Samples/Discover.cs](https://github.com/ramtinak/InstagramApiSharp/blob/master/Examples/Samples/Discover.cs) and [Samples/Live.cs](https://github.com/ramtinak/InstagramApiSharp/blob/master/Examples/Samples/Live.cs) to see how it's works.
+Check [sample projects](https://github.com/ramtinak/InstagramApiSharp/tree/master/samples) and [wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) to see how it's works.
 
 ## Features
 Some of features:
 
 |    |    |    |    |
 | ------ | ------ | ------ | ------ |
-| Login | Login with Facebook | Logout | Create new account |
+| Login | Login with Facebook | Logout | Create new account email/phone number |
 | Edit profile | Change/remove profile picture | Story settings | Get user explore feed |
 | Get user timeline feed | Get all user media by username | Get media by its id | Get user info by its username |
 | Get current user info | Get tag feed by tag value | Get current user media | Get followers list |
@@ -45,9 +46,9 @@ Some of features:
 | Get recent activity | Like media | Unlike media | Follow user |
 | Unfollow user | Set account private | Set account public | Send comment |
 | Delete comment | Upload photo | Upload video | Get followings list |
-| Delete media (photo/video) | Upload story (photo) | Change password | Send direct message |
+| Delete media (photo/video) | Upload story (photo/video) | Change password | Send direct message |
 | Search location | Get location feed | Collection create/get by id/get all/add items | Support challenge required |
-| Upload album (videos/photo) |
+| Upload album (videos/photo) | Highlight support | Share story | Send direct photo/video/ stories/profile/ link/location |
 ## Usage
 #### Use builder to get Insta API instance:
 ```c#
@@ -68,67 +69,51 @@ Task<IResult<object>>
 ```
 
 ## Version changes
-v1.0.3.4
-- Fix challenge require (if two factor is enable)
+v1.0.5.3
+- [Update] GetRequestForEditProfileAsync in AccountProcessor
+- [Update] EditProfileAsync parameters, please check updated [samples/Examples/Samples/Account.cs](https://github.com/ramtinak/InstagramApiSharp/blob/master/samples/Examples/Samples/Account.cs#L71)
+- [Add] Set biography (support hashtags and user mention) in AccountProcessor
+- [Add] Send disappering video to direct thread
+- [Cleanup] some classes and functions
 
-v1.0.3.3
-- Set custom device (user-agent) [Wiki example](https://github.com/ramtinak/InstagramApiSharp/wiki/Set-custom-device(user-agent))
+v1.0.5.2
+- [Add] More properties for InstaStoryLocation (Positioning properties)
 
-v1.0.3.2
-- Bugfix for random device (in user-agent)
-- Bugfix for DeclineAllDirectPendingRequests
+v1.0.5.1
+- [Add] StoryCTA Added. This used for stories with links in see more.
 
-v1.0.3.1
-- Upload album (videos and photos together) added. [Wiki example](https://github.com/ramtinak/InstagramApiSharp/wiki/Upload-album)
-- SendNewDirectMessage added
-- All deprecated functions removed
+v1.0.5.0
+- [Add] link support for direct threads
+- [Add] Send link as direct message
+- [Add] location support for direct threads
+- [Add] Send location as direct message
+- [Bugfix] for SendDirectProfileAsync
 
-v1.0.3.0
-- Register new account via phone number! [Wiki example](https://github.com/ramtinak/InstagramApiSharp/wiki/Create-new-account)
-- SendNewDirectMessage (for users that you didn't send message before).
-- ShareUser added to MessagingProcessor.
-- Some clean up.
-- Obsolete function will remove in next version.
+v1.0.4.9
+- [Bugfix] for highlight
 
-v1.0.2.9
-- Deprecate most of functions! Please check new functions because old ones will removed in v1.0.3.
-- Approve direct pending inbox thread
-- Decline all direct pending inbox threads
-- Get direct pending inbox threads
+v1.0.4.8
+- [Add] Highlight support (create, delete, get) to StoryProcessor
 
-v1.0.2.8
-- Bugfix for ResetChallengeRequireVerifyMethodAsync
-- Bugfix for VerifyCodeForChallengeRequireAsync
+v1.0.4.7
+- [Add] Placeholder support for direct threads
+- [Add] some other info to InstaUserInfo [thx to @GormYa]
+- [Move] InstagramApiSharp to src folder
+- [Move] examples projects to samples folder
 
-v1.0.2.7
-- Bugfix for Challenge require
+v1.0.4.6
+- [Add] ActionLog support for direct threads
+- [Add] Profile support for direct threads
+- [Add] Send profile as direct message 
+- [Add] UpdateDirectThreadAsync to Messaging
+- [Add] mute/unmute thread to Messaging
+- [Add] DeclineDirectPendingRequestsAsync to Messaging
+- [Bugfix] for GetDirectInboxThreadAsync
+- [Bugfix] for ApproveDirectPendingRequestAsync
+- [Bugfix] for DeclineAllDirectPendingRequestsAsync
+- [Bugfix] for DicoverProccesor.GetSuggestedSearchesAsync
 
-v1.0.2.6
-- Change challenge require function(now it's works perfectly).
-- IsCommentsDisabled added to InstaMedia class.
-
-v1.0.2.5
-- Bugfix for facebook login(now you can do anything after you logged in with facebook)
-
-v1.0.2.4
-- Enable/disable media comments
-
-v1.0.2.3
-- Facebook login added
-- Fix GetPendingFriendRequests response issue
-
-v1.0.2.2
-- Share story added.
-- Access to StoryProcessor added.
-
-v1.0.2.1
-- GetStateDataAsString and LoadStateDataFromString added.
-
-v1.0.2
-- Inline comments support(send and get)
-
-v1.0.1
-- Fix Challenge required api. Now you can verify your email or phone number with challenge required functions.
+[Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
 ## Known Issues
 Nothing!!!!
@@ -143,7 +128,7 @@ You can download source code or app from [InstaPost](https://github.com/ramtinak
 
 ## Language
 You can ask questions or report issues in Persian or English language.
-I can't answer to other languages, because I don't understand other languages.
+I can't answer to other languages, because I don't understand them.
 
 ## License
 Do whatever you want to do! Except changing library name!!!!
@@ -167,20 +152,13 @@ Special thanks to [mgp25](https://github.com/mgp25) and his [php wrapper](https:
 This code is in no way affiliated with, authorized, maintained, sponsored or endorsed by Instagram or any of its affiliates or subsidiaries. This is an independent and unofficial API wrapper.
 
 
-## About me
-First and last name: Ramtin Jokar
+## Developers
 
-Born: 1995 (Bushehr city, Iran)
+| Name | Github | Email | Telegram | Instagram |
+| ------ | ------ | ------ | ------ | ------ |
+| Ramtin Jokar | [@Ramtinak](https://github.com/ramtinak) | [Ramtinak@live.com](mailto:ramtinak@live.com) | https://t.me/Ramtinak | https://instagram.com/Rmt4006 |
+| Ali Noshahi | [@NGame1](https://github.com/NGame1) | [NGame1390@hotmail.com](mailto:ngame1390@hotmail.com) | https://t.me/NGameW | https://instagram.com/alingame |
 
-Live in: Kazeroun city, Fars state, Iran
-
-Bio: I hate programming and developing apps/libraries:|!
-
-Email: [Ramtinak@live.com](mailto:ramtinak@live.com)
-
-Telegram: https://t.me/Ramtinak
-
-Instagram: https://instagram.com/Rmt4006
 
 
 Iranian developers - (c) 2018
