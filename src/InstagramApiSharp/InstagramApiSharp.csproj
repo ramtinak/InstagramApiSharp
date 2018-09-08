@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.5.3</Version>
-    <AssemblyVersion>1.0.5.3</AssemblyVersion>
-    <FileVersion>1.0.5.3</FileVersion>
+    <Version>1.0.5.4</Version>
+    <AssemblyVersion>1.0.5.4</AssemblyVersion>
+    <FileVersion>1.0.5.4</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -34,7 +34,10 @@ See examples and wiki pages to find out how can you use this library.</Descripti
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.5.3
+    <PackageReleaseNotes>v1.0.5.4
+- [Add] Resend two factor login code by username, email and phone (thx to @Lorymi )
+
+v1.0.5.3
 - [Update] GetRequestForEditProfileAsync in AccountProcessor
 - [Update] EditProfileAsync parameters, please check updated /samples/Examples/Samples/Account.cs
 - [Add] Set biography (support hashtags and user mention) in AccountProcessor
