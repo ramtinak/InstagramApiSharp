@@ -197,7 +197,8 @@ namespace InstagramApiSharp.API
         public const string FBSEARCH_RECENT_SEARCHES = API_SUFFIX + "/fbsearch/recent_searches/";
         public const string FBSEARCH_CLEAR_SEARCH_HISTORY = API_SUFFIX + "/fbsearch/clear_search_history";
         public const string FBSEARCH_SUGGESTED_SEARCHS = API_SUFFIX + "/fbsearch/suggested_searches/?type={0}";
-
+        public const string FBSEARCH_PROFILE_SEARCH = API_SUFFIX + "/fbsearch/profile_link_search/?q={0}&count={1}";
+        public const string FBSEARCH_TOPSEARCH_FALT = API_SUFFIX + "/fbsearch/topsearch_flat/";
 
         public const string DISCOVER_AYML = API_SUFFIX + "/discover/ayml/";
         public const string DISCOVER_TOP_LIVE = API_SUFFIX + "/discover/top_live/";
@@ -232,6 +233,7 @@ namespace InstagramApiSharp.API
         public const string LIVE_CREATE = API_SUFFIX + "/live/create/";
         public const string LIVE_START = API_SUFFIX + "/live/{0}/start/";
         public const string LIVE_END = API_SUFFIX + "/live/{0}/end_broadcast/";
+        public const string LIVE_GET_JOIN_REQUESTS = API_SUFFIX + "/live/{0}/get_join_requests/";
 
         public const string STORY_MEDIA_INFO_UPLOAD = API_SUFFIX + "/media/mas_opt_in_info/";
         public const string STORY_UPLOAD_VIDEO = INSTAGRAM_URL + "/rupload_igvideo/{0}_0_{1}";

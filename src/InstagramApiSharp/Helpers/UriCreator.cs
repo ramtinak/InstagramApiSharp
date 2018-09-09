@@ -741,7 +741,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for suggested search");
             return instaUri;
         }
-
+        public static Uri GetProfileSearchUri(string query, int count)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FBSEARCH_PROFILE_SEARCH, query, count), out var instaUri))
+                throw new Exception("Cant create URI for profile search");
+            return instaUri;
+        }
         public static Uri GetDiscoverPeopleUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DISCOVER_AYML, out var instaUri))
@@ -942,6 +947,12 @@ namespace InstagramApiSharp.Helpers
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_END, broadcastId), out var instaUri))
                 throw new Exception("Cant create URI for broadcast end");
+            return instaUri;
+        }
+        public static Uri GetBroadcastJoinRequestsUri(string broadcastId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_GET_JOIN_REQUESTS, broadcastId), out var instaUri))
+                throw new Exception("Cant create URI for broadcast join requests");
             return instaUri;
         }
         public static Uri GetFacebookSignUpUri()
@@ -1157,6 +1168,12 @@ namespace InstagramApiSharp.Helpers
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_LOOKUP_PHONE, out var instaUri))
                 throw new Exception("Cant create URI for Account Recovery phone");
+            return instaUri;
+        }
+        public static Uri GetUserSearchByLocationUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FBSEARCH_TOPSEARCH_FALT, out var instaUri))
+                throw new Exception("Cant create URI for user search by location");
             return instaUri;
         }
     }

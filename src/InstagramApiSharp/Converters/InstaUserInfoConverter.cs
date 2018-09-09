@@ -43,6 +43,8 @@ namespace InstagramApiSharp.Converters
                 PublicPhoneNumber = SourceObject.User.PublicPhoneNumber,
                 PublicPhoneCountryCode = SourceObject.User.PublicPhoneCountryCode
             };
+            if (SourceObject.User.BiographyWithEntities != null && SourceObject.User.BiographyWithEntities.Entities != null)
+                userInfo.BiographyWithEntities = SourceObject.User.BiographyWithEntities;
             return userInfo;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
 
 namespace InstagramApiSharp.Classes.ResponseWrappers
@@ -60,5 +61,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("public_phone_number")] public string PublicPhoneNumber { get; set; }
         [JsonProperty("contact_phone_number")] public string ContactPhoneNumber { get; set; }
         [JsonProperty("public_phone_country_code")] public string PublicPhoneCountryCode { get; set; }
+        [JsonProperty("biography_with_entities")] public InstaBiographyEntities BiographyWithEntities { get; set; }
     }
 }

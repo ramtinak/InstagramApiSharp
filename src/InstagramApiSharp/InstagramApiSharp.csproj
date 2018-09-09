@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.5.4</Version>
-    <AssemblyVersion>1.0.5.4</AssemblyVersion>
-    <FileVersion>1.0.5.4</FileVersion>
+    <Version>1.0.5.5</Version>
+    <AssemblyVersion>1.0.5.5</AssemblyVersion>
+    <FileVersion>1.0.5.5</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -35,7 +35,17 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.5.4
+    <PackageReleaseNotes>v1.0.5.5
+- [Bugfix] for random device (user agent). now supports 20 device
+- [Add] Android version to device (randomly from android v4.0 to v9.0)
+- [Add] GetCurrentDevice to InstaApi
+- [Add] Biography with entities property to InstaUserInfo
+- [Add] Search users by location to LocationProcessor
+- [Bugfix] For some functions in LiveProcessor
+- [Add] GetJoinRequestsAsync to LiveProcessor
+- [Add] Send disappering photo to direct thread
+
+v1.0.5.4
 - [Add] Resend two factor login code by username, email and phone (thx to @Lorymi )
 
 v1.0.5.3

@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.5.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.0.5.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -69,6 +69,16 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.5.5
+- [Bugfix] for random device (user agent). now supports 20 device
+- [Add] Android version to device (randomly from android v4.0 to v9.0)
+- [Add] GetCurrentDevice to InstaApi
+- [Add] Biography with entities property to InstaUserInfo
+- [Add] Search users by location to LocationProcessor
+- [Bugfix] For some functions in LiveProcessor
+- [Add] GetJoinRequestsAsync to LiveProcessor
+- [Add] Send disappering photo to direct thread
+
 v1.0.5.4
 - [Add] Resend two factor login code by username, email and phone (thx to [@Lorymi](https://github.com/Lorymi) )
 

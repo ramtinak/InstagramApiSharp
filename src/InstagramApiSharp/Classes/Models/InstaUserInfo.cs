@@ -52,5 +52,6 @@ namespace InstagramApiSharp.Classes.Models
         public string PublicPhoneNumber { get; set; }
         public string ContactPhoneNumber { get; set; }
         public string PublicPhoneCountryCode { get; set; }
+        public InstaBiographyEntities BiographyWithEntities { get; set; }
     }
 }
