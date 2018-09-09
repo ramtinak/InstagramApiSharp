@@ -373,8 +373,6 @@ PaginationParameters paginationParameters)
                     HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                System.Diagnostics.Debug.WriteLine(json);
-                //{"message": "login_required", "logout_reason": 3, "status": "fail"}
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);

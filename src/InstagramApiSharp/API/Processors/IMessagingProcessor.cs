@@ -167,5 +167,11 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> SendDirectDisappearingPhotoAsync(InstaImage image,
      InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
+        /// <summary>
+        ///     Like direct message in a thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="itemId">Item id (message id)</param>
+        Task<IResult<bool>> LikeThreadMessageAsync(string threadId, string itemId);
     }
 }

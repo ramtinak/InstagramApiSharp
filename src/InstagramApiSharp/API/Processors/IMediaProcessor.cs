@@ -14,7 +14,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>Media ID</returns>
         Task<IResult<string>> GetMediaIdFromUrlAsync(Uri uri);
         /// <summary>
-        ///     Delete a media (photo or video)
+        ///     Delete a media (photo, video or album)
         /// </summary>
         /// <param name="mediaId">The media ID</param>
         /// <param name="mediaType">The type of the media</param>

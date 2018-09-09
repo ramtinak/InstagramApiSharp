@@ -496,7 +496,7 @@ namespace InstagramApiSharp.Helpers
         public static Uri GetDeleteMediaUri(string mediaId, InstaMediaType mediaType)
         {
             if (!Uri.TryCreate(BaseInstagramUri,
-                string.Format(InstaApiConstants.DELETE_MEDIA, mediaId, (int) mediaType), out var instaUri))
+                string.Format(InstaApiConstants.DELETE_MEDIA, mediaId,  mediaType.ToString().ToUpper()), out var instaUri))
                 throw new Exception("Can't create URI for deleting media");
             return instaUri;
         }
@@ -1174,6 +1174,12 @@ namespace InstagramApiSharp.Helpers
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FBSEARCH_TOPSEARCH_FALT, out var instaUri))
                 throw new Exception("Cant create URI for user search by location");
+            return instaUri;
+        }
+        public static Uri GetLikeDirectMessageUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_REACTION, out var instaUri))
+                throw new Exception("Cant create URI for like direct message");
             return instaUri;
         }
     }

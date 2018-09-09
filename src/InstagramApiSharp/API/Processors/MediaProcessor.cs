@@ -66,7 +66,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         /// <summary>
-        ///     Delete a media (photo or video)
+        ///     Delete a media (photo, video or album)
         /// </summary>
         /// <param name="mediaId">The media ID</param>
         /// <param name="mediaType">The type of the media</param>
@@ -124,7 +124,7 @@ namespace InstagramApiSharp.API.Processors
                     {"caption_text", caption}
                 };
 
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Get, editMediaUri, _deviceInfo, data);
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, editMediaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == HttpStatusCode.OK)
