@@ -46,7 +46,7 @@ Some of features:
 | Get recent activity | Like media | Unlike media | Follow user |
 | Unfollow user | Set account private | Set account public | Send comment |
 | Delete comment | Upload photo | Upload video | Get followings list |
-| Delete media (photo/video) | Upload story (photo/video) | Change password | Send direct message |
+| Delete media (photo/video/album) | Upload story (photo/video/album) | Change password | Send direct message |
 | Search location | Get location feed | Collection create/get by id/get all/add items | Support challenge required |
 | Upload album (videos/photo) | Highlight support | Share story | Send direct photo/video/ stories/profile/ link/location |
 ## Usage
@@ -96,40 +96,6 @@ v1.0.5.3
 
 v1.0.5.2
 - [Add] More properties for InstaStoryLocation (Positioning properties)
-
-v1.0.5.1
-- [Add] StoryCTA Added. This used for stories with links in see more.
-
-v1.0.5.0
-- [Add] link support for direct threads
-- [Add] Send link as direct message
-- [Add] location support for direct threads
-- [Add] Send location as direct message
-- [Bugfix] for SendDirectProfileAsync
-
-v1.0.4.9
-- [Bugfix] for highlight
-
-v1.0.4.8
-- [Add] Highlight support (create, delete, get) to StoryProcessor
-
-v1.0.4.7
-- [Add] Placeholder support for direct threads
-- [Add] some other info to InstaUserInfo [thx to [@GormYa](https://github.com/GormYa)]
-- [Move] InstagramApiSharp to src folder
-- [Move] examples projects to samples folder
-
-v1.0.4.6
-- [Add] ActionLog support for direct threads
-- [Add] Profile support for direct threads
-- [Add] Send profile as direct message 
-- [Add] UpdateDirectThreadAsync to Messaging
-- [Add] mute/unmute thread to Messaging
-- [Add] DeclineDirectPendingRequestsAsync to Messaging
-- [Bugfix] for GetDirectInboxThreadAsync
-- [Bugfix] for ApproveDirectPendingRequestAsync
-- [Bugfix] for DeclineAllDirectPendingRequestsAsync
-- [Bugfix] for DicoverProccesor.GetSuggestedSearchesAsync
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
