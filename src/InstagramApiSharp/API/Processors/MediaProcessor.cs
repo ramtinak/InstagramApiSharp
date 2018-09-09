@@ -261,15 +261,11 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetMediaConfigureUri();
-                var androidVersion =
-                    AndroidVersion.FromString(_deviceInfo.FirmwareFingerprint.Split('/')[2].Split(':')[1]);
-                if (androidVersion == null)
-                    return Result.Fail("Unsupported android version", (InstaMedia)null);
                 var data = new JObject
                 {
-                    { "caption", caption},
+                    {"caption", caption},
                     {"upload_id", uploadId},
-                    { "source_type", "3"},
+                    {"source_type", "3"},
                     {"camera_position", "unknown"},
                     {
                         "extra", new JObject
@@ -289,10 +285,10 @@ namespace InstagramApiSharp.API.Processors
                             }
                         }
                     },
-                    { "poster_frame_index", 0},
-                    { "audio_muted", false},
-                    { "filter_type", "0"},
-                    { "video_result", "deprecated"},
+                    {"poster_frame_index", 0},
+                    {"audio_muted", false},
+                    {"filter_type", "0"},
+                    {"video_result", "deprecated"},
                     {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.UserName}
@@ -560,8 +556,8 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetMediaConfigureUri();
-                var androidVersion =
-                    AndroidVersion.FromString(_deviceInfo.FirmwareFingerprint.Split('/')[2].Split(':')[1]);
+                var androidVersion = _deviceInfo.AndroidVersion;
+                    //AndroidVersion.FromString(_deviceInfo.FirmwareFingerprint.Split('/')[2].Split(':')[1]);
                 if (androidVersion == null)
                     return Result.Fail("Unsupported android version", (InstaMedia) null);
                 var data = new JObject
@@ -664,8 +660,8 @@ namespace InstagramApiSharp.API.Processors
                             "device", JsonConvert.SerializeObject(new JObject{
                                 {"manufacturer", _deviceInfo.HardwareManufacturer},
                                 {"model", _deviceInfo.DeviceModelIdentifier},
-                                {"android_release", "7.0"},
-                                {"android_version", 24}
+                                {"android_release", _deviceInfo.AndroidVersion.VersionNumber},
+                                {"android_version", _deviceInfo.AndroidVersion.APILevel}
                             })
                         },
                         {"length", id.Value.Length},
@@ -688,8 +684,8 @@ namespace InstagramApiSharp.API.Processors
                         {
                             {"manufacturer", _deviceInfo.HardwareManufacturer},
                             {"model", _deviceInfo.DeviceModelIdentifier},
-                            {"android_release", "7.0"},
-                            {"android_version", 24}
+                            {"android_release", _deviceInfo.AndroidVersion.VersionNumber},
+                            {"android_version", _deviceInfo.AndroidVersion.APILevel}
                         }
                     },
                     {"children_metadata", childrenArray},

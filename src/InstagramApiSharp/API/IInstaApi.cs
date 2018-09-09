@@ -6,7 +6,7 @@ using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
-
+using InstagramApiSharp.Classes.Android.DeviceInfo;
 namespace InstagramApiSharp.API
 {
     public interface IInstaApi
@@ -69,6 +69,13 @@ namespace InstagramApiSharp.API
 
         #endregion
 
+        /// <summary>
+        ///     Gets current device
+        /// </summary>
+        AndroidDevice GetCurrentDevice();
+        /// <summary>
+        ///     Gets logged in user
+        /// </summary>
         UserSessionData GetLoggedUser();
         /// <summary>
         ///     Get current state info as Memory stream

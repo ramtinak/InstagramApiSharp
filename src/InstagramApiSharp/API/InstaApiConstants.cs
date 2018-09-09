@@ -14,10 +14,16 @@ namespace InstagramApiSharp.API
         public const string HEADER_X_INSTAGRAM_AJAX = "X-Instagram-AJAX";
         public const string HEADER_X_REQUESTED_WITH = "X-Requested-With";
         public const string HEADER_XML_HTTP_REQUEST = "XMLHttpRequest";
-
+        /// <summary>
+        ///     For 35.0.0.20.96 verison
+        /// </summary>
+        public const string IG_APP_API_VERSION = "95414346";
+        /// <summary>
+        ///     InstagramApiSharp is based on 35.0.0.20.96 version
+        /// </summary>
+        public const string IG_APP_VERSION = "35.0.0.20.96";
         public const string USER_AGENT =
-            "Instagram 35.0.0.20.96 Android (24/7.0; {0}; {1}; {2}; {3}; {4}; {5}; en_US; 95414346)";
-        ////"Instagram 35.0.0.20.96 Android (24/7.0; 480dpi; 1080x1812; HUAWEI/HONOR; PRA-LA1; HWPRA-H; hi6250; en_US; 95414346)";
+            "Instagram {6} Android ({7}/{8}; {0}; {1}; {2}; {3}; {4}; {5}; en_US; {9})";
         public const string USER_AGENT_DEFAULT =
         "Instagram 35.0.0.20.96 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 95414346)";
         ////"Instagram 12.0.0.7.91 Android (23/6.0.1; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_NZ)";

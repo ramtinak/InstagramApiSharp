@@ -20,16 +20,17 @@
 Support:
 - Create new account with phone number and email.
 - Login with Facebook.
-- Edit Profile.
-- Change/Remove profile picture.
-- Upload album (videos and photos).
+- Edit Profile, change/remove profile picture.
+- Upload album (videos and photos)
+- Upload story (video/photo) to self story and direct thread
+- Send video/photo/story/profile/link/location to direct
 - Live functions.
 - Discover functions.
 - Search peoples.
-- Can pass challenge required.
+- Can pass challenge required and two factor authentication.
 - and many more.
 
-See examples and wiki pages to find out how can you use this library.</Description>
+See example projects and wiki pages to find out how this library works.</Description>
     <Authors>Ramtin Jokar, Ali NGame1</Authors>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>

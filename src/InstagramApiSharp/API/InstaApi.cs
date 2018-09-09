@@ -112,7 +112,16 @@ namespace InstagramApiSharp.API
             _deviceInfo = deviceInfo;
             _httpRequestProcessor = httpRequestProcessor;
         }
-
+        /// <summary>
+        ///     Gets current device
+        /// </summary>
+        public AndroidDevice GetCurrentDevice()
+        {
+            return _deviceInfo;
+        }
+        /// <summary>
+        ///     Gets logged in user
+        /// </summary>
         public UserSessionData GetLoggedUser()
         {
             return _user;
