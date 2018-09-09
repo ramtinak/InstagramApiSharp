@@ -21,6 +21,10 @@ using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.Net.Sockets;
 using System.Net;
+using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Converters.Json;
+using InstagramApiSharp.Converters;
+using InstagramApiSharp.Classes.ResponseWrappers;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -257,32 +261,38 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="commentText">Comment text</param>
         /// <returns></returns>
-        public async Task<IResult<BroadcastSendCommentResponse>> CommentAsync(string broadcastId, string commentText)
+        public async Task<IResult<InstaComment>> CommentAsync(string broadcastId, string commentText)
         {
             try
             {
                 var instaUri = UriCreator.GetBroadcastPostCommentUri(broadcastId);
+                var breadcrumb = CryptoHelper.GetCommentBreadCrumbEncoded(commentText);
                 var data = new JObject
                 {
                     {"user_breadcrumb", commentText},
-                    {"idempotence_token", _deviceInfo.DeviceGuid.ToString()},
+                    {"idempotence_token",  Guid.NewGuid().ToString()},
                     {"comment_text", commentText},
-                    {"live_or_vod", 1},
-                    {"offset_to_video_start", 0}
+                    {"live_or_vod", "1"},
+                    {"offset_to_video_start"," 0"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                 };
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastSendCommentResponse)null);
-                var obj = JsonConvert.DeserializeObject<BroadcastSendCommentResponse>(json);
-                return Result.Success(obj);
+                    return Result.UnExpectedResponse<InstaComment>(response, json);
+                var commentResponse = JsonConvert.DeserializeObject<InstaCommentResponse>(json,
+                     new InstaCommentDataConverter());
+                var converter = ConvertersFabric.Instance.GetCommentConverter(commentResponse);
+                return Result.Success(converter.Convert());
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<BroadcastSendCommentResponse>(exception);
+                return Result.Fail<InstaComment>(exception);
             }
         }
         /// <summary>
@@ -365,12 +375,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetBroadcastCommentUri(broadcastId);
-                Dictionary<string, int> data = new Dictionary<string, int>
-                {
-                    { "last_comment_ts", lastCommentTs },
-                    { "num_comments_requested", commentsRequested }
-                };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Get, instaUri, _deviceInfo, data);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -490,11 +495,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetLiveLikeCountUri(broadcastId);
-                Dictionary<string, int> data = new Dictionary<string, int>
-                {
-                    { "like_ts", likeTs }
-                };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Get, instaUri, _deviceInfo, data);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -570,6 +571,30 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaDefault>(exception);
             }
         }
+        /// <summary>
+        ///     Get join requests to current live broadcast
+        /// </summary>
+        /// <param name="broadcastId">Broadcast</param>
+        public async Task<IResult<BroadcastFinalViewerListResponse>> GetJoinRequestsAsync(string broadcastId)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetBroadcastJoinRequestsUri(broadcastId);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastFinalViewerListResponse)null);
+                var obj = JsonConvert.DeserializeObject<BroadcastFinalViewerListResponse>(json);
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<BroadcastFinalViewerListResponse>(exception);
+            }
+        }
+
 
         // create, start, end broadcast
         /// <summary>
@@ -685,12 +710,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetBroadcastPostLiveLikesUri(broadcastId, startingOffset, encodingTag);
-                Dictionary<string, object> data = new Dictionary<string, object>
-                {
-                    { "starting_offset", startingOffset },
-                    { "encoding_tag", encodingTag }
-                };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Get, instaUri, _deviceInfo, data);
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)

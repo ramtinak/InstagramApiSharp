@@ -300,8 +300,8 @@ namespace InstagramApiSharp.API.Processors
                             "device", new JObject{
                                 {"manufacturer", _deviceInfo.HardwareManufacturer},
                                 {"model", _deviceInfo.DeviceModelIdentifier},
-                                {"android_release", "7.0"},
-                                {"android_version", 24}
+                                {"android_release", _deviceInfo.AndroidVersion.VersionNumber},
+                                {"android_version", _deviceInfo.AndroidVersion.APILevel}
                             }
                         },
                         {"length", 0},
@@ -347,6 +347,238 @@ namespace InstagramApiSharp.API.Processors
                     instaUri = UriCreator.GetVideoStoryConfigureUri(true);
                     var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                  
+                    request.Headers.Add("retry_context", retryContext);
+                    var response = await _httpRequestProcessor.SendAsync(request);
+                    var json = await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var mediaResponse = JsonConvert.DeserializeObject<InstaDefault>(json);
+
+                        return mediaResponse.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+                    }
+                    return Result.UnExpectedResponse<bool>(response, json);
+                }
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+
+
+        public async Task<IResult<bool>> SendPhotoAsync(bool isDirectPhoto, bool isDisappearingPhoto, string caption, InstaViewMode viewMode, InstaStoryType storyType, string recipients, string threadId, InstaImage image)
+        {
+            try
+            {
+                var uploadId = ApiRequestMessage.GenerateRandomUploadId();
+                var photoHashCode = Path.GetFileName(image.Uri).GetHashCode();
+                var photoEntityName = string.Format("{0}_0_{1}", uploadId, photoHashCode);
+                var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
+                var waterfallId = Guid.NewGuid().ToString();
+                var retryContext = GetRetryContext();
+                HttpRequestMessage request = null;
+                HttpResponseMessage response = null;
+                string json = null;
+                var photoUploadParamsObj = new JObject
+                {
+                    {"retry_context", retryContext},
+                    {"media_type", "1"},
+                    {"upload_id", uploadId},
+                    {"image_compression", "{\"lib_name\":\"moz\",\"lib_version\":\"3.1.m\",\"quality\":\"95\"}"},
+                };
+                //if (isDirectPhoto)
+                //{
+                //}
+                //else
+                {
+                    var uploadParamsObj = new JObject
+                    {
+                        {"_csrftoken", _user.CsrfToken},
+                        {"_uid", _user.LoggedInUser.Pk},
+                        {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                        {"media_info", new JObject
+                            {
+                                    {"capture_mode", "normal"},
+                                    {"media_type", 1},
+                                    {"caption", caption ?? string.Empty},
+                                    {"mentions", new JArray()},
+                                    {"hashtags", new JArray()},
+                                    {"locations", new JArray()},
+                                    {"stickers", new JArray()},
+                            }
+                        }
+                    };
+                    request = HttpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetStoryMediaInfoUploadUri(), _deviceInfo, uploadParamsObj);
+                    response = await _httpRequestProcessor.SendAsync(request);
+                    json = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine(json);
+
+                    
+                    var uploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
+                    request = HttpHelper.GetDefaultRequest(HttpMethod.Get, photoUri, _deviceInfo);
+                    request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
+                    request.Headers.Add("X-Instagram-Rupload-Params", uploadParams);
+                    response = await _httpRequestProcessor.SendAsync(request);
+                    json = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine(json);
+
+
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        return Result.UnExpectedResponse<bool>(response, json);
+                }
+                
+                //if (!isDirectPhoto)
+                {
+                    var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
+                    byte[] imageBytes;
+                    if (image.ImageBytes == null)
+                        imageBytes = File.ReadAllBytes(image.Uri);
+                    else
+                        imageBytes = image.ImageBytes;
+                    var imageContent = new ByteArrayContent(imageBytes);
+                    imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                    imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                    request = HttpHelper.GetDefaultRequest(HttpMethod.Post, photoUri, _deviceInfo);
+                    request.Content = imageContent;
+                    request.Headers.Add("X-Entity-Type", "image/jpeg");
+                    request.Headers.Add("Offset", "0");
+                    request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
+                    request.Headers.Add("X-Entity-Name", photoEntityName);
+                    request.Headers.Add("X-Entity-Length", imageBytes.Length.ToString());
+                    request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
+                    response = await _httpRequestProcessor.SendAsync(request);
+                    json = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine(json);
+
+                }
+                return await ConfigurePhoto(uploadId, isDirectPhoto, isDisappearingPhoto, caption, viewMode, storyType, recipients, threadId);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+
+        }
+
+        private async Task<IResult<bool>> ConfigurePhoto(string uploadId, bool isDirectPhoto, bool isDisappearingPhoto, string caption, InstaViewMode viewMode, InstaStoryType storyType, string recipients, string threadId)
+        {
+            try
+            {
+
+                Uri instaUri = UriCreator.GetDirectConfigVideoUri();
+                var retryContext = GetRetryContext();
+                var clientContext = Guid.NewGuid().ToString();
+
+                //if (isDirectVideo)
+                //{
+           
+                //}
+                //else
+                {
+
+                    //{
+                    //	"recipient_users": "[]",
+                    //	"view_mode": "permanent",
+                    //	"thread_ids": "[\"340282366841710300949128132202173515958\"]",
+                    //	"timezone_offset": "16200",
+                    //	"_csrftoken": "gRMgctLzzC9MfJBQTz3MzxeYMtBxCY4s",
+                    //	"client_shared_at": "1536323374",
+                    //	"configure_mode": "2",
+                    //	"source_type": "3",
+                    //	"_uid": "7405924766",
+                    //	"_uuid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
+                    //	"capture_type": "normal",
+                    //	"mas_opt_in": "NOT_PROMPTED",
+                    //	"upload_id": "469885239145487",
+                    //	"client_timestamp": "1536323328",
+                    //	"device": {
+                    //		"manufacturer": "HUAWEI",
+                    //		"model": "PRA-LA1",
+                    //		"android_version": 24,
+                    //		"android_release": "7.0"
+                    //	},
+                    //	"edits": {
+                    //		"crop_original_size": [2240.0, 3968.0],
+                    //		"crop_center": [0.0, -2.5201612E-4],
+                    //		"crop_zoom": 1.0595461
+                    //	},
+                    //	"extra": {
+                    //		"source_width": 2232,
+                    //		"source_height": 3745
+                    //	}
+                    //}
+                    Random rnd = new Random();
+                    var data = new JObject
+                    {
+                        {"timezone_offset", "16200"},
+                        {"_csrftoken", _user.CsrfToken},
+                        {"client_shared_at", (long.Parse(ApiRequestMessage.GenerateUploadId())- rnd.Next(25,55)).ToString()},
+                        {"story_media_creation_date", (long.Parse(ApiRequestMessage.GenerateUploadId())- rnd.Next(50,70)).ToString()},
+                        {"media_folder", "Camera"},
+                        {"source_type", "3"},
+                        {"video_result", ""},
+                        {"_uid", _user.LoggedInUser.Pk.ToString()},
+                        {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                        {"caption", caption ?? string.Empty},
+                        {"date_time_original", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fffZ")},
+                        {"capture_type", "normal"},
+                        {"mas_opt_in", "NOT_PROMPTED"},
+                        {"upload_id", uploadId},
+                        {"client_timestamp", ApiRequestMessage.GenerateUploadId()},
+                        {
+                            "device", new JObject{
+                                {"manufacturer", _deviceInfo.HardwareManufacturer},
+                                {"model", _deviceInfo.DeviceModelIdentifier},
+                                {"android_release", _deviceInfo.AndroidVersion.VersionNumber},
+                                {"android_version", _deviceInfo.AndroidVersion.APILevel}
+                            }
+                        },
+                        {
+                            "extra", new JObject
+                            {
+                                {"source_width", 0},
+                                {"source_height", 0}
+                            }
+                        }
+                    };
+                    if (isDisappearingPhoto)
+                    {
+                        data.Add("view_mode", viewMode.ToString().ToLower());
+                        data.Add("configure_mode", "2");
+                        data.Add("recipient_users", "[]");
+                        data.Add("thread_ids", $"[{threadId}]");
+                    }
+                    else
+                    {
+                        switch (storyType)
+                        {
+                            case InstaStoryType.SelfStory:
+                            default:
+                                data.Add("configure_mode", "1");
+                                break;
+                            case InstaStoryType.Direct:
+                                data.Add("configure_mode", "2");
+                                data.Add("view_mode", "replayable");
+                                data.Add("recipient_users", "[]");
+                                data.Add("thread_ids", $"[{threadId}]");
+                                break;
+                            case InstaStoryType.Both:
+                                data.Add("configure_mode", "3");
+                                data.Add("view_mode", "replayable");
+                                data.Add("recipient_users", "[]");
+                                data.Add("thread_ids", $"[{threadId}]");
+                                break;
+                        }
+                    }
+                    instaUri = UriCreator.GetVideoStoryConfigureUri(false);
+                    var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+
                     request.Headers.Add("retry_context", retryContext);
                     var response = await _httpRequestProcessor.SendAsync(request);
                     var json = await response.Content.ReadAsStringAsync();

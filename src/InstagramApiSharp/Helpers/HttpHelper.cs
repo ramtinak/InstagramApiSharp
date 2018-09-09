@@ -12,7 +12,7 @@ namespace InstagramApiSharp.Helpers
     {
         public static HttpRequestMessage GetDefaultRequest(HttpMethod method, Uri uri, AndroidDevice deviceInfo)
         {
-            var userAgent = GenerateUserAgent(deviceInfo);
+            var userAgent = deviceInfo.GenerateUserAgent();
             var request = new HttpRequestMessage(method, uri);
             request.Headers.Add(InstaApiConstants.HEADER_ACCEPT_LANGUAGE, InstaApiConstants.ACCEPT_LANGUAGE);
             request.Headers.Add(InstaApiConstants.HEADER_IG_CAPABILITIES, InstaApiConstants.IG_CAPABILITIES);
@@ -110,7 +110,6 @@ namespace InstagramApiSharp.Helpers
                 data.ToString(Formatting.None));
             var payload = data.ToString(Formatting.None);
             var signature = $"{hash}.{payload}";
-            //System.Diagnostics.Debug.WriteLine(signature);
             var fields = new Dictionary<string, string>
             {
                 {InstaApiConstants.HEADER_IG_SIGNATURE, signature},
@@ -124,12 +123,5 @@ namespace InstagramApiSharp.Helpers
             return request;
         }
 
-        private static string GenerateUserAgent(AndroidDevice deviceInfo)
-        {
-            if (deviceInfo == null)
-                return InstaApiConstants.USER_AGENT_DEFAULT;
-            return string.Format(InstaApiConstants.USER_AGENT, deviceInfo.Dpi, deviceInfo.Resolution, deviceInfo.HardwareManufacturer,
-                deviceInfo.DeviceModelIdentifier, deviceInfo.FirmwareBrand, deviceInfo.HardwareModel);
-        }
     }
 }

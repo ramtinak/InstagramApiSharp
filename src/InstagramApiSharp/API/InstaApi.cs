@@ -112,7 +112,16 @@ namespace InstagramApiSharp.API
             _deviceInfo = deviceInfo;
             _httpRequestProcessor = httpRequestProcessor;
         }
-
+        /// <summary>
+        ///     Gets current device
+        /// </summary>
+        public AndroidDevice GetCurrentDevice()
+        {
+            return _deviceInfo;
+        }
+        /// <summary>
+        ///     Gets logged in user
+        /// </summary>
         public UserSessionData GetLoggedUser()
         {
             return _user;
@@ -764,21 +773,19 @@ namespace InstagramApiSharp.API
 
 
         /// <summary>
-        /// send Recovery Username
+        ///     Send recovery code by Username
         /// </summary>
         /// <param name="username">Username</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaRecovery>> SendRecoveryByUsername(string username)
+        public async Task<IResult<InstaRecovery>> SendRecoveryByUsernameAsync(string username)
         {
-            return await SendRecoveryByEmail(username);
+            return await SendRecoveryByEmailAsync(username);
         }
 
         /// <summary>
-        /// send Recovery Email
+        ///     Send recovery code by Email
         /// </summary>
         /// <param name="email">Email Address</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaRecovery>> SendRecoveryByEmail(string email)
+        public async Task<IResult<InstaRecovery>> SendRecoveryByEmailAsync(string email)
         {
             try
             {
@@ -825,11 +832,10 @@ namespace InstagramApiSharp.API
         }
 
         /// <summary>
-        /// send Recovery Phone
+        ///     Send recovery code by Phone
         /// </summary>
         /// <param name="phone">Phone Number</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaRecovery>> SendRecoveryByPhone(string phone)
+        public async Task<IResult<InstaRecovery>> SendRecoveryByPhoneAsync(string phone)
         {
             try
             {
@@ -848,8 +854,8 @@ namespace InstagramApiSharp.API
 
                 var postData = new JObject
                 {
-                    {"query",  phone },
-                    {"_csrftoken",  _user.CsrfToken },
+                    {"query",  phone},
+                    {"_csrftoken",  _user.CsrfToken},
                 };
 
                 var instaUri = UriCreator.GetAccountRecoverPhoneUri();

@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.5.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.0.5.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -69,6 +69,19 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.5.5
+- [Bugfix] for random device (user agent). now supports 20 device
+- [Add] Android version to device (randomly from android v4.0 to v9.0)
+- [Add] GetCurrentDevice to InstaApi
+- [Add] Biography with entities property to InstaUserInfo
+- [Add] Search users by location to LocationProcessor
+- [Bugfix] For some functions in LiveProcessor
+- [Add] GetJoinRequestsAsync to LiveProcessor
+- [Add] Send disappering photo to direct thread
+
+v1.0.5.4
+- [Add] Resend two factor login code by username, email and phone (thx to [@Lorymi](https://github.com/Lorymi) )
+
 v1.0.5.3
 - [Update] GetRequestForEditProfileAsync in AccountProcessor
 - [Update] EditProfileAsync parameters, please check updated [samples/Examples/Samples/Account.cs](https://github.com/ramtinak/InstagramApiSharp/blob/master/samples/Examples/Samples/Account.cs#L71)
@@ -97,7 +110,7 @@ v1.0.4.8
 
 v1.0.4.7
 - [Add] Placeholder support for direct threads
-- [Add] some other info to InstaUserInfo [thx to @GormYa]
+- [Add] some other info to InstaUserInfo [thx to [@GormYa](https://github.com/GormYa)]
 - [Move] InstagramApiSharp to src folder
 - [Move] examples projects to samples folder
 

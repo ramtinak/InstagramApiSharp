@@ -112,6 +112,7 @@ namespace InstagramApiSharp.API.Processors
                     new KeyValuePair<string, object>(InstaApiConstants.HEADER_RANK_TOKEN, _user.RankToken));
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaUser>(response, json);
                 var userInfo = JsonConvert.DeserializeObject<InstaSearchUserResponse>(json);

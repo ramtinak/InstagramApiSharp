@@ -14,10 +14,16 @@ namespace InstagramApiSharp.API
         public const string HEADER_X_INSTAGRAM_AJAX = "X-Instagram-AJAX";
         public const string HEADER_X_REQUESTED_WITH = "X-Requested-With";
         public const string HEADER_XML_HTTP_REQUEST = "XMLHttpRequest";
-
+        /// <summary>
+        ///     For 35.0.0.20.96 verison
+        /// </summary>
+        public const string IG_APP_API_VERSION = "95414346";
+        /// <summary>
+        ///     InstagramApiSharp is based on 35.0.0.20.96 version
+        /// </summary>
+        public const string IG_APP_VERSION = "35.0.0.20.96";
         public const string USER_AGENT =
-            "Instagram 35.0.0.20.96 Android (24/7.0; {0}; {1}; {2}; {3}; {4}; {5}; en_US; 95414346)";
-        ////"Instagram 35.0.0.20.96 Android (24/7.0; 480dpi; 1080x1812; HUAWEI/HONOR; PRA-LA1; HWPRA-H; hi6250; en_US; 95414346)";
+            "Instagram {6} Android ({7}/{8}; {0}; {1}; {2}; {3}; {4}; {5}; en_US; {9})";
         public const string USER_AGENT_DEFAULT =
         "Instagram 35.0.0.20.96 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 95414346)";
         ////"Instagram 12.0.0.7.91 Android (23/6.0.1; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_NZ)";
@@ -191,7 +197,8 @@ namespace InstagramApiSharp.API
         public const string FBSEARCH_RECENT_SEARCHES = API_SUFFIX + "/fbsearch/recent_searches/";
         public const string FBSEARCH_CLEAR_SEARCH_HISTORY = API_SUFFIX + "/fbsearch/clear_search_history";
         public const string FBSEARCH_SUGGESTED_SEARCHS = API_SUFFIX + "/fbsearch/suggested_searches/?type={0}";
-
+        public const string FBSEARCH_PROFILE_SEARCH = API_SUFFIX + "/fbsearch/profile_link_search/?q={0}&count={1}";
+        public const string FBSEARCH_TOPSEARCH_FALT = API_SUFFIX + "/fbsearch/topsearch_flat/";
 
         public const string DISCOVER_AYML = API_SUFFIX + "/discover/ayml/";
         public const string DISCOVER_TOP_LIVE = API_SUFFIX + "/discover/top_live/";
@@ -226,6 +233,7 @@ namespace InstagramApiSharp.API
         public const string LIVE_CREATE = API_SUFFIX + "/live/create/";
         public const string LIVE_START = API_SUFFIX + "/live/{0}/start/";
         public const string LIVE_END = API_SUFFIX + "/live/{0}/end_broadcast/";
+        public const string LIVE_GET_JOIN_REQUESTS = API_SUFFIX + "/live/{0}/get_join_requests/";
 
         public const string STORY_MEDIA_INFO_UPLOAD = API_SUFFIX + "/media/mas_opt_in_info/";
         public const string STORY_UPLOAD_VIDEO = INSTAGRAM_URL + "/rupload_igvideo/{0}_0_{1}";

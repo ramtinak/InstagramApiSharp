@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace InstagramApiSharp.Classes.Android.DeviceInfo
 {
+    [Serializable]
     public class AndroidVersion
     {
         public static readonly List<AndroidVersion> AndroidVersions = new List<AndroidVersion>
@@ -66,13 +67,31 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             {
                 Codename = "Nougat",
                 VersionNumber = "7.0",
-                APILevel = "23"
+                APILevel = "24"
             },
             new AndroidVersion
             {
                 Codename = "Nougat",
                 VersionNumber = "7.1",
                 APILevel = "25"
+            },
+            new AndroidVersion
+            {
+                Codename = "Oreo",
+                VersionNumber = "8.0",
+                APILevel = "26"
+            },
+            new AndroidVersion
+            {
+                Codename = "Oreo",
+                VersionNumber = "8.1",
+                APILevel = "27"
+            },
+            new AndroidVersion
+            {
+                Codename = "Pie",
+                VersionNumber = "9.0",
+                APILevel = "27"
             }
         };
 
@@ -95,6 +114,25 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                         .VersionNumber)) < 0)
                     return androidVersion;
             return null;
+        }
+
+        static Random Rnd = new Random();
+        private static AndroidVersion LastAndriodVersion;
+        public static AndroidVersion GetRandomAndriodVersion()
+        {
+            TryLabel:
+            var randomDeviceIndex = Rnd.Next(0, AndroidVersions.Count);
+            var androidVersion = AndroidVersions.ElementAt(randomDeviceIndex);
+            if (LastAndriodVersion != null)
+                if (androidVersion.APILevel == LastAndriodVersion.APILevel)
+                    goto TryLabel;
+            return LastAndriodVersion = androidVersion;
+        }
+        public static AndroidVersion GetAndroidVersion(string apiLevel)
+        {
+            if (string.IsNullOrEmpty(apiLevel)) return null;
+
+            return AndroidVersions.FirstOrDefault(api => api.APILevel == apiLevel);
         }
     }
 }

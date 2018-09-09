@@ -356,8 +356,8 @@ namespace InstagramApiSharp.API.Processors
                         "device", new JObject{
                             {"manufacturer", _deviceInfo.HardwareManufacturer},
                             {"model", _deviceInfo.DeviceModelIdentifier},
-                            {"android_release", "7.0"},
-                            {"android_version", 24}
+                            {"android_release", _deviceInfo.AndroidVersion.VersionNumber},
+                            {"android_version", _deviceInfo.AndroidVersion.APILevel}
                         }
                     },
                     {"length", 0},

@@ -7,6 +7,7 @@
  * IRANIAN DEVELOPERS
  */
 using InstagramApiSharp.Classes;
+using InstagramApiSharp.Classes.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -69,7 +70,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="commentText">Comment text</param>
         /// <returns></returns>
-        Task<IResult<BroadcastSendCommentResponse>> CommentAsync(string broadcastId, string commentText);
+        Task<IResult<InstaComment>> CommentAsync(string broadcastId, string commentText);
         /// <summary>
         /// Pin comment from broadcast.
         /// </summary>
@@ -130,6 +131,13 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
         Task<IResult<InstaDefault>> DeletePostLiveAsync(string broadcastId);
+        /// <summary>
+        ///     Get join requests to current live broadcast
+        /// </summary>
+        /// <param name="broadcastId">Broadcast</param>
+        Task<IResult<BroadcastFinalViewerListResponse>> GetJoinRequestsAsync(string broadcastId);
+
+
 
         // broadcast create, start, end
         /// <summary>

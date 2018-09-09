@@ -10,15 +10,24 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         {
             AndroidDevices.LG_OPTIMUS_G,
             AndroidDevices.NEXUS7_GEN2,
+            AndroidDevices.NEXUS7_GEN1,
             AndroidDevices.HTC10,
             AndroidDevices.GALAXY6,
             AndroidDevices.GALAXY5,
             AndroidDevices.LG_OPTIMUS_F6,
+            AndroidDevices.NEXUS_5X,
+            AndroidDevices.NEXUS_5,
+            AndroidDevices.GALAXY_S7_EDGE,
+            AndroidDevices.GALAXY_S4,
+            AndroidDevices.NEXUS_6P,
             AndroidDevices.GALAXY_TAB,
+            AndroidDevices.GALAXY_TAB3,
             AndroidDevices.SAMSUNG_NOTE3,
             AndroidDevices.NEXUS4_CHROMA,
             AndroidDevices.SONY_Z3_COMPACT,
-            AndroidDevices.XPERIA_Z5
+            AndroidDevices.XPERIA_Z5,
+            AndroidDevices.HONOR_8LITE,
+            AndroidDevices.XIAOMI_MI_4W
         };
 
         public static Dictionary<string, AndroidDevice> AndroidAndroidDeviceSets = new Dictionary<string, AndroidDevice>
@@ -431,7 +440,6 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     Dpi = "640dpi"
                 }
             },
-
             {
                 AndroidDevices.SAMSUNG_NOTE3,
                 new AndroidDevice
@@ -479,15 +487,61 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
+            },
+            {
+                AndroidDevices.HONOR_8LITE,
+                new AndroidDevice
+                {
+                    AndroidBoardName = "HONOR",
+                    DeviceBrand = "HUAWEI",
+                    HardwareManufacturer = "HUAWEI",
+                    DeviceModel = "PRA-LA1",
+                    DeviceModelIdentifier = "PRA-LA1",
+                    FirmwareBrand = "HWPRA-H",
+                    HardwareModel = "hi6250",
+                    DeviceGuid = new Guid("be897499-c663-492e-a125-f4c8d3785ebf"),
+                    PhoneGuid = new Guid("7b72321f-dd9a-425e-b3ee-d4aaf476ec52"),
+                    DeviceId = ApiRequestMessage.GenerateDeviceIdFromGuid(new Guid("be897499-c663-492e-a125-f4c8d3785ebf")),
+                    Resolution = "1080x1812",
+                    Dpi = "480dpi",
+                    FirmwareFingerprint = "HUAWEI/HONOR/PRA-LA1:7.0/hi6250/95414346:user/release-keys",
+                    AndroidBootloader = "4.23",
+                    DeviceModelBoot = "qcom",
+                    FirmwareTags = "release-keys",
+                    FirmwareType = "user"
+                }
+            },
+            {
+                AndroidDevices.XIAOMI_MI_4W,
+                new AndroidDevice
+                {
+                    AndroidBoardName = "MI",
+                    DeviceBrand = "Xiaomi",
+                    HardwareManufacturer = "Xiaomi",
+                    DeviceModel = "PRA-LA1",
+                    DeviceModelIdentifier = "4W",
+                    FirmwareBrand = "4W",
+                    HardwareModel = "cancro",
+                    DeviceGuid = new Guid("726ba564-e9e4-40da-985e-eaf2790cf35c"),
+                    PhoneGuid = new Guid("40167788-a864-4f86-8b38-c1ac4fa543a5"),
+                    DeviceId = ApiRequestMessage.GenerateDeviceIdFromGuid(new Guid("726ba564-e9e4-40da-985e-eaf2790cf35c")),
+                    Resolution = "1080x1920",
+                    Dpi = "480dpi",
+                    FirmwareFingerprint = "Xiaomi/MI/4W:7.1/cancro/95414346:user/release-keys",
+                    AndroidBootloader = "4.23",
+                    DeviceModelBoot = "qcom",
+                    FirmwareTags = "release-keys",
+                    FirmwareType = "user"
+                }
             }
         };
 
+        static Random rnd = new Random();
         private static AndroidDevice LastDevice;
         public static AndroidDevice GetRandomAndroidDevice()
         {
             TryLabel:
-            var random = new Random(/*DateTime.Now.Millisecond*/);
-            var randomDeviceIndex = random.Next(0, DevicesNames.Count);
+            var randomDeviceIndex = rnd.Next(0, DevicesNames.Count);
             var device = AndroidAndroidDeviceSets.ElementAt(randomDeviceIndex).Value;
             if (LastDevice != null)
                 if (device.DeviceId == LastDevice.DeviceId)

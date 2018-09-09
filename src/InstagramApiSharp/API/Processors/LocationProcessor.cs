@@ -133,5 +133,48 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaLocationFeed>(exception);
             }
         }
+        /// <summary>
+        ///     Search user by location
+        /// </summary>
+        /// <param name="latitude">Latitude</param>
+        /// <param name="longitude">Longitude</param>
+        /// <param name="desireUsername">Desire username</param>
+        /// <param name="count">Maximum user count</param>
+        public async Task<IResult<InstaUserSearchLocation>> SearchUserByLocationAsync(double latitude, double longitude, string desireUsername, int count = 50)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var uri = UriCreator.GetUserSearchByLocationUri();
+                if (count <= 0)
+                    count = 30;
+                var fields = new Dictionary<string, string>
+                {
+                    {"timezone_offset", "16200"},
+                    {"lat", latitude.ToString(CultureInfo.InvariantCulture)},
+                    {"lng", longitude.ToString(CultureInfo.InvariantCulture)},
+                    {"count", count.ToString()},
+                    {"query", desireUsername},
+                    {"context", "blended"},
+                    {"rank_token", _user.RankToken}
+                };
+                if (!Uri.TryCreate(uri, fields.AsQueryString(), out var newuri))
+                    return Result.Fail<InstaUserSearchLocation>("Unable to create uri for user search by location");
+
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, newuri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUserSearchLocation>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaUserSearchLocation>(json);
+                return obj.Status.ToLower() =="ok"? Result.Success(obj) : Result.UnExpectedResponse<InstaUserSearchLocation>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUserSearchLocation>(exception);
+            }
+        }
+
     }
 }

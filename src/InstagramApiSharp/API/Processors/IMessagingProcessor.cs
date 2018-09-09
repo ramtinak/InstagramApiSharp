@@ -159,5 +159,13 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         Task<IResult<bool>> SendDirectDisappearingVideoAsync(InstaVideoUpload video,
        InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
+        /// <summary>
+        ///     Send disappearing photo to direct thread (video will remove after user saw it)
+        /// </summary>
+        /// <param name="image">Image to upload</param>
+        /// <param name="viewMode">View mode</param>
+        /// <param name="threadIds">Thread ids</param>
+        Task<IResult<bool>> SendDirectDisappearingPhotoAsync(InstaImage image,
+     InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
     }
 }

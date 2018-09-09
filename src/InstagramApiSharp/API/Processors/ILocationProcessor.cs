@@ -25,5 +25,13 @@ namespace InstagramApiSharp.API.Processors
         ///     Location feed
         /// </returns>
         Task<IResult<InstaLocationFeed>> GetLocationFeedAsync(long locationId, PaginationParameters paginationParameters);
+        /// <summary>
+        ///     Search user by location
+        /// </summary>
+        /// <param name="latitude">Latitude</param>
+        /// <param name="longitude">Longitude</param>
+        /// <param name="desireUsername">Desire username</param>
+        /// <param name="count">Maximum user count</param>
+        Task<IResult<InstaUserSearchLocation>> SearchUserByLocationAsync(double latitude, double longitude, string desireUsername, int count = 50);
     }
 }
