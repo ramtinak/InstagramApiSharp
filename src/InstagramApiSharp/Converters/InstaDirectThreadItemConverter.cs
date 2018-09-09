@@ -159,9 +159,6 @@ namespace InstagramApiSharp.Converters
                     if (!string.IsNullOrEmpty(SourceObject.LocationMedia.City))
                         threadItem.LocationMedia.City = SourceObject.LocationMedia.City;
 
-                    if (!string.IsNullOrEmpty(SourceObject.LocationMedia.City))
-                        threadItem.LocationMedia.City = SourceObject.LocationMedia.City;
-
                     if (!string.IsNullOrEmpty(SourceObject.LocationMedia.ExternalId))
                         threadItem.LocationMedia.ExternalId = SourceObject.LocationMedia.ExternalId;
 

@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.5.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.0.5.6 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -69,6 +69,11 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.0.5.6
+- [Update] UploadPhotoAsync to newer api
+- [Add] Set location while uploading photo/video/album in MediaProcessor
+- [Move] SetDevice to IInstaApi
+
 v1.0.5.5
 - [Bugfix] for random device (user agent). now supports 20 device
 - [Add] Android version to device (randomly from android v4.0 to v9.0)

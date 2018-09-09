@@ -112,6 +112,22 @@ namespace InstagramApiSharp.API
             _deviceInfo = deviceInfo;
             _httpRequestProcessor = httpRequestProcessor;
         }
+
+        bool IsCustomDeviceSet = false;
+        /// <summary>
+        ///     Set custom android device.
+        ///     <para>Note 1: If you want to use this method, you should call it before you calling <seealso cref="IInstaApi.LoadStateDataFromStream(Stream)"/> or <seealso cref="IInstaApi.LoadStateDataFromString(string)"/></para>
+        ///     <para>Note 2: this is optional, if you didn't set this, InstagramApiSharp will choose random device.</para>
+        /// </summary>
+        /// <param name="androidDevice">Android device</param>
+        public void SetDevice(AndroidDevice device)
+        {
+            IsCustomDeviceSet = false;
+            if (device == null)
+                return;
+            _deviceInfo = device;
+            IsCustomDeviceSet = true;
+        }
         /// <summary>
         ///     Gets current device
         /// </summary>
@@ -1382,7 +1398,8 @@ namespace InstagramApiSharp.API
         public void LoadStateDataFromStream(Stream stream)
         {
             var data = SerializationHelper.DeserializeFromStream<StateData>(stream);
-            _deviceInfo = data.DeviceInfo;
+            if (!IsCustomDeviceSet)
+                _deviceInfo = data.DeviceInfo;
             _user = data.UserSession;
             // _httpRequestProcessor.HttpHandler.CookieContainer = data.Cookies;
 
@@ -1410,7 +1427,8 @@ namespace InstagramApiSharp.API
         public void LoadStateDataFromString(string str)
         {
             var data = SerializationHelper.DeserializeFromString<StateData>(str);
-            _deviceInfo = data.DeviceInfo;
+            if (!IsCustomDeviceSet)
+                _deviceInfo = data.DeviceInfo;
             _user = data.UserSession;
             // _httpRequestProcessor.HttpHandler.CookieContainer = data.Cookies;
 

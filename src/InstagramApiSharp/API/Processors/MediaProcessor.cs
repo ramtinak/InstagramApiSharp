@@ -12,6 +12,7 @@ using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Converters;
 using InstagramApiSharp.Converters.Json;
+using InstagramApiSharp.Enums;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
@@ -142,7 +143,8 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="video">Video and thumbnail to upload</param>
         /// <param name="caption">Caption</param>
-        public async Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption)
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        public async Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption, InstaLocationShort location = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -205,7 +207,7 @@ namespace InstagramApiSharp.API.Processors
 
                 await UploadVideoThumbnailAsync(video.VideoThumbnail, uploadId);
 
-                return await ConfigureVideoAsync(video.Video, uploadId, caption);
+                return await ConfigureVideoAsync(video.Video, uploadId, caption, location);
             }
             catch (Exception exception)
             {
@@ -256,29 +258,29 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaMedia>> ConfigureVideoAsync(InstaVideo video, string uploadId, string caption)
+        private async Task<IResult<InstaMedia>> ConfigureVideoAsync(InstaVideo video, string uploadId, string caption, InstaLocationShort location)
         {
             try
             {
                 var instaUri = UriCreator.GetMediaConfigureUri();
                 var data = new JObject
                 {
-                    {"caption", caption},
+                    {"caption", caption ?? string.Empty},
                     {"upload_id", uploadId},
                     {"source_type", "3"},
                     {"camera_position", "unknown"},
                     {
                         "extra", new JObject
                         {
-                            {"source_width", video.Width},
-                            {"source_height", video.Height}
+                            {"source_width", 0},
+                            {"source_height", 0}
                         }
                     },
                     {
                         "clips", new JArray{
                             new JObject
                             {
-                                {"length", 10.0},
+                                {"length", 0},
                                 {"creation_date", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fff")},
                                 {"source_type", "3"},
                                 {"camera_position", "back"}
@@ -288,12 +290,16 @@ namespace InstagramApiSharp.API.Processors
                     {"poster_frame_index", 0},
                     {"audio_muted", false},
                     {"filter_type", "0"},
-                    {"video_result", "deprecated"},
+                    {"video_result", ""},
                     {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.UserName}
                 };
-
+                if (location != null)
+                {
+                    data.Add("location", location.GetJson());
+                    data.Add("date_time_digitalized", DateTime.Now.ToString("yyyy:dd:MM+h:mm:ss"));
+                }
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -357,45 +363,11 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
-        public async Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption)
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        public async Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption, InstaLocationShort location = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetUploadPhotoUri();
-                var uploadId = ApiRequestMessage.GenerateUploadId();
-                var requestContent = new MultipartFormDataContent(uploadId)
-                {
-                    {new StringContent(uploadId), "\"upload_id\""},
-                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
-                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
-                    {
-                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
-                        "\"image_compression\""
-                    }
-                };
-                byte[] fileBytes;
-                if (image.ImageBytes == null)
-                    fileBytes = File.ReadAllBytes(image.Uri);
-                else
-                    fileBytes = image.ImageBytes;
-                var imageContent = new ByteArrayContent(fileBytes);
-                imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
-                imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                requestContent.Add(imageContent, "photo", $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = requestContent;
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.IsSuccessStatusCode)
-                    return await ConfigurePhotoAsync(image, uploadId, caption);
-                return Result.UnExpectedResponse<InstaMedia>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaMedia>(exception);
-            }
+            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(image, caption, location);
         }
         /// <summary>
         ///     Upload album (videos and photos)
@@ -403,7 +375,8 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="images">Array of photos to upload</param>
         /// <param name="videos">Array of videos to upload</param>
         /// <param name="caption">Caption</param>
-        public async Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideoUpload[] videos, string caption)
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        public async Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideoUpload[] videos, string caption, InstaLocationShort location = null)
         {
             try
             {
@@ -535,7 +508,7 @@ namespace InstagramApiSharp.API.Processors
                         var imgResp = JsonConvert.DeserializeObject<ImageThumbnailResponse>(json);
                         videosDic.Add(uploadId, video.Video);
                     }
-                var config = await ConfigureAlbumAsync(imagesUploadIds, videosDic, caption);
+                var config = await ConfigureAlbumAsync(imagesUploadIds, videosDic, caption, location);
                 return config;
             }
             catch (Exception exception)
@@ -544,74 +517,8 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
-        /// <summary>
-        ///     Configure photo
-        /// </summary>
-        /// <param name="image">Photo to configure</param>
-        /// <param name="uploadId">Upload id</param>
-        /// <param name="caption">Caption</param>
-        /// <returns></returns>
-        private async Task<IResult<InstaMedia>> ConfigurePhotoAsync(InstaImage image, string uploadId, string caption)
-        {
-            try
-            {
-                var instaUri = UriCreator.GetMediaConfigureUri();
-                var androidVersion = _deviceInfo.AndroidVersion;
-                    //AndroidVersion.FromString(_deviceInfo.FirmwareFingerprint.Split('/')[2].Split(':')[1]);
-                if (androidVersion == null)
-                    return Result.Fail("Unsupported android version", (InstaMedia) null);
-                var data = new JObject
-                {
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"media_folder", "Camera"},
-                    {"source_type", "4"},
-                    {"caption", caption},
-                    {"upload_id", uploadId},
-                    {
-                        "device", new JObject
-                        {
-                            {"manufacturer", _deviceInfo.HardwareManufacturer},
-                            {"model", _deviceInfo.HardwareModel},
-                            {"android_version", androidVersion.VersionNumber},
-                            {"android_release", androidVersion.APILevel}
-                        }
-                    },
-                    {
-                        "edits", new JObject
-                        {
-                            {"crop_original_size", new JArray {image.Width, image.Height}},
-                            {"crop_center", new JArray {0.0, -0.0}},
-                            {"crop_zoom", 1}
-                        }
-                    },
-                    {
-                        "extra", new JObject
-                        {
-                            {"source_width", image.Width},
-                            {"source_height", image.Height}
-                        }
-                    }
-                };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                    return Result.UnExpectedResponse<InstaMedia>(response, json);
-                var mediaResponse =
-                    JsonConvert.DeserializeObject<InstaMediaItemResponse>(json, new InstaMediaDataConverter());
-                var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
-                return Result.Success(converter.Convert());
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaMedia>(exception);
-            }
-        }
 
-        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] imagesUploadId, Dictionary<string,InstaVideo> videos, string caption)
+        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(string[] imagesUploadId, Dictionary<string,InstaVideo> videos, string caption, InstaLocationShort location)
         {
             try
             {
@@ -690,7 +597,11 @@ namespace InstagramApiSharp.API.Processors
                     },
                     {"children_metadata", childrenArray},
                 };
-
+                if (location != null)
+                {
+                    data.Add("location", location.GetJson());
+                    data.Add("date_time_digitalized", DateTime.Now.ToString("yyyy:dd:MM+h:mm:ss"));
+                }
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();

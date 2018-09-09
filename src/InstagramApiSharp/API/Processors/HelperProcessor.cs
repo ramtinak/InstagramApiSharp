@@ -601,6 +601,154 @@ namespace InstagramApiSharp.API.Processors
         }
 
 
+        public async Task<IResult<InstaMedia>> SendMediaPhotoAsync(InstaImage image, string caption, InstaLocationShort location)
+        {
+            try
+            {
+                var uploadId = ApiRequestMessage.GenerateRandomUploadId();
+                var photoHashCode = Path.GetFileName(image.Uri).GetHashCode();
+                var photoEntityName = string.Format("{0}_0_{1}", uploadId, photoHashCode);
+                var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
+                var waterfallId = Guid.NewGuid().ToString();
+                var retryContext = GetRetryContext();
+                HttpRequestMessage request = null;
+                HttpResponseMessage response = null;
+                string json = null;
+                var photoUploadParamsObj = new JObject
+                {
+                    {"retry_context", retryContext},
+                    {"media_type", "1"},
+                    {"upload_id", uploadId},
+                    {"image_compression", "{\"lib_name\":\"moz\",\"lib_version\":\"3.1.m\",\"quality\":\"95\"}"},
+                };
+                var uploadParamsObj = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"media_info", new JObject
+                        {
+                                {"capture_mode", "normal"},
+                                {"media_type", 1},
+                                {"caption", caption ?? string.Empty},
+                                {"mentions", new JArray()},
+                                {"hashtags", new JArray()},
+                                {"locations", new JArray()},
+                                {"stickers", new JArray()},
+                        }
+                    }
+                };
+                request = HttpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetStoryMediaInfoUploadUri(), _deviceInfo, uploadParamsObj);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+
+
+                var uploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
+                request = HttpHelper.GetDefaultRequest(HttpMethod.Get, photoUri, _deviceInfo);
+                request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
+                request.Headers.Add("X-Instagram-Rupload-Params", uploadParams);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaMedia>(response, json);
+
+
+                var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
+                byte[] imageBytes;
+                if (image.ImageBytes == null)
+                    imageBytes = File.ReadAllBytes(image.Uri);
+                else
+                    imageBytes = image.ImageBytes;
+                var imageContent = new ByteArrayContent(imageBytes);
+                imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                request = HttpHelper.GetDefaultRequest(HttpMethod.Post, photoUri, _deviceInfo);
+                request.Content = imageContent;
+                request.Headers.Add("X-Entity-Type", "image/jpeg");
+                request.Headers.Add("Offset", "0");
+                request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
+                request.Headers.Add("X-Entity-Name", photoEntityName);
+                request.Headers.Add("X-Entity-Length", imageBytes.Length.ToString());
+                request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                    return await ConfigureMediaPhotoAsync(uploadId, caption, location);
+                return Result.UnExpectedResponse<InstaMedia>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMedia>(exception);
+            }
+
+        }
+        private async Task<IResult<InstaMedia>> ConfigureMediaPhotoAsync(string uploadId, string caption, InstaLocationShort location)
+        {
+            try
+            {
+
+                Uri instaUri = UriCreator.GetMediaConfigureUri();
+                var retryContext = GetRetryContext();
+                var clientContext = Guid.NewGuid().ToString();
+                Random rnd = new Random();
+                var data = new JObject
+                {
+                    {"timezone_offset", "16200"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"client_shared_at", (long.Parse(ApiRequestMessage.GenerateUploadId()) - rnd.Next(25,55)).ToString()},
+                    {"story_media_creation_date", (long.Parse(ApiRequestMessage.GenerateUploadId()) - rnd.Next(50,70)).ToString()},
+                    {"media_folder", "Camera"},
+                    {"source_type", "3"},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"caption", caption ?? string.Empty},
+                    {"date_time_original", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fffZ")},
+                    {"capture_type", "normal"},
+                    {"mas_opt_in", "NOT_PROMPTED"},
+                    {"upload_id", uploadId},
+                    {"client_timestamp", ApiRequestMessage.GenerateUploadId()},
+                    {
+                        "device", new JObject{
+                            {"manufacturer", _deviceInfo.HardwareManufacturer},
+                            {"model", _deviceInfo.DeviceModelIdentifier},
+                            {"android_release", _deviceInfo.AndroidVersion.VersionNumber},
+                            {"android_version", _deviceInfo.AndroidVersion.APILevel}
+                        }
+                    },
+                    {
+                        "extra", new JObject
+                        {
+                            {"source_width", 0},
+                            {"source_height", 0}
+                        }
+                    }
+                };
+                if (location != null)
+                {
+                    data.Add("location", location.GetJson());
+                    data.Add("date_time_digitalized", DateTime.Now.ToString("yyyy:dd:MM+h:mm:ss"));
+                }
+
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Add("retry_context", retryContext);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                var mediaResponse =
+                     JsonConvert.DeserializeObject<InstaMediaItemResponse>(json, new InstaMediaDataConverter());
+                var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMedia>(exception);
+            }
+        }
 
         private string GetRetryContext()
         {

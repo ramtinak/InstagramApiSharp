@@ -4,6 +4,9 @@ using System.Text;
 using System.Linq;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.API;
+using InstagramApiSharp.Classes.Models;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace InstagramApiSharp
 {
@@ -35,5 +38,24 @@ namespace InstagramApiSharp
         {
             return "\"" + content + "\"";
         }
+
+        public static string GetJson(this InstaLocationShort location)
+        {
+            if (location == null)
+                return null;
+
+            return new JObject
+                            {
+                                {"name", location.Address ?? string.Empty},
+                                {"address", location.ExternalId ?? string.Empty},
+                                {"lat", location.Lat},
+                                {"lng", location.Lng},
+                                {"external_source", location.ExternalSource ?? "facebook_places"},
+                                {"facebook_places_id", location.ExternalId},
+                            }.ToString(Formatting.None);
+        }
+
+
+
     }
 }

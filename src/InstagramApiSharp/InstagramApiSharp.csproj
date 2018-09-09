@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.5.5</Version>
-    <AssemblyVersion>1.0.5.5</AssemblyVersion>
-    <FileVersion>1.0.5.5</FileVersion>
+    <Version>1.0.5.6</Version>
+    <AssemblyVersion>1.0.5.6</AssemblyVersion>
+    <FileVersion>1.0.5.6</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -35,7 +35,12 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.5.5
+    <PackageReleaseNotes>v1.0.5.6
+- [Update] UploadPhotoAsync to newer api
+- [Add] Set location while uploading photo/video/album in MediaProcessor
+- [Move] SetDevice to IInstaApi
+
+v1.0.5.5
 - [Bugfix] for random device (user agent). now supports 20 device
 - [Add] Android version to device (randomly from android v4.0 to v9.0)
 - [Add] GetCurrentDevice to InstaApi

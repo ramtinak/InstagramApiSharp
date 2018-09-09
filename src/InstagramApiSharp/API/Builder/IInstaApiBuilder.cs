@@ -2,7 +2,7 @@ using System.Net.Http;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Logger;
-
+using System;
 namespace InstagramApiSharp.API.Builder
 {
     public interface IInstaApiBuilder
@@ -56,7 +56,7 @@ namespace InstagramApiSharp.API.Builder
         /// <param name="delay">Timespan delay</param>
         /// <returns>API Builder</returns>
         IInstaApiBuilder SetRequestDelay(IRequestDelay delay);
-
+        [Obsolete("Deprecated. Please use IInstaApi.SetDevice instead.")]
         /// <summary>
         ///     Set custom android device.
         ///     <para>Note: this is optional, if you didn't set this, InstagramApiSharp will choose random device.</para>

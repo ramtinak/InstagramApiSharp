@@ -32,20 +32,23 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="video">Video and thumbnail to upload</param>
         /// <param name="caption">Caption</param>
-        Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption);
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption, InstaLocationShort location = null);
         /// <summary>
         ///     Upload photo
         /// </summary>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
-        Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption);
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption, InstaLocationShort location = null);
         /// <summary>
         ///     Upload album (videos and photos)
         /// </summary>
         /// <param name="images">Array of photos to upload</param>
         /// <param name="videos">Array of videos to upload</param>
         /// <param name="caption">Caption</param>
-        Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideoUpload[] videos, string caption);
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideoUpload[] videos, string caption, InstaLocationShort location = null);
         /// <summary>
         ///     Get users (short) who liked certain media. Normaly it return around 1000 last users.
         /// </summary>
@@ -75,5 +78,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="mediaId">media ID</param>
         /// <returns>Share link as Uri</returns>
         Task<IResult<Uri>> GetShareLinkFromMediaIdAsync(string mediaId);
+
+        //Task<IResult<bool>> UploadPhotoAsyncV2(InstaImage image, string caption, InstaLocationShort location = null);
     }
 }

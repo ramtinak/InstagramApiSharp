@@ -69,6 +69,14 @@ namespace InstagramApiSharp.API
 
         #endregion
 
+
+        /// <summary>
+        ///     Set custom android device.
+        ///     <para>Note 1: If you want to use this method, you should call it before you calling <seealso cref="IInstaApi.LoadStateDataFromStream(Stream)"/> or <seealso cref="IInstaApi.LoadStateDataFromString(string)"/></para>
+        ///     <para>Note 2: this is optional, if you didn't set this, <seealso cref="InstagramApiSharp"/> will choose random device.</para>
+        /// </summary>
+        /// <param name="androidDevice">Android device</param>
+        void SetDevice(AndroidDevice device);
         /// <summary>
         ///     Gets current device
         /// </summary>
