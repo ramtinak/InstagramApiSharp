@@ -69,7 +69,7 @@ Task<IResult<object>>
 ```
 
 ## Version changes
-v1.0.5.6
+v1.0.5.6 
 - [Update] UploadPhotoAsync to newer api
 - [Add] Set location while uploading photo/video/album in MediaProcessor
 - [Move] SetDevice to IInstaApi

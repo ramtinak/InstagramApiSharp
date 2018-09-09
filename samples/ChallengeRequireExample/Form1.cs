@@ -284,30 +284,6 @@ namespace ChallengeRequireExample
             if (!InstaApi.IsUserAuthenticated)
                 MessageBox.Show("Login first.");
 
-            OpenFileDialog dialog = new OpenFileDialog() { Multiselect = true };
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                string i = "", v = "";
-                foreach(var item in dialog.FileNames)
-                {
-                    var ext = Path.GetExtension(item).Replace(".", "").ToLower();
-                    if (ext == "mp4") v = item;
-                    else i = item;
-                }
-                var loca = await InstaApi.LocationProcessor.SearchLocationAsync(29.61949, 51.65415, "kazerun");
-                var first = loca.Value.FirstOrDefault();
-                var img = new InstaImage { Uri = i };
-                var vid = new InstaVideo { Uri = v };
-                var upload = new InstaVideoUpload
-                {
-                    Video = vid,
-                    VideoThumbnail = img
-                };
-                var post = await InstaApi.MediaProcessor.UploadVideoAsync(upload, "testesh mikonim", first);
-                //var post = await InstaApi.MediaProcessor.UploadPhotoAsync(img, "teeeeeeeeeeeeeest"/*, first*/);
-            }
-
-            return;
             var x = await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
             if (x.Succeeded)
