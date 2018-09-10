@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452;uap10.0</TargetFrameworks>
-    <VersionPrefix>1.0.5.3</VersionPrefix>
+    <VersionPrefix>1.0.6.0</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.5.6</Version>
-    <AssemblyVersion>1.0.5.6</AssemblyVersion>
-    <FileVersion>1.0.5.6</FileVersion>
+    <Version>1.0.6.0</Version>
+    <AssemblyVersion>1.0.6.0</AssemblyVersion>
+    <FileVersion>1.0.6.0</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -27,6 +27,7 @@ Support:
 - Live functions.
 - Discover functions.
 - Search peoples.
+- IGTV functions.
 - Can pass challenge required and two factor authentication.
 - and many more.
 
@@ -35,7 +36,12 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.5.6
+    <PackageReleaseNotes>v1.0.6.0
+- [Add] Instagram TV support in IInstaApi.TVProcessor
+- [Update] Add Timeout and NeedsChallenge to ResultInfo (thx to @Lorymi)
+- [Add] like direct message in thread
+
+v1.0.5.6
 - [Update] UploadPhotoAsync to newer api
 - [Add] Set location while uploading photo/video/album in MediaProcessor
 - [Move] SetDevice to IInstaApi
@@ -118,7 +124,7 @@ v1.0.4.0
 - Build option for uwp(NET CORE)</PackageReleaseNotes>
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo</PackageTags>
+    <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo, igtv</PackageTags>
     <PackageIconUrl>http://s9.picofile.com/file/8336165642/insta5.png</PackageIconUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>

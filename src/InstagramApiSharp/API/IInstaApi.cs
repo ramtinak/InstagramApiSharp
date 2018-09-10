@@ -66,6 +66,10 @@ namespace InstagramApiSharp.API
         ///     User api functions.
         /// </summary>
         IUserProcessor UserProcessor { get; }
+        /// <summary>
+        ///     Instagram TV api functions
+        /// </summary>
+        ITVProcessor TVProcessor { get; }
 
         #endregion
 

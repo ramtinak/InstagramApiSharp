@@ -7,7 +7,7 @@ using InstagramApiSharp.API;
 using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-
+using InstagramApiSharp.Enums;
 namespace InstagramApiSharp
 {
     internal static class ExtensionHelper
@@ -55,7 +55,42 @@ namespace InstagramApiSharp
                             }.ToString(Formatting.None);
         }
 
+        public static InstaTVChannelType GetChannelType(this string type)
+        {
+            if(string.IsNullOrEmpty(type))
+                return InstaTVChannelType.User;
+            switch (type.ToLower())
+            {
+                case "chrono_following":
+                    return InstaTVChannelType.ChronoFollowing;
+                case "continue_watching":
+                    return InstaTVChannelType.ContinueWatching;
+                case "for_you":
+                    return InstaTVChannelType.ForYou;
+                case "popular":
+                    return InstaTVChannelType.Popular;
+                default:
+                case "user":
+                    return InstaTVChannelType.User;
+            }
+        }
+        public static string GetRealChannelType(this InstaTVChannelType type)
+        {
+            switch(type)
+            {
+                case InstaTVChannelType.ChronoFollowing:
+                    return "chrono_following";
+                case InstaTVChannelType.ContinueWatching:
+                    return "continue_watching";
+                case InstaTVChannelType.Popular:
+                    return "popular";
+                case InstaTVChannelType.User:
+                    return "user";
+                case InstaTVChannelType.ForYou:
+                default:
+                    return "for_you";
 
-
+            }
+        }
     }
 }

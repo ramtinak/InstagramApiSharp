@@ -103,6 +103,13 @@ namespace InstagramApiSharp.API
         ///     Helper processor for other processors
         /// </summary>
         internal HelperProcessor HelperProcessor => _helperProcessor;
+
+        ITVProcessor _tvProcessor;
+        /// <summary>
+        ///     Instagram TV api functions
+        /// </summary>
+        public ITVProcessor TVProcessor => _tvProcessor;
+
         public InstaApi(UserSessionData user, IInstaLogger logger, AndroidDevice deviceInfo,
             IHttpRequestProcessor httpRequestProcessor)
         {
@@ -1474,6 +1481,8 @@ namespace InstagramApiSharp.API
             _discoverProcessor = new DiscoverProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this);
             _accountProcessor = new AccountProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this);
             _helperProcessor = new HelperProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this);
+            _tvProcessor = new TVProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this);
+
 
         }
         private void ValidateUser()

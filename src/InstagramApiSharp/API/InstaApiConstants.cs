@@ -247,6 +247,12 @@ namespace InstagramApiSharp.API
 
         public const string FB_FACEBOOK_SIGNUP = API_SUFFIX + "/fb/facebook_signup/";
 
+
+        public const string IGTV_TV_GUIDE = API_SUFFIX + "/igtv/tv_guide/";
+        public const string IGTV_CHANNEL = API_SUFFIX + "/igtv/channel/";
+        public const string IGTV_SEARCH = API_SUFFIX + "/igtv/search/?query={0}";
+        public const string IGTV_SUGGESTED_SEARCHES = API_SUFFIX + "/igtv/suggested_searches/";
+
         public static readonly Uri BaseInstagramUri = new Uri(BASE_INSTAGRAM_API_URL);
     }
 }
