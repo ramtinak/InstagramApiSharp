@@ -43,6 +43,13 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="query">Channel or username</param>
         Task<IResult<InstaTVSearch>> SearchAsync(string query);
+        /// <summary>
+        ///     Upload video to Instagram TV
+        /// </summary>
+        /// <param name="video">Video to upload (aspect ratio is very important for thumbnail and video | range 0.5 - 1.0 | Width = 480, Height = 852)</param>
+        /// <param name="title">Title</param>
+        /// <param name="caption">Caption</param>
+        Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string title, string caption);
 
     }
 }

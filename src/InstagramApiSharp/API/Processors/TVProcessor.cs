@@ -162,6 +162,16 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaTVSearch>(exception.Message);
             }
         }
-
+        /// <summary>
+        ///     Upload video to Instagram TV
+        /// </summary>
+        /// <param name="video">Video to upload (aspect ratio is very important for thumbnail and video | range 0.5 - 1.0 | Width = 480, Height = 852)</param>
+        /// <param name="title">Title</param>
+        /// <param name="caption">Caption</param>
+        public async Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string title, string caption)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendIGTVVideoAsync(video, title, caption);
+        }
     }
 }

@@ -1206,5 +1206,11 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for igtv suggested searches");
             return instaUri;
         }
+        public static Uri GetMediaConfigureToIGTVUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.MEDIA_CONFIGURE_TO_IGTV, out var instaUri))
+                throw new Exception("Cant create URI for media configure igtv");
+            return instaUri;
+        }
     }
 }
