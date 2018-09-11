@@ -36,7 +36,19 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.0.6.0
+    <PackageReleaseNotes>1.1.0.0
+- [Add] UploadVideoAsync to TVProcessor
+- [Change] User agent to v61.0.0.19.86 for supporting new apis
+- [Add] Support FelixShare (igtv shared video) in direct threads
+- [Add] Some new properties to direct threads (new api)
+- [Add] Some new properties to InstaUserInfo
+- [Update] InstaCurrentUser.Gender to InstaGenderType
+- [Add] Some new properties to InstaMedia
+- [Add] Some new properties to InstaStory
+- [Update] InstaTagFeed class
+- [Bugfix] for GetMediaRepliesCommentsAsync in CommentProcessor
+
+v1.0.6.0
 - [Add] Instagram TV support in IInstaApi.TVProcessor
 - [Update] Add Timeout and NeedsChallenge to ResultInfo (thx to @Lorymi)
 - [Add] like direct message in thread

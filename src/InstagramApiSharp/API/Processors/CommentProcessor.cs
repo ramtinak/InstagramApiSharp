@@ -12,7 +12,7 @@ using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
-
+using System.Diagnostics;
 namespace InstagramApiSharp.API.Processors
 {
     internal class CommentProcessor : ICommentProcessor
@@ -49,6 +49,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                //Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaCommentList>(response, json);
                 var commentListResponse = JsonConvert.DeserializeObject<InstaCommentListResponse>(json);
@@ -88,39 +89,54 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="targetCommentId">Target comment id</param>
         /// <param name="paginationParameters">Maximum amount of pages to load and start id</param>
         /// <returns></returns>
-        public async Task<IResult<InstaInlineCommentListResponse>> GetMediaRepliesCommentsAsync(string mediaId, string targetCommentId,
-PaginationParameters paginationParameters)
+        public async Task<IResult<InstaInlineCommentList>> GetMediaRepliesCommentsAsync(string mediaId, string targetCommentId
+/*PaginationParameters paginationParameters*/)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommentId, paginationParameters.NextId);
+                var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommentId, ""/*paginationParameters.NextId*/);
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                //Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaInlineCommentListResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaInlineCommentList>(response, json);
                 var commentListResponse = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
-                var pagesLoaded = 1;
+                //var pagesLoaded = 1;
 
-                while (commentListResponse.HasMoreHeadChildComments
-                       && !string.IsNullOrEmpty(commentListResponse.NextId)
-                       && pagesLoaded < paginationParameters.MaximumPagesToLoad)
-                {
-                    var nextComments = await GetInlineCommentListWithMaxIdAsync(mediaId, targetCommentId, commentListResponse.NextId);
-                    if (!nextComments.Succeeded)
-                        return Result.Fail(nextComments.Info, commentListResponse);
-                    commentListResponse.NextId = nextComments.Value.NextId;
-                    commentListResponse.HasMoreHeadChildComments = nextComments.Value.HasMoreHeadChildComments;
-                    commentListResponse.ChildComments.AddRange(nextComments.Value.ChildComments);
-                    pagesLoaded++;
-                }
-                return Result.Success(commentListResponse);
+                var comments = ConvertersFabric.Instance.GetInlineCommentsConverter(commentListResponse).Convert();
+                //while (comments.HasMoreHeadloadComments
+                //       && !string.IsNullOrEmpty(comments.NextMinId)
+                //       && pagesLoaded < paginationParameters.MaximumPagesToLoad)
+                //{
+                //    var nextComments = await GetInlineCommentListWithMaxIdAsync(mediaId, targetCommentId, comments.NextMinId);
+                //    if (!nextComments.Succeeded)
+                //        return Result.Fail(nextComments.Info, comments);
+                //    comments.NextMinId = nextComments.Value.NextMinId;
+                //    comments.HasMoreHeadloadComments = nextComments.Value.HasMoreHeadloadComments;
+                //    comments.Comments.AddRange(nextComments.Value.Comments);
+                //    pagesLoaded++;
+                //}
+                return Result.Success(comments);
+                //while (commentListResponse.HasMoreHeadloadComments
+                //       && !string.IsNullOrEmpty(commentListResponse.NextMinId)
+                //       && pagesLoaded < paginationParameters.MaximumPagesToLoad)
+                //{
+                //    var nextComments = await GetInlineCommentListWithMaxIdAsync(mediaId, targetCommentId, commentListResponse.NextId);
+                //    if (!nextComments.Succeeded)
+                //        return Result.Fail(nextComments.Info, commentListResponse);
+                //    commentListResponse.NextMinId = nextComments.Value.NextId;
+                //    commentListResponse.HasMoreHeadloadComments = nextComments.Value.HasMoreHeadChildComments;
+                //    commentListResponse.Comments.AddRange(nextComments.Value.ChildComments);
+                //    pagesLoaded++;
+                //}
+                //return Result.Success(commentListResponse);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaInlineCommentListResponse>(exception);
+                return Result.Fail<InstaInlineCommentList>(exception);
             }
         }
         /// <summary>
@@ -250,17 +266,21 @@ PaginationParameters paginationParameters)
             return Result.Success(comments);
         }
 
-        private async Task<IResult<InstaInlineCommentListResponse>> GetInlineCommentListWithMaxIdAsync(string mediaId,
+        private async Task<IResult<InstaInlineCommentList>> GetInlineCommentListWithMaxIdAsync(string mediaId,
     string targetCommandId,
     string nextId)
         {
             var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommandId, nextId);
+            //Debug.WriteLine(commentsUri.ToString());
             var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
+            //Debug.WriteLine(json);
             if (response.StatusCode != HttpStatusCode.OK)
-                return Result.UnExpectedResponse<InstaInlineCommentListResponse>(response, json);
-            var comments = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
+                return Result.UnExpectedResponse<InstaInlineCommentList>(response, json);
+            var commentListResponse = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
+
+            var comments = ConvertersFabric.Instance.GetInlineCommentsConverter(commentListResponse).Convert();
             return Result.Success(comments);
         }
         /// <summary>
@@ -313,7 +333,7 @@ PaginationParameters paginationParameters)
                     HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                System.Diagnostics.Debug.WriteLine(json);
+                //System.Diagnostics.Debug.WriteLine(json);
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
@@ -338,7 +358,7 @@ PaginationParameters paginationParameters)
                     HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                System.Diagnostics.Debug.WriteLine(json);
+                //System.Diagnostics.Debug.WriteLine(json);
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);

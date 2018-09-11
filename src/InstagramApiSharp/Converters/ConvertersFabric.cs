@@ -277,5 +277,11 @@ InstaHighlightReelResponse response)
         {
             return new InstaUserInfoConverter {SourceObject = response};
         }
+
+        public IObjectConverter<InstaInlineCommentList, InstaInlineCommentListResponse> GetInlineCommentsConverter(
+    InstaInlineCommentListResponse response)
+        {
+            return new InstaInlineCommentListConverter { SourceObject = response };
+        }
     }
 }

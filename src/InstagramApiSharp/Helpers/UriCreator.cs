@@ -319,7 +319,8 @@ namespace InstagramApiSharp.Helpers
                 out var instaUri))
                 throw new Exception("Cant create URI for getting media comments");
             return !string.IsNullOrEmpty(nextId)
-                ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
+                ? new UriBuilder(instaUri) { Query = $"min_id={nextId}" }.Uri
+                //? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
                 : instaUri;
         }
 

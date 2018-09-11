@@ -81,6 +81,7 @@ v1.1.0.0
 - [Add] Some new properties to InstaMedia
 - [Add] Some new properties to InstaStory
 - [Update] InstaTagFeed class
+- [Bugfix] for GetMediaRepliesCommentsAsync in CommentProcessor
 
 v1.0.6.0
 - [Add] Instagram TV support in IInstaApi.TVProcessor

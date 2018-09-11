@@ -132,7 +132,7 @@ namespace InstagramApiSharp.API
         public const string GET_FOLLOWING_RECENT_ACTIVITY = API_SUFFIX + "/news/";
         public const string LIKE_MEDIA = API_SUFFIX + "/media/{0}/like/";
         public const string UNLIKE_MEDIA = API_SUFFIX + "/media/{0}/unlike/";
-        public const string MEDIA_COMMENTS = API_SUFFIX + "/media/{0}/comments/";
+        public const string MEDIA_COMMENTS = API_SUFFIX + "/media/{0}/comments/?can_support_threading=true";
         public const string MEDIA_LIKERS = API_SUFFIX + "/media/{0}/likers/";
         public const string FOLLOW_USER = API_SUFFIX + "/friendships/create/{0}/";
         public const string UNFOLLOW_USER = API_SUFFIX + "/friendships/destroy/{0}/";
