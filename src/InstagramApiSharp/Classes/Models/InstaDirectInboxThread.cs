@@ -35,5 +35,27 @@ namespace InstagramApiSharp.Classes.Models
 
 
         public List<InstaDirectInboxItem> Items { get; set; }
+
+
+
+        public bool IsPin { get; set; }
+
+        public bool ValuedRequest { get; set; }
+
+        public long PendingScore { get; set; }
+
+        public bool VCMuted { get; set; }
+
+        public bool IsGroup { get; set; }
+
+        public int ReshareSendCount { get; set; }
+
+        public int ReshareReceiveCount { get; set; }
+
+        public int ExpiringMediaSendCount { get; set; }
+
+        public int ExpiringMediaReceiveCount { get; set; }
+
+        public List<InstaLastSeen> LastSeenAt { get; set; }
     }
 }

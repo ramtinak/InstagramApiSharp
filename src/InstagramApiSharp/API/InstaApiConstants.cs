@@ -21,7 +21,7 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///     InstagramApiSharp is based on 35.0.0.20.96 version
         /// </summary>
-        public const string IG_APP_VERSION = "35.0.0.20.96";
+        public const string IG_APP_VERSION = "61.0.0.19.86"/*"35.0.0.20.96"*/;
         public const string USER_AGENT =
             "Instagram {6} Android ({7}/{8}; {0}; {1}; {2}; {3}; {4}; {5}; en_US; {9})";
         public const string USER_AGENT_DEFAULT =

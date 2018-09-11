@@ -31,7 +31,15 @@ namespace InstagramApiSharp.Converters
                 Width = SourceObject.Width,
                 HasAudio = SourceObject.HasAudio,
                 ViewCount = int.Parse(SourceObject.ViewCount.ToString(CultureInfo.InvariantCulture)),
-                IsCommentsDisabled = SourceObject.IsCommentsDisabled
+                IsCommentsDisabled = SourceObject.IsCommentsDisabled,
+                // new properties>
+                CanViewerReshare = SourceObject.CanViewerReshare,
+                CanViewerSave = SourceObject.CanViewerSave,
+                CanViewMorePreviewComments = SourceObject.CanViewMorePreviewComments,
+                CommentLikesEnabled = SourceObject.CommentLikesEnabled,
+                MaxNumVisiblePreviewComments = SourceObject.MaxNumVisiblePreviewComments,
+                HasMoreComments = SourceObject.HasMoreComments,
+                CommentThreadingEnabled = SourceObject.CommentThreadingEnabled
             };
             if (!string.IsNullOrEmpty(SourceObject.TakenAtUnixLike))
                 media.TakenAt = DateTimeHelper.UnixTimestampToDateTime(SourceObject.TakenAtUnixLike);

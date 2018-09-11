@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using InstagramApiSharp.Enums;
+using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models
 {
@@ -25,7 +26,7 @@ namespace InstagramApiSharp.Classes.Models
         public string PhoneNumber { get; set; }
         public int CountryCode { get; set; }
         public long NationalNumber { get; set; }
-        public int Gender { get; set; }
+        public InstaGenderType Gender { get; set; }
         public string Email { get; set; }
     }
 }

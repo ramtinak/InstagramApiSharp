@@ -1,7 +1,7 @@
 ﻿using System;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
-
+using InstagramApiSharp.Enums;
 namespace InstagramApiSharp.Converters
 {
     internal class InstaCurrentUserConverter : IObjectConverter<InstaCurrentUser, InstaCurrentUserResponse>
@@ -22,7 +22,7 @@ namespace InstagramApiSharp.Converters
                 Email = SourceObject.Email,
                 ExternalUrl = SourceObject.ExternalURL,
                 ShowConversionEditEntry = SourceObject.ShowConversationEditEntry,
-                Gender = SourceObject.Gender,
+                Gender = (InstaGenderType)SourceObject.Gender,
                 PhoneNumber = SourceObject.PhoneNumber
             };
 

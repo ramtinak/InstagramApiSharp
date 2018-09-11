@@ -62,5 +62,12 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("contact_phone_number")] public string ContactPhoneNumber { get; set; }
         [JsonProperty("public_phone_country_code")] public string PublicPhoneCountryCode { get; set; }
         [JsonProperty("biography_with_entities")] public InstaBiographyEntities BiographyWithEntities { get; set; }
+
+        [JsonProperty("is_eligible_for_school")] public bool IsEligibleForSchool { get; set; }
+
+        [JsonProperty("following_tag_count")] public int FollowingTagCount { get; set; }
+
+        [JsonProperty("is_favorite_for_stories")] public bool IsFavoriteForStories { get; set; }
+
     }
 }

@@ -37,7 +37,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public InstaRavenMediaActionSummary RavenExpiringMediaActionSummary { get; set; }
 
-        public InstaActionLog ActionLogMedia { get; set; }
+        public InstaActionLog ActionLog { get; set; }
 
         public InstaUserShort ProfileMedia { get; set; }
 
@@ -48,5 +48,8 @@ namespace InstagramApiSharp.Classes.Models
         public InstaWebLink LinkMedia { get; set; }
 
         public InstaLocation LocationMedia { get; set; }
+
+        public InstaMedia FelixShareMedia { get; set; }
+
     }
 }

@@ -118,7 +118,7 @@ namespace InstagramApiSharp.Converters
             }
             else if (threadItem.ItemType == InstaDirectThreadItemType.ActionLog && SourceObject.ActionLogMedia != null)
             {
-                threadItem.ActionLogMedia = new InstaActionLog
+                threadItem.ActionLog = new InstaActionLog
                 {
                     Description = SourceObject.ActionLogMedia.Description
                 };
@@ -178,6 +178,16 @@ namespace InstagramApiSharp.Converters
                 }
                 catch { }
             }
+            else if (threadItem.ItemType == InstaDirectThreadItemType.FelixShare && SourceObject.FelixShareMedia != null &&
+                SourceObject.FelixShareMedia.Video != null)
+            {
+                try
+                {
+                    threadItem.FelixShareMedia = ConvertersFabric.Instance.GetSingleMediaConverter(SourceObject.FelixShareMedia.Video).Convert();
+                }
+                catch { }
+            }
+
             return threadItem;
         }
     }

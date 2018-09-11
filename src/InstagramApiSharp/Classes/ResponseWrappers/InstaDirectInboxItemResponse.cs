@@ -50,5 +50,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("placeholder")] public InstaPlaceholderResponse Placeholder { get; set; }
 
         [JsonProperty("location")] public InstaLocationResponse LocationMedia { get; set; }
+
+        [JsonProperty("felix_share")] public InstaFelixShareResponse FelixShareMedia { get; set; }
+
     }
 }

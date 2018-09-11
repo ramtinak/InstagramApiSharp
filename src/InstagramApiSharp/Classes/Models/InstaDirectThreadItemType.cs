@@ -13,6 +13,10 @@
         StoryShare = 8,
         ActionLog = 9,
         Profile = 10,
-        Location = 11
+        Location = 11,
+        /// <summary>
+        /// Instagram TV video share type
+        /// </summary>
+        FelixShare
     }
 }

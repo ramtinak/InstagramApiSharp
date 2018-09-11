@@ -49,9 +49,25 @@ namespace InstagramApiSharp.Classes.Models
         public bool HasUnseenBestiesMedia { get; set; }
         public bool AutoExpandChaining { get; set; }
 
+        /// <summary>
+        ///     Only for current user
+        /// </summary>
         public string PublicPhoneNumber { get; set; }
+        /// <summary>
+        ///     Only for current user
+        /// </summary>
         public string ContactPhoneNumber { get; set; }
+        /// <summary>
+        ///     Only for current user
+        /// </summary>
         public string PublicPhoneCountryCode { get; set; }
+
         public InstaBiographyEntities BiographyWithEntities { get; set; }
+
+        public bool IsEligibleForSchool { get; set; }
+
+        public int FollowingTagCount { get; set; }
+
+        public bool IsFavoriteForStories { get; set; }
     }
 }

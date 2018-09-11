@@ -72,5 +72,26 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("location")] public InstaLocationResponse Location { get; set; }
 
         [JsonProperty("preview_comments")] public List<InstaCommentResponse> PreviewComments { get; set; }
+
+
+
+        [JsonProperty("comment_likes_enabled")] public bool CommentLikesEnabled { get; set; }
+
+        [JsonProperty("comment_threading_enabled")] public bool CommentThreadingEnabled { get; set; }
+
+        [JsonProperty("has_more_comments")] public bool HasMoreComments { get; set; }
+
+        [JsonProperty("max_num_visible_preview_comments")] public int MaxNumVisiblePreviewComments { get; set; }
+
+        [JsonProperty("can_view_more_preview_comments")] public bool CanViewMorePreviewComments { get; set; }
+
+        [JsonProperty("can_viewer_reshare")] public bool CanViewerReshare { get; set; }
+
+        [JsonProperty("caption_is_edited")] public bool CaptionIsEdited { get; set; }
+
+        [JsonProperty("can_viewer_save")] public bool CanViewerSave { get; set; }
+
+
+
     }
 }

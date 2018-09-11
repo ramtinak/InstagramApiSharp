@@ -38,5 +38,32 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("thread_type")] public InstaDirectThreadType ThreadType { get; set; }
 
         [JsonProperty("items")] public List<InstaDirectInboxItemResponse> Items { get; set; }
+
+
+
+
+        [JsonProperty("is_pin")] public bool IsPin { get; set; }
+
+        [JsonProperty("valued_request")] public bool ValuedRequest { get; set; }
+
+        [JsonProperty("pending_score")] public long? PendingScore { get; set; }
+
+        [JsonProperty("vc_muted")] public bool VCMuted { get; set; }
+
+        [JsonProperty("is_group")] public bool IsGroup { get; set; }
+
+        [JsonProperty("reshare_send_count")] public int ReshareSendCount { get; set; }
+
+        [JsonProperty("reshare_receive_count")] public int ReshareReceiveCount { get; set; }
+
+        [JsonProperty("expiring_media_send_count")] public int ExpiringMediaSendCount { get; set; }
+
+        [JsonProperty("expiring_media_receive_count")] public int ExpiringMediaReceiveCount { get; set; }
+
+
+        [JsonProperty("last_seen_at")] public object LastSeenAt { get; set; }
+
+
+
     }
 }

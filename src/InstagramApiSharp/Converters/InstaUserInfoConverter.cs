@@ -39,9 +39,12 @@ namespace InstagramApiSharp.Converters
                 IncludeDirectBlacklistStatus = SourceObject.User.IncludeDirectBlacklistStatus,
                 HasUnseenBestiesMedia = SourceObject.User.HasUnseenBestiesMedia,
                 AutoExpandChaining = SourceObject.User.AutoExpandChaining,
-                ContactPhoneNumber = SourceObject.User.ContactPhoneNumber,
-                PublicPhoneNumber = SourceObject.User.PublicPhoneNumber,
-                PublicPhoneCountryCode = SourceObject.User.PublicPhoneCountryCode
+                ContactPhoneNumber = SourceObject.User.ContactPhoneNumber ?? string.Empty,
+                PublicPhoneNumber = SourceObject.User.PublicPhoneNumber ?? string.Empty,
+                PublicPhoneCountryCode = SourceObject.User.PublicPhoneCountryCode ?? string.Empty,
+                IsEligibleForSchool = SourceObject.User.IsEligibleForSchool,
+                IsFavoriteForStories = SourceObject.User.IsFavoriteForStories,
+                FollowingTagCount = SourceObject.User.FollowingTagCount
             };
             if (SourceObject.User.BiographyWithEntities != null && SourceObject.User.BiographyWithEntities.Entities != null)
                 userInfo.BiographyWithEntities = SourceObject.User.BiographyWithEntities;

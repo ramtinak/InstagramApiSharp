@@ -63,5 +63,22 @@ namespace InstagramApiSharp.Classes.Models
 
         private bool _play = false;
         public bool Play { get { return _play; } set { _play = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Play")); } }
+
+
+        public bool CommentLikesEnabled { get; set; }
+        
+        public bool CommentThreadingEnabled { get; set; }
+
+        public bool HasMoreComments { get; set; }
+
+        public int MaxNumVisiblePreviewComments { get; set; }
+
+        public bool CanViewMorePreviewComments { get; set; }
+
+        public bool CanViewerReshare { get; set; }
+
+        public bool CaptionIsEdited { get; set; }
+
+        public bool CanViewerSave { get; set; }
     }
 }
