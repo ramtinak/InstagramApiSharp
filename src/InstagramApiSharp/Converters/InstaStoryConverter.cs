@@ -25,8 +25,27 @@ namespace InstagramApiSharp.Converters
                 SeenRankedPosition = SourceObject.SeenRankedPosition,
                 SocialContext = SourceObject.SocialContext,
                 SourceToken = SourceObject.SourceToken,
-                TakenAtUnix = SourceObject.TakenAtUnixLike
+                TakenAtUnix = SourceObject.TakenAtUnixLike,
+                CanReshare = SourceObject.CanReshare,
+                CanViewerSave = SourceObject.CanViewerSave,
+                CaptionIsEdited = SourceObject.CaptionIsEdited,
+                CaptionPosition = SourceObject.CaptionPosition,
+                ClientCacheKey = SourceObject.ClientCacheKey,
+                PhotoOfYou = SourceObject.PhotoOfYou,
+                IsReelMedia = SourceObject.IsReelMedia,
+                VideoDuration = SourceObject.VideoDuration ?? 0,
+                SupportsReelReactions = SourceObject.SupportsReelReactions,
+                HasSharedToFb = SourceObject.HasSharedToFb,
+                ImportedTakenAt = SourceObject.ImportedTakenAt.FromUnixTimeSeconds()
             };
+
+            if (SourceObject.StoryHashtags != null)
+                foreach (var item in SourceObject.StoryHashtags)
+                    story.StoryHashtags.Add(ConvertersFabric.Instance.GetMentionConverter(item).Convert());
+
+            if (SourceObject.StoryLocation != null)
+                story.StoryLocation = SourceObject.StoryLocation;
+
             if (SourceObject.Owner != null)
                 story.Owner = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.Owner).Convert();
 

@@ -43,7 +43,7 @@ namespace InstagramApiSharp.API.Processors
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
-            {
+            { 
                 var storyFeedUri = UriCreator.GetStoryFeedUri();
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, storyFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);

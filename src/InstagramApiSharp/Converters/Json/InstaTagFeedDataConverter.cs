@@ -27,7 +27,7 @@ namespace InstagramApiSharp.Converters.Json
             var story = root.SelectToken("story");
             var rankedItems = root.SelectToken("ranked_items");
             var items = root.SelectToken("items");
-            var storiesTray = root.SelectToken("items[0].stories.tray");
+            var storiesTray = root.SelectToken("story.items");
 
             List<InstaMediaItemResponse> GetMedias(JToken token)
             {

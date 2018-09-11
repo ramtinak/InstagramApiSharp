@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.0.5.7 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.0.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -71,6 +71,17 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.1.0.0
+- [Add] UploadVideoAsync to TVProcessor
+- [Change] User agent to v61.0.0.19.86 for supporting new apis
+- [Add] Support FelixShare (igtv shared video) in direct threads
+- [Add] Some new properties to direct threads (new api)
+- [Add] Some new properties to InstaUserInfo
+- [Update] InstaCurrentUser.Gender to InstaGenderType
+- [Add] Some new properties to InstaMedia
+- [Add] Some new properties to InstaStory
+- [Update] InstaTagFeed class
+
 v1.0.6.0
 - [Add] Instagram TV support in IInstaApi.TVProcessor
 - [Update] Add Timeout and NeedsChallenge to ResultInfo (thx to [@Lorymi](https://github.com/Lorymi) )

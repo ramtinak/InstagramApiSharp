@@ -52,7 +52,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
+                
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaTagFeed>(response, json);
                 var feedResponse = JsonConvert.DeserializeObject<InstaTagFeedResponse>(json,
@@ -99,6 +99,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaFeed>(response, json);
 
@@ -146,6 +147,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, exploreUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaExploreFeed>(response, json);
                 var feedResponse = JsonConvert.DeserializeObject<InstaExploreFeedResponse>(json,
@@ -266,6 +268,7 @@ namespace InstagramApiSharp.API.Processors
             var response = await _httpRequestProcessor.SendAsync(request, HttpCompletionOption.ResponseContentRead);
             var activityFeed = new InstaActivityFeed();
             var json = await response.Content.ReadAsStringAsync();
+            Debug.WriteLine(json);
             if (response.StatusCode != HttpStatusCode.OK)
                 return Result.UnExpectedResponse<InstaActivityFeed>(response, json);
             var feedPage = JsonConvert.DeserializeObject<InstaRecentActivityResponse>(json,
