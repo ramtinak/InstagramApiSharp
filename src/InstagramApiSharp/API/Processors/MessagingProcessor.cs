@@ -163,7 +163,7 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
 
 
-                var result = await SendDirectMessageAsync(firstRecipient.Pk.ToString(), null, text);
+                var result = await SendDirectTextAsync(firstRecipient.Pk.ToString(), null, text);
 
                 return result;
             }
@@ -174,13 +174,13 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         /// <summary>
-        ///     Send direct message to provided users and threads
+        ///     Send direct text message to provided users and threads
         /// </summary>
         /// <param name="recipients">Comma-separated users PK</param>
         /// <param name="threadIds">Message thread ids</param>
         /// <param name="text">Message text</param>
         /// <returns>List of threads</returns>
-        public async Task<IResult<InstaDirectInboxThreadList>> SendDirectMessageAsync(string recipients, string threadIds,
+        public async Task<IResult<InstaDirectInboxThreadList>> SendDirectTextAsync(string recipients, string threadIds,
             string text)
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -193,13 +193,16 @@ namespace InstagramApiSharp.API.Processors
                 if (!string.IsNullOrEmpty(recipients))
                     fields.Add("recipient_users", "[[" + recipients + "]]");
                 else
-                    return Result.Fail<InstaDirectInboxThreadList>("Please provide at least one recipient.");
+                    fields.Add("recipient_users", "[]");
+                //else
+                //    return Result.Fail<InstaDirectInboxThreadList>("Please provide at least one recipient.");
                 if (!string.IsNullOrEmpty(threadIds))
                     fields.Add("thread_ids", "[" + threadIds + "]");
 
                 request.Content = new FormUrlEncodedContent(fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
                 var result = JsonConvert.DeserializeObject<InstaSendDirectMessageResponse>(json);
@@ -377,7 +380,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
+                
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaDirectInboxContainer>(response, json);
                 var inboxResponse = JsonConvert.DeserializeObject<InstaDirectInboxContainerResponse>(json);
@@ -425,7 +428,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception exception)
             {
-                Debug.WriteLine(exception.Message);
+                
                 _logger?.LogException(exception);
                 return Result.Fail<InstaSharing>(exception);
             }
@@ -457,8 +460,6 @@ namespace InstagramApiSharp.API.Processors
         {
             try
             {
-                Debug.WriteLine(threadId);
-                Debug.WriteLine(recipients);
                 var instaUri = UriCreator.GetDirectSendPhotoUri();
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
                 var clientContext = Guid.NewGuid();
@@ -498,7 +499,6 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception exception)
             {
-                Debug.WriteLine(exception.Message);
                 _logger?.LogException(exception);
                 return Result.Fail<bool>(exception);
             }

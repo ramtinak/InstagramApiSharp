@@ -12,16 +12,16 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="mediaId">Media id</param>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        Task<IResult<InstaCommentList>>
+        Task<IResult<InstaInlineCommentList>>
             GetMediaCommentsAsync(string mediaId, PaginationParameters paginationParameters);
         /// <summary>
         ///     Get media inline comments
         /// </summary>
         /// <param name="mediaId">Media id</param>
         /// <param name="targetCommentId">Target comment id</param>
-       // /// <param name="paginationParameters">Maximum amount of pages to load and start id</param>
+       /// <param name="paginationParameters">Maximum amount of pages to load and start id</param>
         Task<IResult<InstaInlineCommentList>>
-           GetMediaRepliesCommentsAsync(string mediaId, string targetCommentId/*, PaginationParameters paginationParameters*/);
+           GetMediaRepliesCommentsAsync(string mediaId, string targetCommentId, PaginationParameters paginationParameters);
         /// <summary>
         ///     Comment media
         /// </summary>
@@ -34,6 +34,12 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="mediaId">Media id</param>
         /// <param name="commentId">Comment id</param>
         Task<IResult<bool>> DeleteCommentAsync(string mediaId, string commentId);
+        /// <summary>
+        ///     Delete media comments(multiple)
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentIds">Comment id</param>
+        Task<IResult<bool>> DeleteMultipleCommentsAsync(string mediaId, params string[] commentIds);
         /// <summary>
         ///     Inline comment media
         /// </summary>
@@ -62,5 +68,17 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="mediaId">Media id</param>
         /// <param name="commentId">Comment id</param>
         Task<IResult<bool>> ReportCommentAsync(string mediaId, string commentId);
+        /// <summary>
+        ///     Like media comment
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentId">Comment id</param>
+        Task<IResult<bool>> LikeCommentAsync(string mediaId, string commentId);
+        /// <summary>
+        ///     Unlike media comment
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentId">Comment id</param>
+        Task<IResult<bool>> UnlikeCommentAsync(string mediaId, string commentId);
     }
 }

@@ -69,6 +69,16 @@ namespace InstagramApiSharp.Converters
                 }
                 catch { }
             }
+            if (!string.IsNullOrEmpty(SourceObject.NextMaxId))
+            {
+                try
+                {
+                    var convertedNextId = JsonConvert.DeserializeObject<InstaInlineCommentNextIdResponse>(SourceObject.NextMaxId);
+                    inline.NextMaxId = convertedNextId.ServerCursor;
+                }
+                catch { }
+            }
+
             //var comment = new InstaComment
             //{
             //    BitFlags = SourceObject.BitFlags,

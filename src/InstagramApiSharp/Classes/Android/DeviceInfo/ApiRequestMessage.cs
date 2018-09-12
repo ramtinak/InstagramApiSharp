@@ -14,14 +14,20 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
     public class ApiRequestMessage
     {
         static Random rnd = new Random();
-
-        public string phone_id { get; set; }
-        public string username { get; set; }
-        public Guid guid { get; set; }
-        public string device_id { get; set; }
-        public string password { get; set; }
-        public string login_attempt_count { get; set; } = "0";
-        public string adid { get; set; }
+        [JsonProperty("phone_id")]
+        public string PhoneId { get; set; }
+        [JsonProperty("username")]
+        public string Username { get; set; }
+        [JsonProperty("guid")]
+        public Guid Guid { get; set; }
+        [JsonProperty("device_id")]
+        public string DeviceId { get; set; }
+        [JsonProperty("password")]
+        public string Password { get; set; }
+        [JsonProperty("login_attempt_count")]
+        public string LoginAttemptCount { get; set; } = "0";
+        [JsonProperty("adid")]
+        public string AdId { get; set; }
         public static ApiRequestMessage CurrentDevice { get; private set; }
         internal string GetMessageString()
         {
@@ -33,24 +39,24 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             var api = new ApiRequestChallengeMessage
             {
                 CsrtToken = csrfToken,
-                device_id = device_id,
-                guid = guid,
-                login_attempt_count = "1",
-                password = password,
-                phone_id = phone_id,
-                username = username,
-                adid = adid
+                DeviceId = DeviceId,
+                Guid = Guid,
+                LoginAttemptCount = "1",
+                Password = Password,
+                PhoneId = PhoneId,
+                Username = Username,
+                AdId = AdId
             };
             var json = JsonConvert.SerializeObject(api);
             return json;
         }
         internal string GetMessageStringForChallengeVerificationCodeSend(int Choice = 1)
         {
-            return JsonConvert.SerializeObject(new { choice = Choice.ToString(), _csrftoken = "ReplaceCSRF", guid, device_id });
+            return JsonConvert.SerializeObject(new { choice = Choice.ToString(), _csrftoken = "ReplaceCSRF", Guid, DeviceId });
         }
         internal string GetChallengeVerificationCodeSend(string verify)
         {
-            return JsonConvert.SerializeObject(new { security_code = verify.ToString(), _csrftoken = "ReplaceCSRF", guid, device_id });
+            return JsonConvert.SerializeObject(new { security_code = verify.ToString(), _csrftoken = "ReplaceCSRF", Guid, DeviceId });
         }
         internal string GenerateSignature(string signatureKey, out string deviceid)
         {
@@ -58,7 +64,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                 signatureKey = InstaApiConstants.IG_SIGNATURE_KEY;
             var res = CryptoHelper.CalculateHash(signatureKey,
                 JsonConvert.SerializeObject(this));
-            deviceid = device_id;
+            deviceid = DeviceId;
             return res;
         }
         internal string GenerateChallengeSignature(string signatureKey,string csrfToken, out string deviceid)
@@ -68,24 +74,24 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             var api = new ApiRequestChallengeMessage
             {
                 CsrtToken = csrfToken,
-                device_id = device_id,
-                guid = guid,
-                login_attempt_count = "1",
-                password = password,
-                phone_id = phone_id,
-                username = username,
-                adid = adid
+                DeviceId = DeviceId,
+                Guid = Guid,
+                LoginAttemptCount = "1",
+                Password = Password,
+                PhoneId = PhoneId,
+                Username = Username,
+                AdId = AdId
             };
             var res = CryptoHelper.CalculateHash(signatureKey,
                 JsonConvert.SerializeObject(api));
-            deviceid = device_id;
+            deviceid = DeviceId;
             return res;
         }
         internal bool IsEmpty()
         {
-            if (string.IsNullOrEmpty(phone_id)) return true;
-            if (string.IsNullOrEmpty(device_id)) return true;
-            if (Guid.Empty == guid) return true;
+            if (string.IsNullOrEmpty(PhoneId)) return true;
+            if (string.IsNullOrEmpty(DeviceId)) return true;
+            if (Guid.Empty == Guid) return true;
             return false;
         }
 
@@ -110,9 +116,9 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         {
             var requestMessage = new ApiRequestMessage
             {
-                phone_id = device.PhoneGuid.ToString(),
-                guid = device.DeviceGuid,
-                device_id = device.DeviceId
+                PhoneId = device.PhoneGuid.ToString(),
+                Guid = device.DeviceGuid,
+                DeviceId = device.DeviceId
             };
             return requestMessage;
         }

@@ -23,6 +23,12 @@ using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Logger;
+/////////////////////////////////////////////////////////////////////
+////////////////////// IMPORTANT NOTE ///////////////////////////////
+// Please check wiki pages for more information:
+// https://github.com/ramtinak/InstagramApiSharp/wiki
+////////////////////// IMPORTANT NOTE ///////////////////////////////
+/////////////////////////////////////////////////////////////////////
 namespace TwoFactorSample
 {
     public partial class Form1 : Form

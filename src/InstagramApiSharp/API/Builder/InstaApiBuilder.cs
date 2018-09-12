@@ -41,20 +41,20 @@ namespace InstagramApiSharp.API.Builder
                     _device = AndroidDeviceGenerator.GetRandomAndroidDevice();
                 _requestMessage = new ApiRequestMessage
                 {
-                    phone_id = _device.PhoneGuid.ToString(),
-                    guid = _device.DeviceGuid,
-                    password = _user?.Password,
-                    username = _user?.UserName,
-                    device_id = ApiRequestMessage.GenerateDeviceId(),
-                    adid = _device.AdId.ToString()
+                    PhoneId = _device.PhoneGuid.ToString(),
+                    Guid = _device.DeviceGuid,
+                    Password = _user?.Password,
+                    Username = _user?.UserName,
+                    DeviceId = ApiRequestMessage.GenerateDeviceId(),
+                    AdId = _device.AdId.ToString()
                 };
             }
 
-            if (string.IsNullOrEmpty(_requestMessage.password)) _requestMessage.password = _user?.Password;
-            if (string.IsNullOrEmpty(_requestMessage.username)) _requestMessage.username = _user?.UserName;
+            if (string.IsNullOrEmpty(_requestMessage.Password)) _requestMessage.Password = _user?.Password;
+            if (string.IsNullOrEmpty(_requestMessage.Username)) _requestMessage.Username = _user?.UserName;
 
-            if (_device == null && !string.IsNullOrEmpty(_requestMessage.device_id))
-                _device = AndroidDeviceGenerator.GetById(_requestMessage.device_id);
+            if (_device == null && !string.IsNullOrEmpty(_requestMessage.DeviceId))
+                _device = AndroidDeviceGenerator.GetById(_requestMessage.DeviceId);
             if (_device == null) AndroidDeviceGenerator.GetRandomAndroidDevice();
 
             if (_httpRequestProcessor == null)

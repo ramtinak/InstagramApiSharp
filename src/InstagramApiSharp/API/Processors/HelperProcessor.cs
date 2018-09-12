@@ -284,8 +284,8 @@ namespace InstagramApiSharp.API.Processors
                         {"filter_type", "0"},
                         {"timezone_offset", "16200"},
                         {"_csrftoken", _user.CsrfToken},
-                        {"client_shared_at", (long.Parse(ApiRequestMessage.GenerateUploadId())- rnd.Next(25,55)).ToString()},
-                        {"story_media_creation_date", (long.Parse(ApiRequestMessage.GenerateUploadId())- rnd.Next(50,70)).ToString()},
+                        {"client_shared_at", (DateTime.UtcNow.ToUnixTime() - rnd.Next(25,55)).ToString()},
+                        {"story_media_creation_date", (DateTime.UtcNow.ToUnixTime() - rnd.Next(50,70)).ToString()},
                         {"media_folder", "Camera"},
                         {"source_type", "4"},
                         {"video_result", ""},
@@ -296,7 +296,7 @@ namespace InstagramApiSharp.API.Processors
                         {"capture_type", "normal"},
                         {"mas_opt_in", "NOT_PROMPTED"},
                         {"upload_id", uploadId},
-                        {"client_timestamp", ApiRequestMessage.GenerateUploadId()},
+                        {"client_timestamp", DateTime.UtcNow.ToUnixTime()},
                         {
                             "device", new JObject{
                                 {"manufacturer", _deviceInfo.HardwareManufacturer},
@@ -521,8 +521,8 @@ namespace InstagramApiSharp.API.Processors
                     {
                         {"timezone_offset", "16200"},
                         {"_csrftoken", _user.CsrfToken},
-                        {"client_shared_at", (long.Parse(ApiRequestMessage.GenerateUploadId())- rnd.Next(25,55)).ToString()},
-                        {"story_media_creation_date", (long.Parse(ApiRequestMessage.GenerateUploadId())- rnd.Next(50,70)).ToString()},
+                        {"client_shared_at", (DateTime.UtcNow.ToUnixTime() - rnd.Next(25,55)).ToString()},
+                        {"story_media_creation_date", (DateTime.UtcNow.ToUnixTime() - rnd.Next(50,70)).ToString()},
                         {"media_folder", "Camera"},
                         {"source_type", "3"},
                         {"video_result", ""},
@@ -533,7 +533,7 @@ namespace InstagramApiSharp.API.Processors
                         {"capture_type", "normal"},
                         {"mas_opt_in", "NOT_PROMPTED"},
                         {"upload_id", uploadId},
-                        {"client_timestamp", ApiRequestMessage.GenerateUploadId()},
+                        {"client_timestamp", DateTime.UtcNow.ToUnixTime()},
                         {
                             "device", new JObject{
                                 {"manufacturer", _deviceInfo.HardwareManufacturer},
@@ -703,8 +703,8 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"timezone_offset", "16200"},
                     {"_csrftoken", _user.CsrfToken},
-                    {"client_shared_at", (long.Parse(ApiRequestMessage.GenerateUploadId()) - rnd.Next(25,55)).ToString()},
-                    {"story_media_creation_date", (long.Parse(ApiRequestMessage.GenerateUploadId()) - rnd.Next(50,70)).ToString()},
+                    {"client_shared_at", (DateTime.UtcNow.ToUnixTime() - rnd.Next(25,55)).ToString()},
+                    {"story_media_creation_date", (DateTime.UtcNow.ToUnixTime() - rnd.Next(50,70)).ToString()},
                     {"media_folder", "Camera"},
                     {"source_type", "3"},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
@@ -714,7 +714,8 @@ namespace InstagramApiSharp.API.Processors
                     {"capture_type", "normal"},
                     {"mas_opt_in", "NOT_PROMPTED"},
                     {"upload_id", uploadId},
-                    {"client_timestamp", ApiRequestMessage.GenerateUploadId()},
+                    {"client_timestamp", DateTime.UtcNow.ToUnixTime()},
+                    {"date_time_digitalized", DateTime.Now.ToString("yyyy:dd:MM+h:mm:ss")},
                     {
                         "device", new JObject{
                             {"manufacturer", _deviceInfo.HardwareManufacturer},
@@ -734,14 +735,13 @@ namespace InstagramApiSharp.API.Processors
                 if (location != null)
                 {
                     data.Add("location", location.GetJson());
-                    data.Add("date_time_digitalized", DateTime.Now.ToString("yyyy:dd:MM+h:mm:ss"));
                 }
 
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Add("retry_context", retryContext);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-
+                Debug.WriteLine(json);
                 var mediaResponse =
                      JsonConvert.DeserializeObject<InstaMediaItemResponse>(json, new InstaMediaDataConverter());
                 var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);

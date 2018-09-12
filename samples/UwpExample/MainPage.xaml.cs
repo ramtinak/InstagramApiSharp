@@ -1,7 +1,7 @@
 ﻿/*
  * Created by Ramtin Jokar [Ramtinak@live.com] [Telegram: https://t.me/Ramtinak]
  * 
- * NOTE 1: Minimum target version must be 16299 (Fall creators update)
+ * NOTE 1: Minimum target version must be 14393 (Anniversary update)
  * NOTE 2: These capabilities Internet(Client), Internet(Client, Server) should be checked.
  * 
  * If you want, upload videos and image together or single, check this example:
@@ -23,7 +23,12 @@ using InstagramApiSharp.Classes;
 using InstagramApiSharp.API.Builder;
 using Windows.Storage.Pickers;
 using InstagramApiSharp.Classes.Models;
-
+/////////////////////////////////////////////////////////////////////
+////////////////////// IMPORTANT NOTE ///////////////////////////////
+// Please check wiki pages for more information:
+// https://github.com/ramtinak/InstagramApiSharp/wiki
+////////////////////// IMPORTANT NOTE ///////////////////////////////
+/////////////////////////////////////////////////////////////////////
 namespace UwpExample
 {
     public sealed partial class MainPage : Page

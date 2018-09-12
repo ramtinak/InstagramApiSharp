@@ -15,7 +15,12 @@ using System.Threading.Tasks;
 using InstagramApiSharp.API;
 using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
-
+/////////////////////////////////////////////////////////////////////
+////////////////////// IMPORTANT NOTE ///////////////////////////////
+// Please check wiki pages for more information:
+// https://github.com/ramtinak/InstagramApiSharp/wiki
+////////////////////// IMPORTANT NOTE ///////////////////////////////
+/////////////////////////////////////////////////////////////////////
 namespace Examples.Samples
 {
     internal class Discover : IDemoSample

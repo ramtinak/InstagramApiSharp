@@ -31,13 +31,13 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>List of threads</returns>
         Task<IResult<InstaDirectInboxThreadList>> SendNewDirectMessageAsync(string username, string text);
         /// <summary>
-        ///     Send direct message to provided users and threads
+        ///     Send direct text message to provided users and threads
         /// </summary>
         /// <param name="recipients">Comma-separated users PK</param>
         /// <param name="threadIds">Message thread ids</param>
         /// <param name="text">Message text</param>
         /// <returns>List of threads</returns>
-        Task<IResult<InstaDirectInboxThreadList>> SendDirectMessageAsync(string recipients, string threadIds,
+        Task<IResult<InstaDirectInboxThreadList>> SendDirectTextAsync(string recipients, string threadIds,
             string text);
         /// <summary>
         ///     Get recent recipients (threads and users) asynchronously

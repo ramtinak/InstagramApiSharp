@@ -35,5 +35,7 @@ namespace InstagramApiSharp.Classes.Models
         public string NextMinId { get; set; }
 
         internal string Status { get; set; }
+
+        public string NextMaxId { get; set; }
     }
 }

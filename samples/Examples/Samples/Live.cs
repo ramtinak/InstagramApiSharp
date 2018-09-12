@@ -15,7 +15,12 @@ using System.Threading.Tasks;
 using InstagramApiSharp.API;
 using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
-
+/////////////////////////////////////////////////////////////////////
+////////////////////// IMPORTANT NOTE ///////////////////////////////
+// Please check wiki pages for more information:
+// https://github.com/ramtinak/InstagramApiSharp/wiki
+////////////////////// IMPORTANT NOTE ///////////////////////////////
+/////////////////////////////////////////////////////////////////////
 namespace Examples.Samples
 {
     internal class Live : IDemoSample
@@ -121,9 +126,9 @@ EndAsync");
             if (result.Succeeded)
             {
                 Console.WriteLine($"Send new comment to broadcast");
-                Console.WriteLine("CommentStatus: " + result.Value.Comment.Status);
-                Console.WriteLine("CommentText: " + result.Value.Comment.Text);
-                Console.WriteLine("CommentUser: " + result.Value.Comment.User.Username);
+                Console.WriteLine("CommentStatus: " + result.Value.Status);
+                Console.WriteLine("CommentText: " + result.Value.Text);
+                Console.WriteLine("CommentUser: " + result.Value.User.UserName);
             }
             else
                 Console.WriteLine("Error while send new comment to broadcast: " + result.Info.Message);

@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.0.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.0.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -71,6 +71,15 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.1.0.1
+- [Change] SendDirectMessageAsync to SendDirectTextAsync
+- [Fix] SendDirectTextAsync issue
+- [Add] DeleteMultipleCommentsAsync to CommentProcessor
+- [Add] Like/Unlike comment to CommentProcessor
+- [Update] GetMediaCommentsAsync in CommentProcessor
+- [Add] Pagination support to GetMediaRepliesCommentsAsync
+- [Wiki Update] for [Direct messaging page](https://github.com/ramtinak/InstagramApiSharp/wiki/Direct-messaging) 
+
 v1.1.0.0
 - [Add] UploadVideoAsync to TVProcessor
 - [Change] User agent to v61.0.0.19.86 for supporting new apis

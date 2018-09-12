@@ -308,8 +308,8 @@ namespace InstagramApiSharp.Helpers
                 out var instaUri))
                 throw new Exception("Cant create URI for getting media comments");
             return !string.IsNullOrEmpty(nextId)
-                ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
-                : instaUri;
+                ? new UriBuilder(instaUri) { Query = $"can_support_threading=true&max_id={nextId}" }.Uri
+                : new UriBuilder(instaUri) { Query = $"can_support_threading=true" }.Uri;
         }
 
         public static Uri GetMediaInlineCommentsUri(string mediaId, string targetCommentId, string nextId = "")
@@ -319,8 +319,8 @@ namespace InstagramApiSharp.Helpers
                 out var instaUri))
                 throw new Exception("Cant create URI for getting media comments");
             return !string.IsNullOrEmpty(nextId)
-                ? new UriBuilder(instaUri) { Query = $"min_id={nextId}" }.Uri
-                //? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
+                //? new UriBuilder(instaUri) { Query = $"min_id={nextId}" }.Uri
+                ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
                 : instaUri;
         }
 
@@ -421,7 +421,7 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for report comment");
             return instaUri;
         }
-        public static Uri GetDeleteCommetUri(string mediaId, string commentId)
+        public static Uri GetDeleteCommentUri(string mediaId, string commentId)
         {
             if (
                 !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DELETE_COMMENT, mediaId, commentId),
@@ -1211,6 +1211,30 @@ namespace InstagramApiSharp.Helpers
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.MEDIA_CONFIGURE_TO_IGTV, out var instaUri))
                 throw new Exception("Cant create URI for media configure igtv");
+            return instaUri;
+        }
+        public static Uri GetLikeCommentUri(string mediaId, string commentId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIKE_COMMENT, mediaId, commentId),
+                    out var instaUri))
+                throw new Exception("Cant create URI for like comment");
+            return instaUri;
+        }
+        public static Uri GetUnLikeCommentUri(string mediaId, string commentId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.UNLIKE_COMMENT, mediaId, commentId),
+                    out var instaUri))
+                throw new Exception("Cant create URI for unlike comment");
+            return instaUri;
+        }
+        public static Uri GetDeleteMultipleCommentsUri(string mediaId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DELETE_MULTIPLE_COMMENT, mediaId),
+                    out var instaUri))
+                throw new Exception("Cant create URI for delete multiple comments");
             return instaUri;
         }
     }

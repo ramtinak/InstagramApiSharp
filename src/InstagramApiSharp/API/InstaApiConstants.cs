@@ -146,6 +146,9 @@ namespace InstagramApiSharp.API
         public const string MEDIA_COMMENT_LIKERS = API_SUFFIX + "/media/{0}/comment_likers/";
         public const string MEDIA_REPORT_COMMENT = API_SUFFIX + "/media/{0}/comment/{1}/flag/";
         public const string DELETE_COMMENT = API_SUFFIX + "/media/{0}/comment/{1}/delete/";
+        public const string DELETE_MULTIPLE_COMMENT = API_SUFFIX + "/media/{0}/comment/bulk_delete/";
+        public const string LIKE_COMMENT = API_SUFFIX + "/media/{0}/comment/{1}/comment_like/";
+        public const string UNLIKE_COMMENT = API_SUFFIX + "/media/{0}/comment/{1}/comment_unlike/";
         public const string UPLOAD_PHOTO = API_SUFFIX + "/upload/photo/";
         public const string UPLOAD_VIDEO = API_SUFFIX + "/upload/video/";
         public const string MEDIA_CONFIGURE = API_SUFFIX + "/media/configure/";

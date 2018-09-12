@@ -188,7 +188,7 @@ namespace InstagramApiSharp.API
                     .BaseAddress);
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
                 _user.CsrfToken = csrftoken;
-                Debug.WriteLine("verify token: " + csrftoken);
+                
                 var postData = new Dictionary<string, string>
                 {
                     {"_csrftoken",      csrftoken},
@@ -238,7 +238,7 @@ namespace InstagramApiSharp.API
                     .BaseAddress);
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
                 _user.CsrfToken = csrftoken;
-                Debug.WriteLine("verify token: " + csrftoken);
+                
                 var postData = new Dictionary<string, string>
                 {
                     {"_csrftoken",      csrftoken},
@@ -589,15 +589,14 @@ namespace InstagramApiSharp.API
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(response.StatusCode);
-                Debug.WriteLine(json);
+                
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<AccountCreation>(response, json);
                 var o = JsonConvert.DeserializeObject<AccountCreation>(json);
                 //{"account_created": false, "errors": {"email": ["Another account is using iranramtin73jokar@live.com."], "username": ["This username isn't available. Please try another."]}, "allow_contacts_sync": true, "status": "ok", "error_type": "email_is_taken, username_is_taken"}
                 //{"message": "feedback_required", "spam": true, "feedback_title": "Signup Error", "feedback_message": "Sorry! There\u2019s a problem signing you up right now. Please try again later. We restrict certain content and actions to protect our community. Tell us if you think we made a mistake.", "feedback_url": "repute/report_problem/instagram_signup/", "feedback_appeal_label": "Report problem", "feedback_ignore_label": "OK", "feedback_action": "report_problem", "status": "fail", "error_type": "signup_block"}
 
-                Debug.WriteLine(json);
+                
                 return Result.Success(o);
             }
             catch (Exception exception)
@@ -688,7 +687,7 @@ namespace InstagramApiSharp.API
                 IsUserAuthenticated = loginInfo.User?.UserName.ToLower() == _user.UserName.ToLower();
                 var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
                 _user.LoggedInUser = converter.Convert();
-                _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
                 if(string.IsNullOrEmpty(_user.CsrfToken))
                 {
                     cookies =
@@ -728,8 +727,8 @@ namespace InstagramApiSharp.API
             try
             {
                 var twoFactorRequestMessage = new ApiTwoFactorRequestMessage(verificationCode,
-                    _httpRequestProcessor.RequestMessage.username,
-                    _httpRequestProcessor.RequestMessage.device_id,
+                    _httpRequestProcessor.RequestMessage.Username,
+                    _httpRequestProcessor.RequestMessage.DeviceId,
                     _twoFactorInfo.TwoFactorIdentifier);
 
                 var instaUri = UriCreator.GetTwoFactorLoginUri();
@@ -759,7 +758,7 @@ namespace InstagramApiSharp.API
                         loginInfo.User != null && loginInfo.User.UserName.ToLower() == _user.UserName.ToLower();
                     var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
                     _user.LoggedInUser = converter.Convert();
-                    _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                    _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
 
                     return Result.Success(InstaLoginTwoFactorResult.Success);
                 }
@@ -923,8 +922,8 @@ namespace InstagramApiSharp.API
                 var postData = new Dictionary<string, string>
                 {
                     { "two_factor_identifier",  _twoFactorInfo.TwoFactorIdentifier },
-                    { "username",    _httpRequestProcessor.RequestMessage.username},
-                    { "device_id",   _httpRequestProcessor.RequestMessage.device_id},
+                    { "username",    _httpRequestProcessor.RequestMessage.Username},
+                    { "device_id",   _httpRequestProcessor.RequestMessage.DeviceId},
                     { "guid",        _deviceInfo.DeviceGuid.ToString()},
                     { "_csrftoken",    _user.CsrfToken }
                 };
@@ -1228,7 +1227,7 @@ namespace InstagramApiSharp.API
                 _user.LoggedInUser = converter.Convert();
                 if (validateExtra)
                 {
-                    _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                    _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
                     _user.CsrfToken = csrfToken;
                     IsUserAuthenticated = true;
                     InvalidateProcessors();
@@ -1305,7 +1304,7 @@ namespace InstagramApiSharp.API
                     };
                     _user.LoggedInUser = user;
                     _user.CsrfToken = webBrowserResponse.Config.CsrfToken;
-                    _user.RankToken = $"{webBrowserResponse.Config.Viewer.Id}_{_httpRequestProcessor.RequestMessage.phone_id}";
+                    _user.RankToken = $"{webBrowserResponse.Config.Viewer.Id}_{_httpRequestProcessor.RequestMessage.PhoneId}";
                     IsUserAuthenticated = true;
                     if (facebookLogin)
                     {
@@ -1411,13 +1410,13 @@ namespace InstagramApiSharp.API
             // _httpRequestProcessor.HttpHandler.CookieContainer = data.Cookies;
 
             //Load Stream Edit 
-            _httpRequestProcessor.RequestMessage.username = data.UserSession.UserName;
-            _httpRequestProcessor.RequestMessage.password = data.UserSession.Password;
+            _httpRequestProcessor.RequestMessage.Username = data.UserSession.UserName;
+            _httpRequestProcessor.RequestMessage.Password = data.UserSession.Password;
             // _httpRequestProcessor.HttpHandler.CookieContainer = data.Cookies;
-            _httpRequestProcessor.RequestMessage.device_id = data.DeviceInfo.DeviceId;
-            _httpRequestProcessor.RequestMessage.phone_id = data.DeviceInfo.PhoneGuid.ToString();
-            _httpRequestProcessor.RequestMessage.guid = data.DeviceInfo.DeviceGuid;
-            _httpRequestProcessor.RequestMessage.adid = data.DeviceInfo.AdId.ToString();
+            _httpRequestProcessor.RequestMessage.DeviceId = data.DeviceInfo.DeviceId;
+            _httpRequestProcessor.RequestMessage.PhoneId = data.DeviceInfo.PhoneGuid.ToString();
+            _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
+            _httpRequestProcessor.RequestMessage.AdId = data.DeviceInfo.AdId.ToString();
 
             foreach (Cookie cookie in data.RawCookies)
             {
@@ -1440,13 +1439,13 @@ namespace InstagramApiSharp.API
             // _httpRequestProcessor.HttpHandler.CookieContainer = data.Cookies;
 
             //Load Stream Edit 
-            _httpRequestProcessor.RequestMessage.username = data.UserSession.UserName;
-            _httpRequestProcessor.RequestMessage.password = data.UserSession.Password;
+            _httpRequestProcessor.RequestMessage.Username = data.UserSession.UserName;
+            _httpRequestProcessor.RequestMessage.Password = data.UserSession.Password;
             // _httpRequestProcessor.HttpHandler.CookieContainer = data.Cookies;
-            _httpRequestProcessor.RequestMessage.device_id = data.DeviceInfo.DeviceId;
-            _httpRequestProcessor.RequestMessage.phone_id = data.DeviceInfo.PhoneGuid.ToString();
-            _httpRequestProcessor.RequestMessage.guid = data.DeviceInfo.DeviceGuid;
-            _httpRequestProcessor.RequestMessage.adid = data.DeviceInfo.AdId.ToString();
+            _httpRequestProcessor.RequestMessage.DeviceId = data.DeviceInfo.DeviceId;
+            _httpRequestProcessor.RequestMessage.PhoneId = data.DeviceInfo.PhoneGuid.ToString();
+            _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
+            _httpRequestProcessor.RequestMessage.AdId = data.DeviceInfo.AdId.ToString();
 
             foreach (Cookie cookie in data.RawCookies)
             {

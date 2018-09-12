@@ -63,6 +63,9 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public string NextMinId { get; set; }
         [JsonProperty("status")]
         internal string Status { get; set; }
+
+        [JsonProperty("next_max_id")]
+        public string NextMaxId { get; set; }
     }
 
     internal class InstaInlineCommentNextIdResponse
@@ -71,6 +74,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public string CachedCommentsCursor { get; set; }
         [JsonProperty("bifilter_token")]
         public string BifilterToken { get; set; }
+        [JsonProperty("server_cursor")]
+        public string ServerCursor { get; set; }
     }
     
 

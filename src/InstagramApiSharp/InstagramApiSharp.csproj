@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.0.0</Version>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.1.0.1</Version>
+    <AssemblyVersion>1.1.0.1</AssemblyVersion>
+    <FileVersion>1.1.0.1</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -36,7 +36,15 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>1.1.0.0
+    <PackageReleaseNotes>v1.1.0.1
+- [Change] SendDirectMessageAsync to SendDirectTextAsync
+- [Fix] SendDirectTextAsync issue
+- [Add] DeleteMultipleCommentsAsync to CommentProcessor
+- [Add] Like/Unlike comment to CommentProcessor
+- [Update] GetMediaCommentsAsync in CommentProcessor
+- [Add] Pagination support to GetMediaRepliesCommentsAsync
+
+1.1.0.0
 - [Add] UploadVideoAsync to TVProcessor
 - [Change] User agent to v61.0.0.19.86 for supporting new apis
 - [Add] Support FelixShare (igtv shared video) in direct threads
