@@ -18,8 +18,8 @@ namespace InstagramApiSharp
                 return InstaApiConstants.USER_AGENT_DEFAULT;
             return string.Format(InstaApiConstants.USER_AGENT, deviceInfo.Dpi, deviceInfo.Resolution, deviceInfo.HardwareManufacturer,
                 deviceInfo.DeviceModelIdentifier, deviceInfo.FirmwareBrand, deviceInfo.HardwareModel,
-                InstaApiConstants.IG_APP_VERSION, deviceInfo.AndroidVersion.APILevel,
-                deviceInfo.AndroidVersion.VersionNumber, InstaApiConstants.IG_APP_API_VERSION);
+                InstaApiConstants.IG_APP_VERSION, deviceInfo.AndroidVer.APILevel,
+                deviceInfo.AndroidVer.VersionNumber, InstaApiConstants.IG_APP_API_VERSION);
         }
         public static string EncodeList(this string[] listOfValues, bool appendQuotation = true)
         {

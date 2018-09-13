@@ -567,8 +567,8 @@ namespace InstagramApiSharp.API.Processors
                             "device", JsonConvert.SerializeObject(new JObject{
                                 {"manufacturer", _deviceInfo.HardwareManufacturer},
                                 {"model", _deviceInfo.DeviceModelIdentifier},
-                                {"android_release", _deviceInfo.AndroidVersion.VersionNumber},
-                                {"android_version", _deviceInfo.AndroidVersion.APILevel}
+                                {"android_release", _deviceInfo.AndroidVer.VersionNumber},
+                                {"android_version", _deviceInfo.AndroidVer.APILevel}
                             })
                         },
                         {"length", id.Value.Length},
@@ -591,8 +591,8 @@ namespace InstagramApiSharp.API.Processors
                         {
                             {"manufacturer", _deviceInfo.HardwareManufacturer},
                             {"model", _deviceInfo.DeviceModelIdentifier},
-                            {"android_release", _deviceInfo.AndroidVersion.VersionNumber},
-                            {"android_version", _deviceInfo.AndroidVersion.APILevel}
+                            {"android_release", _deviceInfo.AndroidVer.VersionNumber},
+                            {"android_version", _deviceInfo.AndroidVer.APILevel}
                         }
                     },
                     {"children_metadata", childrenArray},

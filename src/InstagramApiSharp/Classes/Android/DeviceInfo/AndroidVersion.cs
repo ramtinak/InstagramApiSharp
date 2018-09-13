@@ -117,7 +117,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         }
 
         static Random Rnd = new Random();
-        private static AndroidVersion LastAndriodVersion;
+        private static AndroidVersion LastAndriodVersion = AndroidVersions[AndroidVersions.Count - 2];
         public static AndroidVersion GetRandomAndriodVersion()
         {
             TryLabel:
@@ -126,7 +126,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             if (LastAndriodVersion != null)
                 if (androidVersion.APILevel == LastAndriodVersion.APILevel)
                     goto TryLabel;
-            return LastAndriodVersion = androidVersion;
+            LastAndriodVersion = androidVersion;
+            return androidVersion;
         }
         public static AndroidVersion GetAndroidVersion(string apiLevel)
         {
