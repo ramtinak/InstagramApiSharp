@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.0.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.0.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -49,7 +49,7 @@ Some of features:
 | Delete media (photo/video/album) | Upload story (photo/video/album) | Change password | Send direct message |
 | Search location | Get location feed | Collection create/get by id/get all/add items | Support challenge required |
 | Upload album (videos/photo) | Highlight support | Share story | Send direct photo/video/ stories/profile/ link/location |
-| IG TV support |
+| IG TV support | Share media to direct thread |
 
 ## Usage
 #### Use builder to get Insta API instance:
@@ -71,6 +71,12 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.1.0.2
+- [Add] ShareMediaToThreadAsync to MessagingProcessor
+- [Add] GetFullUserInfoAsync to UserProcessor
+- [Add] 1 new device to AndroidDevices
+- [Cleanup] some classes
+
 v1.1.0.1
 - [Change] SendDirectMessageAsync to SendDirectTextAsync
 - [Fix] SendDirectTextAsync issue
@@ -101,29 +107,6 @@ v1.0.5.6
 - [Update] UploadPhotoAsync to newer api
 - [Add] Set location while uploading photo/video/album in MediaProcessor
 - [Move] SetDevice to IInstaApi
-
-v1.0.5.5
-- [Bugfix] for random device (user agent). now supports 20 device
-- [Add] Android version to device (randomly from android v4.0 to v9.0)
-- [Add] GetCurrentDevice to InstaApi
-- [Add] Biography with entities property to InstaUserInfo
-- [Add] Search users by location to LocationProcessor
-- [Bugfix] For some functions in LiveProcessor
-- [Add] GetJoinRequestsAsync to LiveProcessor
-- [Add] Send disappering photo to direct thread
-
-v1.0.5.4
-- [Add] Resend two factor login code by username, email and phone (thx to [@Lorymi](https://github.com/Lorymi) )
-
-v1.0.5.3
-- [Update] GetRequestForEditProfileAsync in AccountProcessor
-- [Update] EditProfileAsync parameters, please check updated [samples/Examples/Samples/Account.cs](https://github.com/ramtinak/InstagramApiSharp/blob/master/samples/Examples/Samples/Account.cs#L71)
-- [Add] Set biography (support hashtags and user mention) in AccountProcessor
-- [Add] Send disappering video to direct thread
-- [Cleanup] some classes and functions
-
-v1.0.5.2
-- [Add] More properties for InstaStoryLocation (Positioning properties)
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 

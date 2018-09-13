@@ -533,6 +533,29 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareTags = "release-keys",
                     FirmwareType = "user"
                 }
+            },
+            {
+                AndroidDevices.XIAOMI_HM_1SW,
+                new AndroidDevice
+                {
+                    AndroidBoardName = "HM",
+                    DeviceBrand = "Xiaomi",
+                    HardwareManufacturer = "Xiaomi",
+                    DeviceModel = "PRA-LA1",
+                    DeviceModelIdentifier = "1SW",
+                    FirmwareBrand = "1SW",
+                    HardwareModel = "armani",
+                    DeviceGuid = new Guid("eee33f71-41cd-40ef-8f82-9cdbb29012d7"),
+                    PhoneGuid = new Guid("48cdf398-784d-470e-a54c-8e211b56f710"),
+                    DeviceId = ApiRequestMessage.GenerateDeviceIdFromGuid(new Guid("eee33f71-41cd-40ef-8f82-9cdbb29012d7")),
+                    Resolution = "720x1280",
+                    Dpi = "320dpi",
+                    FirmwareFingerprint = "Xiaomi/HM/1SW:6.0/cancro/95414346:user/release-keys",
+                    AndroidBootloader = "4.23",
+                    DeviceModelBoot = "qcom",
+                    FirmwareTags = "release-keys",
+                    FirmwareType = "user"
+                }
             }
         };
 

@@ -19,13 +19,13 @@ namespace InstagramApiSharp.API
         /// </summary>
         public const string IG_APP_API_VERSION = "95414346";
         /// <summary>
-        ///     InstagramApiSharp is based on 35.0.0.20.96 version
+        ///     InstagramApiSharp is based on 35.0.0.20.96 version but user agent is 61.0.0.19.86
         /// </summary>
         public const string IG_APP_VERSION = "61.0.0.19.86"/*"35.0.0.20.96"*/;
         public const string USER_AGENT =
             "Instagram {6} Android ({7}/{8}; {0}; {1}; {2}; {3}; {4}; {5}; en_US; {9})";
         public const string USER_AGENT_DEFAULT =
-        "Instagram 35.0.0.20.96 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 95414346)";
+        "Instagram 61.0.0.19.86 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 95414346)";
         ////"Instagram 12.0.0.7.91 Android (23/6.0.1; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_NZ)";
         public const string HEADER_USER_AGENT = "User-Agent";
 
@@ -122,11 +122,24 @@ namespace InstagramApiSharp.API
         public const string DIRECT_BROADCAST_LINK = API_SUFFIX + "/direct_v2/threads/broadcast/link/";
         public const string DIRECT_BROADCAST_LOCATION = API_SUFFIX + "/direct_v2/threads/broadcast/location/";
         public const string DIRECT_BROADCAST_REACTION = API_SUFFIX + "/direct_v2/threads/broadcast/reaction/";
+        public const string DIRECT_BROADCAST_MEDIA_SHARE = API_VERSION + "/direct_v2/threads/broadcast/media_share/?media_type={0}";
 
         public const string DIRECT_THREAD_ITEM_SEEN = API_SUFFIX + "/direct_v2/visual_threads/{0}/item_seen/";
         public const string DIRECT_THREAD_UPDATE_TITLE = API_SUFFIX + "/direct_v2/threads/{0}/update_title/";
         public const string DIRECT_THREAD_MUTE = API_SUFFIX + "/direct_v2/threads/{0}/mute/";
         public const string DIRECT_THREAD_UNMUTE = API_SUFFIX + "/direct_v2/threads/{0}/unmute/";
+        /// <summary>
+        /// post data:
+        /// <para>use_unified_inbox=true</para>
+        /// <para>recipient_users= user ids split with comma.: ["user id1","user id2","..."]</para>
+        /// </summary>
+        public const string DIRECT_CREATE_GROUP = API_SUFFIX + "/direct_v2/create_group_thread/";
+        /// <summary>
+        /// post data: _uid ro post nakon
+        /// <para>use_unified_inbox=true</para>
+        /// </summary>
+        public const string DIRECT_THREAD_HIDE = API_SUFFIX + "/direct_v2/threads/{0}/hide/";
+        public const string DIRECT_SHARE = API_SUFFIX + "/direct_share/inbox/";
 
         public const string GET_RECENT_ACTIVITY = API_SUFFIX + "/news/inbox/";
         public const string GET_FOLLOWING_RECENT_ACTIVITY = API_SUFFIX + "/news/";
@@ -203,17 +216,69 @@ namespace InstagramApiSharp.API
         public const string FBSEARCH_SUGGESTED_SEARCHS = API_SUFFIX + "/fbsearch/suggested_searches/?type={0}";
         public const string FBSEARCH_PROFILE_SEARCH = API_SUFFIX + "/fbsearch/profile_link_search/?q={0}&count={1}";
         public const string FBSEARCH_TOPSEARCH_FALT = API_SUFFIX + "/fbsearch/topsearch_flat/";
+        public const string FBSEARCH_GET_HIDDEN_SEARCH_ENTITIES = API_SUFFIX + "/fbsearch/get_hidden_search_entities/";
+        /// <summary>
+        /// get nearby places
+        /// </summary>
+        public const string FBSEARCH_PLACES = API_SUFFIX + "/fbsearch/places/?timezone_offset=43200&lat={0}&lng={1}";
+        /// <summary>
+        /// get search places
+        /// </summary>
+        public const string FBSEARCH_PLACES_QUERY = API_SUFFIX + "/fbsearch/places/?timezone_offset=43200&lat={0}&lng={1}&query={2}&rank_token={3}";
+        /// <summary>
+        /// post data:
+        /// <para>section=suggested</para>
+        /// <para>user=["1 user id"]</para>
+        /// </summary>
+        public const string FBSEARCH_ = API_SUFFIX + "/fbsearch/hide_search_entities/";
+
+
 
         public const string DISCOVER_AYML = API_SUFFIX + "/discover/ayml/";
         public const string DISCOVER_TOP_LIVE = API_SUFFIX + "/discover/top_live/";
         public const string DISCOVER_TOP_LIVE_STATUS = API_SUFFIX + "/discover/top_live_status/";
 
+        public const string DISCOVER_CHAINING = API_SUFFIX + "/discover/chaining/?target_id={0}";
 
-        public const string FRIENDSHIPS_APPROVE = API_SUFFIX + "/friendships/approve/{0}";
-        public const string FRIENDSHIPS_IGNORE = API_SUFFIX + "/friendships/ignore/{0}";
+        public const string FRIENDSHIPS_APPROVE = API_SUFFIX + "/friendships/approve/{0}/";
+        public const string FRIENDSHIPS_IGNORE = API_SUFFIX + "/friendships/ignore/{0}/";
         public const string FRIENDSHIPS_PENDING_REQUESTS = API_SUFFIX + "/friendships/pending/?rank_mutual=0&rank_token={0}";
-
-
+        /// <summary>
+        /// get friendship status
+        /// <para>post data:</para>
+        /// <para>include_reel_info = 0</para>
+        /// <para>user_ids = user ids(PK) split with comma</para>
+        /// </summary>
+        public const string FRIENDSHIPS_SHOW_MANY = API_SUFFIX + "/friendships/show_many/";
+        /// <summary>
+        /// mute friend reel
+        /// <para>{0}: user id</para>
+        /// <para>post data:</para>
+        /// <para>tray_position=13</para>
+        /// <para>reel_type=story</para>
+        /// </summary>
+        public const string FRIENDSHIPS_MUTE_FRIEND_REEL = API_SUFFIX + "/friendships/mute_friend_reel/{0}/";
+        /// <summary>
+        /// post method
+        /// </summary>
+        public const string FRIENDSHIPS_FAVORITE = API_SUFFIX + "/friendships/favorite/{0}/";
+        /// <summary>
+        /// post method
+        /// </summary>
+        public const string FRIENDSHIPS_UNFAVORITE = API_SUFFIX + "/friendships/unfavorite/{0}/";
+        /// <summary>
+        /// unhide your stories from a specific user
+        /// </summary>
+        public const string FRIENDSHIPS_UNBLOCK_FRIEND_REEL = API_SUFFIX + "/friendships/unblock_friend_reel/{0}";
+        /// <summary>
+        /// hide your stories from specific users
+        /// </summary>
+        public const string FRIENDSHIPS_SET_REEL_BLOCK_STATUS = API_SUFFIX + "/friendships/set_reel_block_status/";
+        /// <summary>
+        /// get blocked users from self stories
+        /// </summary>
+        public const string FRIENDSHIPS_BLOCKED_REEL = API_VERSION + "/friendships/blocked_reels/";
+        public const string FRIENDSHIPS_REMOVE_FOLLOWER = API_SUFFIX + "/friendships/remove_follower/";
 
         public const string LIVE_HEARTBEAT_AND_GET_VIEWER_COUNT = API_SUFFIX + "/live/{0}/heartbeat_and_get_viewer_count/";
         public const string LIVE_GET_FINAL_VIEWER_LIST = API_SUFFIX + "/live/{0}/get_final_viewer_list/";
@@ -247,7 +312,7 @@ namespace InstagramApiSharp.API
         public const string HIGHLIGHT_TRAY = API_SUFFIX + "/highlights/{0}/highlights_tray/";
         public const string HIGHLIGHT_EDIT_REEL = API_SUFFIX + "/highlights/{0}/edit_reel/";
         public const string HIGHLIGHT_CREATE_REEL = API_SUFFIX + "/highlights/create_reel/";
-
+        public const string HIGHLIGHT_DELETE_REEL = API_SUFFIX + "/highlights/{0}/delete_reel/";
         public const string FB_FACEBOOK_SIGNUP = API_SUFFIX + "/fb/facebook_signup/";
 
 
@@ -256,6 +321,78 @@ namespace InstagramApiSharp.API
         public const string IGTV_SEARCH = API_SUFFIX + "/igtv/search/?query={0}";
         public const string IGTV_SUGGESTED_SEARCHES = API_SUFFIX + "/igtv/suggested_searches/";
         public const string MEDIA_CONFIGURE_TO_IGTV = API_SUFFIX + "/media/configure_to_igtv/";
+
+
+        public const string FRIENDSHIP_AUTOCOMPLETE_USER_LIST = API_SUFFIX + "/friendships/autocomplete_user_list/";
+
+
+        public const string NOTIFICATION_BADGE = API_SUFFIX + "/notifications/badge/";
+        public const string PUSH_REGISTER = API_SUFFIX + "/push/register/";
+
+        /// <summary>
+        /// queries:
+        /// <para>visited = [{"id":"TAG ID","type":"hashtag"}]</para>
+        /// <para>related_types = ["location","hashtag"]</para>
+        /// </summary>
+        public const string TAG_RELATED = API_SUFFIX + "/tags/{0}/related/";
+        /// <summary>
+        /// post params:
+        /// <para>"action":"click"</para>
+        /// </summary>
+        public const string NEWS_LOG = API_SUFFIX + "/news/log/";
+        /// <summary>
+        /// get
+        /// </summary>
+        public const string USERS_FOLLOWING_TAG_INFO = API_SUFFIX + "/users/{0}/following_tags_info/";
+        /// <summary>
+        /// user id 
+        /// </summary>
+        public const string USERS_FULL_DETAIL_INFO = API_SUFFIX + "/users/{0}/full_detail_info/";
+        /// <summary>
+        /// get
+        /// </summary>
+        public const string FEED_SAVED = API_SUFFIX + "/feed/saved/";
+        /// <summary>
+        /// {0} = rank token <<<<< this endpoint is deprecated
+        /// </summary>
+        public const string FEED_POPULAR = API_VERSION + "/feed/popular/?people_teaser_supported=1&rank_token={0}&ranked_content=true";
+        /// <summary>
+        /// {0} media id, {1} user pk
+        /// <para>post data:</para>
+        /// <para>module_name=single_feed_profile</para>
+        /// </summary>
+        public const string MEDIA_SAVE = API_SUFFIX + "/media/{0}_{1}/save/";
+        /// <summary>
+        /// {0} media id, {1} user pk
+        /// <para>post data:</para>
+        /// <para>module_name=single_feed_profile</para>
+        /// </summary>
+        public const string MEDIA_UNSAVE = API_SUFFIX + "/media/{0}_{1}/unsave/";
+        /// <summary>
+        ///  get media infos
+        ///  <para>get method | queries:</para>
+        ///  <para>_uuid</para>
+        ///  <para>_csrftoken</para>
+        ///  <para>media_ids= split with comma</para>
+        ///  <para>ranked_content=true</para>
+        ///  <para>include_inactive_reel=true</para>
+        /// </summary>
+        public const string MEDIA_INFOS = API_SUFFIX + "/media/infos/";
+
+        public const string MEGAPHONE_LOG = API_SUFFIX + "/megaphone/log/";
+
+        public const string QE_EXPOSE = API_SUFFIX + "/qe/expose/";
+        /// <summary>
+        /// {0} => external id
+        /// </summary>
+        public const string LOCATIONS_INFO = API_SUFFIX + "/locations/{0}/info/";
+        /// <summary>
+        /// {0} => external id
+        /// </summary>
+        public const string LOCATIONS_RELEATED = API_SUFFIX + "/locations/{0}/related/";
+
+        public const string LANGUAGE_TRANSLATE = API_SUFFIX + "/language/translate/";
+        public const string LANGUAGE_TRANSLATE_MULTIPLE = API_SUFFIX + "/language/bulk_translate/";
 
         public static readonly Uri BaseInstagramUri = new Uri(BASE_INSTAGRAM_API_URL);
     }

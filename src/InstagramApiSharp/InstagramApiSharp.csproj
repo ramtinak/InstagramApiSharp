@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.0.1</Version>
-    <AssemblyVersion>1.1.0.1</AssemblyVersion>
-    <FileVersion>1.1.0.1</FileVersion>
+    <Version>1.1.0.2</Version>
+    <AssemblyVersion>1.1.0.2</AssemblyVersion>
+    <FileVersion>1.1.0.2</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -36,7 +36,13 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.0.1
+    <PackageReleaseNotes>v1.1.0.2
+- [Add] ShareMediaToThreadAsync to MessagingProcessor
+- [Add] GetFullUserInfoAsync to UserProcessor
+- [Add] 1 new device to AndroidDevices
+- [Cleanup] some classes
+
+v1.1.0.1
 - [Change] SendDirectMessageAsync to SendDirectTextAsync
 - [Fix] SendDirectTextAsync issue
 - [Add] DeleteMultipleCommentsAsync to CommentProcessor

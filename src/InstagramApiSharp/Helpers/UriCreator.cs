@@ -181,8 +181,9 @@ namespace InstagramApiSharp.Helpers
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_INBOX, out var instaUri))
                 throw new Exception("Cant create URI for get inbox");
             return !string.IsNullOrEmpty(NextId)
-                ? new UriBuilder(instaUri) { Query = $"cursor={NextId}" }.Uri
-                : instaUri;
+                ? new UriBuilder(instaUri) { Query = $"visual_message_return_type=unseen&persistentBadging=true&use_unified_inbox=true&cursor={NextId}" }.Uri
+                 : new UriBuilder(instaUri) { Query = "visual_message_return_type=unseen&persistentBadging=true&use_unified_inbox=true" }.Uri;
+                //: instaUri;
             //        return instaUri
             ////GET /api/v1/direct_v2/inbox/?visual_message_return_type=unseen&persistentBadging=true&use_unified_inbox=true
             //.AddQueryParameterIfNotEmpty("visual_message_return_type", "unseen")
@@ -1235,6 +1236,23 @@ namespace InstagramApiSharp.Helpers
                 !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DELETE_MULTIPLE_COMMENT, mediaId),
                     out var instaUri))
                 throw new Exception("Cant create URI for delete multiple comments");
+            return instaUri;
+        }
+        public static Uri GetFullUserInfoUri(long userId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USERS_FULL_DETAIL_INFO, userId),
+                    out var instaUri))
+                throw new Exception("Cant create URI for full user info");
+            return instaUri;
+        }
+
+        public static Uri GetMediaShareUri(InstaMediaType mediaType)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_BROADCAST_MEDIA_SHARE, mediaType.ToString().ToLower()),
+                    out var instaUri))
+                throw new Exception("Cant create URI for media share");
             return instaUri;
         }
     }
