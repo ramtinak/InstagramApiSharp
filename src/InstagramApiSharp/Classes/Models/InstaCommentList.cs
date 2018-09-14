@@ -2,7 +2,7 @@
 
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaCommentList : IInstaBaseList
+    public class InstaCommentList
     {
         public bool LikesEnabled { get; set; }
 
@@ -12,10 +12,30 @@ namespace InstagramApiSharp.Classes.Models
 
         public InstaCaption Caption { get; set; }
 
-        public bool MoreComentsAvailable { get; set; }
+        public bool MoreCommentsAvailable { get; set; }
 
         public List<InstaComment> Comments { get; set; } = new List<InstaComment>();
 
-        public string NextId { get; set; }
+        public string NextMaxId { get; set; }
+
+        public int CommentsCount { get; set; }
+                
+        public bool ThreadingEnabled { get; set; }
+        
+        public string MediaHeaderDisplay { get; set; }
+        
+        public bool InitiateAtTop { get; set; }
+        
+        public bool InsertNewCommentToTop { get; set; }
+        
+        public List<InstaComment> PreviewComments { get; set; }
+        
+        public bool CanViewMorePreviewComments { get; set; }
+        
+        public string NextMinId { get; set; }
+
+
+
+
     }
 }

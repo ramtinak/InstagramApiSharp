@@ -289,6 +289,11 @@ InstaHighlightReelResponse response)
         {
             return new InstaFullUserInfoConverter { SourceObject = response };
         }
+        public IObjectConverter<InstaCommentShort, InstaCommentShortResponse> GetCommentShortConverter(
+            InstaCommentShortResponse response)
+        {
+            return new InstaCommentShortConverter { SourceObject = response };
+        }
 
 
     }

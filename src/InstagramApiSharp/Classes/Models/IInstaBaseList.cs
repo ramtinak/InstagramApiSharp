@@ -2,6 +2,6 @@
 {
     public interface IInstaBaseList
     {
-        string NextId { get; set; }
+        string NextMaxId { get; set; }
     }
 }

@@ -27,7 +27,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             AndroidDevices.SONY_Z3_COMPACT,
             AndroidDevices.XPERIA_Z5,
             AndroidDevices.HONOR_8LITE,
-            AndroidDevices.XIAOMI_MI_4W
+            AndroidDevices.XIAOMI_MI_4W,
+            AndroidDevices.HTC_ONE_PLUS
         };
 
         public static Dictionary<string, AndroidDevice> AndroidAndroidDeviceSets = new Dictionary<string, AndroidDevice>
@@ -518,7 +519,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     AndroidBoardName = "MI",
                     DeviceBrand = "Xiaomi",
                     HardwareManufacturer = "Xiaomi",
-                    DeviceModel = "PRA-LA1",
+                    DeviceModel = "MI-4W",
                     DeviceModelIdentifier = "4W",
                     FirmwareBrand = "4W",
                     HardwareModel = "cancro",
@@ -541,7 +542,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     AndroidBoardName = "HM",
                     DeviceBrand = "Xiaomi",
                     HardwareManufacturer = "Xiaomi",
-                    DeviceModel = "PRA-LA1",
+                    DeviceModel = "HM-1SW",
                     DeviceModelIdentifier = "1SW",
                     FirmwareBrand = "1SW",
                     HardwareModel = "armani",
@@ -551,6 +552,29 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     Resolution = "720x1280",
                     Dpi = "320dpi",
                     FirmwareFingerprint = "Xiaomi/HM/1SW:6.0/cancro/95414346:user/release-keys",
+                    AndroidBootloader = "4.23",
+                    DeviceModelBoot = "qcom",
+                    FirmwareTags = "release-keys",
+                    FirmwareType = "user"
+                }
+            },
+            {
+                AndroidDevices.HTC_ONE_PLUS,
+                new AndroidDevice
+                {
+                    AndroidBoardName = "One",
+                    DeviceBrand = "Htc",
+                    HardwareManufacturer = "Htc",
+                    DeviceModel = "One-Plus",
+                    DeviceModelIdentifier = "Plus",
+                    FirmwareBrand = "Plus",
+                    HardwareModel = "A3010",
+                    DeviceGuid = new Guid("43691b4d-4fcf-46c9-9c1f-a65a38c4ecc2"),
+                    PhoneGuid = new Guid("e17e7301-5ff0-4819-88da-27b320a79d4e"),
+                    DeviceId = ApiRequestMessage.GenerateDeviceIdFromGuid(new Guid("43691b4d-4fcf-46c9-9c1f-a65a38c4ecc2")),
+                    Resolution = "1080x1920",
+                    Dpi = "380dpi",
+                    FirmwareFingerprint = "Htc/One/Plus:6.0/cancro/95414346:user/release-keys",
                     AndroidBootloader = "4.23",
                     DeviceModelBoot = "qcom",
                     FirmwareTags = "release-keys",

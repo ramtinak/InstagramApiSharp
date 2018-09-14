@@ -3,6 +3,6 @@
     public class InstaBaseFeed : IInstaBaseList
     {
         public InstaMediaList Medias { get; set; } = new InstaMediaList();
-        public string NextId { get; set; }
+        public string NextMaxId { get; set; }
     }
 }

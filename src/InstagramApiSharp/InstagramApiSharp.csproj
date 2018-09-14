@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452;uap10.0</TargetFrameworks>
-    <VersionPrefix>1.1.0.0</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.0.5</Version>
-    <AssemblyVersion>1.1.0.5</AssemblyVersion>
-    <FileVersion>1.1.0.5</FileVersion>
+    <Version>1.1.0.7</Version>
+    <AssemblyVersion>1.1.0.7</AssemblyVersion>
+    <FileVersion>1.1.0.7</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -36,7 +36,17 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.0.5
+    <PackageReleaseNotes>v1.1.0.7
+- [Bugfix] for ShareMediaToThreadAsync (thx to @huseyinkarael for report)
+- [Bugfix] for image/video uploader (thx to @alexrepetskyi for report)
+- [Bugfix] for like/unlike comment (thx to @aspmaker for report)
+- [Bugfix] for GetMediaCommentsAsync (thx to @aspmaker for report)
+- [Bugfix] for GetMediaRepliesCommentsAsync (thx to @aspmaker for report)
+- [Add] Some new property to InstaComment
+- [Add] LeaveGroupThreadAsync to MessagingProcessor
+- [Add] 1 new device to AndroidDevices
+
+v1.1.0.5
 - [Add] Progress changed action to every uploading functions(media,story,direct)
 - [Bugfix] for random android version (thx to @aspmaker )
 

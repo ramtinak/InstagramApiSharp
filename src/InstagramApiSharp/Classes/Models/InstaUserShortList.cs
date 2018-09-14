@@ -4,6 +4,6 @@ namespace InstagramApiSharp.Classes.Models
 {
     public class InstaUserShortList : List<InstaUserShort>, IInstaBaseList
     {
-        public string NextId { get; set; }
+        public string NextMaxId { get; set; }
     }
 }

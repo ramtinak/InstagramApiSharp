@@ -109,7 +109,7 @@ namespace InstagramApiSharp.API.Processors
                 var feedResponse = JsonConvert.DeserializeObject<InstaLocationFeedResponse>(json);
                 var feed = ConvertersFabric.Instance.GetLocationFeedConverter(feedResponse).Convert();
                 paginationParameters.PagesLoaded++;
-                paginationParameters.NextId = feed.NextId;
+                paginationParameters.NextId = feed.NextMaxId;
 
                 while (feedResponse.MoreAvailable
                        && !string.IsNullOrEmpty(paginationParameters.NextId)
@@ -118,9 +118,9 @@ namespace InstagramApiSharp.API.Processors
                     var nextFeed = await GetLocationFeedAsync(locationId, paginationParameters);
                     if (!nextFeed.Succeeded)
                         return nextFeed;
-                    paginationParameters.StartFromId(nextFeed.Value.NextId);
+                    paginationParameters.StartFromId(nextFeed.Value.NextMaxId);
                     paginationParameters.PagesLoaded++;
-                    feed.NextId = nextFeed.Value.NextId;
+                    feed.NextMaxId = nextFeed.Value.NextMaxId;
                     feed.Medias.AddRange(nextFeed.Value.Medias);
                     feed.RankedMedias.AddRange(nextFeed.Value.RankedMedias);
                 }

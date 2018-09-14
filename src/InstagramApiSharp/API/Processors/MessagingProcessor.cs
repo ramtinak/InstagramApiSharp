@@ -117,7 +117,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
+                //Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaDirectInboxContainer>(response, json);
                 var inboxResponse = JsonConvert.DeserializeObject<InstaDirectInboxContainerResponse>(json);
@@ -756,6 +756,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                //Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
@@ -847,7 +848,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         /// </summary>
         /// <param name="threadId">Thread id</param>
         /// <param name="title">New title</param>
-        public async Task<IResult<bool>> UpdateDirectThreadAsync(string threadId, string title)
+        public async Task<IResult<bool>> UpdateDirectThreadTitleAsync(string threadId, string title)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -875,7 +876,38 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 return Result.Fail<bool>(exception);
             }
         }
-
+        /// <summary>
+        ///     Leave from group thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        public async Task<IResult<bool>> LeaveGroupThreadAsync(string threadId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetLeaveThreadUri(threadId);
+                var clientContext = Guid.NewGuid().ToString();
+                var data = new Dictionary<string, string>
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                };
+                var request =
+                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                //Debug.WriteLine(json);
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
         private async Task<IResult<bool>> DeclineDirectPendingRequests(bool all, params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);

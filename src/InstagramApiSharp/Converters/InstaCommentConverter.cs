@@ -2,7 +2,8 @@ using System;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Helpers;
-
+using System.Linq;
+using System.Collections.Generic;
 namespace InstagramApiSharp.Converters
 {
     internal class InstaCommentConverter
@@ -29,10 +30,23 @@ namespace InstagramApiSharp.Converters
                 ChildCommentCount = SourceObject.ChildCommentCount,
                 HasLikedComment = SourceObject.HasLikedComment,
                 HasMoreHeadChildComments = SourceObject.HasMoreHeadChildComments,
-                HasMoreTailChildComments = SourceObject.HasMoreTailChildComments,
-                NextMaxChildCursor = SourceObject.NextMaxChildCursor,
-                NumTailChildComments = SourceObject.NumTailChildComments
+                HasMoreTailChildComments = SourceObject.HasMoreTailChildComments
             };
+            if (SourceObject.OtherPreviewUsers != null && SourceObject.OtherPreviewUsers.Any())
+            {
+                if (comment.OtherPreviewUsers == null)
+                    comment.OtherPreviewUsers = new List<InstaUserShort>();
+                foreach (var user in SourceObject.OtherPreviewUsers)
+                    comment.OtherPreviewUsers.Add(ConvertersFabric.Instance.GetUserShortConverter(user).Convert());
+            }
+            if (SourceObject.PreviewChildComments != null && SourceObject.PreviewChildComments.Any())
+            {
+                if (comment.PreviewChildComments == null)
+                    comment.PreviewChildComments = new List<InstaCommentShort>();
+
+                foreach (var cm in SourceObject.PreviewChildComments)
+                    comment.PreviewChildComments.Add(ConvertersFabric.Instance.GetCommentShortConverter(cm).Convert());
+            }
             return comment;
         }
     }

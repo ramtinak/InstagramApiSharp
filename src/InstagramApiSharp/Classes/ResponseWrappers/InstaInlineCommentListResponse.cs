@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    internal class InstaInlineCommentListResponseOLD : BaseStatusResponse
+    public class InstaInlineCommentListResponse : BaseStatusResponse
     {
         [JsonProperty("child_comment_count")]
         public int ChildCommentCount { get; set; }
@@ -16,7 +16,10 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public bool HasMoreHeadChildComments { get; set; }
 
         [JsonProperty("next_max_child_cursor")]
-        public string NextId { get; set; }
+        public string NextMaxId { get; set; }
+
+        [JsonProperty("next_in_child_cursor")]
+        public string NextMinId { get; set; }
 
         [JsonProperty("num_tail_child_comments")]
         public int NumTailChildComments { get; set; }
@@ -25,11 +28,10 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("child_comments")] public List<InstaCommentResponse> ChildComments { get; set; }
 
-
     }
 
 
-    public class InstaInlineCommentListResponse
+    class InstaInlineCommentListResponseABC
     {
         [JsonProperty("comment_likes_enabled")]
         public bool CommentLikesEnabled { get; set; }
@@ -78,5 +80,4 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public string ServerCursor { get; set; }
     }
     
-
 }

@@ -120,7 +120,7 @@ namespace InstagramApiSharp.API.Processors
                     {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
                     {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
                     {
-                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"95\"}"),
                         "\"image_compression\""
                     }
                 };
@@ -239,8 +239,8 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
-                var videoHashCode = Path.GetFileName(video.Video.Uri).GetHashCode();
-                var photoHashCode = Path.GetFileName(video.VideoThumbnail.Uri).GetHashCode();
+                var videoHashCode = Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4").GetHashCode();
+                var photoHashCode = Path.GetFileName(video.VideoThumbnail.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
 
                 var waterfallId = Guid.NewGuid().ToString();
       
@@ -311,7 +311,7 @@ namespace InstagramApiSharp.API.Processors
                 };
                 request = HttpHelper.GetDefaultRequest(HttpMethod.Post, videoUri, _deviceInfo);
                 request.Content = progressContent;
-                var vidExt = Path.GetExtension(video.Video.Uri).Replace(".", "").ToLower();
+                var vidExt = Path.GetExtension(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4").Replace(".", "").ToLower();
                 if(vidExt == "mov")
                     request.Headers.Add("X-Entity-Type", "video/quicktime");
                 else

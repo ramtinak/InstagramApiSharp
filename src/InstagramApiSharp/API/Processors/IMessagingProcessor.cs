@@ -245,6 +245,11 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="threadId">Thread id</param>
         /// <param name="title">New title</param>
-        Task<IResult<bool>> UpdateDirectThreadAsync(string threadId, string title);
+        Task<IResult<bool>> UpdateDirectThreadTitleAsync(string threadId, string title);
+        /// <summary>
+        ///     Leave from group thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        Task<IResult<bool>> LeaveGroupThreadAsync(string threadId);
     }
 }

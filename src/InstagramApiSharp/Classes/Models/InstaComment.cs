@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models
 {
@@ -29,14 +30,16 @@ namespace InstagramApiSharp.Classes.Models
 
         public int ChildCommentCount { get; set; }
 
-        public int NumTailChildComments { get; set; }
+        //public int NumTailChildComments { get; set; }
 
         public bool HasMoreTailChildComments { get; set; }
 
         public bool HasMoreHeadChildComments { get; set; }
 
-        public string NextMaxChildCursor { get; set; }
+        //public string NextMaxChildCursor { get; set; }
+        public List<InstaCommentShort> PreviewChildComments { get; set; } = new List<InstaCommentShort>();
 
+        public List<InstaUserShort> OtherPreviewUsers { get; set; } = new List<InstaUserShort>();
         public bool Equals(InstaComment comment)
         {
             return Pk == comment?.Pk;

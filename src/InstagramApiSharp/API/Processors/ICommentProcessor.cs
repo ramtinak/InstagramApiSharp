@@ -12,7 +12,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="mediaId">Media id</param>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        Task<IResult<InstaInlineCommentList>>
+        Task<IResult<InstaCommentList>>
             GetMediaCommentsAsync(string mediaId, PaginationParameters paginationParameters);
         /// <summary>
         ///     Get media inline comments
@@ -71,14 +71,12 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Like media comment
         /// </summary>
-        /// <param name="mediaId">Media id</param>
         /// <param name="commentId">Comment id</param>
-        Task<IResult<bool>> LikeCommentAsync(string mediaId, string commentId);
+        Task<IResult<bool>> LikeCommentAsync(string commentId);
         /// <summary>
         ///     Unlike media comment
         /// </summary>
-        /// <param name="mediaId">Media id</param>
         /// <param name="commentId">Comment id</param>
-        Task<IResult<bool>> UnlikeCommentAsync(string mediaId, string commentId);
+        Task<IResult<bool>> UnlikeCommentAsync(string commentId);
     }
 }

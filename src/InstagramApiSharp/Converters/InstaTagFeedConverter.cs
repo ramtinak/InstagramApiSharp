@@ -31,7 +31,7 @@ namespace InstagramApiSharp.Converters
 
             feed.RankedMedias.AddRange(ConvertMedia(SourceObject.RankedItems));
             feed.Medias.AddRange(ConvertMedia(SourceObject.Medias));
-            feed.NextId = SourceObject.NextMaxId;
+            feed.NextMaxId = SourceObject.NextMaxId;
             foreach (var story in SourceObject.Stories)
             {
                 var feedItem = ConvertersFabric.Instance.GetStoryConverter(story).Convert();

@@ -33,7 +33,7 @@ namespace InstagramApiSharp.Converters
             var feed = new InstaLocationFeed
             {
                 MediaCount = SourceObject.MediaCount,
-                NextId = SourceObject.NextMaxId,
+                NextMaxId = SourceObject.NextMaxId,
                 Medias = ConvertMedia(SourceObject.Items),
                 RankedMedias = ConvertMedia(SourceObject.RankedItems),
                 Location = ConvertersFabric.Instance.GetLocationConverter(SourceObject.Location).Convert(),

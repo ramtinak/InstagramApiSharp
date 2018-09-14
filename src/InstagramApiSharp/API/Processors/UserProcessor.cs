@@ -315,7 +315,7 @@ namespace InstagramApiSharp.API.Processors
                 followers.AddRange(
                     followersResponse.Value.Items?.Select(ConvertersFabric.Instance.GetUserShortConverter)
                         .Select(converter => converter.Convert()));
-                followers.NextId = followersResponse.Value.NextMaxId;
+                followers.NextMaxId = followersResponse.Value.NextMaxId;
 
                 var pagesLoaded = 1;
                 while (!string.IsNullOrEmpty(followersResponse.Value.NextMaxId)
@@ -331,7 +331,7 @@ namespace InstagramApiSharp.API.Processors
                         followersResponse.Value.Items?.Select(ConvertersFabric.Instance.GetUserShortConverter)
                             .Select(converter => converter.Convert()));
                     pagesLoaded++;
-                    followers.NextId = followersResponse.Value.NextMaxId;
+                    followers.NextMaxId = followersResponse.Value.NextMaxId;
                 }
 
                 return Result.Success(followers);
@@ -368,9 +368,9 @@ namespace InstagramApiSharp.API.Processors
                 following.AddRange(
                     userListResponse.Value.Items.Select(ConvertersFabric.Instance.GetUserShortConverter)
                         .Select(converter => converter.Convert()));
-                following.NextId = userListResponse.Value.NextMaxId;
+                following.NextMaxId = userListResponse.Value.NextMaxId;
                 var pages = 1;
-                while (!string.IsNullOrEmpty(following.NextId)
+                while (!string.IsNullOrEmpty(following.NextMaxId)
                        && pages < paginationParameters.MaximumPagesToLoad)
                 {
                     var nextUri =
@@ -383,7 +383,7 @@ namespace InstagramApiSharp.API.Processors
                         userListResponse.Value.Items.Select(ConvertersFabric.Instance.GetUserShortConverter)
                             .Select(converter => converter.Convert()));
                     pages++;
-                    following.NextId = userListResponse.Value.NextMaxId;
+                    following.NextMaxId = userListResponse.Value.NextMaxId;
                 }
 
                 return Result.Success(following);
@@ -496,7 +496,7 @@ namespace InstagramApiSharp.API.Processors
                 userTags.AddRange(
                     mediaResponse.Medias.Select(ConvertersFabric.Instance.GetSingleMediaConverter)
                         .Select(converter => converter.Convert()));
-                userTags.NextId = paginationParameters.NextId = mediaResponse.NextMaxId;
+                userTags.NextMaxId = paginationParameters.NextId = mediaResponse.NextMaxId;
                 paginationParameters.PagesLoaded++;
 
                 while (mediaResponse.MoreAvailable
@@ -508,7 +508,7 @@ namespace InstagramApiSharp.API.Processors
                         return nextMedia;
 
                     userTags.AddRange(nextMedia.Value);
-                    userTags.NextId = paginationParameters.NextId = nextMedia.Value.NextId;
+                    userTags.NextMaxId = paginationParameters.NextId = nextMedia.Value.NextMaxId;
                 }
 
                 return Result.Success(userTags);
@@ -665,7 +665,7 @@ namespace InstagramApiSharp.API.Processors
                 feedPage.Stories.Select(ConvertersFabric.Instance.GetSingleRecentActivityConverter)
                     .Select(converter => converter.Convert()));
             paginationParameters.PagesLoaded++;
-            activityFeed.NextId = paginationParameters.NextId = feedPage.NextMaxId;
+            activityFeed.NextMaxId = paginationParameters.NextId = feedPage.NextMaxId;
             while (!string.IsNullOrEmpty(nextId)
                    && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
             {
@@ -677,7 +677,7 @@ namespace InstagramApiSharp.API.Processors
                     feedPage.Stories.Select(ConvertersFabric.Instance.GetSingleRecentActivityConverter)
                         .Select(converter => converter.Convert()));
                 paginationParameters.PagesLoaded++;
-                activityFeed.NextId = paginationParameters.NextId = nextId;
+                activityFeed.NextMaxId = paginationParameters.NextId = nextId;
             }
 
             return Result.Success(activityFeed);
@@ -735,7 +735,7 @@ namespace InstagramApiSharp.API.Processors
                     new InstaMediaListDataConverter());
 
                 mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();
-                mediaList.NextId = paginationParameters.NextId = mediaResponse.NextMaxId;
+                mediaList.NextMaxId = paginationParameters.NextId = mediaResponse.NextMaxId;
                 paginationParameters.PagesLoaded++;
 
                 while (mediaResponse.MoreAvailable
@@ -745,7 +745,7 @@ namespace InstagramApiSharp.API.Processors
                     var nextMedia = await GetUserMediaAsync(userId, paginationParameters);
                     if (!nextMedia.Succeeded)
                         return Result.Fail(nextMedia.Info, mediaList);
-                    mediaList.NextId = paginationParameters.NextId = nextMedia.Value.NextId;
+                    mediaList.NextMaxId = paginationParameters.NextId = nextMedia.Value.NextMaxId;
                     mediaList.AddRange(nextMedia.Value);
                 }
 

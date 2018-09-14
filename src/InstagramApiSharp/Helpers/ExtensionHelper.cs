@@ -95,5 +95,14 @@ namespace InstagramApiSharp
 
             }
         }
+        static Random Rnd = new Random();
+        public static string GenerateRandomString(this int length)
+        {
+            const string pool = "abcdefghijklmnopqrstuvwxyz0123456789";
+            var chars = Enumerable.Range(0, length)
+                .Select(x => pool[Rnd.Next(0, pool.Length)]);
+            return new string(chars.ToArray());
+        }
+
     }
 }

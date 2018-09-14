@@ -216,7 +216,7 @@ namespace InstagramApiSharp.API.Processors
                 var videoContent = new ByteArrayContent(fileBytes);
                 videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 videoContent.Headers.Add("Content-Type", "application/octet-stream");
-                videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri)}\"");
+                videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4")}\"");
                 var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
                 {
                     UploaderProgress = upProgress
@@ -580,7 +580,7 @@ namespace InstagramApiSharp.API.Processors
                         var videoContent = new ByteArrayContent(videoBytes);
                         videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
                         videoContent.Headers.Add("Content-Type", "application/octet-stream");
-                        videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri)}\"");
+                        videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4")}\"");
                         var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
                         {
                             UploaderProgress = upProgress

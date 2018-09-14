@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-
+using System.Collections.Generic;
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaCommentResponse
@@ -32,12 +32,17 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("child_comment_count")] public int ChildCommentCount { get; set; }
 
-        [JsonProperty("num_tail_child_comments")] public int NumTailChildComments { get; set; }
+        //[JsonProperty("num_tail_child_comments")] public int NumTailChildComments { get; set; }
 
         [JsonProperty("has_more_tail_child_comments")] public bool HasMoreTailChildComments { get; set; }
 
         [JsonProperty("has_more_head_child_comments")] public bool HasMoreHeadChildComments { get; set; }
 
-        [JsonProperty("next_max_child_cursor")] public string NextMaxChildCursor { get; set; }
+        //[JsonProperty("next_max_child_cursor")] public string NextMaxChildCursor { get; set; }
+
+        [JsonProperty("preview_child_comments")] public List<InstaCommentShortResponse> PreviewChildComments { get; set; } 
+
+        [JsonProperty("other_preview_users")] public List<InstaUserShortResponse> OtherPreviewUsers { get; set; }
+
     }
 }

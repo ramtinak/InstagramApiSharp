@@ -39,7 +39,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="mediaId">Media id</param>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        public async Task<IResult<InstaInlineCommentList>> GetMediaCommentsAsync(string mediaId,
+        public async Task<IResult<InstaCommentList>> GetMediaCommentsAsync(string mediaId,
             PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -50,35 +50,45 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaInlineCommentList>(response, json);
-                var commentListResponse = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
-
+                    return Result.UnExpectedResponse<InstaCommentList>(response, json);
+                var commentListResponse = JsonConvert.DeserializeObject<InstaCommentListResponse>(json);
                 var pagesLoaded = 1;
-
-                InstaInlineCommentList Convert(InstaInlineCommentListResponse commentsResponse)
+                InstaCommentList Convert(InstaCommentListResponse commentsResponse)
                 {
-                    return ConvertersFabric.Instance.GetInlineCommentsConverter(commentsResponse).Convert();
+                    return ConvertersFabric.Instance.GetCommentListConverter(commentsResponse).Convert();
                 }
 
-                while (commentListResponse.HasMoreComments
+                while (commentListResponse.MoreCommentsAvailable
                        && !string.IsNullOrEmpty(commentListResponse.NextMaxId)
+                       && pagesLoaded < paginationParameters.MaximumPagesToLoad ||
+
+                       commentListResponse.MoreHeadLoadAvailable
+                       && !string.IsNullOrEmpty(commentListResponse.NextMinId)
                        && pagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var nextComments = await GetCommentListWithMaxIdAsync(mediaId, commentListResponse.NextMinId);
+                    IResult<InstaCommentListResponse> nextComments;
+                    if(!string.IsNullOrEmpty(commentListResponse.NextMaxId))
+                        nextComments = await GetCommentListWithMaxIdAsync(mediaId, commentListResponse.NextMaxId,null);
+                    else 
+                        nextComments = await GetCommentListWithMaxIdAsync(mediaId,null, commentListResponse.NextMinId);
+
                     if (!nextComments.Succeeded)
                         return Result.Fail(nextComments.Info, Convert(commentListResponse));
                     commentListResponse.NextMaxId = nextComments.Value.NextMaxId;
-                    commentListResponse.HasMoreComments = nextComments.Value.HasMoreComments;
+                    commentListResponse.NextMinId = nextComments.Value.NextMinId;
+                    commentListResponse.MoreCommentsAvailable = nextComments.Value.MoreCommentsAvailable;
+                    commentListResponse.MoreHeadLoadAvailable = nextComments.Value.MoreHeadLoadAvailable;
                     commentListResponse.Comments.AddRange(nextComments.Value.Comments);
                     pagesLoaded++;
                 }
-                var comments = ConvertersFabric.Instance.GetInlineCommentsConverter(commentListResponse).Convert();
-                return Result.Success(comments);
+
+                var converter = ConvertersFabric.Instance.GetCommentListConverter(commentListResponse);
+                return Result.Success(converter.Convert());
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaInlineCommentList>(exception);
+                return Result.Fail<InstaCommentList>(exception);
             }
         }
         /// <summary>
@@ -93,12 +103,11 @@ namespace InstagramApiSharp.API.Processors
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
-            {
+            { 
                 var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommentId, paginationParameters.NextId);
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-               
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaInlineCommentList>(response, json);
                 var commentListResponse = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
@@ -109,17 +118,25 @@ namespace InstagramApiSharp.API.Processors
                 {
                     return ConvertersFabric.Instance.GetInlineCommentsConverter(commentsResponse).Convert();
                 }
-
-                while (commentListResponse.HasMoreComments
+                while (commentListResponse.HasMoreTailChildComments
                        && !string.IsNullOrEmpty(commentListResponse.NextMaxId)
+                       && pagesLoaded < paginationParameters.MaximumPagesToLoad ||
+                       commentListResponse.HasMoreHeadChildComments
+                       && !string.IsNullOrEmpty(commentListResponse.NextMinId)
                        && pagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var nextComments = await GetCommentListWithMaxIdAsync(mediaId, commentListResponse.NextMinId);
+                    IResult<InstaInlineCommentListResponse> nextComments;
+                    if (!string.IsNullOrEmpty(commentListResponse.NextMaxId))
+                        nextComments = await GetInlineCommentListWithMaxIdAsync(mediaId, targetCommentId, commentListResponse.NextMaxId, null);
+                    else
+                        nextComments = await GetInlineCommentListWithMaxIdAsync(mediaId, targetCommentId, null, commentListResponse.NextMinId);
                     if (!nextComments.Succeeded)
                         return Result.Fail(nextComments.Info, Convert(commentListResponse));
                     commentListResponse.NextMaxId = nextComments.Value.NextMaxId;
-                    commentListResponse.HasMoreComments = nextComments.Value.HasMoreComments;
-                    commentListResponse.Comments.AddRange(nextComments.Value.Comments);
+                    commentListResponse.NextMinId = nextComments.Value.NextMinId;
+                    commentListResponse.HasMoreHeadChildComments = nextComments.Value.HasMoreHeadChildComments;
+                    commentListResponse.HasMoreTailChildComments = nextComments.Value.HasMoreTailChildComments;
+                    commentListResponse.ChildComments.AddRange(nextComments.Value.ChildComments);
                     pagesLoaded++;
                 }
                 var comments = ConvertersFabric.Instance.GetInlineCommentsConverter(commentListResponse).Convert();
@@ -276,33 +293,38 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception.Message, false);
             }
         }
-        private async Task<IResult<InstaInlineCommentListResponse>> GetCommentListWithMaxIdAsync(string mediaId,
-            string nextId)
+        private async Task<IResult<InstaCommentListResponse>> GetCommentListWithMaxIdAsync(string mediaId,
+            string nextMaxId, string nextMinId)
         {
-            var commentsUri = UriCreator.GetMediaCommentsUri(mediaId, nextId);
+            Uri commentsUri = UriCreator.GetMediaCommentsUri(mediaId, nextMaxId);
+            if(!string.IsNullOrEmpty(nextMinId))
+                commentsUri = UriCreator.GetMediaCommentsMinIdUri(mediaId, nextMinId);
+              
             var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
-           
+                       
             if (response.StatusCode != HttpStatusCode.OK)
-                return Result.UnExpectedResponse<InstaInlineCommentListResponse>(response, json);
-            var comments = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
+                return Result.UnExpectedResponse<InstaCommentListResponse>(response, json);
+            var comments = JsonConvert.DeserializeObject<InstaCommentListResponse>(json);
             return Result.Success(comments);
         }
 
         private async Task<IResult<InstaInlineCommentListResponse>> GetInlineCommentListWithMaxIdAsync(string mediaId,
     string targetCommandId,
-    string nextId)
+    string nextMaxId, string nextMinId)
         {
-            var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommandId, nextId);
+            Uri commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommandId, nextMaxId);
+            if (!string.IsNullOrEmpty(nextMinId))
+                commentsUri = UriCreator.GetMediaInlineCommentsWithMinIdUri(mediaId, targetCommandId, nextMinId);
+
             var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
+
             if (response.StatusCode != HttpStatusCode.OK)
                 return Result.UnExpectedResponse<InstaInlineCommentListResponse>(response, json);
             var commentListResponse = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
-
-            //var comments = ConvertersFabric.Instance.GetInlineCommentsConverter(commentListResponse).Convert();
             return Result.Success(commentListResponse);
         }
         /// <summary>
@@ -430,14 +452,13 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Like media comment
         /// </summary>
-        /// <param name="mediaId">Media id</param>
         /// <param name="commentId">Comment id</param>
-        public async Task<IResult<bool>> LikeCommentAsync(string mediaId, string commentId)
+        public async Task<IResult<bool>> LikeCommentAsync(string commentId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetLikeCommentUri(mediaId, commentId);
+                var instaUri = UriCreator.GetLikeCommentUri(commentId);
                 var fields = new Dictionary<string, string>
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
@@ -448,6 +469,7 @@ namespace InstagramApiSharp.API.Processors
                     HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
@@ -461,14 +483,13 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Unlike media comment
         /// </summary>
-        /// <param name="mediaId">Media id</param>
         /// <param name="commentId">Comment id</param>
-        public async Task<IResult<bool>> UnlikeCommentAsync(string mediaId, string commentId)
+        public async Task<IResult<bool>> UnlikeCommentAsync(string commentId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetUnLikeCommentUri(mediaId, commentId);
+                var instaUri = UriCreator.GetUnLikeCommentUri(commentId);
                 var fields = new Dictionary<string, string>
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
@@ -479,6 +500,7 @@ namespace InstagramApiSharp.API.Processors
                     HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);

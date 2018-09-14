@@ -122,12 +122,14 @@ namespace InstagramApiSharp.API
         public const string DIRECT_BROADCAST_LINK = API_SUFFIX + "/direct_v2/threads/broadcast/link/";
         public const string DIRECT_BROADCAST_LOCATION = API_SUFFIX + "/direct_v2/threads/broadcast/location/";
         public const string DIRECT_BROADCAST_REACTION = API_SUFFIX + "/direct_v2/threads/broadcast/reaction/";
-        public const string DIRECT_BROADCAST_MEDIA_SHARE = API_VERSION + "/direct_v2/threads/broadcast/media_share/?media_type={0}";
+        public const string DIRECT_BROADCAST_MEDIA_SHARE = API_SUFFIX + "/direct_v2/threads/broadcast/media_share/?media_type={0}";
+        public const string DIRECT_BROADCAST_REEL_SHARE = API_SUFFIX + "/direct_v2/threads/broadcast/reel_share/";
 
         public const string DIRECT_THREAD_ITEM_SEEN = API_SUFFIX + "/direct_v2/visual_threads/{0}/item_seen/";
         public const string DIRECT_THREAD_UPDATE_TITLE = API_SUFFIX + "/direct_v2/threads/{0}/update_title/";
         public const string DIRECT_THREAD_MUTE = API_SUFFIX + "/direct_v2/threads/{0}/mute/";
         public const string DIRECT_THREAD_UNMUTE = API_SUFFIX + "/direct_v2/threads/{0}/unmute/";
+        public const string DIRECT_THREAD_LEAVE = API_SUFFIX + "/direct_v2/threads/{0}/leave/";
         /// <summary>
         /// post data:
         /// <para>use_unified_inbox=true</para>
@@ -146,6 +148,8 @@ namespace InstagramApiSharp.API
         public const string LIKE_MEDIA = API_SUFFIX + "/media/{0}/like/";
         public const string UNLIKE_MEDIA = API_SUFFIX + "/media/{0}/unlike/";
         public const string MEDIA_COMMENTS = API_SUFFIX + "/media/{0}/comments/?can_support_threading=true";
+        public const string MEDIA_INLINE_COMMENTS = API_SUFFIX + "/media/{0}/comments/{1}/inline_child_comments/";
+
         public const string MEDIA_LIKERS = API_SUFFIX + "/media/{0}/likers/";
         public const string FOLLOW_USER = API_SUFFIX + "/friendships/create/{0}/";
         public const string UNFOLLOW_USER = API_SUFFIX + "/friendships/destroy/{0}/";
@@ -160,8 +164,8 @@ namespace InstagramApiSharp.API
         public const string MEDIA_REPORT_COMMENT = API_SUFFIX + "/media/{0}/comment/{1}/flag/";
         public const string DELETE_COMMENT = API_SUFFIX + "/media/{0}/comment/{1}/delete/";
         public const string DELETE_MULTIPLE_COMMENT = API_SUFFIX + "/media/{0}/comment/bulk_delete/";
-        public const string LIKE_COMMENT = API_SUFFIX + "/media/{0}/comment/{1}/comment_like/";
-        public const string UNLIKE_COMMENT = API_SUFFIX + "/media/{0}/comment/{1}/comment_unlike/";
+        public const string LIKE_COMMENT = API_SUFFIX + "/media/{0}/comment_like/";
+        public const string UNLIKE_COMMENT = API_SUFFIX + "/media/{0}/comment_unlike/";
         public const string UPLOAD_PHOTO = API_SUFFIX + "/upload/photo/";
         public const string UPLOAD_VIDEO = API_SUFFIX + "/upload/video/";
         public const string MEDIA_CONFIGURE = API_SUFFIX + "/media/configure/";
@@ -203,6 +207,8 @@ namespace InstagramApiSharp.API
         public const string ACCOUNTS_GET_COMMENT_FILTER = API_SUFFIX + "/accounts/get_comment_filter/";
         public const string ACCOUNTS_REGEN_BACKUP_CODES = API_SUFFIX + "/accounts/regen_backup_codes/";
         public const string ACCOUNTS_SET_BIOGRAPHY = API_SUFFIX + "/accounts/set_biography/";
+        public const string ACCOUNTS_READ_MSISDN_HEADER = API_SUFFIX + "/accounts/read_msisdn_header/";
+        public const string ACCOUNTS_CONTACT_POINT_PREFILL = API_SUFFIX + "/accounts/contact_point_prefill/";
 
         public const string USER_CHECK_EMAIL = API_SUFFIX + "/users/check_email/";
         public const string USER_REEL_SETTINGS = API_SUFFIX + "/users/reel_settings/";
@@ -230,8 +236,9 @@ namespace InstagramApiSharp.API
         /// <para>section=suggested</para>
         /// <para>user=["1 user id"]</para>
         /// </summary>
-        public const string FBSEARCH_ = API_SUFFIX + "/fbsearch/hide_search_entities/";
+        public const string FBSEARCH_HIDE_SEARCH_ENTITIES = API_SUFFIX + "/fbsearch/hide_search_entities/";
 
+        public const string FBSEARCH_TOPSEARCH = API_SUFFIX + "/fbsearch/topsearch/";
 
 
         public const string DISCOVER_AYML = API_SUFFIX + "/discover/ayml/";

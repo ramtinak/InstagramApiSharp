@@ -1,5 +1,7 @@
 ﻿using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
+using Newtonsoft.Json;
+using System.Linq;
 
 namespace InstagramApiSharp.Converters
 {
@@ -14,11 +16,16 @@ namespace InstagramApiSharp.Converters
                 Caption = SourceObject.Caption != null
                     ? ConvertersFabric.Instance.GetCaptionConverter(SourceObject.Caption).Convert()
                     : null,
+                CanViewMorePreviewComments = SourceObject.CanViewMorePreviewComments,
                 CaptionIsEdited = SourceObject.CaptionIsEdited,
+                CommentsCount = SourceObject.CommentsCount,
+                MoreCommentsAvailable = SourceObject.MoreCommentsAvailable,
+                InitiateAtTop = SourceObject.InitiateAtTop,
+                InsertNewCommentToTop = SourceObject.InsertNewCommentToTop,
+                MediaHeaderDisplay = SourceObject.MediaHeaderDisplay,
+                ThreadingEnabled = SourceObject.ThreadingEnabled,
                 LikesEnabled = SourceObject.LikesEnabled,
-                MoreComentsAvailable = SourceObject.MoreComentsAvailable,
-                MoreHeadLoadAvailable = SourceObject.MoreHeadLoadAvailable,
-                NextId = SourceObject.NextMaxId
+                MoreHeadLoadAvailable = SourceObject.MoreHeadLoadAvailable, 
             };
             if (SourceObject.Comments == null || !(SourceObject?.Comments?.Count > 0)) return commentList;
             foreach (var commentResponse in SourceObject.Comments)
@@ -26,7 +33,35 @@ namespace InstagramApiSharp.Converters
                 var converter = ConvertersFabric.Instance.GetCommentConverter(commentResponse);
                 commentList.Comments.Add(converter.Convert());
             }
-
+            if (!string.IsNullOrEmpty(SourceObject.NextMinId))
+            {
+                try
+                {
+                    var convertedNextId = JsonConvert.DeserializeObject<InstaInlineCommentNextIdResponse>(SourceObject.NextMinId);
+                    commentList.NextMinId = convertedNextId.BifilterToken;
+                }
+                catch { commentList.NextMinId = SourceObject.NextMinId; }
+            }
+            if (!string.IsNullOrEmpty(SourceObject.NextMaxId))
+            {
+                try
+                {
+                    var convertedNextId = JsonConvert.DeserializeObject<InstaInlineCommentNextIdResponse>(SourceObject.NextMaxId);
+                    commentList.NextMaxId = convertedNextId.ServerCursor;
+                }
+                catch { commentList.NextMaxId = SourceObject.NextMaxId; }
+            }
+            if (SourceObject.PreviewComments != null && SourceObject.PreviewComments.Any())
+            {
+                foreach (var cmt in SourceObject.PreviewComments)
+                {
+                    try
+                    {
+                        commentList.PreviewComments.Add(ConvertersFabric.Instance.GetCommentConverter(cmt).Convert());
+                    }
+                    catch { }
+                }
+            }
             return commentList;
         }
     }

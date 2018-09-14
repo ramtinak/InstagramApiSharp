@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.0.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.0.7 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -71,9 +71,19 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.1.0.7
+- [Bugfix] for ShareMediaToThreadAsync (thx to [@huseyinkarael](https://github.com/huseyinkarael) for report)
+- [Bugfix] for image/video uploader (thx to [@alexrepetskyi](https://github.com/alexrepetskyi) for report)
+- [Bugfix] for like/unlike comment (thx to [@aspmaker](https://github.com/aspmaker) for report)
+- [Bugfix] for GetMediaCommentsAsync (thx to [@aspmaker](https://github.com/aspmaker) for report)
+- [Bugfix] for GetMediaRepliesCommentsAsync (thx to [@aspmaker](https://github.com/aspmaker) for report)
+- [Add] Some new property to InstaComment
+- [Add] LeaveGroupThreadAsync to MessagingProcessor
+- [Add] 1 new device to AndroidDevices
+
 v1.1.0.5
 - [Add] Progress changed action to every uploading functions(media, story, direct)
-- [Bugfix] for random android version (thx to [@Aspmaker](https://github.com/aspmaker) )
+- [Bugfix] for random android version (thx to [@aspmaker](https://github.com/aspmaker) )
 
 v1.1.0.2
 - [Add] ShareMediaToThreadAsync to MessagingProcessor

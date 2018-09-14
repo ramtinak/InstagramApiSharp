@@ -20,7 +20,7 @@ namespace InstagramApiSharp.Converters
                 feed.Medias.Add(feedItem);
             }
 
-            feed.NextId = SourceObject.NextMaxId;
+            feed.NextMaxId = SourceObject.NextMaxId;
             return feed;
         }
     }

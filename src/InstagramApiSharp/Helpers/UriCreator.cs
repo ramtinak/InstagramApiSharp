@@ -303,28 +303,43 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetMediaCommentsUri(string mediaId, string nextId = "")
+        public static Uri GetMediaCommentsUri(string mediaId, string nextMaxId = "")
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_COMMENTS, mediaId),
                 out var instaUri))
                 throw new Exception("Cant create URI for getting media comments");
-            return !string.IsNullOrEmpty(nextId)
-                ? new UriBuilder(instaUri) { Query = $"can_support_threading=true&max_id={nextId}" }.Uri
+            return !string.IsNullOrEmpty(nextMaxId)
+                ? new UriBuilder(instaUri) { Query = $"can_support_threading=true&max_id={nextMaxId}" }.Uri
                 : new UriBuilder(instaUri) { Query = $"can_support_threading=true" }.Uri;
         }
-
-        public static Uri GetMediaInlineCommentsUri(string mediaId, string targetCommentId, string nextId = "")
+        public static Uri GetMediaCommentsMinIdUri(string mediaId, string nextMinId = "")
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_COMMENTS, mediaId) +
-                $"{targetCommentId}/inline_child_comments/",
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_COMMENTS, mediaId),
                 out var instaUri))
                 throw new Exception("Cant create URI for getting media comments");
-            return !string.IsNullOrEmpty(nextId)
+            return !string.IsNullOrEmpty(nextMinId)
+                ? new UriBuilder(instaUri) { Query = $"can_support_threading=true&min_id={nextMinId}" }.Uri
+                : new UriBuilder(instaUri) { Query = $"can_support_threading=true" }.Uri;
+        }
+        public static Uri GetMediaInlineCommentsUri(string mediaId, string targetCommentId, string nextMaxId = "")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_INLINE_COMMENTS, mediaId,targetCommentId),
+                out var instaUri))
+                throw new Exception("Cant create URI for getting media comments replies with max id");
+            return !string.IsNullOrEmpty(nextMaxId)
                 //? new UriBuilder(instaUri) { Query = $"min_id={nextId}" }.Uri
-                ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
+                ? new UriBuilder(instaUri) { Query = $"max_id={nextMaxId}" }.Uri
                 : instaUri;
         }
-
+        public static Uri GetMediaInlineCommentsWithMinIdUri(string mediaId, string targetCommentId, string nextMinId = "")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_INLINE_COMMENTS, mediaId, targetCommentId),
+                out var instaUri))
+                throw new Exception("Cant create URI for getting media comment replies with min id");
+            return !string.IsNullOrEmpty(nextMinId)
+                ? new UriBuilder(instaUri) { Query = $"min_id={nextMinId}" }.Uri
+                : instaUri;
+        }
         public static Uri GetMediaLikersUri(string mediaId)
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_LIKERS, mediaId),
@@ -1214,18 +1229,18 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for media configure igtv");
             return instaUri;
         }
-        public static Uri GetLikeCommentUri(string mediaId, string commentId)
+        public static Uri GetLikeCommentUri(string commentId)
         {
             if (
-                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIKE_COMMENT, mediaId, commentId),
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIKE_COMMENT, commentId),
                     out var instaUri))
                 throw new Exception("Cant create URI for like comment");
             return instaUri;
         }
-        public static Uri GetUnLikeCommentUri(string mediaId, string commentId)
+        public static Uri GetUnLikeCommentUri(string commentId)
         {
             if (
-                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.UNLIKE_COMMENT, mediaId, commentId),
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.UNLIKE_COMMENT, commentId),
                     out var instaUri))
                 throw new Exception("Cant create URI for unlike comment");
             return instaUri;
@@ -1253,6 +1268,14 @@ namespace InstagramApiSharp.Helpers
                 !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_BROADCAST_MEDIA_SHARE, mediaType.ToString().ToLower()),
                     out var instaUri))
                 throw new Exception("Cant create URI for media share");
+            return instaUri;
+        }
+        public static Uri GetLeaveThreadUri(string threadId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_THREAD_LEAVE, threadId),
+                    out var instaUri))
+                throw new Exception("Cant create URI for leave group thread");
             return instaUri;
         }
     }

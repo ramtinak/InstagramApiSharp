@@ -6,6 +6,6 @@ namespace InstagramApiSharp.Classes.Models
     {
         public int Pages { get; set; } = 0;
         public int PageSize { get; set; } = 0;
-        public string NextId { get; set; }
+        public string NextMaxId { get; set; }
     }
 }
