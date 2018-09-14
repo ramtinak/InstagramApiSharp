@@ -50,6 +50,13 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="title">Title</param>
         /// <param name="caption">Caption</param>
         Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string title, string caption);
-
+        /// <summary>
+        ///     Upload video to Instagram TV with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload (aspect ratio is very important for thumbnail and video | range 0.5 - 1.0 | Width = 480, Height = 852)</param>
+        /// <param name="title">Title</param>
+        /// <param name="caption">Caption</param>
+        Task<IResult<InstaMedia>> UploadVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string title, string caption);
     }
 }

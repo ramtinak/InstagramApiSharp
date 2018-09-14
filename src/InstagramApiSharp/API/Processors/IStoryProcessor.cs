@@ -24,11 +24,25 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="caption">Caption</param>
         Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(InstaImage image, string caption);
         /// <summary>
+        ///     Upload story photo with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="caption">Caption</param>
+        Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption);
+        /// <summary>
         ///     Upload story video (to self story)
         /// </summary>
         /// <param name="video">Video to upload</param>
         /// <param name="caption">Caption</param>
         Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(InstaVideoUpload video, string caption);
+        /// <summary>
+        ///     Upload story video (to self story) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload</param>
+        /// <param name="caption">Caption</param>
+        Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string caption);
         /// <summary>
         ///     Upload story video [to self story, to direct threads or both(self and direct)]
         /// </summary>
@@ -37,6 +51,14 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> UploadStoryVideoAsync(InstaVideoUpload video,
             InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
+        /// <summary>
+        ///     Upload story video (to self story) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload</param>
+        /// <param name="caption">Caption</param>
+        Task<IResult<bool>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video,
+    InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
         /// <summary>
         ///     Get user story reel feed. Contains user info last story including all story items.
         /// </summary>

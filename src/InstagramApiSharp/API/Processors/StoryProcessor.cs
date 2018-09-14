@@ -92,11 +92,28 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="caption">Caption</param>
         public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(InstaImage image, string caption)
         {
+            return await UploadStoryPhotoAsync(null, image, caption);
+        }
+        /// <summary>
+        ///     Upload story photo with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="caption">Caption</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption)
+        {
             UserAuthValidator.Validate(_userAuthValidate);
+            var upProgress = new InstaUploaderProgress
+            {
+                Caption = caption ?? string.Empty,
+                UploadState = InstaUploadState.Preparing
+            };
             try
             {
                 var instaUri = UriCreator.GetUploadPhotoUri();
                 var uploadId = ApiRequestMessage.GenerateUploadId();
+                upProgress.UploadId = uploadId;
+                progress?.Invoke(upProgress);
                 var requestContent = new MultipartFormDataContent(uploadId)
                 {
                     {new StringContent(uploadId), "\"upload_id\""},
@@ -115,17 +132,29 @@ namespace InstagramApiSharp.API.Processors
                 var imageContent = new ByteArrayContent(imageBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                requestContent.Add(imageContent, "photo", $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
+
+                var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
+                {
+                    UploaderProgress = upProgress
+                };
+                requestContent.Add(progressContent, "photo", $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
                 request.Content = requestContent;
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode)
-                    return await ConfigureStoryPhotoAsync(image, uploadId, caption);
+                {
+                    upProgress = progressContent?.UploaderProgress;
+                    return await ConfigureStoryPhotoAsync(progress, upProgress, image, uploadId, caption);
+                }
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
                 return Result.UnExpectedResponse<InstaStoryMedia>(response, json);
             }
             catch (Exception exception)
             {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
                 return Result.Fail<InstaStoryMedia>(exception.Message);
             }
@@ -136,11 +165,13 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to configure</param>
         /// <param name="uploadId">Upload id</param>
         /// <param name="caption">Caption</param>
-        private async Task<IResult<InstaStoryMedia>> ConfigureStoryPhotoAsync(InstaImage image, string uploadId,
+        private async Task<IResult<InstaStoryMedia>> ConfigureStoryPhotoAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaImage image, string uploadId,
             string caption)
         {
             try
             {
+                upProgress.UploadState = InstaUploadState.Configuring;
+                progress?.Invoke(upProgress);
                 var instaUri = UriCreator.GetStoryConfigureUri();
                 var data = new JObject
                 {
@@ -162,13 +193,22 @@ namespace InstagramApiSharp.API.Processors
                 {
                     var mediaResponse = JsonConvert.DeserializeObject<InstaStoryMediaResponse>(json);
                     var converter = ConvertersFabric.Instance.GetStoryMediaConverter(mediaResponse);
-                    return Result.Success(converter.Convert());
-                }
+                    var obj = converter.Convert();
+                    upProgress.UploadState = InstaUploadState.Configured;
+                    progress?.Invoke(upProgress);
 
+                    upProgress.UploadState = InstaUploadState.Completed;
+                    progress?.Invoke(upProgress);
+                    return Result.Success(obj);
+                }
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
                 return Result.UnExpectedResponse<InstaStoryMedia>(response, json);
             }
             catch (Exception exception)
             {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
                 return Result.Fail<InstaStoryMedia>(exception.Message);
             }
@@ -180,7 +220,22 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="caption">Caption</param>
         public async Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(InstaVideoUpload video, string caption)
         {
+            return await UploadStoryVideoAsync(null, video, caption);
+        }
+        /// <summary>
+        ///     Upload story video (to self story) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload</param>
+        /// <param name="caption">Caption</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string caption)
+        {
             UserAuthValidator.Validate(_userAuthValidate);
+            var upProgress = new InstaUploaderProgress
+            {
+                Caption = caption ?? string.Empty,
+                UploadState = InstaUploadState.Preparing
+            };
             try
             {
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
@@ -195,7 +250,8 @@ namespace InstagramApiSharp.API.Processors
                 var photoEntityName = string.Format("{0}_0_{1}", uploadId, photoHashCode);
                 var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
 
-
+                upProgress.UploadId = uploadId;
+                progress?.Invoke(upProgress);
                 var videoMediaInfoData = new JObject
                 {
                     {"_csrftoken", _user.CsrfToken},
@@ -234,7 +290,11 @@ namespace InstagramApiSharp.API.Processors
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<InstaStoryMedia>(response, json);
+                }
 
 
                 byte[] videoBytes;
@@ -245,8 +305,12 @@ namespace InstagramApiSharp.API.Processors
                 var videoContent = new ByteArrayContent(videoBytes);
                 videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 videoContent.Headers.Add("Content-Type", "application/octet-stream");
+                var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
+                {
+                    UploaderProgress = upProgress
+                };
                 request = HttpHelper.GetDefaultRequest(HttpMethod.Post, videoUri, _deviceInfo);
-                request.Content = videoContent;
+                request.Content = progressContent;
                 var vidExt = Path.GetExtension(video.Video.Uri).Replace(".", "").ToLower();
                 if(vidExt == "mov")
                     request.Headers.Add("X-Entity-Type", "video/quicktime");
@@ -260,7 +324,11 @@ namespace InstagramApiSharp.API.Processors
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<InstaStoryMedia>(response, json);
+                }
                 
                 var photoUploadParamsObj = new JObject
                 {
@@ -276,9 +344,14 @@ namespace InstagramApiSharp.API.Processors
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<InstaStoryMedia>(response, json);
+                }
 
-
+                upProgress.UploadState = InstaUploadState.UploadingThumbnail;
+                progress?.Invoke(upProgress);
                 byte[] imageBytes;
                 if (video.VideoThumbnail.ImageBytes == null)
                     imageBytes = File.ReadAllBytes(video.VideoThumbnail.Uri);
@@ -297,13 +370,22 @@ namespace InstagramApiSharp.API.Processors
                 request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.IsSuccessStatusCode)
-                    return await ConfigureStoryVideoAsync(video, uploadId, caption);
+                {
+                    upProgress = progressContent?.UploaderProgress;
+                    upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
+                    progress?.Invoke(upProgress);
+                    return await ConfigureStoryVideoAsync(progress,upProgress, video, uploadId, caption);
+                }
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
                 return Result.UnExpectedResponse<InstaStoryMedia>(response, json);
             }
             catch (Exception exception)
             {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
                 return Result.Fail<InstaStoryMedia>(exception.Message);
             }
@@ -317,8 +399,19 @@ namespace InstagramApiSharp.API.Processors
     InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendVideoAsync(false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video);
-
+            return await _instaApi.HelperProcessor.SendVideoAsync(null, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video);
+        }
+        /// <summary>
+        ///     Upload story video (to self story) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload</param>
+        /// <param name="caption">Caption</param>
+        public async Task<IResult<bool>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video,
+    InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendVideoAsync(progress, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video);
         }
         /// <summary>
         ///     Configure story video
@@ -326,11 +419,13 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to configure</param>
         /// <param name="uploadId">Upload id</param>
         /// <param name="caption">Caption</param>
-        private async Task<IResult<InstaStoryMedia>> ConfigureStoryVideoAsync(InstaVideoUpload video, string uploadId,
+        private async Task<IResult<InstaStoryMedia>> ConfigureStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaVideoUpload video, string uploadId,
             string caption)
         {
             try
             {
+                upProgress.UploadState = InstaUploadState.Configuring;
+                progress?.Invoke(upProgress);
                 var instaUri = UriCreator.GetVideoStoryConfigureUri(false);
                 Random rnd = new Random();
                 var data = new JObject
@@ -386,12 +481,21 @@ namespace InstagramApiSharp.API.Processors
                 {
                     var mediaResponse = JsonConvert.DeserializeObject<InstaStoryMediaResponse>(json);
                     var converter = ConvertersFabric.Instance.GetStoryMediaConverter(mediaResponse);
-                    return Result.Success(converter.Convert());
+                    var obj = Result.Success(converter.Convert());
+                    upProgress.UploadState = InstaUploadState.Configured;
+                    progress?.Invoke(upProgress);
+                    upProgress.UploadState = InstaUploadState.Completed;
+                    progress?.Invoke(upProgress);
+                    return obj;
                 }
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
                 return Result.UnExpectedResponse<InstaStoryMedia>(response, json);
             }
             catch (Exception exception)
             {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
                 return Result.Fail<InstaStoryMedia>(exception.Message);
             }

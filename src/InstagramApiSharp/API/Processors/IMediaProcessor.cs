@@ -35,12 +35,28 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
         Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption, InstaLocationShort location = null);
         /// <summary>
+        ///     Upload video with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video and thumbnail to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        Task<IResult<InstaMedia>> UploadVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string caption, InstaLocationShort location = null);
+        /// <summary>
         ///     Upload photo
         /// </summary>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
         Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption, InstaLocationShort location = null);
+        /// <summary>
+        ///     Upload photo with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        Task<IResult<InstaMedia>> UploadPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption, InstaLocationShort location = null);
         /// <summary>
         ///     Upload album (videos and photos)
         /// </summary>
@@ -49,6 +65,15 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
         Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideoUpload[] videos, string caption, InstaLocationShort location = null);
+        /// <summary>
+        ///     Upload album (videos and photos) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="images">Array of photos to upload</param>
+        /// <param name="videos">Array of videos to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        Task<IResult<InstaMedia>> UploadAlbumAsync(Action<InstaUploaderProgress> progress, InstaImage[] images, InstaVideoUpload[] videos, string caption, InstaLocationShort location = null);
         /// <summary>
         ///     Get users (short) who liked certain media. Normaly it return around 1000 last users.
         /// </summary>

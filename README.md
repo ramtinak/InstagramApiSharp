@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.0.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.0.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -71,7 +71,8 @@ Task<IResult<object>>
 ```
 
 ## Version changes
-v1.1.0.3
+v1.1.0.5
+- [Add] Progress changed action to every uploading functions(media, story, direct)
 - [Bugfix] for random android version (thx to [@Aspmaker](https://github.com/aspmaker) )
 
 v1.1.0.2

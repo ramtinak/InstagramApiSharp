@@ -381,10 +381,21 @@ namespace InstagramApiSharp.API.Processors
         public async Task<IResult<bool>> SendDirectDisappearingPhotoAsync(InstaImage image,
      InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendPhotoAsync(false, true, "", viewMode, InstaStoryType.Direct, null, threadIds.EncodeList(), image);
+            return await SendDirectDisappearingPhotoAsync(null, image, viewMode, threadIds);
         }
-
+        /// <summary>
+        ///     Send disappearing photo to direct thread (video will remove after user saw it) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Image to upload</param>
+        /// <param name="viewMode">View mode</param>
+        /// <param name="threadIds">Thread ids</param>
+        public async Task<IResult<bool>> SendDirectDisappearingPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image,
+     InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendPhotoAsync(progress, false, true, "", viewMode, InstaStoryType.Direct, null, threadIds.EncodeList(), image);
+        }
         /// <summary>
         ///     Send disappearing video to direct thread (video will remove after user saw it)
         /// </summary>
@@ -394,10 +405,21 @@ namespace InstagramApiSharp.API.Processors
         public async Task<IResult<bool>> SendDirectDisappearingVideoAsync(InstaVideoUpload video,
 InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendVideoAsync(false, true, "", viewMode, InstaStoryType.Direct, null, threadIds.EncodeList(), video);
+            return await SendDirectDisappearingVideoAsync(null, video, viewMode, threadIds);
         }
-
+        /// <summary>
+        ///     Send disappearing video to direct thread (video will remove after user saw it) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload</param>
+        /// <param name="viewMode">View mode</param>
+        /// <param name="threadIds">Thread ids</param>
+        public async Task<IResult<bool>> SendDirectDisappearingVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video,
+InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendVideoAsync(progress, false, true, "", viewMode, InstaStoryType.Direct, null, threadIds.EncodeList(), video);
+        }
         /// <summary>
         ///     Send link address to direct thread
         /// </summary>
@@ -486,9 +508,20 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         public async Task<IResult<bool>> SendDirectPhotoAsync(InstaImage image, string threadId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await SendDirectPhoto(null, threadId, image);
+            return await SendDirectPhotoAsync(null, image, threadId);
         }
-
+        /// <summary>
+        ///     Send photo to direct thread (single) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Image to upload</param>
+        /// <param name="threadId">Thread id</param>
+        /// <returns>Returns True is sent</returns>
+        public async Task<IResult<bool>> SendDirectPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string threadId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await SendDirectPhoto(progress, null, threadId, image);
+        }
         /// <summary>
         ///     Send photo to multiple recipients (multiple user)
         /// </summary>
@@ -497,10 +530,20 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         /// <returns>Returns True is sent</returns>
         public async Task<IResult<bool>> SendDirectPhotoToRecipientsAsync(InstaImage image, params string[] recipients)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            return await SendDirectPhoto(string.Join(",", recipients), null, image);
+            return await SendDirectPhotoToRecipientsAsync(null, image, recipients);
         }
-
+        /// <summary>
+        ///     Send photo to multiple recipients (multiple user) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Image to upload</param>
+        /// <param name="recipients">Recipients (user ids/pk)</param>
+        /// <returns>Returns True is sent</returns>
+        public async Task<IResult<bool>> SendDirectPhotoToRecipientsAsync(Action<InstaUploaderProgress> progress, InstaImage image, params string[] recipients)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await SendDirectPhoto(progress, string.Join(",", recipients), null, image);
+        }
         /// <summary>
         ///     Send profile to direct thrad
         /// </summary>
@@ -590,10 +633,19 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         /// <param name="threadId">Thread id</param>
         public async Task<IResult<bool>> SendDirectVideoAsync(InstaVideoUpload video, string threadId)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendVideoAsync(true, false, "", InstaViewMode.Replayable, InstaStoryType.Both, null, threadId, video);
+            return await SendDirectVideoAsync(null, video, threadId);
         }
-
+        /// <summary>
+        ///     Send video to direct thread (single) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload (no need to set thumbnail)</param>
+        /// <param name="threadId">Thread id</param>
+        public async Task<IResult<bool>> SendDirectVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string threadId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendVideoAsync(progress,true, false, "", InstaViewMode.Replayable, InstaStoryType.Both, null, threadId, video);
+        }
         /// <summary>
         ///     Send video to multiple recipients (multiple user)
         /// </summary>
@@ -602,9 +654,19 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         public async Task<IResult<bool>> SendDirectVideoToRecipientsAsync(InstaVideoUpload video, params string[] recipients)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendVideoAsync(true, false, "", InstaViewMode.Replayable, InstaStoryType.Both, recipients.EncodeList(false), null, video);
+            return await SendDirectVideoToRecipientsAsync(null, video, recipients);
         }
-
+        /// <summary>
+        ///     Send video to multiple recipients (multiple user) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload (no need to set thumbnail)</param>
+        /// <param name="recipients">Recipients (user ids/pk)</param>
+        public async Task<IResult<bool>> SendDirectVideoToRecipientsAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, params string[] recipients)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendVideoAsync(progress, true, false, "", InstaViewMode.Replayable, InstaStoryType.Both, recipients.EncodeList(false), null, video);
+        }
         /// <summary>
         ///     Send new direct message. (use this function, if you didn't send any message to this user before)
         /// </summary>
@@ -854,13 +916,20 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 return Result.Fail<bool>(exception.Message);
             }
         }
-        private async Task<IResult<bool>> SendDirectPhoto(string recipients, string threadId, InstaImage image)
+        private async Task<IResult<bool>> SendDirectPhoto(Action<InstaUploaderProgress> progress, string recipients, string threadId, InstaImage image)
         {
+            var upProgress = new InstaUploaderProgress
+            {
+                Caption = string.Empty,
+                UploadState = InstaUploadState.Preparing
+            };
             try
             {
                 var instaUri = UriCreator.GetDirectSendPhotoUri();
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
                 var clientContext = Guid.NewGuid();
+                upProgress.UploadId = uploadId;
+                progress?.Invoke(upProgress);
                 var requestContent = new MultipartFormDataContent(uploadId)
                 {
                     {new StringContent("send_item"), "\"action\""},
@@ -880,23 +949,41 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 var imageContent = new ByteArrayContent(fileBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                requestContent.Add(imageContent, "photo",
+                var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
+                {
+                    UploaderProgress = upProgress
+                };
+                requestContent.Add(progressContent, "photo",
                     $"direct_temp_photo_{ApiRequestMessage.GenerateUploadId()}.jpg");
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
                 request.Content = requestContent;
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<bool>(response, json);
+                }
 
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
                 if (obj.Status.ToLower() == "ok")
+                {
+                    upProgress.UploadState = InstaUploadState.Completed;
+                    progress?.Invoke(upProgress);
                     return Result.Success(true);
+                }
                 else
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<bool>(response, json);
+                }
             }
             catch (Exception exception)
             {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
                 return Result.Fail<bool>(exception);
             }

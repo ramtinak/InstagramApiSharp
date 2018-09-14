@@ -92,7 +92,15 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> SendDirectDisappearingPhotoAsync(InstaImage image,
      InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
-
+        /// <summary>
+        ///     Send disappearing photo to direct thread (video will remove after user saw it) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Image to upload</param>
+        /// <param name="viewMode">View mode</param>
+        /// <param name="threadIds">Thread ids</param>
+        Task<IResult<bool>> SendDirectDisappearingPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image,
+     InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
         /// <summary>
         ///     Send disappearing video to direct thread (video will remove after user saw it)
         /// </summary>
@@ -102,7 +110,16 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         Task<IResult<bool>> SendDirectDisappearingVideoAsync(InstaVideoUpload video,
        InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
-
+        /// <summary>
+        ///     Send disappearing video to direct thread (video will remove after user saw it) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload</param>
+        /// <param name="viewMode">View mode</param>
+        /// <param name="threadIds">Thread ids</param>
+        /// <returns></returns>
+        Task<IResult<bool>> SendDirectDisappearingVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video,
+       InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
         /// <summary>
         ///     Send link address to direct thread
         /// </summary>
@@ -121,13 +138,20 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> SendDirectLocationAsync(string externalId, params string[] threadIds);
 
         /// <summary>
-        ///     Send photo to direct thread (single)
+        ///     Send photo to direct thread (single) with progress
         /// </summary>
         /// <param name="image">Image to upload</param>
         /// <param name="threadId">Thread id</param>
         /// <returns>Returns True is sent</returns>
         Task<IResult<bool>> SendDirectPhotoAsync(InstaImage image, string threadId);
-
+        /// <summary>
+        ///     Send photo to direct thread (single)
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Image to upload</param>
+        /// <param name="threadId">Thread id</param>
+        /// <returns>Returns True is sent</returns>
+        Task<IResult<bool>> SendDirectPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string threadId);
         /// <summary>
         ///     Send photo to multiple recipients (multiple user)
         /// </summary>
@@ -135,7 +159,14 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="recipients">Recipients (user ids/pk)</param>
         /// <returns>Returns True is sent</returns>
         Task<IResult<bool>> SendDirectPhotoToRecipientsAsync(InstaImage image, params string[] recipients);
-
+        /// <summary>
+        ///     Send photo to multiple recipients (multiple user) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Image to upload</param>
+        /// <param name="recipients">Recipients (user ids/pk)</param>
+        /// <returns>Returns True is sent</returns>
+        Task<IResult<bool>> SendDirectPhotoToRecipientsAsync(Action<InstaUploaderProgress> progress, InstaImage image, params string[] recipients);
         /// <summary>
         ///     Send profile to direct thread
         /// </summary>
@@ -160,14 +191,26 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload (no need to set thumbnail)</param>
         /// <param name="threadId">Thread id</param>
         Task<IResult<bool>> SendDirectVideoAsync(InstaVideoUpload video, string threadId);
-
+        /// <summary>
+        ///     Send video to direct thread (single) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload (no need to set thumbnail)</param>
+        /// <param name="threadId">Thread id</param>
+        Task<IResult<bool>> SendDirectVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string threadId);
         /// <summary>
         ///     Send video to multiple recipients (multiple user)
         /// </summary>
         /// <param name="video">Video to upload (no need to set thumbnail)</param>
         /// <param name="recipients">Recipients (user ids/pk)</param>
         Task<IResult<bool>> SendDirectVideoToRecipientsAsync(InstaVideoUpload video, params string[] recipients);
-
+        /// <summary>
+        ///     Send video to multiple recipients (multiple user) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload (no need to set thumbnail)</param>
+        /// <param name="recipients">Recipients (user ids/pk)</param>
+        Task<IResult<bool>> SendDirectVideoToRecipientsAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, params string[] recipients);
         [Obsolete("SendNewDirectMessageAsync is deprecated. Use SendDirectTextAsync instead.")]
         /// <summary>
         ///     Send new direct message. (use this function, if you didn't send any message to this user before)

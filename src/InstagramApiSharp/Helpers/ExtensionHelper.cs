@@ -16,6 +16,9 @@ namespace InstagramApiSharp
         {
             if (deviceInfo == null)
                 return InstaApiConstants.USER_AGENT_DEFAULT;
+            if (deviceInfo.AndroidVer == null)
+                deviceInfo.AndroidVer = AndroidVersion.GetRandomAndriodVersion();
+
             return string.Format(InstaApiConstants.USER_AGENT, deviceInfo.Dpi, deviceInfo.Resolution, deviceInfo.HardwareManufacturer,
                 deviceInfo.DeviceModelIdentifier, deviceInfo.FirmwareBrand, deviceInfo.HardwareModel,
                 InstaApiConstants.IG_APP_VERSION, deviceInfo.AndroidVer.APILevel,
