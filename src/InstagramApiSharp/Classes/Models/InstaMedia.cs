@@ -62,6 +62,9 @@ namespace InstagramApiSharp.Classes.Models
         public event PropertyChangedEventHandler PropertyChanged;
 
         private bool _play = false;
+        /// <summary>
+        /// This property is for developer's personal use. 
+        /// </summary>
         public bool Play { get { return _play; } set { _play = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Play")); } }
 
 
