@@ -798,7 +798,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (InstaSharing)null);
+                    return Result.UnExpectedResponse<InstaSharing>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaSharing>(json);
 
                 return Result.Success(obj);

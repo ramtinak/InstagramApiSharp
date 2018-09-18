@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.0.7 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.0.8 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -71,6 +71,14 @@ Task<IResult<object>>
 ```
 
 ## Version changes
+v1.1.0.8
+- [Add] CheckUsernameAsync to IInstaApi
+- [Add] GetRequestForDownloadAccountDataAsync to AccountProcessor
+- [Add] Progress changed action to change profile picture
+- [Bugfix] for GetFullUserInfoAsync (thx to rohollah for report)
+- [Bugfix] for random android version (thx to [@aspmaker](https://github.com/aspmaker )
+- [Cleanup] some functions
+
 v1.1.0.7
 - [Bugfix] for ShareMediaToThreadAsync (thx to [@huseyinkarael](https://github.com/huseyinkarael) for report)
 - [Bugfix] for image/video uploader (thx to [@alexrepetskyi](https://github.com/alexrepetskyi) for report)

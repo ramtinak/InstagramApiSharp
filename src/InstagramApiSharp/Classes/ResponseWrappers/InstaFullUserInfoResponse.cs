@@ -53,7 +53,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("items")]
         public List<InstaStoryItemResponse> Items { get; set; } = new List<InstaStoryItemResponse>();
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
         [JsonProperty("latest_reel_media")]
         public int LatestReelMedia { get; set; }
         [JsonProperty("expiring_at")]

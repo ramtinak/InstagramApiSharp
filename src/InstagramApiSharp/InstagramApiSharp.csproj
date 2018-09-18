@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.0.7</Version>
-    <AssemblyVersion>1.1.0.7</AssemblyVersion>
-    <FileVersion>1.1.0.7</FileVersion>
+    <Version>1.1.0.8</Version>
+    <AssemblyVersion>1.1.0.8</AssemblyVersion>
+    <FileVersion>1.1.0.8</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -36,7 +36,15 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.0.7
+    <PackageReleaseNotes>v1.1.0.8
+- [Add] CheckUsernameAsync to IInstaApi
+- [Add] GetRequestForDownloadAccountDataAsync to AccountProcessor
+- [Add] Progress changed action to change profile picture
+- [Bugfix] for GetFullUserInfoAsync (thx to rohollah for report)
+- [Bugfix] for random android version (thx to @Aspmaker )
+- [Cleanup] some functions
+
+v1.1.0.7
 - [Bugfix] for ShareMediaToThreadAsync (thx to @huseyinkarael for report)
 - [Bugfix] for image/video uploader (thx to @alexrepetskyi for report)
 - [Bugfix] for like/unlike comment (thx to @aspmaker for report)

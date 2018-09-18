@@ -10,6 +10,9 @@ namespace InstagramApiSharp.Classes
 
         [JsonProperty("error_type")] public string ErrorType { get; set; }
 
+        [JsonProperty("message")] public string Message { get; set; }
+
+        [JsonProperty("help_url")] public string HelpUrl { get; set; }
         #endregion
 
         #region 2 Factor Authentication

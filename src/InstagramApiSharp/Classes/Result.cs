@@ -98,12 +98,62 @@ namespace InstagramApiSharp.Classes
                     case "sentry_block":
                         responseType = ResponseType.SentryBlock;
                         break;
+                    case "inactive user":
+                    case "inactive_user":
+                        responseType = ResponseType.InactiveUser;
+                        break;
+                    case "checkpoint_challenge_required":
+                        responseType = ResponseType.ChallengeRequired;
+                        break;
                 }
 
                 if (!status.IsOk() && status.Message.Contains("wait a few minutes"))
                     responseType = ResponseType.RequestsLimit;
 
                 var resultInfo = new ResultInfo(responseType, status.Message);
+                return new Result<T>(false, default(T), resultInfo);
+            }
+        }
+
+        public static IResult<T> UnExpectedResponse<T>(HttpResponseMessage response, string message, string json)
+        {
+            if (string.IsNullOrEmpty(json))
+            {
+                var resultInfo = new ResultInfo(ResponseType.UnExpectedResponse,
+                    $"{message}\r\nUnexpected response status: {response.StatusCode}");
+                return new Result<T>(false, default(T), resultInfo);
+            }
+            else
+            {
+                var status = ErrorHandlingHelper.GetBadStatusFromJsonString(json);
+                var responseType = ResponseType.UnExpectedResponse;
+                switch (status.ErrorType)
+                {
+                    case "checkpoint_logged_out":
+                        responseType = ResponseType.CheckPointRequired;
+                        break;
+                    case "login_required":
+                        responseType = ResponseType.LoginRequired;
+                        break;
+                    case "Sorry, too many requests.Please try again later":
+                        responseType = ResponseType.RequestsLimit;
+                        break;
+                    case "sentry_block":
+                        responseType = ResponseType.SentryBlock;
+                        break;
+                    case "inactive user":
+                    case "inactive_user":
+                        responseType = ResponseType.InactiveUser;
+                        break;
+                    case "checkpoint_challenge_required":
+                        responseType = ResponseType.ChallengeRequired;
+                        break;
+                }
+
+                if (!status.IsOk() && status.Message.Contains("wait a few minutes"))
+                    responseType = ResponseType.RequestsLimit;
+
+                var resultInfo = new ResultInfo(responseType, message);
                 return new Result<T>(false, default(T), resultInfo);
             }
         }

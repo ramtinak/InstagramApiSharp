@@ -401,6 +401,9 @@ namespace InstagramApiSharp.API
         public const string LANGUAGE_TRANSLATE = API_SUFFIX + "/language/translate/";
         public const string LANGUAGE_TRANSLATE_MULTIPLE = API_SUFFIX + "/language/bulk_translate/";
 
+        public const string DYI_REQUEST_DOWNLOAD_DATA = API_SUFFIX + "/dyi/request_download_data/";
+
+
         public static readonly Uri BaseInstagramUri = new Uri(BASE_INSTAGRAM_API_URL);
     }
 }

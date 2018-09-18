@@ -74,6 +74,23 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>        
         Task<IResult<InstaAccountUserResponse>> ChangeProfilePictureAsync(byte[] pictureBytes);
+        /// <summary>
+        ///     Change profile picture(only jpg and jpeg formats).
+        /// </summary> 
+        /// <param name="progress">Progress action</param>
+        /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>
+        Task<IResult<InstaAccountUserResponse>> ChangeProfilePictureAsync(Action<InstaUploaderProgress> progress, byte[] pictureBytes);
+        /// <summary>
+        ///     Get request for download account data.
+        /// </summary>
+        /// <param name="email">Email</param>
+        Task<IResult<InstaRequestDownloadData>> GetRequestForDownloadAccountDataAsync(string email);
+        /// <summary>
+        ///     Get request for download account data.
+        /// </summary>
+        /// <param name="email">Email</param>
+        /// <param name="password">Password (only for facebook logins)</param>
+        Task<IResult<InstaRequestDownloadData>> GetRequestForDownloadAccountDataAsync(string email, string password);
         #endregion Edit profile
 
         #region Story settings
@@ -81,7 +98,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get story settings.
         /// </summary>        
-        Task<IResult<AccountSettingsResponse>> GetStorySettingsAsync();
+        Task<IResult<InstaStorySettings>> GetStorySettingsAsync();
         /// <summary>
         ///     Enable Save story to gallery.
         /// </summary>        

@@ -14,7 +14,7 @@ using InstagramApiSharp.Enums;
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes
 {
-    public class AccountSettingsResponse
+    public class InstaStorySettings
     {
         /// <summary>
         /// In dar asl hamon MessagePrefs hast ke tabdil be message replies type shode

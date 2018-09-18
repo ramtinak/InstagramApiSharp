@@ -130,7 +130,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        Task<IResult<InstaDefault>> DeletePostLiveAsync(string broadcastId);
+        Task<IResult<bool>> DeletePostLiveAsync(string broadcastId);
         /// <summary>
         ///     Get join requests to current live broadcast
         /// </summary>
@@ -161,10 +161,10 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="endAfterCopyrightWarning">Copyright warning</param>
         /// <returns></returns>
-        Task<IResult<InstaDefault>> EndAsync(string broadcastId, bool endAfterCopyrightWarning = false);
+        Task<IResult<bool>> EndAsync(string broadcastId, bool endAfterCopyrightWarning = false);
 
-
-
+        
+        /*
         /// <summary>
         /// NOT COMPLETE
         /// </summary>
@@ -184,6 +184,6 @@ namespace InstagramApiSharp.API.Processors
         /// NOT COMPLETE
         /// </summary>
         /// <returns></returns>
-        Task<IResult<object>> SeenBroadcastAsync(string broadcastId, string pk);
+        Task<IResult<object>> SeenBroadcastAsync(string broadcastId, string pk);*/
     }
 }

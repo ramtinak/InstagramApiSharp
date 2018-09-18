@@ -25,7 +25,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         public string FirmwareType { get; set; }
         public string HardwareManufacturer { get; set; }
         public string HardwareModel { get; set; }
-        public string Resolution { get; set; }
-        public string Dpi { get; set; }
+        public string Resolution { get; set; } = "1080x1812";
+        public string Dpi { get; set; } = "480dpi";
     }
 }

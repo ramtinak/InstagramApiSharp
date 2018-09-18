@@ -33,7 +33,7 @@ namespace InstagramApiSharp.API.Processors
         /// Clear Recent searches
         /// </summary>
         /// <returns></returns>
-        Task<IResult<DicoverDefaultResponse>> ClearRecentSearchsAsync();
+        Task<IResult<bool>> ClearRecentSearchsAsync();
         /// <summary>
         /// Get suggested searches
         /// </summary>
@@ -49,16 +49,7 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<DiscoverSearchResponse>> SearchPeopleAsync(string content, int count = 30);
 
 
-        ///// <summary>
-        ///// NOT COMPLETE
-        ///// </summary>
-        ///// <returns></returns>
-        //Task<IResult<object>> AcceptFriendshipAsync(long userId);
-        ///// <summary>
-        ///// NOT COMPLETE
-        ///// </summary>
-        ///// <returns></returns>
-        //Task<IResult<object>> RejectFriendshipAsync(long userId);
+
         ///// <summary>
         ///// NOT COMPLETE
         ///// </summary>

@@ -56,7 +56,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (DiscoverRecentSearchsResponse)null);
+                    return Result.UnExpectedResponse<DiscoverRecentSearchsResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<DiscoverRecentSearchsResponse>(json);
                 return Result.Success(obj);
             }
@@ -70,7 +70,7 @@ namespace InstagramApiSharp.API.Processors
         /// Clear Recent searches
         /// </summary>
         /// <returns></returns>
-        public async Task<IResult<DicoverDefaultResponse>> ClearRecentSearchsAsync()
+        public async Task<IResult<bool>> ClearRecentSearchsAsync()
         {
             try
             {
@@ -85,14 +85,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (DicoverDefaultResponse)null);
-                var obj = JsonConvert.DeserializeObject<DicoverDefaultResponse>(json);
-                return Result.Success(obj);
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<DicoverDefaultResponse>(exception);
+                return Result.Fail<bool>(exception);
             }
         }
         /// <summary>
@@ -110,7 +110,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (DiscoverSuggestionResponse)null);
+                    return Result.UnExpectedResponse<DiscoverSuggestionResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<DiscoverSuggestionResponse>(json);
                 return Result.Success(obj);
             }
@@ -136,7 +136,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (DiscoverSearchResponse)null);
+                    return Result.UnExpectedResponse<DiscoverSearchResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<DiscoverSearchResponse>(json);
                 return Result.Success(obj);
             }
@@ -148,79 +148,7 @@ namespace InstagramApiSharp.API.Processors
         }
         
         
-        
-        
-        
-        
-        /// <summary>
-        /// NOT COMPLETE
-        /// </summary>
-        /// <returns></returns>
-        private async Task<IResult<object>> AcceptFriendshipAsync(long userId)
-        {
-            try
-            {
-                var instaUri = UriCreator.GetAcceptFriendshipUri(userId);
-                Debug.WriteLine(instaUri.ToString());
-                var data = new JObject
-                {
-                    { "_csrftoken", _user.CsrfToken},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"user_id", userId},
-                    {"radio_type", "wifi"}
-                };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (DiscoverRecentSearchsResponse)null);
-                var obj = JsonConvert.DeserializeObject<DiscoverRecentSearchsResponse>(json);
-                return Result.Success(obj);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<DiscoverRecentSearchsResponse>(exception);
-            }
-        }
-        /// <summary>
-        /// NOT COMPLETE
-        /// </summary>
-        /// <returns></returns>
-        private async Task<IResult<object>> RejectFriendshipAsync(long userId)
-        {
-            try
-            {
 
-                var instaUri = UriCreator.GetDenyFriendshipUri(userId);
-                Debug.WriteLine(instaUri.ToString());
-                var data = new JObject
-                {
-                    { "_csrftoken", _user.CsrfToken},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"user_id", userId},
-                    {"radio_type", "wifi"}
-                };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (DiscoverRecentSearchsResponse)null);
-                Debug.WriteLine(json);
-                var obj = JsonConvert.DeserializeObject<DiscoverRecentSearchsResponse>(json);
-                return Result.Success(obj);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<DiscoverRecentSearchsResponse>(exception);
-            }
-        }
         /// <summary>
         /// NOT COMPLETE
         /// </summary>
@@ -248,7 +176,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (DicoverDefaultResponse)null);
+                    return Result.UnExpectedResponse<DicoverDefaultResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<DicoverDefaultResponse>(json);
                 return Result.Success(obj);
             }

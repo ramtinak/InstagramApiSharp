@@ -70,7 +70,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastLiveHeartBeatViewerCountResponse)null);
+                    return Result.UnExpectedResponse<BroadcastLiveHeartBeatViewerCountResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastLiveHeartBeatViewerCountResponse>(json);
                 return Result.Success(obj);
             }
@@ -94,7 +94,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastFinalViewerListResponse)null);
+                    return Result.UnExpectedResponse<BroadcastFinalViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastFinalViewerListResponse>(json);
                 return Result.Success(obj);
 
@@ -118,7 +118,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastSuggestedResponse)null);
+                    return Result.UnExpectedResponse<BroadcastSuggestedResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastSuggestedResponse>(json);
                 return Result.Success(obj);
             }
@@ -141,7 +141,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (DiscoverTopLiveResponse)null);
+                    return Result.UnExpectedResponse<DiscoverTopLiveResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<DiscoverTopLiveResponse>(json);
                 return Result.Success(obj);
             }
@@ -172,7 +172,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastTopLiveStatusResponse)null);
+                    return Result.UnExpectedResponse<BroadcastTopLiveStatusResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastTopLiveStatusResponse>(json);
                 return Result.Success(obj);
             }
@@ -196,7 +196,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastInfoResponse)null);
+                    return Result.UnExpectedResponse<BroadcastInfoResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastInfoResponse>(json);
                 return Result.Success(obj);
             }
@@ -220,7 +220,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastViewerListResponse)null);
+                    return Result.UnExpectedResponse<BroadcastViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastViewerListResponse>(json);
                 return Result.Success(obj);
             }
@@ -245,7 +245,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastViewerListResponse)null);
+                    return Result.UnExpectedResponse<BroadcastViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastViewerListResponse>(json);
                 return Result.Success(obj);
             }
@@ -319,7 +319,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastPinUnpinResponse)null);
+                    return Result.UnExpectedResponse<BroadcastPinUnpinResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastPinUnpinResponse>(json);
                 return Result.Success(obj);
             }
@@ -353,7 +353,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastPinUnpinResponse)null);
+                    return Result.UnExpectedResponse<BroadcastPinUnpinResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastPinUnpinResponse>(json);
                 return Result.Success(obj);
             }
@@ -379,7 +379,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastCommentResponse)null);
+                    return Result.UnExpectedResponse<BroadcastCommentResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastCommentResponse>(json);
                 return Result.Success(obj);
             }
@@ -410,7 +410,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastCommentEnableDisableResponse)null);
+                    return Result.UnExpectedResponse<BroadcastCommentEnableDisableResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastCommentEnableDisableResponse>(json);
                 return Result.Success(obj);
             }
@@ -441,7 +441,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastCommentEnableDisableResponse)null);
+                    return Result.UnExpectedResponse<BroadcastCommentEnableDisableResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastCommentEnableDisableResponse>(json);
                 return Result.Success(obj);
             }
@@ -474,7 +474,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastLikeResponse)null);
+                    return Result.UnExpectedResponse<BroadcastLikeResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastLikeResponse>(json);
                 return Result.Success(obj);
             }
@@ -499,7 +499,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastLikeResponse)null);
+                    return Result.UnExpectedResponse<BroadcastLikeResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastLikeResponse>(json);
                 return Result.Success(obj);
             }
@@ -530,7 +530,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastAddToPostLiveResponse)null);
+                    return Result.UnExpectedResponse<BroadcastAddToPostLiveResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastAddToPostLiveResponse>(json);
                 return Result.Success(obj);
             }
@@ -545,7 +545,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        public async Task<IResult<InstaDefault>> DeletePostLiveAsync(string broadcastId)
+        public async Task<IResult<bool>> DeletePostLiveAsync(string broadcastId)
         {
             try
             {
@@ -561,14 +561,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (InstaDefault)null);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
-                return Result.Success(obj);
+                return obj.Status == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDefault>(exception);
+                return Result.Fail<bool>(exception);
             }
         }
         /// <summary>
@@ -584,7 +584,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastFinalViewerListResponse)null);
+                    return Result.UnExpectedResponse<BroadcastFinalViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastFinalViewerListResponse>(json);
                 return Result.Success(obj);
             }
@@ -624,7 +624,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastCreateResponse)null);
+                    return Result.UnExpectedResponse<BroadcastCreateResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadcastCreateResponse>(json);
                 return Result.Success(obj);
             }
@@ -657,7 +657,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 var obj = JsonConvert.DeserializeObject<BroadcastStartResponse>(json);
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastStartResponse)null);
+                    return Result.UnExpectedResponse<BroadcastStartResponse>(response, json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
@@ -672,7 +672,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="endAfterCopyrightWarning">Copyright warning</param>
         /// <returns></returns>
-        public async Task<IResult<InstaDefault>> EndAsync(string broadcastId, bool endAfterCopyrightWarning = false)
+        public async Task<IResult<bool>> EndAsync(string broadcastId, bool endAfterCopyrightWarning = false)
         {
             try
             {
@@ -688,14 +688,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (InstaDefault)null);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
-                return Result.Success(obj);
+                return obj.Status == "ok" ? Result.Success(true): Result.UnExpectedResponse<bool>(response, json);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDefault>(exception);
+                return Result.Fail<bool>(exception);
             }
         }
 
@@ -714,7 +714,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadCastNotifyFriendsResponse)null);
+                    return Result.UnExpectedResponse<BroadcastViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadCastNotifyFriendsResponse>(json);
                 return Result.Success(json);
             }
@@ -738,7 +738,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadCastNotifyFriendsResponse)null);
+                    return Result.UnExpectedResponse<BroadcastViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadCastNotifyFriendsResponse>(json);
                 return Result.Success(json);
             }
@@ -761,7 +761,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadCastNotifyFriendsResponse)null);
+                    return Result.UnExpectedResponse<BroadcastViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<BroadCastNotifyFriendsResponse>(json);
                 return Result.Success(obj);
             }
@@ -800,7 +800,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (BroadcastLiveHeartBeatViewerCountResponse)null);
+                    return Result.UnExpectedResponse<BroadcastViewerListResponse>(response, json);
                 return Result.Success(json);
             }
             catch (Exception exception)

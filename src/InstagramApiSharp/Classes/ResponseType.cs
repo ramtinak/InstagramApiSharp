@@ -12,6 +12,7 @@ namespace InstagramApiSharp.Classes
         SomePagesSkipped = 7,
         UnExpectedResponse = 8,
         InternalException = 9,
-        ChallengeRequired = 10
+        ChallengeRequired = 10,
+        InactiveUser = 11
     }
 }

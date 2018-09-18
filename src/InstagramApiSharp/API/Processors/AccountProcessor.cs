@@ -337,7 +337,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, false);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
@@ -371,7 +371,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (InstaAccountUserResponse)null);
+                    return Result.UnExpectedResponse<InstaAccountUserResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaAccountUserResponse>(json);
 
                 return Result.Success(obj);
@@ -389,11 +389,27 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>
         public async Task<IResult<InstaAccountUserResponse>> ChangeProfilePictureAsync(byte[] pictureBytes)
         {
+            return await ChangeProfilePictureAsync(null, pictureBytes);
+        }
+        /// <summary>
+        ///     Change profile picture(only jpg and jpeg formats).
+        /// </summary> 
+        /// <param name="progress">Progress action</param>
+        /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>
+        public async Task<IResult<InstaAccountUserResponse>> ChangeProfilePictureAsync(Action<InstaUploaderProgress> progress, byte[] pictureBytes)
+        {
             UserAuthValidator.Validate(_userAuthValidate);
+            var upProgress = new InstaUploaderProgress
+            {
+                Caption = string.Empty,
+                UploadState = InstaUploadState.Preparing
+            };
             try
             {
                 var instaUri = UriCreator.GetChangeProfilePictureUri();
                 var uploadId = ApiRequestMessage.GenerateUploadId();
+                upProgress.UploadId = uploadId;
+                progress?.Invoke(upProgress);
                 var requestContent = new MultipartFormDataContent(uploadId)
                 {
                     {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
@@ -402,19 +418,77 @@ namespace InstagramApiSharp.API.Processors
                 };
                 var imageContent = new ByteArrayContent(pictureBytes);
                 requestContent.Add(imageContent, "profile_pic", $"r{ApiRequestMessage.GenerateUploadId()}.jpg");
+                var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
+                {
+                    UploaderProgress = upProgress
+                };
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = requestContent;
+                request.Content = progressContent;
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                if (progressContent.UploaderProgress != null)
+                    upProgress = progressContent.UploaderProgress;
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (InstaAccountUserResponse)null);
-                var obj = JsonConvert.DeserializeObject<InstaAccountUserResponse>(json);       
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
+                    return Result.UnExpectedResponse<InstaAccountUserResponse>(response, json);
+                }
+
+                var obj = JsonConvert.DeserializeObject<InstaAccountUserResponse>(json);
+                upProgress.UploadState = InstaUploadState.Completed;
+                progress?.Invoke(upProgress);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
                 return Result.Fail<InstaAccountUserResponse>(exception);
+            }
+        }
+        /// <summary>
+        ///     Get request for download account data.
+        /// </summary>
+        /// <param name="email">Email</param>
+        public async Task<IResult<InstaRequestDownloadData>> GetRequestForDownloadAccountDataAsync(string email)
+        {
+            return await GetRequestForDownloadAccountDataAsync(email, null);
+        }
+        /// <summary>
+        ///     Get request for download account data.
+        /// </summary>
+        /// <param name="email">Email</param>
+        /// <param name="password">Password (only for facebook logins)</param>
+        public async Task<IResult<InstaRequestDownloadData>> GetRequestForDownloadAccountDataAsync(string email, string password)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (string.IsNullOrEmpty(password))
+                    password = _user.Password;
+
+                var instaUri = UriCreator.GetRequestForDownloadDataUri();
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"email", email},
+                    {"password", password}
+                };
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaRequestDownloadData>(json);
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaRequestDownloadData>(exception);
             }
         }
         #endregion Profile edit
@@ -424,7 +498,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get story settings.
         /// </summary>
-        public async Task<IResult<AccountSettingsResponse>> GetStorySettingsAsync()
+        public async Task<IResult<InstaStorySettings>> GetStorySettingsAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -434,14 +508,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (AccountSettingsResponse)null);
-                var obj = JsonConvert.DeserializeObject<AccountSettingsResponse>(json);
+                    return Result.UnExpectedResponse<InstaStorySettings>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaStorySettings>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountSettingsResponse>(exception);
+                return Result.Fail<InstaStorySettings>(exception);
             }
         }
         /// <summary>
@@ -464,7 +538,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, false);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
@@ -497,7 +571,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, false);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
@@ -533,7 +607,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, false);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 Debug.WriteLine(json);
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 //{"reel_auto_archive": "on", "message_prefs": null, "status": "ok"}
@@ -570,7 +644,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, false);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 if(obj.ReelAutoArchive.ToLower() == "off")
                     return Result.Success(true);
@@ -607,7 +681,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, false);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 if (obj.Status.ToLower() == "off")
                     return Result.Success(true);
@@ -642,7 +716,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, false);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 if (obj.MessagePrefs.ToLower() == "anyone" && repliesType == InstaMessageRepliesType.Everyone)
                     return Result.Success(true);
@@ -660,7 +734,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         /// <summary>
-        ///     Check username availablity.
+        ///     Check username availablity. (for logged in user)
         /// </summary>
         /// <param name="desiredUsername">Desired username</param>
         public async Task<IResult<AccountCheckResponse>> CheckUsernameAsync(string desiredUsername)
@@ -679,7 +753,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (AccountCheckResponse)null);
+                    return Result.UnExpectedResponse<AccountCheckResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountCheckResponse>(json);
                 return Result.Success(obj);
             }
@@ -712,7 +786,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (AccountSecuritySettingsResponse)null);
+                    return Result.UnExpectedResponse<AccountSecuritySettingsResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountSecuritySettingsResponse>(json);
                 return Result.Success(obj);
             }
@@ -741,7 +815,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, false);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountCheckResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
@@ -776,7 +850,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (AccountTwoFactorSmsResponse)null);
+                    return Result.UnExpectedResponse<AccountTwoFactorSmsResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountTwoFactorSmsResponse>(json);
                 return Result.Success(obj);
             }
@@ -810,7 +884,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (AccountTwoFactorResponse)null);
+                    return Result.UnExpectedResponse<AccountTwoFactorResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountTwoFactorResponse>(json);
                 return Result.Success(obj);
             }
@@ -840,7 +914,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (AccountConfirmEmailResponse)null);
+                    return Result.UnExpectedResponse<AccountConfirmEmailResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountConfirmEmailResponse>(json);
                 return Result.Success(obj);
             }
@@ -872,7 +946,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (AccountSendSmsResponse)null);
+                    return Result.UnExpectedResponse<AccountSendSmsResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountSendSmsResponse>(json);
                 return Result.Success(obj);
             }
@@ -906,7 +980,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (AccountVerifySmsResponse)null);
+                    return Result.UnExpectedResponse<AccountVerifySmsResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<AccountVerifySmsResponse>(json);
                 return Result.Success(obj);
             }
@@ -979,7 +1053,7 @@ namespace InstagramApiSharp.API.Processors
 
                 Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (AccountBesties)null);
+                    return Result.UnExpectedResponse<object>(response, json);
 
                 return null;
             }
@@ -1013,7 +1087,7 @@ namespace InstagramApiSharp.API.Processors
                 Debug.WriteLine(response.StatusCode);
                 Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail("Status code: " + response.StatusCode, (AccountBesties)null);
+                    return Result.UnExpectedResponse<object>(response, json);
 
 
                 return null;
@@ -1042,7 +1116,7 @@ namespace InstagramApiSharp.API.Processors
                 Debug.WriteLine(response.StatusCode);
                 Debug.WriteLine(json);
                 //if (response.StatusCode != HttpStatusCode.OK)
-                //    return Result.Fail("Status code: " + response.StatusCode, false);
+                //    return Result.UnExpectedResponse<object>(response, json);
                 //{"config_value": 0, "status": "ok"}
                 return null;
             }

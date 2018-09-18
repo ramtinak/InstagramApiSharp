@@ -153,12 +153,17 @@ namespace InstagramApiSharp.API
         ///     Check phone number availability
         /// </summary>
         /// <param name="phoneNumber">Phone number to check</param>
-        Task<IResult<InstaDefault>> CheckPhoneNumberAsync(string phoneNumber);
+        Task<IResult<bool>> CheckPhoneNumberAsync(string phoneNumber);
+        /// <summary>
+        ///     Check username availablity. 
+        /// </summary>
+        /// <param name="username">Username</param>
+        Task<IResult<AccountCheckResponse>> CheckUsernameAsync(string username);
         /// <summary>
         ///     Send sign up sms code
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        Task<IResult<InstaDefault>> SendSignUpSmsCodeAsync(string phoneNumber);
+        Task<IResult<bool>> SendSignUpSmsCodeAsync(string phoneNumber);
         /// <summary>
         ///     Verify sign up sms code
         /// </summary>

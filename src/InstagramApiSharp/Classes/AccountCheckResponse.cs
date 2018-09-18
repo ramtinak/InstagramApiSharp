@@ -21,9 +21,9 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("error")]
         public string Error { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        internal string Status { get; set; }
         [JsonProperty("error_type")]
-        public string ErrorType { get; set; }
+        internal string ErrorType { get; set; }
     }
 
 }

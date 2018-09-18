@@ -1278,5 +1278,11 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for leave group thread");
             return instaUri;
         }
+        public static Uri GetRequestForDownloadDataUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DYI_REQUEST_DOWNLOAD_DATA, out var instaUri))
+                throw new Exception("Cant create URI for request for download data.");
+            return instaUri;
+        }
     }
 }

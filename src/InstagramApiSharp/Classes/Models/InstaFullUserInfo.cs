@@ -45,7 +45,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public List<InstaStoryItem> Items { get; set; } = new List<InstaStoryItem>();
 
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public int LatestReelMedia { get; set; }
 

@@ -7,95 +7,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
     [Serializable]
     public class AndroidVersion
     {
-        public static readonly List<AndroidVersion> AndroidVersions = new List<AndroidVersion>
-        {
-            new AndroidVersion
-            {
-                Codename = "Ice Cream Sandwich",
-                VersionNumber = "4.0",
-                APILevel = "14"
-            },
-            new AndroidVersion
-            {
-                Codename = "Ice Cream Sandwich",
-                VersionNumber = "4.0.3",
-                APILevel = "15"
-            },
-            new AndroidVersion
-            {
-                Codename = "Jelly Bean",
-                VersionNumber = "4.1",
-                APILevel = "16"
-            },
-            new AndroidVersion
-            {
-                Codename = "Jelly Bean",
-                VersionNumber = "4.2",
-                APILevel = "17"
-            },
-            new AndroidVersion
-            {
-                Codename = "Jelly Bean",
-                VersionNumber = "4.3",
-                APILevel = "18"
-            },
-            new AndroidVersion
-            {
-                Codename = "KitKat",
-                VersionNumber = "4.4",
-                APILevel = "19"
-            },
-            new AndroidVersion
-            {
-                Codename = "KitKat",
-                VersionNumber = "5.0",
-                APILevel = "21"
-            },
-            new AndroidVersion
-            {
-                Codename = "Lollipop",
-                VersionNumber = "5.1",
-                APILevel = "22"
-            },
-            new AndroidVersion
-            {
-                Codename = "Marshmallow",
-                VersionNumber = "6.0",
-                APILevel = "23"
-            },
-            new AndroidVersion
-            {
-                Codename = "Nougat",
-                VersionNumber = "7.0",
-                APILevel = "24"
-            },
-            new AndroidVersion
-            {
-                Codename = "Nougat",
-                VersionNumber = "7.1",
-                APILevel = "25"
-            },
-            new AndroidVersion
-            {
-                Codename = "Oreo",
-                VersionNumber = "8.0",
-                APILevel = "26"
-            },
-            new AndroidVersion
-            {
-                Codename = "Oreo",
-                VersionNumber = "8.1",
-                APILevel = "27"
-            },
-            new AndroidVersion
-            {
-                Codename = "Pie",
-                VersionNumber = "9.0",
-                APILevel = "27"
-            }
-        };
-
-        private AndroidVersion()
+        internal AndroidVersion()
         {
         }
 
@@ -106,23 +18,23 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         public static AndroidVersion FromString(string versionString)
         {
             var version = new Version(versionString);
-            foreach (var androidVersion in AndroidVersions)
+            foreach (var androidVersion in AndroidVersionList.GetVersionList().AndroidVersions())
                 if (version.CompareTo(new Version(androidVersion.VersionNumber)) == 0 ||
                     version.CompareTo(new Version(androidVersion.VersionNumber)) > 0 &&
-                    androidVersion != AndroidVersions.Last() &&
-                    version.CompareTo(new Version(AndroidVersions[AndroidVersions.IndexOf(androidVersion) + 1]
+                    androidVersion != AndroidVersionList.GetVersionList().AndroidVersions().Last() &&
+                    version.CompareTo(new Version(AndroidVersionList.GetVersionList().AndroidVersions()[AndroidVersionList.GetVersionList().AndroidVersions().IndexOf(androidVersion) + 1]
                         .VersionNumber)) < 0)
                     return androidVersion;
             return null;
         }
 
         static Random Rnd = new Random();
-        private static AndroidVersion LastAndriodVersion = AndroidVersions[AndroidVersions.Count - 2];
+        private static AndroidVersion LastAndriodVersion = AndroidVersionList.GetVersionList().AndroidVersions()[AndroidVersionList.GetVersionList().AndroidVersions().Count - 2];
         public static AndroidVersion GetRandomAndriodVersion()
         {
             TryLabel:
-            var randomDeviceIndex = Rnd.Next(0, AndroidVersions.Count);
-            var androidVersion = AndroidVersions.ElementAt(randomDeviceIndex);
+            var randomDeviceIndex = Rnd.Next(0, AndroidVersionList.GetVersionList().AndroidVersions().Count);
+            var androidVersion = AndroidVersionList.GetVersionList().AndroidVersions().ElementAt(randomDeviceIndex);
             if (LastAndriodVersion != null)
                 if (androidVersion.APILevel == LastAndriodVersion.APILevel)
                     goto TryLabel;
@@ -133,7 +45,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         {
             if (string.IsNullOrEmpty(apiLevel)) return null;
 
-            return AndroidVersions.FirstOrDefault(api => api.APILevel == apiLevel);
+            return AndroidVersionList.GetVersionList().AndroidVersions().FirstOrDefault(api => api.APILevel == apiLevel);
         }
     }
 }
