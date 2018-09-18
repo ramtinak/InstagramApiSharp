@@ -70,6 +70,9 @@ For example:
 Task<IResult<object>>
 ```
 
+## Wiki
+Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
+
 ## Version changes
 v1.1.0.8
 - [Add] CheckUsernameAsync to IInstaApi
@@ -120,23 +123,10 @@ v1.1.0.0
 - [Update] InstaTagFeed class
 - [Bugfix] for GetMediaRepliesCommentsAsync in CommentProcessor
 
-v1.0.6.0
-- [Add] Instagram TV support in IInstaApi.TVProcessor
-- [Update] Add Timeout and NeedsChallenge to ResultInfo (thx to [@Lorymi](https://github.com/Lorymi) )
-- [Add] like direct message in thread
-
-v1.0.5.6 
-- [Update] UploadPhotoAsync to newer api
-- [Add] Set location while uploading photo/video/album in MediaProcessor
-- [Move] SetDevice to IInstaApi
-
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
 ## Known Issues
 Nothing!!!!
-
-## Wiki
-Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## [InstaPost](https://github.com/ramtinak/InstaPost/) app.
 You can download source code or app from [InstaPost](https://github.com/ramtinak/InstaPost/) github page.
