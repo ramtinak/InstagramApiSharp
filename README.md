@@ -79,7 +79,7 @@ v1.1.0.8
 - [Add] GetRequestForDownloadAccountDataAsync to AccountProcessor
 - [Add] Progress changed action to change profile picture
 - [Bugfix] for GetFullUserInfoAsync (thx to https://t.me/rohollah for report)
-- [Bugfix] for random android version (thx to [@aspmaker](https://github.com/aspmaker )
+- [Bugfix] for random android version (thx to [@aspmaker](https://github.com/aspmaker) )
 - [Cleanup] some functions
 
 v1.1.0.7
