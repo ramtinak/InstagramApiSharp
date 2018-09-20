@@ -37,7 +37,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get suggested searches
         /// </summary>
-        Task<IResult<InstaTVSearch>> SuggestedSearchesAsync();
+        Task<IResult<InstaTVSearch>> GetSuggestedSearchesAsync();
         /// <summary>
         ///     Search channels
         /// </summary>

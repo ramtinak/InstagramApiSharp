@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.0.8</Version>
-    <AssemblyVersion>1.1.0.8</AssemblyVersion>
-    <FileVersion>1.1.0.8</FileVersion>
+    <Version>1.1.0.9</Version>
+    <AssemblyVersion>1.1.0.9</AssemblyVersion>
+    <FileVersion>1.1.0.9</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -36,7 +36,11 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.0.8
+    <PackageReleaseNotes>v1.1.0.9
+- [Rename] SuggestedSearchesAsync to GetSuggestedSearchesAsync in TVProcessor
+- [Bugfix] for GetFullUserInfoAsync
+
+v1.1.0.8
 - [Add] CheckUsernameAsync to IInstaApi
 - [Add] GetRequestForDownloadAccountDataAsync to AccountProcessor
 - [Add] Progress changed action to change profile picture

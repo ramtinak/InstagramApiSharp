@@ -449,7 +449,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         /// <summary>
-        ///     Get request for download account data.
+        ///     Get request for download backup account data.
         /// </summary>
         /// <param name="email">Email</param>
         public async Task<IResult<InstaRequestDownloadData>> GetRequestForDownloadAccountDataAsync(string email)
@@ -457,7 +457,7 @@ namespace InstagramApiSharp.API.Processors
             return await GetRequestForDownloadAccountDataAsync(email, null);
         }
         /// <summary>
-        ///     Get request for download account data.
+        ///     Get request for download backup account data.
         /// </summary>
         /// <param name="email">Email</param>
         /// <param name="password">Password (only for facebook logins)</param>

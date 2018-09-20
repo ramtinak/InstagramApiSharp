@@ -18,19 +18,23 @@ namespace InstagramApiSharp.Classes.Models
         [JsonProperty("status")]
         public string Status { get; set; }
         [JsonProperty("suggested_users")]
-        public SuggestedUsers SuggestedUsers { get; set; }
+        public InstaPendingSuggestedUsers SuggestedUsers { get; set; }
         [JsonProperty("truncate_follow_requests_at_index")]
         public int TruncateFollowRequestsAtIndex { get; set; }
         [JsonProperty("users")]
         public InstaUserShortResponse[] Users { get; set; }
     }
     
-    public class SuggestedUsers
+    public class InstaPendingSuggestedUsers
     {
         [JsonProperty("netego_type")]
         public string NetegoType { get; set; }
         [JsonProperty("suggestions")]
-        public object[] Suggestions { get; set; }
+        public InstaPendingSuggestedSingleUser[] Suggestions { get; set; }
     }
-    
+    public class InstaPendingSuggestedSingleUser
+    {
+        [JsonProperty("user")]
+        public InstaUserShortResponse User { get; set; }
+    }
 }

@@ -81,12 +81,12 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>
         Task<IResult<InstaAccountUserResponse>> ChangeProfilePictureAsync(Action<InstaUploaderProgress> progress, byte[] pictureBytes);
         /// <summary>
-        ///     Get request for download account data.
+        ///     Get request for download backup account data.
         /// </summary>
         /// <param name="email">Email</param>
         Task<IResult<InstaRequestDownloadData>> GetRequestForDownloadAccountDataAsync(string email);
         /// <summary>
-        ///     Get request for download account data.
+        ///     Get request for download backup account data.
         /// </summary>
         /// <param name="email">Email</param>
         /// <param name="password">Password (only for facebook logins)</param>

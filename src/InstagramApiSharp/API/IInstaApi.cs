@@ -95,18 +95,38 @@ namespace InstagramApiSharp.API
         /// <returns>State data</returns>
         Stream GetStateDataAsStream();
         /// <summary>
-        ///     Set state data from provided stream
-        /// </summary>
-        void LoadStateDataFromStream(Stream data);
-        /// <summary>
         ///     Get current state info as Json string
         /// </summary>
         /// <returns>State data</returns>
         string GetStateDataAsString();
         /// <summary>
+        ///     Get current state info as Json string asynchronously
+        /// </summary>
+        /// <returns>
+        ///     State data
+        /// </returns>
+        Task<string> GetStateDataAsStringAsync();
+        /// <summary>
+        ///     Get current state info as Memory stream asynchronously
+        /// </summary>
+        /// <returns>State data</returns>
+        Task<Stream> GetStateDataAsStreamAsync();
+        /// <summary>
+        ///     Set state data from provided stream
+        /// </summary>
+        void LoadStateDataFromStream(Stream data);
+        /// <summary>
         ///     Set state data from provided json string
         /// </summary>
         void LoadStateDataFromString(string data);
+        /// <summary>
+        ///     Set state data from provided stream asynchronously
+        /// </summary>
+        Task LoadStateDataFromStreamAsync(Stream stream);
+        /// <summary>
+        ///     Set state data from provided json string asynchronously
+        /// </summary>
+        Task LoadStateDataFromStringAsync(string json);
 
         #region Async Members
         /// <summary>

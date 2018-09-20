@@ -55,7 +55,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("id")]
         public long Id { get; set; }
         [JsonProperty("latest_reel_media")]
-        public int LatestReelMedia { get; set; }
+        public int? LatestReelMedia { get; set; }
         [JsonProperty("expiring_at")]
         public long ExpiringAt { get; set; }
         [JsonProperty("seen")]

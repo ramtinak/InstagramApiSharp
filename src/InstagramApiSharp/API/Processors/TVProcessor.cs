@@ -49,7 +49,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
+                
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaTV>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaTV>(json);
@@ -101,7 +101,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
+                
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaTVChannel>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaTVChannel>(json);
@@ -116,7 +116,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get suggested searches
         /// </summary>
-        public async Task<IResult<InstaTVSearch>> SuggestedSearchesAsync()
+        public async Task<IResult<InstaTVSearch>> GetSuggestedSearchesAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -125,7 +125,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
+                
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaTVSearch>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaTVSearch>(json);
@@ -150,7 +150,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
+                
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaTVSearch>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaTVSearch>(json);

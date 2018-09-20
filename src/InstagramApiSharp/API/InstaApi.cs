@@ -1406,7 +1406,7 @@ namespace InstagramApiSharp.API
             return SerializationHelper.SerializeToStream(state);
         }
         /// <summary>
-        ///     Get current state info as Memory stream
+        ///     Get current state info as Json string
         /// </summary>
         /// <returns>
         ///     State data
@@ -1431,7 +1431,36 @@ namespace InstagramApiSharp.API
             };
             return SerializationHelper.SerializeToString(state);
         }
-
+        /// <summary>
+        ///     Get current state info as Memory stream asynchronously
+        /// </summary>
+        /// <returns>
+        ///     State data
+        /// </returns>
+        public async Task<Stream> GetStateDataAsStreamAsync()
+        {
+            return await Task<Stream>.Factory.StartNew(() =>
+            {
+                var state = GetStateDataAsStream();
+                Task.Delay(1000);
+                return state;
+            });
+        }
+        /// <summary>
+        ///     Get current state info as Json string asynchronously
+        /// </summary>
+        /// <returns>
+        ///     State data
+        /// </returns>
+        public async Task<string> GetStateDataAsStringAsync()
+        {
+            return await Task<string>.Factory.StartNew(() =>
+            {
+                var state = GetStateDataAsString();
+                Task.Delay(1000);
+                return state;
+            });
+        }
         /// <summary>
         ///     Loads the state data from stream.
         /// </summary>
@@ -1442,12 +1471,10 @@ namespace InstagramApiSharp.API
             if (!IsCustomDeviceSet)
                 _deviceInfo = data.DeviceInfo;
             _user = data.UserSession;
-            // _httpRequestProcessor.HttpHandler.CookieContainer = data.Cookies;
-
-            //Load Stream Edit 
+            
             _httpRequestProcessor.RequestMessage.Username = data.UserSession.UserName;
             _httpRequestProcessor.RequestMessage.Password = data.UserSession.Password;
-            // _httpRequestProcessor.HttpHandler.CookieContainer = data.Cookies;
+            
             _httpRequestProcessor.RequestMessage.DeviceId = data.DeviceInfo.DeviceId;
             _httpRequestProcessor.RequestMessage.PhoneId = data.DeviceInfo.PhoneGuid.ToString();
             _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
@@ -1457,26 +1484,25 @@ namespace InstagramApiSharp.API
             {
                 _httpRequestProcessor.HttpHandler.CookieContainer.Add(new Uri(InstaApiConstants.INSTAGRAM_URL), cookie);
             }
-
-            //_httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(new Uri(InstaApiConstants.INSTAGRAM_URL),data.RawCookies);
-
-
+            
 
             IsUserAuthenticated = data.IsAuthenticated;
             InvalidateProcessors();
         }
-        public void LoadStateDataFromString(string str)
+        /// <summary>
+        ///     Set state data from provided json string
+        /// </summary>
+        public void LoadStateDataFromString(string json)
         {
-            var data = SerializationHelper.DeserializeFromString<StateData>(str);
+            var data = SerializationHelper.DeserializeFromString<StateData>(json);
             if (!IsCustomDeviceSet)
                 _deviceInfo = data.DeviceInfo;
             _user = data.UserSession;
-            // _httpRequestProcessor.HttpHandler.CookieContainer = data.Cookies;
-
+            
             //Load Stream Edit 
             _httpRequestProcessor.RequestMessage.Username = data.UserSession.UserName;
             _httpRequestProcessor.RequestMessage.Password = data.UserSession.Password;
-            // _httpRequestProcessor.HttpHandler.CookieContainer = data.Cookies;
+            
             _httpRequestProcessor.RequestMessage.DeviceId = data.DeviceInfo.DeviceId;
             _httpRequestProcessor.RequestMessage.PhoneId = data.DeviceInfo.PhoneGuid.ToString();
             _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
@@ -1486,13 +1512,32 @@ namespace InstagramApiSharp.API
             {
                 _httpRequestProcessor.HttpHandler.CookieContainer.Add(new Uri(InstaApiConstants.INSTAGRAM_URL), cookie);
             }
-
-            //_httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(new Uri(InstaApiConstants.INSTAGRAM_URL),data.RawCookies);
-
-
+            
 
             IsUserAuthenticated = data.IsAuthenticated;
             InvalidateProcessors();
+        }
+        /// <summary>
+        ///     Set state data from provided stream asynchronously
+        /// </summary>
+        public async Task LoadStateDataFromStreamAsync(Stream stream)
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                LoadStateDataFromStream(stream);
+                Task.Delay(1000);
+            });
+        }
+        /// <summary>
+        ///     Set state data from provided json string asynchronously
+        /// </summary>
+        public async Task LoadStateDataFromStringAsync(string json)
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                LoadStateDataFromString(json);
+                Task.Delay(1000);
+            });
         }
         #endregion
 
@@ -1542,6 +1587,6 @@ namespace InstagramApiSharp.API
             _logger?.LogException(exception);
         }
 
-        #endregion
+#endregion
     }
 }
