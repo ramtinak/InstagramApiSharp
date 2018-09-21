@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -282,12 +281,10 @@ namespace InstagramApiSharp.API.Processors
                     progress?.Invoke(upProgress);
                     return Result.Success(true);
                 }
-                else
-                {
-                    upProgress.UploadState = InstaUploadState.Error;
-                    progress?.Invoke(upProgress);
-                    return Result.Fail<bool>("Could not upload thumbnail");
-                }
+
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                return Result.Fail<bool>("Could not upload thumbnail");
             }
             catch (Exception exception)
             {
@@ -361,12 +358,10 @@ namespace InstagramApiSharp.API.Processors
                     progress?.Invoke(upProgress);
                     return Result.Success(success.Value);
                 }
-                else
-                {
-                    upProgress.UploadState = InstaUploadState.Error;
-                    progress?.Invoke(upProgress);
-                    return Result.Fail<InstaMedia>("Cannot expose media");
-                }
+
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                return Result.Fail<InstaMedia>("Cannot expose media");
             }
             catch (Exception exception)
             {
@@ -406,8 +401,8 @@ namespace InstagramApiSharp.API.Processors
                     var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
                     return Result.Success(converter.Convert());
                 }
-                else
-                    return Result.Fail<InstaMedia>(jObject.Status);
+
+                return Result.Fail<InstaMedia>(jObject.Status);
             }
             catch (Exception exception)
             {
@@ -471,59 +466,58 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 var imagesUploadIds = new string[images.Length];
                 var index = 0;
-                if (images != null)
-                    foreach (var image in images)
+                foreach (var image in images)
+                {
+                    var instaUri = UriCreator.GetUploadPhotoUri();
+                    var uploadId = ApiRequestMessage.GenerateUploadId();
+                    upProgress.UploadId = uploadId;
+                    upProgress.Name = $"[Album] Photo uploading {index}/{images.Length}";
+                    upProgress.UploadState = InstaUploadState.Uploading;
+                    progress?.Invoke(upProgress);
+                    var requestContent = new MultipartFormDataContent(uploadId)
                     {
-                        var instaUri = UriCreator.GetUploadPhotoUri();
-                        var uploadId = ApiRequestMessage.GenerateUploadId();
-                        upProgress.UploadId = uploadId;
-                        upProgress.Name = $"[Album] Photo uploading {index}/{images.Length}";
-                        upProgress.UploadState = InstaUploadState.Uploading;
-                        progress?.Invoke(upProgress);
-                        var requestContent = new MultipartFormDataContent(uploadId)
+                        {new StringContent(uploadId), "\"upload_id\""},
+                        {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                        {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
                         {
-                            {new StringContent(uploadId), "\"upload_id\""},
-                            {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
-                            {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
-                            {
-                                new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
-                                "\"image_compression\""
-                            },
-                            {new StringContent("1"), "\"is_sidecar\""}
-                        };
-                        byte[] fileBytes;
-                        if (image.ImageBytes == null)
-                            fileBytes = File.ReadAllBytes(image.Uri);
-                        else
-                            fileBytes = image.ImageBytes;
-                        var imageContent = new ByteArrayContent(fileBytes);
-                        imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
-                        imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                        var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
-                        {
-                            UploaderProgress = upProgress
-                        };
-                        requestContent.Add(progressContent, "photo",
-                            $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
+                            new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                            "\"image_compression\""
+                        },
+                        {new StringContent("1"), "\"is_sidecar\""}
+                    };
+                    byte[] fileBytes;
+                    if (image.ImageBytes == null)
+                        fileBytes = File.ReadAllBytes(image.Uri);
+                    else
+                        fileBytes = image.ImageBytes;
+                    var imageContent = new ByteArrayContent(fileBytes);
+                    imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                    imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                    var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
+                    {
+                        UploaderProgress = upProgress
+                    };
+                    requestContent.Add(progressContent, "photo",
+                        $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
 
-                        var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                        request.Content = requestContent;
-                        var response = await _httpRequestProcessor.SendAsync(request);
-                        var json = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            upProgress = progressContent?.UploaderProgress;
-                            upProgress.UploadState = InstaUploadState.Uploaded;
-                            progress?.Invoke(upProgress);
-                            imagesUploadIds[index++] = uploadId;
-                        }
-                        else
-                        {
-                            upProgress.UploadState = InstaUploadState.Error;
-                            progress?.Invoke(upProgress);
-                            return Result.UnExpectedResponse<InstaMedia>(response, json);
-                        }
+                    var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                    request.Content = requestContent;
+                    var response = await _httpRequestProcessor.SendAsync(request);
+                    var json = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        upProgress = progressContent?.UploaderProgress;
+                        upProgress.UploadState = InstaUploadState.Uploaded;
+                        progress?.Invoke(upProgress);
+                        imagesUploadIds[index++] = uploadId;
                     }
+                    else
+                    {
+                        upProgress.UploadState = InstaUploadState.Error;
+                        progress?.Invoke(upProgress);
+                        return Result.UnExpectedResponse<InstaMedia>(response, json);
+                    }
+                }
 
                 var videosDic = new Dictionary<string, InstaVideo>();
                 var vidIndex = 0;

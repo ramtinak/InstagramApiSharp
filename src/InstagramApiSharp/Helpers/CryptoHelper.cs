@@ -75,7 +75,7 @@ namespace InstagramApiSharp.Helpers
 
             // Convert to standard hex string 
             return hash.Select(a => a.ToString("x2"))
-                .Aggregate((a, b) => string.Format("{0}{1}", a, b));
+                .Aggregate((a, b) => $"{a}{b}");
         }
 
         public static byte[] GetHash(byte[] bytes)

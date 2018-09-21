@@ -13,7 +13,7 @@ namespace InstagramApiSharp.Helpers
             httpValueCollection.Add(name, value);
 
             var ub = new UriBuilder(uri);
-            string q = "";
+            var q = "";
             foreach (var item in httpValueCollection)
             {
                 if (q == "") q += $"{item.Key}={item.Value}";
@@ -31,7 +31,7 @@ namespace InstagramApiSharp.Helpers
             httpValueCollection.Remove(name);
             httpValueCollection.Add(name, value);
             var ub = new UriBuilder(uri);
-            string q = "";
+            var q = "";
             foreach (var item in httpValueCollection)
             {
                 if (q == "") q += $"{item.Key}={item.Value}";

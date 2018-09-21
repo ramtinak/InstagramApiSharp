@@ -1,7 +1,5 @@
 ﻿using InstagramApiSharp.Classes;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace InstagramApiSharp.Helpers
 {

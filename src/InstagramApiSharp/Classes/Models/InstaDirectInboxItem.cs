@@ -1,5 +1,4 @@
-﻿using InstagramApiSharp.Classes.ResponseWrappers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models

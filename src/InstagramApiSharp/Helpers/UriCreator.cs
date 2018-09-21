@@ -21,7 +21,7 @@ namespace InstagramApiSharp.Helpers
         public static Uri GetSearchTagUri(string tag, int count, IEnumerable<long> excludeList, string rankToken)
         {
             excludeList = excludeList ?? new List<long>();
-            var excludeListStr = $"[{String.Join(",", excludeList)}]";
+            var excludeListStr = $"[{string.Join(",", excludeList)}]";
             if (!Uri.TryCreate(BaseInstagramUri,
                 string.Format(InstaApiConstants.SEARCH_TAGS, tag, count),
                 out var instaUri))

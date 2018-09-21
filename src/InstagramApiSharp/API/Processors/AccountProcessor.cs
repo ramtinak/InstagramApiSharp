@@ -11,15 +11,12 @@ using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Logger;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using InstagramApiSharp.Helpers;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
-using System.Net.Sockets;
 using InstagramApiSharp.Converters;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.Models;
@@ -341,8 +338,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
-                else
-                    return Result.Success(false);
+                return Result.Success(false);
             }
             catch (Exception exception)
             {
@@ -542,8 +538,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
-                else
-                    return Result.Success(false);
+                return Result.Success(false);
             }
             catch (Exception exception)
             {
@@ -575,8 +570,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
-                else
-                    return Result.Success(false);
+                return Result.Success(false);
             }
             catch (Exception exception)
             {
@@ -613,8 +607,7 @@ namespace InstagramApiSharp.API.Processors
                 //{"reel_auto_archive": "on", "message_prefs": null, "status": "ok"}
                 if (obj.ReelAutoArchive.ToLower() == "on")
                     return Result.Success(true);
-                else
-                    return Result.Success(false);
+                return Result.Success(false);
 
             }
             catch (Exception exception)
@@ -648,8 +641,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 if(obj.ReelAutoArchive.ToLower() == "off")
                     return Result.Success(true);
-                else
-                    return Result.Success(false);
+                return Result.Success(false);
             }
             catch (Exception exception)
             {
@@ -685,8 +677,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 if (obj.Status.ToLower() == "off")
                     return Result.Success(true);
-                else
-                    return Result.Success(false);
+                return Result.Success(false);
             }
             catch (Exception exception)
             {
@@ -720,12 +711,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
                 if (obj.MessagePrefs.ToLower() == "anyone" && repliesType == InstaMessageRepliesType.Everyone)
                     return Result.Success(true);
-                else if (obj.MessagePrefs.ToLower() == "following" && repliesType == InstaMessageRepliesType.Following)
+                if (obj.MessagePrefs.ToLower() == "following" && repliesType == InstaMessageRepliesType.Following)
                     return Result.Success(true);
-                else if (obj.MessagePrefs.ToLower() == "off" && repliesType == InstaMessageRepliesType.Off)
+                if (obj.MessagePrefs.ToLower() == "off" && repliesType == InstaMessageRepliesType.Off)
                     return Result.Success(true);
-                else
-                    return Result.Success(false);
+                return Result.Success(false);
             }
             catch (Exception exception)
             {
@@ -819,8 +809,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<AccountCheckResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
-                else
-                    return Result.Success(false);
+                return Result.Success(false);
             }
             catch (Exception exception)
             {

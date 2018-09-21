@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
-using InstagramApiSharp.Classes.ResponseWrappers;
 
 namespace InstagramApiSharp.API.Processors
 {

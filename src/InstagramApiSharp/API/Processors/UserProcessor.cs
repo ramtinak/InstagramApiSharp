@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -213,7 +212,7 @@ namespace InstagramApiSharp.API.Processors
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                         .BaseAddress);
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 var instaUri = UriCreator.GetFriendshipPendingRequestsUri(_user.RankToken);
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
@@ -226,10 +225,8 @@ namespace InstagramApiSharp.API.Processors
                     var JRes = JsonConvert.DeserializeObject<InstaPendingRequest>(json);
                     return Result.Success(JRes);
                 }
-                else
-                {
-                    return Result.Fail<InstaPendingRequest>(response.StatusCode.ToString());
-                }
+
+                return Result.Fail<InstaPendingRequest>(response.StatusCode.ToString());
             }
             catch (Exception ex)
             {

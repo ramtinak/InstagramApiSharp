@@ -8,7 +8,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -50,7 +49,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Approve direct pending request
         /// </summary>
-        /// <param name="threadId">Thread id</param>
+        /// <param name="threadIds">Thread id</param>
         public async Task<IResult<bool>> ApproveDirectPendingRequestAsync(params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -79,8 +78,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
                 if (obj.IsSucceed)
                     return Result.Success(true);
-                else
-                    return Result.Fail("Error: " + obj.Message, false);
+                return Result.Fail("Error: " + obj.Message, false);
             }
             catch (Exception exception)
             {
@@ -436,7 +434,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 var data = new Dictionary<string, string>
                 {
                     {"link_text", text},
-                    {"link_urls", $"[{ExtensionHelper.EncodeList(new string[]{ link })}]"},
+                    {"link_urls", $"[{ExtensionHelper.EncodeList(new[]{ link })}]"},
                     {"action", "send_item"},
                     {"thread_ids", $"[{threadIds.EncodeList(false)}]"},
                     {"client_context", clientContext},
@@ -939,8 +937,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 var obj = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
                 if (obj.IsSucceed)
                     return Result.Success(true);
-                else
-                    return Result.Fail("Error: " + obj.Message, false);
+                return Result.Fail("Error: " + obj.Message, false);
             }
             catch (Exception exception)
             {
@@ -1005,12 +1002,10 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     progress?.Invoke(upProgress);
                     return Result.Success(true);
                 }
-                else
-                {
-                    upProgress.UploadState = InstaUploadState.Error;
-                    progress?.Invoke(upProgress);
-                    return Result.UnExpectedResponse<bool>(response, json);
-                }
+
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                return Result.UnExpectedResponse<bool>(response, json);
             }
             catch (Exception exception)
             {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace InstagramApiSharp.Enums
+﻿namespace InstagramApiSharp.Enums
 {
     public enum InstaViewMode
     {

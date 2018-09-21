@@ -11,15 +11,11 @@ using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Logger;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using InstagramApiSharp.Helpers;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
-using System.Net.Sockets;
 using InstagramApiSharp.Converters;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.Models;
@@ -73,7 +69,7 @@ namespace InstagramApiSharp.API.Processors
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
                 var videoHashCode = Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4").GetHashCode();
                 var waterfallId = Guid.NewGuid().ToString();
-                var videoEntityName = string.Format("{0}_0_{1}", uploadId, videoHashCode);
+                var videoEntityName = $"{uploadId}_0_{videoHashCode}";
                 var videoUri = UriCreator.GetStoryUploadVideoUri(uploadId, videoHashCode);
                 var retryContext = GetRetryContext();
                 HttpRequestMessage request = null;
@@ -220,7 +216,7 @@ namespace InstagramApiSharp.API.Processors
                     upProgress.UploadState = InstaUploadState.UploadingThumbnail;
                     progress?.Invoke(upProgress);
                     var photoHashCode = Path.GetFileName(video.VideoThumbnail.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
-                    var photoEntityName = string.Format("{0}_0_{1}", uploadId, photoHashCode);
+                    var photoEntityName = $"{uploadId}_0_{photoHashCode}";
                     var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
                     var photoUploadParamsObj = new JObject
                     {
@@ -270,16 +266,16 @@ namespace InstagramApiSharp.API.Processors
             {
                 upProgress.UploadState = InstaUploadState.Configuring;
                 progress?.Invoke(upProgress);
-                Uri instaUri = UriCreator.GetDirectConfigVideoUri();
+                var instaUri = UriCreator.GetDirectConfigVideoUri();
                 var retryContext = GetRetryContext();
                 var clientContext = Guid.NewGuid().ToString();
                 
                 if (isDirectVideo)
                 {
-                    var data = new Dictionary<string, string>()
+                    var data = new Dictionary<string, string>
                     {
                          {"action","send_item"},
-                         {"client_context",clientContext.ToString()},
+                         {"client_context",clientContext},
                          {"_csrftoken",_user.CsrfToken},
                          {"video_result",""},
                          {"_uuid",_deviceInfo.DeviceGuid.ToString()},
@@ -319,7 +315,7 @@ namespace InstagramApiSharp.API.Processors
                 }
                 else
                 {
-                    Random rnd = new Random();
+                    var rnd = new Random();
                     var data = new JObject
                     {
                         {"filter_type", "0"},
@@ -438,7 +434,7 @@ namespace InstagramApiSharp.API.Processors
             {
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
                 var photoHashCode = Path.GetFileName(image.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
-                var photoEntityName = string.Format("{0}_0_{1}", uploadId, photoHashCode);
+                var photoEntityName = $"{uploadId}_0_{photoHashCode}";
                 var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
                 var waterfallId = Guid.NewGuid().ToString();
                 var retryContext = GetRetryContext();
@@ -502,10 +498,7 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
                 byte[] imageBytes;
-                if (image.ImageBytes == null)
-                    imageBytes = File.ReadAllBytes(image.Uri);
-                else
-                    imageBytes = image.ImageBytes;
+                imageBytes = image.ImageBytes ?? File.ReadAllBytes(image.Uri);
                 var imageContent = new ByteArrayContent(imageBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
@@ -546,7 +539,7 @@ namespace InstagramApiSharp.API.Processors
 
                 upProgress.UploadState = InstaUploadState.Configuring;
                 progress?.Invoke(upProgress);
-                Uri instaUri = UriCreator.GetDirectConfigVideoUri();
+                var instaUri = UriCreator.GetDirectConfigVideoUri();
                 var retryContext = GetRetryContext();
                 var clientContext = Guid.NewGuid().ToString();
 
@@ -588,7 +581,7 @@ namespace InstagramApiSharp.API.Processors
                     //		"source_height": 3745
                     //	}
                     //}
-                    Random rnd = new Random();
+                    var rnd = new Random();
                     var data = new JObject
                     {
                         {"timezone_offset", "16200"},
@@ -692,7 +685,7 @@ namespace InstagramApiSharp.API.Processors
             {
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
                 var photoHashCode = Path.GetFileName(image.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
-                var photoEntityName = string.Format("{0}_0_{1}", uploadId, photoHashCode);
+                var photoEntityName = $"{uploadId}_0_{photoHashCode}";
                 var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
                 var waterfallId = Guid.NewGuid().ToString();
                 var retryContext = GetRetryContext();
@@ -747,11 +740,7 @@ namespace InstagramApiSharp.API.Processors
                 upProgress.UploadState = InstaUploadState.UploadingThumbnail;
                 progress?.Invoke(upProgress);
                 var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
-                byte[] imageBytes;
-                if (image.ImageBytes == null)
-                    imageBytes = File.ReadAllBytes(image.Uri);
-                else
-                    imageBytes = image.ImageBytes;
+                var imageBytes = image.ImageBytes ?? File.ReadAllBytes(image.Uri);
                 var imageContent = new ByteArrayContent(imageBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
@@ -797,10 +786,10 @@ namespace InstagramApiSharp.API.Processors
             {
                 upProgress.UploadState = InstaUploadState.Configuring;
                 progress?.Invoke(upProgress);
-                Uri instaUri = UriCreator.GetMediaConfigureUri();
+                var instaUri = UriCreator.GetMediaConfigureUri();
                 var retryContext = GetRetryContext();
                 var clientContext = Guid.NewGuid().ToString();
-                Random rnd = new Random();
+                var rnd = new Random();
                 var data = new JObject
                 {
                     {"timezone_offset", "16200"},
@@ -885,7 +874,7 @@ namespace InstagramApiSharp.API.Processors
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
                 var videoHashCode = Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4").GetHashCode();
                 var waterfallId = Guid.NewGuid().ToString();
-                var videoEntityName = string.Format("{0}_0_{1}", uploadId, videoHashCode);
+                var videoEntityName = $"{uploadId}_0_{videoHashCode}";
                 var videoUri = UriCreator.GetStoryUploadVideoUri(uploadId, videoHashCode);
                 var retryContext = GetRetryContext();
                 HttpRequestMessage request = null;
@@ -894,24 +883,23 @@ namespace InstagramApiSharp.API.Processors
                 string json = null;
                 upProgress.UploadId = uploadId;
                 progress?.Invoke(upProgress);
-                var videoUploadParamsObj = new JObject();
-                videoUploadParamsObj = new JObject
-                    {
-                        {"_csrftoken", _user.CsrfToken},
-                        {"_uid", _user.LoggedInUser.Pk},
-                        {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                        {"media_info", new JObject
-                            {
-                                    {"capture_mode", "normal"},
-                                    {"media_type", 2},
-                                    {"caption", caption ?? string.Empty},
-                                    {"mentions", new JArray()},
-                                    {"hashtags", new JArray()},
-                                    {"locations", new JArray()},
-                                    {"stickers", new JArray()},
-                            }
+                var videoUploadParamsObj = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"media_info", new JObject
+                        {
+                            {"capture_mode", "normal"},
+                            {"media_type", 2},
+                            {"caption", caption ?? string.Empty},
+                            {"mentions", new JArray()},
+                            {"hashtags", new JArray()},
+                            {"locations", new JArray()},
+                            {"stickers", new JArray()},
                         }
-                    };
+                    }
+                };
                 request = HttpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetStoryMediaInfoUploadUri(), _deviceInfo, videoUploadParamsObj);
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
@@ -945,11 +933,7 @@ namespace InstagramApiSharp.API.Processors
 
 
                 // video part
-                byte[] videoBytes;
-                if (video.Video.VideoBytes == null)
-                    videoBytes = File.ReadAllBytes(video.Video.Uri);
-                else
-                    videoBytes = video.Video.VideoBytes;
+                var videoBytes = video.Video.VideoBytes ?? File.ReadAllBytes(video.Video.Uri);
 
                 var videoContent = new ByteArrayContent(videoBytes);
                 var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
@@ -981,7 +965,7 @@ namespace InstagramApiSharp.API.Processors
                 }
 
                 var photoHashCode = Path.GetFileName(video.VideoThumbnail.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
-                var photoEntityName = string.Format("{0}_0_{1}", uploadId, photoHashCode);
+                var photoEntityName = $"{uploadId}_0_{photoHashCode}";
                 var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
                 var photoUploadParamsObj = new JObject
                     {
@@ -993,11 +977,7 @@ namespace InstagramApiSharp.API.Processors
                 upProgress.UploadState = InstaUploadState.UploadingThumbnail;
                 progress?.Invoke(upProgress);
                 var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
-                byte[] imageBytes;
-                if (video.VideoThumbnail.ImageBytes == null)
-                    imageBytes = File.ReadAllBytes(video.VideoThumbnail.Uri);
-                else
-                    imageBytes = video.VideoThumbnail.ImageBytes;
+                var imageBytes = video.VideoThumbnail.ImageBytes ?? File.ReadAllBytes(video.VideoThumbnail.Uri);
                 var imageContent = new ByteArrayContent(imageBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
@@ -1043,7 +1023,7 @@ namespace InstagramApiSharp.API.Processors
                 var retryContext = GetRetryContext();
                 var clientContext = Guid.NewGuid().ToString();
 
-                Random rnd = new Random();
+                var rnd = new Random();
                 var data = new JObject
                 {
                     {"filter_type", "0"},
