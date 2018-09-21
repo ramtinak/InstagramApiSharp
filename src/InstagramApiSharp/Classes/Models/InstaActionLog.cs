@@ -1,9 +1,4 @@
-﻿using InstagramApiSharp.Classes.ResponseWrappers;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace InstagramApiSharp.Classes.Models
+﻿namespace InstagramApiSharp.Classes.Models
 {
     public class InstaActionLog
     {

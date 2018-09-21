@@ -244,10 +244,10 @@ namespace InstagramApiSharp.API.Processors
 
                 var waterfallId = Guid.NewGuid().ToString();
       
-                var videoEntityName= string.Format("{0}_0_{1}", uploadId, videoHashCode);
+                var videoEntityName= $"{uploadId}_0_{videoHashCode}";
                 var videoUri = UriCreator.GetStoryUploadVideoUri(uploadId, videoHashCode);
 
-                var photoEntityName = string.Format("{0}_0_{1}", uploadId, photoHashCode);
+                var photoEntityName = $"{uploadId}_0_{photoHashCode}";
                 var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
 
                 upProgress.UploadId = uploadId;
@@ -297,11 +297,7 @@ namespace InstagramApiSharp.API.Processors
                 }
 
 
-                byte[] videoBytes;
-                if (video.Video.VideoBytes == null)
-                    videoBytes = File.ReadAllBytes(video.Video.Uri);
-                else
-                    videoBytes = video.Video.VideoBytes;
+                var videoBytes = video.Video.VideoBytes ?? File.ReadAllBytes(video.Video.Uri);
                 var videoContent = new ByteArrayContent(videoBytes);
                 videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 videoContent.Headers.Add("Content-Type", "application/octet-stream");
@@ -352,11 +348,7 @@ namespace InstagramApiSharp.API.Processors
 
                 upProgress.UploadState = InstaUploadState.UploadingThumbnail;
                 progress?.Invoke(upProgress);
-                byte[] imageBytes;
-                if (video.VideoThumbnail.ImageBytes == null)
-                    imageBytes = File.ReadAllBytes(video.VideoThumbnail.Uri);
-                else
-                    imageBytes = video.VideoThumbnail.ImageBytes;
+                var imageBytes = video.VideoThumbnail.ImageBytes ?? File.ReadAllBytes(video.VideoThumbnail.Uri);
                 var imageContent = new ByteArrayContent(imageBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
@@ -394,7 +386,6 @@ namespace InstagramApiSharp.API.Processors
         ///     Upload story video (to self story)
         /// </summary>
         /// <param name="video">Video to upload</param>
-        /// <param name="caption">Caption</param>
         public async Task<IResult<bool>> UploadStoryVideoAsync(InstaVideoUpload video,
     InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
         {
@@ -406,7 +397,6 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="progress">Progress action</param>
         /// <param name="video">Video to upload</param>
-        /// <param name="caption">Caption</param>
         public async Task<IResult<bool>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video,
     InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
         {
@@ -427,7 +417,7 @@ namespace InstagramApiSharp.API.Processors
                 upProgress.UploadState = InstaUploadState.Configuring;
                 progress?.Invoke(upProgress);
                 var instaUri = UriCreator.GetVideoStoryConfigureUri(false);
-                Random rnd = new Random();
+                var rnd = new Random();
                 var data = new JObject
                 {
                     {"filter_type", "0"},
@@ -602,7 +592,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Delete a media story (photo or video)
         /// </summary>
-        /// <param name="mediaId">Story media id</param>
+        /// <param name="storyMediaId">Story media id</param>
         /// <param name="sharingType">The type of the media</param>
         /// <returns>Return true if the story media is deleted</returns>
         public async Task<IResult<bool>> DeleteStoryAsync(string storyMediaId, InstaSharingType sharingType = InstaSharingType.Video)
@@ -730,7 +720,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"cover", cover},
                     {"title", title},
-                    {"media_ids", $"[{ExtensionHelper.EncodeList(new string[] { mediaId.ToString() })}]"}
+                    {"media_ids", $"[{ExtensionHelper.EncodeList(new[] { mediaId })}]"}
                 };
 
                 var storyFeedUri = UriCreator.GetHighlightCreateUri();
@@ -783,11 +773,11 @@ namespace InstagramApiSharp.API.Processors
                 if (delete)
                 {
                     data.Add("added_media_ids", "[]");
-                    data.Add("removed_media_ids", $"[{ExtensionHelper.EncodeList(new string[] { mediaId.ToString() })}]");
+                    data.Add("removed_media_ids", $"[{ExtensionHelper.EncodeList(new[] { mediaId })}]");
                 }
                 else
                 {
-                    data.Add("added_media_ids", $"[{ExtensionHelper.EncodeList(new string[] { mediaId.ToString() })}]");
+                    data.Add("added_media_ids", $"[{ExtensionHelper.EncodeList(new[] { mediaId })}]");
                     data.Add("removed_media_ids", "[]");
                 }
                 var storyFeedUri = UriCreator.GetHighlightEditUri(highlightId);

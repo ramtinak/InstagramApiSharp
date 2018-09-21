@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Android.DeviceInfo
 {
@@ -10,7 +8,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
 
         public List<AndroidVersion> AndroidVersions()
         {
-            return new List<AndroidVersion>()
+            return new List<AndroidVersion>
             {
                 new AndroidVersion
                 {

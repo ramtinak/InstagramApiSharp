@@ -2,9 +2,8 @@
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Helpers;
-using System.Linq;
 using Newtonsoft.Json;
-using System;
+
 namespace InstagramApiSharp.Converters
 {
     internal class InstaDirectThreadConverter : IObjectConverter<InstaDirectInboxThread, InstaDirectInboxThreadResponse>

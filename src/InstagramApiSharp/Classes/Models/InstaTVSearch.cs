@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using InstagramApiSharp.Classes.ResponseWrappers;
-using InstagramApiSharp.Enums;
+
 namespace InstagramApiSharp.Classes.Models
 {
     public class InstaTVSearch

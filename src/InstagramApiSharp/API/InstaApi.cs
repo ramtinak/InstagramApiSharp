@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -126,7 +125,7 @@ namespace InstagramApiSharp.API
         ///     <para>Note 1: If you want to use this method, you should call it before you calling <seealso cref="IInstaApi.LoadStateDataFromStream(Stream)"/> or <seealso cref="IInstaApi.LoadStateDataFromString(string)"/></para>
         ///     <para>Note 2: this is optional, if you didn't set this, InstagramApiSharp will choose random device.</para>
         /// </summary>
-        /// <param name="androidDevice">Android device</param>
+        /// <param name="device">Android device</param>
         public void SetDevice(AndroidDevice device)
         {
             IsCustomDeviceSet = false;
@@ -186,7 +185,7 @@ namespace InstagramApiSharp.API
                 var cookies = 
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 
                 var postData = new Dictionary<string, string>
@@ -206,10 +205,11 @@ namespace InstagramApiSharp.API
                     var obj = JsonConvert.DeserializeObject<CheckEmailRegistration>(json);
                     if (obj.ErrorType == "fail")
                         return Result.UnExpectedResponse<CheckEmailRegistration>(response, json);
-                    else if (obj.ErrorType == "email_is_taken")
+                    if (obj.ErrorType == "email_is_taken")
                         return Result.Fail("Email is taken.", (CheckEmailRegistration)null);
-                    else if (obj.ErrorType == "invalid_email")
+                    if (obj.ErrorType == "invalid_email")
                         return Result.Fail("Please enter a valid email address.", (CheckEmailRegistration)null);
+
                     return Result.UnExpectedResponse<CheckEmailRegistration>(response, json);
                 }
                 else
@@ -217,10 +217,11 @@ namespace InstagramApiSharp.API
                     var obj = JsonConvert.DeserializeObject<CheckEmailRegistration>(json);
                     if(obj.ErrorType == "fail")
                         return Result.UnExpectedResponse<CheckEmailRegistration>(response, json);
-                    else if (obj.ErrorType == "email_is_taken")
+                    if (obj.ErrorType == "email_is_taken")
                         return Result.Fail("Email is taken.", (CheckEmailRegistration)null);
-                    else if (obj.ErrorType == "invalid_email")
+                    if (obj.ErrorType == "invalid_email")
                         return Result.Fail("Please enter a valid email address.", (CheckEmailRegistration)null);
+
                     return Result.Success(obj);
                 }
             }
@@ -243,7 +244,7 @@ namespace InstagramApiSharp.API
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 
                 var postData = new Dictionary<string, string>
@@ -261,10 +262,8 @@ namespace InstagramApiSharp.API
                 {
                     return Result.UnExpectedResponse<bool>(response, json);
                 }
-                else
-                {              
-                    return Result.Success(true);
-                }
+
+                return Result.Success(true);
             }
             catch (Exception exception)
             {
@@ -314,7 +313,7 @@ namespace InstagramApiSharp.API
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 var postData = new Dictionary<string, string>
                 {
@@ -335,10 +334,8 @@ namespace InstagramApiSharp.API
 
                     return Result.UnExpectedResponse<bool>(response, o.Message?.Errors?[0], json);
                 }
-                else
-                {
-                    return Result.Success(true);
-                }
+
+                return Result.Success(true);
             }
             catch (Exception exception)
             {
@@ -364,7 +361,7 @@ namespace InstagramApiSharp.API
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 var postData = new Dictionary<string, string>
                 {
@@ -385,16 +382,14 @@ namespace InstagramApiSharp.API
 
                     return Result.Fail(o.Errors?.Nonce?[0], (PhoneNumberRegistration)null);
                 }
-                else
-                {
-                    var r = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumberVerifySms>(json);
-                    if(r.ErrorType == "invalid_nonce")
-                        return Result.Fail(r.Errors?.Nonce?[0], (PhoneNumberRegistration)null);
 
-                    await GetRegistrationStepsAsync();
-                    var obj = JsonConvert.DeserializeObject<PhoneNumberRegistration>(json);
-                    return Result.Success(obj);
-                }
+                var r = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumberVerifySms>(json);
+                if(r.ErrorType == "invalid_nonce")
+                    return Result.Fail(r.Errors?.Nonce?[0], (PhoneNumberRegistration)null);
+
+                await GetRegistrationStepsAsync();
+                var obj = JsonConvert.DeserializeObject<PhoneNumberRegistration>(json);
+                return Result.Success(obj);
             }
             catch (Exception exception)
             {
@@ -418,7 +413,7 @@ namespace InstagramApiSharp.API
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 var postData = new Dictionary<string, string>
                 {
@@ -440,11 +435,9 @@ namespace InstagramApiSharp.API
 
                     return Result.Fail(o.Message?.Errors?[0], (RegistrationSuggestionResponse)null);
                 }
-                else
-                {
-                    var obj = JsonConvert.DeserializeObject<RegistrationSuggestionResponse>(json);
-                    return Result.Success(obj);
-                }
+
+                var obj = JsonConvert.DeserializeObject<RegistrationSuggestionResponse>(json);
+                return Result.Success(obj);
             }
             catch (Exception exception)
             {
@@ -473,7 +466,7 @@ namespace InstagramApiSharp.API
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 //sn_nonce:Kzk4OTE3NDMxNDAwNnwxNTM0MTg0MjYzfAhfpJ9rzGNAlQLWQe+kor/nDAntXA0i8Q==
                 //+989174314006|1534184263|_��k�c@��A濫��	�\
@@ -508,17 +501,15 @@ namespace InstagramApiSharp.API
 
                     return Result.Fail(o.Errors?.Username?[0], (AccountCreation)null);
                 }
-                else
-                {
-                    var r = JsonConvert.DeserializeObject<AccountCreationResponse>(json);
-                    if (r.ErrorType == "username_is_taken")
-                        return Result.Fail(r.Errors?.Username?[0], (AccountCreation)null);
 
-                    var obj = JsonConvert.DeserializeObject<AccountCreation>(json);
-                    if (obj.AccountCreated && obj.CreatedUser != null)
-                        ValidateUserAsync(obj.CreatedUser, csrftoken, true);
-                    return Result.Success(obj);
-                }
+                var r = JsonConvert.DeserializeObject<AccountCreationResponse>(json);
+                if (r.ErrorType == "username_is_taken")
+                    return Result.Fail(r.Errors?.Username?[0], (AccountCreation)null);
+
+                var obj = JsonConvert.DeserializeObject<AccountCreation>(json);
+                if (obj.AccountCreated && obj.CreatedUser != null)
+                    ValidateUserAsync(obj.CreatedUser, csrftoken, true);
+                return Result.Success(obj);
             }
             catch (Exception exception)
             {
@@ -535,7 +526,7 @@ namespace InstagramApiSharp.API
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 var postData = new Dictionary<string, string>
                 {
@@ -563,11 +554,9 @@ namespace InstagramApiSharp.API
 
                     return Result.Fail(o.Message?.Errors?[0], (RegistrationSuggestionResponse)null);
                 }
-                else
-                {
-                    var obj = JsonConvert.DeserializeObject<RegistrationSuggestionResponse>(json);
-                    return Result.Success(obj);
-                }
+
+                var obj = JsonConvert.DeserializeObject<RegistrationSuggestionResponse>(json);
+                return Result.Success(obj);
             }
             catch (Exception exception)
             {
@@ -586,7 +575,7 @@ namespace InstagramApiSharp.API
         /// <returns></returns>
         public async Task<IResult<AccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName)
         {
-            AccountCreation createResponse = new AccountCreation();
+            var createResponse = new AccountCreation();
             try
             {
                 var _deviceIdReg = ApiRequestMessage.GenerateDeviceId();
@@ -597,7 +586,7 @@ namespace InstagramApiSharp.API
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 var postData = new Dictionary<string, string>
                 {
                     {"allow_contacts_sync",       "true"},
@@ -664,11 +653,11 @@ namespace InstagramApiSharp.API
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                         .BaseAddress);
               
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 var instaUri = UriCreator.GetLoginUri();
                 var signature = string.Empty;
-                string devid = string.Empty;
+                var devid = string.Empty;
                 if (isNewLogin)
                     signature = $"{_httpRequestProcessor.RequestMessage.GenerateSignature(InstaApiConstants.IG_SIGNATURE_KEY, out devid)}.{_httpRequestProcessor.RequestMessage.GetMessageString()}";
                 else
@@ -728,7 +717,7 @@ namespace InstagramApiSharp.API
                     cookies =
                       _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                           .BaseAddress);
-                    _user.CsrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                    _user.CsrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 }
                 return Result.Success(InstaLoginResult.Success);
             }
@@ -846,7 +835,7 @@ namespace InstagramApiSharp.API
         {
             try
             {
-                string token = "";
+                var token = "";
                 if (!string.IsNullOrEmpty(_user.CsrfToken))
                     token = _user.CsrfToken;
                 else
@@ -856,7 +845,7 @@ namespace InstagramApiSharp.API
                         _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                             .BaseAddress);
                     _logger?.LogResponse(firstResponse);
-                    token = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                    token = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 }
 
                 var postData = new JObject
@@ -896,7 +885,7 @@ namespace InstagramApiSharp.API
         {
             try
             {
-                string token = "";
+                var token = "";
                 if (!string.IsNullOrEmpty(_user.CsrfToken))
                     token = _user.CsrfToken;
                 else
@@ -906,7 +895,7 @@ namespace InstagramApiSharp.API
                         _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                             .BaseAddress);
                     _logger?.LogResponse(firstResponse);
-                    token = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                    token = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 }
 
                 var postData = new JObject
@@ -927,7 +916,8 @@ namespace InstagramApiSharp.API
                     error.Message.Errors.ForEach(errorContent => errors += errorContent + "\n");
                     return Result.Fail<InstaRecovery>(errors);
                 }
-                else if (result.Contains("errors"))
+
+                if (result.Contains("errors"))
                 {
                     var error = JsonConvert.DeserializeObject<BadStatusErrorsResponseRecovery>(result);
                     var errors = "";
@@ -1034,11 +1024,9 @@ namespace InstagramApiSharp.API
                     catch { }
                     return Result.UnExpectedResponse<ChallengeRequireVerifyMethod>(response, json);
                 }
-                else
-                {
-                    var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
-                    return Result.Success(obj);
-                }
+
+                var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
+                return Result.Success(obj);
             }
             catch (Exception ex)
             {
@@ -1076,11 +1064,9 @@ namespace InstagramApiSharp.API
                     catch { }
                     return Result.UnExpectedResponse<ChallengeRequireVerifyMethod>(response, json);
                 }
-                else
-                {
-                    var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
-                    return Result.Success(obj);
-                }
+
+                var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
+                return Result.Success(obj);
             }
             catch (Exception ex)
             {
@@ -1122,11 +1108,9 @@ namespace InstagramApiSharp.API
                     catch { }
                     return Result.Fail(msg, (ChallengeRequireSMSVerify)null);
                 }
-                else
-                {
-                    var obj = JsonConvert.DeserializeObject<ChallengeRequireSMSVerify>(json);
-                    return Result.Success(obj);
-                }
+
+                var obj = JsonConvert.DeserializeObject<ChallengeRequireSMSVerify>(json);
+                return Result.Success(obj);
             }
             catch (Exception ex)
             {
@@ -1168,11 +1152,9 @@ namespace InstagramApiSharp.API
                     catch { }
                     return Result.Fail(msg, (ChallengeRequireEmailVerify)null);
                 }
-                else
-                {
-                    var obj = JsonConvert.DeserializeObject<ChallengeRequireEmailVerify>(json);
-                    return Result.Success(obj);
-                }
+
+                var obj = JsonConvert.DeserializeObject<ChallengeRequireEmailVerify>(json);
+                return Result.Success(obj);
             }
             catch (Exception ex)
             {
@@ -1193,7 +1175,7 @@ namespace InstagramApiSharp.API
                 var cookies =
             _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                 .BaseAddress);
-                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? String.Empty;
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 var instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
                 if (string.IsNullOrEmpty(_challengeGuid))
@@ -1222,29 +1204,28 @@ namespace InstagramApiSharp.API
                     catch { }
                     return Result.UnExpectedResponse<InstaLoginResult>(response, msg + "\t"+ json);
                 }
-                else
-                {
-                    var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyCode>(json);
-                    if (obj != null)
-                    {
-                        if (obj.LoggedInUser != null)
-                        {
-                            ValidateUserAsync(obj.LoggedInUser, csrftoken);
-                            await Task.Delay(3000);
-                            await _messagingProcessor.GetDirectInboxAsync();
-                            await _feedProcessor.GetRecentActivityFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
-                            return Result.Success(InstaLoginResult.Success);
-                        }
-                        else if (!string.IsNullOrEmpty(obj.Action))
-                        {
-                            // we should wait at least 15 seconds and then trying to login again
-                            await Task.Delay(15000);
-                            return await LoginAsync(false);
-                        }
+                var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyCode>(json);
+                if (obj != null)
+                {
+                    if (obj.LoggedInUser != null)
+                    {
+                        ValidateUserAsync(obj.LoggedInUser, csrftoken);
+                        await Task.Delay(3000);
+                        await _messagingProcessor.GetDirectInboxAsync();
+                        await _feedProcessor.GetRecentActivityFeedAsync(PaginationParameters.MaxPagesToLoad(1));
+
+                        return Result.Success(InstaLoginResult.Success);
                     }
-                    return Result.UnExpectedResponse<InstaLoginResult>(response, json);
+
+                    if (!string.IsNullOrEmpty(obj.Action))
+                    {
+                        // we should wait at least 15 seconds and then trying to login again
+                        await Task.Delay(15000);
+                        return await LoginAsync(false);
+                    }
                 }
+                return Result.UnExpectedResponse<InstaLoginResult>(response, json);
             }
             catch (Exception ex)
             {
@@ -1329,7 +1310,7 @@ namespace InstagramApiSharp.API
                     cookie = cookie.Replace(';', ',');
                     _httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(uri, cookie);
 
-                    InstaUserShort user = new InstaUserShort
+                    var user = new InstaUserShort
                     {
                         Pk = long.Parse(webBrowserResponse.Config.Viewer.Id),
                         UserName = _user.UserName,
@@ -1480,7 +1461,7 @@ namespace InstagramApiSharp.API
             _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
             _httpRequestProcessor.RequestMessage.AdId = data.DeviceInfo.AdId.ToString();
 
-            foreach (Cookie cookie in data.RawCookies)
+            foreach (var cookie in data.RawCookies)
             {
                 _httpRequestProcessor.HttpHandler.CookieContainer.Add(new Uri(InstaApiConstants.INSTAGRAM_URL), cookie);
             }
@@ -1508,7 +1489,7 @@ namespace InstagramApiSharp.API
             _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
             _httpRequestProcessor.RequestMessage.AdId = data.DeviceInfo.AdId.ToString();
 
-            foreach (Cookie cookie in data.RawCookies)
+            foreach (var cookie in data.RawCookies)
             {
                 _httpRequestProcessor.HttpHandler.CookieContainer.Add(new Uri(InstaApiConstants.INSTAGRAM_URL), cookie);
             }

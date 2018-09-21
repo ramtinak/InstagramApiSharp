@@ -104,7 +104,7 @@ namespace InstagramApiSharp.Converters
                 threadItem.RavenSeenCount = SourceObject.RavenSeenCount;
                 if (SourceObject.RavenExpiringMediaActionSummary != null)
                 {
-                    InstaRavenType ravenType = SourceObject.RavenExpiringMediaActionSummary.Type.ToLower() == "raven_delivered" ? InstaRavenType.Delivered : InstaRavenType.Opened;
+                    var ravenType = SourceObject.RavenExpiringMediaActionSummary.Type.ToLower() == "raven_delivered" ? InstaRavenType.Delivered : InstaRavenType.Opened;
                     threadItem.RavenExpiringMediaActionSummary = new InstaRavenMediaActionSummary
                     {
                         Count = SourceObject.RavenExpiringMediaActionSummary.Count,

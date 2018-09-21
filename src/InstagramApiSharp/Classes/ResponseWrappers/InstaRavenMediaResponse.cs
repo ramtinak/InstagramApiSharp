@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using InstagramApiSharp.Classes.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     //public class InstaRavenMediaResponse

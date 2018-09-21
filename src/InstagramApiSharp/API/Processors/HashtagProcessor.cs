@@ -67,6 +67,7 @@ namespace InstagramApiSharp.API.Processors
 
                 if (tags.Any() && excludeList != null && excludeList.Contains(tags.First().Id))
                     tags.RemoveAt(0);
+
                 if (!tags.Any())
                     tags = new InstaHashtagSearch();
 

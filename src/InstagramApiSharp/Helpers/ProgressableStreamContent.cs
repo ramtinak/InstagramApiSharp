@@ -1,11 +1,9 @@
 ﻿using InstagramApiSharp.Classes;
 using InstagramApiSharp.Enums;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InstagramApiSharp.Helpers
@@ -44,8 +42,8 @@ namespace InstagramApiSharp.Helpers
         {
             return Task.Run(async () =>
             {
-                var buffer = new Byte[_bufferSize];
-                TryComputeLength(out long size);
+                var buffer = new byte[_bufferSize];
+                TryComputeLength(out var size);
                 var uploadedBytes = 0;
 
 

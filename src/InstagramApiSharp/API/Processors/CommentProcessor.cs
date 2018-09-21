@@ -12,7 +12,7 @@ using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
-using System.Diagnostics;
+
 namespace InstagramApiSharp.API.Processors
 {
     internal class CommentProcessor : ICommentProcessor
@@ -296,7 +296,7 @@ namespace InstagramApiSharp.API.Processors
         private async Task<IResult<InstaCommentListResponse>> GetCommentListWithMaxIdAsync(string mediaId,
             string nextMaxId, string nextMinId)
         {
-            Uri commentsUri = UriCreator.GetMediaCommentsUri(mediaId, nextMaxId);
+            var commentsUri = UriCreator.GetMediaCommentsUri(mediaId, nextMaxId);
             if(!string.IsNullOrEmpty(nextMinId))
                 commentsUri = UriCreator.GetMediaCommentsMinIdUri(mediaId, nextMinId);
               
@@ -314,7 +314,7 @@ namespace InstagramApiSharp.API.Processors
     string targetCommandId,
     string nextMaxId, string nextMinId)
         {
-            Uri commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommandId, nextMaxId);
+            var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommandId, nextMaxId);
             if (!string.IsNullOrEmpty(nextMinId))
                 commentsUri = UriCreator.GetMediaInlineCommentsWithMinIdUri(mediaId, targetCommandId, nextMinId);
 

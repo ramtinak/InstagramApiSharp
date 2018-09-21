@@ -28,7 +28,7 @@ namespace InstagramApiSharp.Converters.Json
             else
             {
                 var oldStories = token.SelectToken("old_stories")?.ToObject<List<InstaRecentActivityFeedResponse>>();
-                recentActivity.Stories.AddRange(oldStories);
+                recentActivity.Stories.AddRange(oldStories ?? throw new InvalidOperationException());
                 recentActivity.IsOwnActivity = true;
             }
 

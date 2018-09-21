@@ -2,7 +2,6 @@
 using InstagramApiSharp.API;
 using InstagramApiSharp.Helpers;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.Classes.Android.DeviceInfo
 {
@@ -56,7 +55,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         }
         internal string GetChallengeVerificationCodeSend(string verify)
         {
-            return JsonConvert.SerializeObject(new { security_code = verify.ToString(), _csrftoken = "ReplaceCSRF", Guid, DeviceId });
+            return JsonConvert.SerializeObject(new { security_code = verify, _csrftoken = "ReplaceCSRF", Guid, DeviceId });
         }
         internal string GenerateSignature(string signatureKey, out string deviceid)
         {
