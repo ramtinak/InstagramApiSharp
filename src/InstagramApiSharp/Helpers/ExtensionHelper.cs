@@ -102,6 +102,11 @@ namespace InstagramApiSharp
                 .Select(x => pool[Rnd.Next(0, pool.Length)]);
             return new string(chars.ToArray());
         }
+        
+        public static void PrintInDebug(this object obj)
+        {
+            System.Diagnostics.Debug.WriteLine(Convert.ToString(obj));
+        }
 
     }
 }

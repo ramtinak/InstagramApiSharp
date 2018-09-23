@@ -1284,5 +1284,18 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for request for download data.");
             return instaUri;
         }
+        public static Uri GetConsentNewUserFlowBeginsUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CONSENT_NEW_USER_FLOW_BEGINS, out var instaUri))
+                throw new Exception("Cant create URI for request for consent new user flow begins.");
+            return instaUri;
+        }
+        public static Uri GetConsentNewUserFlowUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CONSENT_NEW_USER_FLOW, out var instaUri))
+                throw new Exception("Cant create URI for request for consent new user flow.");
+            return instaUri;
+        }
+
     }
 }

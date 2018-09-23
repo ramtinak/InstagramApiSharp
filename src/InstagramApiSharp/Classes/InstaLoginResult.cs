@@ -9,6 +9,7 @@
         Exception,
         ChallengeRequired,
         LimitError,
-        InactiveUser
+        InactiveUser,
+
     }
 }

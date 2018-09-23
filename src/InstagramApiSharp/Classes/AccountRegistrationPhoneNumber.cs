@@ -13,13 +13,19 @@ namespace InstagramApiSharp.Classes
     internal class AccountRegistrationPhoneNumber
     {
         [JsonProperty("message")]
-        public AccountRegistrationPhoneNumberMessage Message { get; set; }
+        internal AccountRegistrationPhoneNumberMessage Message { get; set; }
         [JsonProperty("error_source")]
-        public string ErrorSource { get; set; }
+        internal string ErrorSource { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        internal string Status { get; set; }
         [JsonProperty("error_type")]
-        public string ErrorType { get; set; }
+        internal string ErrorType { get; set; }
+        [JsonProperty("tos_version")]
+        public string TosVersion { get; set; }
+        [JsonProperty("gdpr_required")]
+        public bool GdprRequired { get; set; }
+        [JsonIgnore]
+        public bool Succeed => Status.ToLower() == "ok" ? true : false;
     }
 
     internal class AccountRegistrationPhoneNumberMessage

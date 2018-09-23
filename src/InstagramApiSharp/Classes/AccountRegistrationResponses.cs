@@ -22,10 +22,10 @@ namespace InstagramApiSharp.Classes
         public string Status { get; set; }
         [JsonProperty("error_type")]
         public string ErrorType { get; set; }
-        //[JsonProperty("tos_version")]
-        //public string TOsVersion { get; set; }
-        //[JsonProperty("gdpr_required")]
-        //public bool GdprRequired { get; set; }
+        [JsonProperty("tos_version")]
+        public string TosVersion { get; set; }
+        [JsonProperty("gdpr_required")]
+        public bool GdprRequired { get; set; }
         [JsonProperty("username_suggestions_with_metadata")]
         public RegistrationSuggestionsList UsernameSuggestionsWithMetadata { get; set; }
 

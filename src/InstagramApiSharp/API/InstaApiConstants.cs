@@ -15,18 +15,18 @@ namespace InstagramApiSharp.API
         public const string HEADER_X_REQUESTED_WITH = "X-Requested-With";
         public const string HEADER_XML_HTTP_REQUEST = "XMLHttpRequest";
         /// <summary>
-        ///     For 35.0.0.20.96 verison
+        ///     For 44.0.0.9.93 verison
         /// </summary>
-        public const string IG_APP_API_VERSION = "95414346";
+        public const string IG_APP_API_VERSION = "107092322";
         /// <summary>
-        ///     InstagramApiSharp is based on 35.0.0.20.96 version but user agent is 61.0.0.19.86
+        ///     InstagramApiSharp is based on 44.0.0.9.93 version but user agent is 61.0.0.19.86
         /// </summary>
-        public const string IG_APP_VERSION = "61.0.0.19.86"/*"35.0.0.20.96"*/;
+        public const string IG_APP_VERSION = "61.0.0.19.86";
         public const string USER_AGENT =
             "Instagram {6} Android ({7}/{8}; {0}; {1}; {2}; {3}; {4}; {5}; en_US; {9})";
         public const string USER_AGENT_DEFAULT =
-        "Instagram 61.0.0.19.86 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 95414346)";
-        ////"Instagram 12.0.0.7.91 Android (23/6.0.1; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_NZ)";
+        "Instagram 61.0.0.19.86 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 107092322)";
+        // v35 "Instagram 61.0.0.19.86 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 95414346)";
         public const string HEADER_USER_AGENT = "User-Agent";
 
         public const string HEADER_QUERY = "q";
@@ -37,13 +37,13 @@ namespace InstagramApiSharp.API
         public const string FB_ACCESS_TOKEN = "EAABwzLixnjYBADcFesqNbHwRoDFmpBpEVZB2hcOAhMh1A3gGyxoW82CZBXKUEAYDAfNrA2Ntt4Pf21mXIT5Bv2CYIY3OhWJZCChIxAopXyOYQq4KkZBUsRL3deG7550cL9qiJaPEwlnK9pTQCWSUok5ZBZBNaUyW78eiQeTJCfBOQxYbjNG8CU";
         public const string
             IG_SIGNATURE_KEY =
-              "be01114435207c0a0b11a5cf68faeb82ec4eee37c52e8429af5fff6b54b80b28";    
-            //"b4946d296abf005163e72346a6d33dd083cadde638e6ad9c5eb92e381b35784a"; //4749bda4fc1f49372dae3d79db339ce4959cfbbe
+              "25f955cc0c8f080a0592aa1fd2572d60afacd5f3c03090cf47ca409068b0d2e1";
+        //v35 "be01114435207c0a0b11a5cf68faeb82ec4eee37c52e8429af5fff6b54b80b28";
 
         public const string HEADER_IG_SIGNATURE = "signed_body";
-        public const string IG_SIGNATURE_KEY_VERSION = "4"; //5
+        public const string IG_SIGNATURE_KEY_VERSION = "4";
         public const string HEADER_IG_SIGNATURE_KEY_VERSION = "ig_sig_key_version";
-        public const string IG_CAPABILITIES = "3brTBw==";//"3boBAA==";
+        public const string IG_CAPABILITIES = "3brTPw==";//v35 "3brTBw==";
         public const string HEADER_IG_CAPABILITIES = "X-IG-Capabilities";
         public const string IG_CONNECTION_TYPE = "WIFI";
         public const string HEADER_IG_CONNECTION_TYPE = "X-IG-Connection-Type";
@@ -59,7 +59,7 @@ namespace InstagramApiSharp.API
         public const string IG_APP_ID = "567067343352427";
 
         public const string COMMENT_BREADCRUMB_KEY = "iN4$aGr0m";
-        public const int TIMEZONE_OFFSET = 43200;
+        public const int TIMEZONE_OFFSET = 16200;
 
         public const string INSTAGRAM_URL = "https://i.instagram.com";
         public const string API = "/api";
@@ -403,6 +403,8 @@ namespace InstagramApiSharp.API
 
         public const string DYI_REQUEST_DOWNLOAD_DATA = API_SUFFIX + "/dyi/request_download_data/";
 
+        public const string CONSENT_NEW_USER_FLOW = API_SUFFIX + "/consent/new_user_flow/";
+        public const string CONSENT_NEW_USER_FLOW_BEGINS = API_SUFFIX + "/consent/new_user_flow_begins/";
 
         public static readonly Uri BaseInstagramUri = new Uri(BASE_INSTAGRAM_API_URL);
     }

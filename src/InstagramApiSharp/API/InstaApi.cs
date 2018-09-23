@@ -172,15 +172,22 @@ namespace InstagramApiSharp.API
         }
         #region Register new account with Phone number and email
         string _waterfallIdReg = "", _deviceIdReg = "", _phoneIdReg = "", _guidReg = "";
+        AccountRegistrationPhoneNumber _signUpPhoneNumberInfo;
         /// <summary>
         ///     Check email availability
         /// </summary>
         /// <param name="email">Email to check</param>
         public async Task<IResult<CheckEmailRegistration>> CheckEmailAsync(string email)
         {
+            return await CheckEmail(email);
+        }
+        private async Task<IResult<CheckEmailRegistration>> CheckEmail(string email, bool useNewWaterfall = true)
+        {
             try
             {
-                _waterfallIdReg = Guid.NewGuid().ToString();
+                if (_waterfallIdReg == null || useNewWaterfall)
+                    _waterfallIdReg = Guid.NewGuid().ToString();
+
                 var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
                 var cookies = 
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
@@ -240,6 +247,7 @@ namespace InstagramApiSharp.API
             try
             {
                 _deviceIdReg = ApiRequestMessage.GenerateDeviceId();
+       
                 var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
@@ -252,7 +260,7 @@ namespace InstagramApiSharp.API
                     {"_csrftoken",      csrftoken},
                     {"login_nonces",    "[]"},
                     {"phone_number",    phoneNumber},
-                    {"device_id",    _deviceIdReg},
+                    {"device_id",    _deviceInfo.DeviceId},
                 };
                 var instaUri = UriCreator.GetCheckPhoneNumberUri();
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
@@ -305,11 +313,11 @@ namespace InstagramApiSharp.API
         {
             try
             {
-                if (string.IsNullOrEmpty(_deviceIdReg))
-                    throw new ArgumentException("You should call CheckPhoneNumberAsync function first.");
-                _phoneIdReg = Guid.NewGuid().ToString();
-                _waterfallIdReg = Guid.NewGuid().ToString();
-                _guidReg = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(_waterfallIdReg))
+                    _waterfallIdReg = Guid.NewGuid().ToString();
+
+                await CheckPhoneNumberAsync(phoneNumber);
+
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
@@ -317,11 +325,11 @@ namespace InstagramApiSharp.API
                 _user.CsrfToken = csrftoken;
                 var postData = new Dictionary<string, string>
                 {
-                    {"phone_id",        _phoneIdReg},
+                    {"phone_id",        _deviceInfo.PhoneGuid.ToString()},
                     {"phone_number",    phoneNumber},
                     {"_csrftoken",      csrftoken},
-                    {"guid",            _guidReg},
-                    {"device_id",       _deviceIdReg},
+                    {"guid",            _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id",       _deviceInfo.DeviceId},
                     {"waterfall_id",    _waterfallIdReg},
                 };
                 var instaUri = UriCreator.GetSignUpSMSCodeUri();
@@ -334,7 +342,7 @@ namespace InstagramApiSharp.API
 
                     return Result.UnExpectedResponse<bool>(response, o.Message?.Errors?[0], json);
                 }
-
+                _signUpPhoneNumberInfo = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumber>(json);
                 return Result.Success(true);
             }
             catch (Exception exception)
@@ -352,10 +360,7 @@ namespace InstagramApiSharp.API
         {
             try
             {
-                if (string.IsNullOrEmpty(_deviceIdReg))
-                    throw new ArgumentException("You should call CheckPhoneNumberAsync function first.");
-
-                if (string.IsNullOrEmpty(_guidReg) || string.IsNullOrEmpty(_waterfallIdReg))
+                if (string.IsNullOrEmpty(_waterfallIdReg))
                     throw new ArgumentException("You should call SendSignUpSmsCodeAsync function first.");
 
                 var cookies =
@@ -368,8 +373,8 @@ namespace InstagramApiSharp.API
                     {"verification_code",         verificationCode},
                     {"phone_number",              phoneNumber},
                     {"_csrftoken",                csrftoken},
-                    {"guid",                      _guidReg},
-                    {"device_id",                 _deviceIdReg},
+                    {"guid",                      _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id",                 _deviceInfo.DeviceId},
                     {"waterfall_id",              _waterfallIdReg},
                 };
                 var instaUri = UriCreator.GetValidateSignUpSMSCodeUri();
@@ -403,13 +408,20 @@ namespace InstagramApiSharp.API
         /// <param name="name">Name</param>
         public async Task<IResult<RegistrationSuggestionResponse>> GetUsernameSuggestionsAsync(string name)
         {
+            return await GetUsernameSuggestions(name);
+        }
+        public async Task<IResult<RegistrationSuggestionResponse>> GetUsernameSuggestions(string name, bool useNewIds = true)
+        {
             try
             {
                 if (string.IsNullOrEmpty(_deviceIdReg))
                     _deviceIdReg = ApiRequestMessage.GenerateDeviceId();
-                _phoneIdReg = Guid.NewGuid().ToString();
-                _waterfallIdReg = Guid.NewGuid().ToString();
-                _guidReg = Guid.NewGuid().ToString();
+                if (useNewIds)
+                {
+                    _phoneIdReg = Guid.NewGuid().ToString();
+                    _waterfallIdReg = Guid.NewGuid().ToString();
+                    _guidReg = Guid.NewGuid().ToString();
+                }
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
@@ -417,14 +429,24 @@ namespace InstagramApiSharp.API
                 _user.CsrfToken = csrftoken;
                 var postData = new Dictionary<string, string>
                 {
-                    {"phone_id",        _phoneIdReg},
                     {"name",            name},
                     {"_csrftoken",      csrftoken},
-                    {"guid",            _guidReg},
-                    {"device_id",       _deviceIdReg},
-                    {"email",           ""},
-                    {"waterfall_id",    _waterfallIdReg},
+                    {"email",           ""}
                 };
+                if(useNewIds)
+                {
+                    postData.Add("phone_id", _phoneIdReg);
+                    postData.Add("guid", _guidReg);
+                    postData.Add("device_id", _deviceIdReg);
+                    postData.Add("waterfall_id", _waterfallIdReg);
+                }
+                else
+                {
+                    postData.Add("phone_id", _deviceInfo.PhoneGuid.ToString());
+                    postData.Add("guid", _deviceInfo.DeviceGuid.ToString());
+                    postData.Add("device_id", _deviceInfo.DeviceId.ToString());
+                    postData.Add("waterfall_id", _waterfallIdReg ?? Guid.NewGuid().ToString());
+                }
                 var instaUri = UriCreator.GetUsernameSuggestionsUri();
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -457,33 +479,34 @@ namespace InstagramApiSharp.API
         {
             try
             {
-                if (string.IsNullOrEmpty(_deviceIdReg))
-                    throw new ArgumentException("You should call CheckPhoneNumberAsync function first.");
-
-                if (string.IsNullOrEmpty(_guidReg) || string.IsNullOrEmpty(_waterfallIdReg))
+                if (string.IsNullOrEmpty(_waterfallIdReg) || _signUpPhoneNumberInfo == null)
                     throw new ArgumentException("You should call SendSignUpSmsCodeAsync function first.");
 
+                if(_signUpPhoneNumberInfo.GdprRequired)
+                {
+                    var acceptGdpr = await AcceptConsentRequiredAsync(null, phoneNumber);
+                    if (!acceptGdpr.Succeeded)
+                        return Result.Fail(acceptGdpr.Info.Message, (AccountCreation)null);
+                }
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
-                //sn_nonce:Kzk4OTE3NDMxNDAwNnwxNTM0MTg0MjYzfAhfpJ9rzGNAlQLWQe+kor/nDAntXA0i8Q==
-                //+989174314006|1534184263|_��k�c@��A濫��	�\
-                //"�
+                
                 var postData = new Dictionary<string, string>
                 {
                     {"allow_contacts_sync",       "true"},
                     {"verification_code",         verificationCode},
                     {"sn_result",                 "API_ERROR:+null"},
-                    {"phone_id",                  _phoneIdReg},
+                    {"phone_id",                  _deviceInfo.PhoneGuid.ToString()},
                     {"phone_number",              phoneNumber},
                     {"_csrftoken",                csrftoken},
                     {"username",                  username},
                     {"first_name",                firstName},
                     {"adid",                      Guid.NewGuid().ToString()},
-                    {"guid",                      _guidReg},
-                    {"device_id",                 _deviceIdReg},
+                    {"guid",                      _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id",                 _deviceInfo.DeviceId},
                     {"sn_nonce",                  ""},
                     {"force_sign_up_code",        ""},
                     {"waterfall_id",              _waterfallIdReg},
@@ -491,6 +514,9 @@ namespace InstagramApiSharp.API
                     {"password",                  password},
                     {"has_sms_consent",           "true"},
                 };
+                if (_signUpPhoneNumberInfo.GdprRequired)
+                    postData.Add("gdpr_s", "[0,2,0,null]");
+
                 var instaUri = UriCreator.GetCreateValidatedUri();
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -508,7 +534,7 @@ namespace InstagramApiSharp.API
 
                 var obj = JsonConvert.DeserializeObject<AccountCreation>(json);
                 if (obj.AccountCreated && obj.CreatedUser != null)
-                    ValidateUserAsync(obj.CreatedUser, csrftoken, true);
+                    ValidateUserAsync(obj.CreatedUser, csrftoken, true, password);
                 return Result.Success(obj);
             }
             catch (Exception exception)
@@ -578,33 +604,63 @@ namespace InstagramApiSharp.API
             var createResponse = new AccountCreation();
             try
             {
-                var _deviceIdReg = ApiRequestMessage.GenerateDeviceId();
-                var _phoneIdReg = Guid.NewGuid().ToString();
-                var _waterfallIdReg = Guid.NewGuid().ToString();
-                var _guidReg = Guid.NewGuid().ToString();
-
+                //this will done by builder
+                //_deviceInfo = AndroidDeviceGenerator.GetRandomAndroidDevice();
+                var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                await firstResponse.Content.ReadAsStringAsync();
                 var cookies =
-                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
-                    .BaseAddress);
+                        _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                        .BaseAddress);
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
+                var checkEmail = await CheckEmail(email, false);
+                if (!checkEmail.Succeeded)
+                    return Result.Fail(checkEmail.Info.Message, (AccountCreation)null);
+
+
+                await Task.Delay(1500);
+                if (checkEmail.Value.GdprRequired)
+                {
+                    var acceptGdpr = await AcceptConsentRequiredAsync(email);
+                    if (!acceptGdpr.Succeeded)
+                        return Result.Fail(acceptGdpr.Info.Message, (AccountCreation)null);
+                }
+
+                await Task.Delay(1500);
+                if (username.Length > 6)
+                {
+                    await GetUsernameSuggestions(username.Substring(0,4), false);
+                    await Task.Delay(1000);
+                    await GetUsernameSuggestions(username.Substring(0, 5), false);
+                }
+                else
+                {
+                    await GetUsernameSuggestions(username, false);
+                    await Task.Delay(1000);
+                    await GetUsernameSuggestions(username, false);
+                }
+
+
                 var postData = new Dictionary<string, string>
                 {
                     {"allow_contacts_sync",       "true"},
                     {"sn_result",                 "API_ERROR:+null"},
-                    {"phone_id",                  _phoneIdReg},
+                    {"phone_id",                  _deviceInfo.PhoneGuid.ToString()},
                     {"_csrftoken",                csrftoken},
                     {"username",                  username},
                     {"first_name",                firstName},
                     {"adid",                      Guid.NewGuid().ToString()},
-                    {"guid",                      _guidReg},
-                    {"device_id",                 _deviceIdReg},
+                    {"guid",                      _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id",                 _deviceInfo.DeviceId.ToString()},
                     {"email",                     email},
                     {"sn_nonce",                  ""},
                     {"force_sign_up_code",        ""},
-                    {"waterfall_id",              _waterfallIdReg},
+                    {"waterfall_id",              _waterfallIdReg ?? Guid.NewGuid().ToString()},
                     {"qs_stamp",                  ""},
                     {"password",                  password},
                 };
+                if (checkEmail.Value.GdprRequired)
+                    postData.Add("gdpr_s", "[0,2,0,null]");
+
                 var instaUri = UriCreator.GetCreateAccountUri();
                 var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -612,17 +668,95 @@ namespace InstagramApiSharp.API
                 
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<AccountCreation>(response, json);
-                var o = JsonConvert.DeserializeObject<AccountCreation>(json);
+                var obj = JsonConvert.DeserializeObject<AccountCreation>(json);
                 //{"account_created": false, "errors": {"email": ["Another account is using iranramtin73jokar@live.com."], "username": ["This username isn't available. Please try another."]}, "allow_contacts_sync": true, "status": "ok", "error_type": "email_is_taken, username_is_taken"}
                 //{"message": "feedback_required", "spam": true, "feedback_title": "Signup Error", "feedback_message": "Sorry! There\u2019s a problem signing you up right now. Please try again later. We restrict certain content and actions to protect our community. Tell us if you think we made a mistake.", "feedback_url": "repute/report_problem/instagram_signup/", "feedback_appeal_label": "Report problem", "feedback_ignore_label": "OK", "feedback_action": "report_problem", "status": "fail", "error_type": "signup_block"}
 
-                
-                return Result.Success(o);
+                if (obj.AccountCreated && obj.CreatedUser != null)
+                    ValidateUserAsync(obj.CreatedUser, csrftoken, true, password);
+
+                return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
                 return Result.Fail<AccountCreation>(exception);
+            }
+        }
+
+        private async Task<IResult<bool>> AcceptConsentRequiredAsync(string email, string phone = null)
+        {
+            try
+            {
+                //{"message": "consent_required", "consent_data": {"headline": "Updates to Our Terms and Data Policy", "content": "We've updated our Terms and made some changes to our Data Policy. Please take a moment to review these changes and let us know that you agree to them.\n\nYou need to finish reviewing this information before you can use Instagram.", "button_text": "Review Now"}, "status": "fail"}
+                await Task.Delay(2000);
+                var instaUri = UriCreator.GetConsentNewUserFlowBeginsUri();
+                var data = new JObject
+                {
+                    {"phone_id", _deviceInfo.PhoneGuid},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                await Task.Delay(1500);
+
+                instaUri = UriCreator.GetConsentNewUserFlowUri();
+                data = new JObject
+                {
+                    {"phone_id", _deviceInfo.PhoneGuid},
+                    {"gdpr_s", ""},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"guid", _deviceInfo.DeviceGuid},
+                    {"device_id", _deviceInfo.DeviceId}
+                };
+                if (email != null)
+                    data.Add("email", email);
+                else
+                {
+                    if (phone != null && !phone.StartsWith("+"))
+                        phone = $"+{phone}";
+
+                    if (phone == null)
+                        phone = string.Empty;
+                    data.Add("phone", phone);
+                }
+
+                request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                await Task.Delay(1500);
+
+                data = new JObject
+                {
+                    {"current_screen_key", "age_consent_two_button"},
+                    {"phone_id", _deviceInfo.PhoneGuid},
+                    {"gdpr_s", "[0,0,0,null]"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"updates", "{\"age_consent_state\":\"2\"}"},
+                    {"guid", _deviceInfo.DeviceGuid},
+                    {"device_id", _deviceInfo.DeviceId}
+                };
+                request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                return Result.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex, false);
             }
         }
         #endregion
@@ -691,7 +825,8 @@ namespace InstagramApiSharp.API
                         //2FA is required!
                         return Result.Fail("Two Factor Authentication is required", InstaLoginResult.TwoFactorRequired);
                     }
-                    if (loginFailReason.ErrorType == "checkpoint_challenge_required")
+                    if (loginFailReason.ErrorType == "checkpoint_challenge_required" || 
+                        !string.IsNullOrEmpty(loginFailReason.Message) && loginFailReason.Message == "challenge_required")
                     {
                         _challengeinfo = loginFailReason.Challenge;
 
@@ -1235,19 +1370,29 @@ namespace InstagramApiSharp.API
         }
 
 
-        private void ValidateUserAsync(InstaUserShortResponse user, string csrfToken, bool validateExtra = true)
+        private void ValidateUserAsync(InstaUserShortResponse user, string csrfToken, bool validateExtra = true, string password = null)
         {
             try
             {
                 var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
                 _user.LoggedInUser = converter.Convert();
+                _user.Password = password;
+                _user.UserName = _user.UserName;
                 if (validateExtra)
                 {
                     _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
                     _user.CsrfToken = csrfToken;
+                    if (string.IsNullOrEmpty(_user.CsrfToken))
+                    {
+                        var cookies =
+                          _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                              .BaseAddress);
+                        _user.CsrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
+                    }
                     IsUserAuthenticated = true;
                     InvalidateProcessors();
                 }
+
             }
             catch { }
         }
@@ -1359,6 +1504,9 @@ namespace InstagramApiSharp.API
             }
             return Result.Fail("", false);
         }
+
+
+
         /// <summary>
         ///     Get current state info as Memory stream
         /// </summary>

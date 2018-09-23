@@ -687,7 +687,7 @@ namespace InstagramApiSharp.API.Processors
                 var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-
+                json.PrintInDebug();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaUserInfo>(response, json);
                 var userInfo = JsonConvert.DeserializeObject<InstaUserInfoContainerResponse>(json);

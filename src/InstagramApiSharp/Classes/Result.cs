@@ -110,6 +110,12 @@ namespace InstagramApiSharp.Classes
                 if (!status.IsOk() && status.Message.Contains("wait a few minutes"))
                     responseType = ResponseType.RequestsLimit;
 
+                if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("consent_required"))
+                    responseType = ResponseType.ConsentRequired;
+
+                if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("challenge_required"))
+                    responseType = ResponseType.ChallengeRequired;
+
                 var resultInfo = new ResultInfo(responseType, status.Message);
                 return new Result<T>(false, default(T), resultInfo);
             }

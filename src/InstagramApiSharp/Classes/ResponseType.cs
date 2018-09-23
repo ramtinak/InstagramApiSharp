@@ -13,6 +13,7 @@ namespace InstagramApiSharp.Classes
         UnExpectedResponse = 8,
         InternalException = 9,
         ChallengeRequired = 10,
-        InactiveUser = 11
+        InactiveUser = 11,
+        ConsentRequired = 12
     }
 }
