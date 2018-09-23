@@ -1258,13 +1258,14 @@ namespace InstagramApiSharp.API
 
                 var data = new JObject
                 {
-                    {"choice", "0"},
                     {"_csrftoken", _user.CsrfToken},
                     {"guid", _deviceInfo.DeviceGuid.ToString()},
                     {"device_id", _deviceInfo.DeviceId},
                 };
                 if (!string.IsNullOrEmpty(phoneNumber))
                     data.Add("phone_number", phoneNumber);
+                else
+                    data.Add("choice", "0");
 
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Add("Host", "i.instagram.com");

@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.0.9 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.1.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -74,6 +74,16 @@ Task<IResult<object>>
 Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.1.0
+- [Add] auto accept consent require in signup with phone and email
+- [Update] signup with phone and email. (no need to call LoginAsync after account created.)
+- [Add] submit phone number for challenge require (special thx to [Ramesh Paudel](https://t.me/Digall) for helping me)
+- [Add] support for changing api version(v35, v44 and v61), in IInstaApiBuilder
+- [Revert] api version to v44 as default (this will fixes consent required issue) (special thx to [Ramesh Paudel](https://t.me/Digall) for helping me)
+- [Remove] static from HttpHelper class
+- [Update] challenge functions for using current device information
+- [Add wiki] FAQ page
+
 v1.1.0.9
 - [Rename]  SuggestedSearchesAsync to GetSuggestedSearchesAsync in TVProcessor
 - [Bugfix]  for GetFullUserInfoAsync

@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.0.9</Version>
-    <AssemblyVersion>1.1.0.9</AssemblyVersion>
-    <FileVersion>1.1.0.9</FileVersion>
+    <Version>1.1.1.0</Version>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -36,7 +36,16 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.0.9
+    <PackageReleaseNotes>v1.1.1.0
+- [Add] auto accept consent require in signup with phone and email
+- [Update] signup with phone and email. (no need to call LoginAsync after account created.)
+- [Add] submit phone number for challenge require (special thx to Ramesh Paudel for helping me)
+- [Add] support for changing api version(v35, v44 and v61), in IInstaApiBuilder
+- [Revert] api version to v44 as default (this will fixes consent required issue) (special thx to Ramesh Paudel for helping me)
+- [Remove] static from HttpHelper class
+- [Update] challenge functions for using current device information
+
+v1.1.0.9
 - [Rename] SuggestedSearchesAsync to GetSuggestedSearchesAsync in TVProcessor
 - [Bugfix] for GetFullUserInfoAsync
 

@@ -43,6 +43,9 @@ namespace ChallengeRequireExample
         // here:
         // 1. Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync();
         // If your login needs challenge, first you should call this function.
+        // Note: if you call this and SubmitPhoneRequired was true, you should sumbit phone number
+        // with this function:
+        // Task<IResult<ChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync();
 
 
         // 2. Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
@@ -128,23 +131,31 @@ namespace ChallengeRequireExample
                         var challenge = await InstaApi.GetChallengeRequireVerifyMethodAsync();
                         if (challenge.Succeeded)
                         {
-                            if (challenge.Value.StepData != null)
+                            if (challenge.Value.SubmitPhoneRequired)
                             {
-                                if (!string.IsNullOrEmpty(challenge.Value.StepData.PhoneNumber))
-                                {
-                                    RadioVerifyWithPhoneNumber.Checked = false;
-                                    RadioVerifyWithPhoneNumber.Visible = true;
-                                    RadioVerifyWithPhoneNumber.Text = challenge.Value.StepData.PhoneNumber;
-                                }
-                                if (!string.IsNullOrEmpty(challenge.Value.StepData.Email))
-                                {
-                                    RadioVerifyWithEmail.Checked = false;
-                                    RadioVerifyWithEmail.Visible = true;
-                                    RadioVerifyWithEmail.Text = challenge.Value.StepData.Email;
-                                }
-
-                                SelectMethodGroupBox.Visible = true;
+                                SubmitPhoneChallengeGroup.Visible = true;
                                 Size = ChallengeSize;
+                            }
+                            else
+                            {
+                                if (challenge.Value.StepData != null)
+                                {
+                                    if (!string.IsNullOrEmpty(challenge.Value.StepData.PhoneNumber))
+                                    {
+                                        RadioVerifyWithPhoneNumber.Checked = false;
+                                        RadioVerifyWithPhoneNumber.Visible = true;
+                                        RadioVerifyWithPhoneNumber.Text = challenge.Value.StepData.PhoneNumber;
+                                    }
+                                    if (!string.IsNullOrEmpty(challenge.Value.StepData.Email))
+                                    {
+                                        RadioVerifyWithEmail.Checked = false;
+                                        RadioVerifyWithEmail.Visible = true;
+                                        RadioVerifyWithEmail.Text = challenge.Value.StepData.Email;
+                                    }
+
+                                    SelectMethodGroupBox.Visible = true;
+                                    Size = ChallengeSize;
+                                }
                             }
                         }
                         else
@@ -159,6 +170,32 @@ namespace ChallengeRequireExample
             }
         }
 
+        private async void SubmitPhoneChallengeButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(txtSubmitPhoneForChallenge.Text) ||
+                     string.IsNullOrWhiteSpace(txtSubmitPhoneForChallenge.Text))
+                {
+                    MessageBox.Show("Please type a valid phone number(with country code).\r\ni.e: +989123456789", "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                var phoneNumber = txtSubmitPhoneForChallenge.Text;
+                if (!phoneNumber.StartsWith("+"))
+                    phoneNumber = $"+{phoneNumber}";
+
+                var submitPhone = await InstaApi.SubmitPhoneNumberForChallengeRequireAsync(phoneNumber);
+                if (submitPhone.Succeeded)
+                {
+                    VerifyCodeGroupBox.Visible = true;
+                    SubmitPhoneChallengeGroup.Visible = false;
+                }
+                else
+                    MessageBox.Show(submitPhone.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "EX", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
         private async void SendCodeButton_Click(object sender, EventArgs e)
         {
             bool isEmail = false;
@@ -329,6 +366,7 @@ namespace ChallengeRequireExample
                 state.CopyTo(fileStream);
             }
         }
+
     }
     public static class DebugUtils
     {

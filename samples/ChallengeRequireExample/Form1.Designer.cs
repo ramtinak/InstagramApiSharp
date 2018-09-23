@@ -50,9 +50,14 @@
             this.TwoFactorButton = new System.Windows.Forms.Button();
             this.txtTwoFactorCode = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.SubmitPhoneChallengeGroup = new System.Windows.Forms.GroupBox();
+            this.SubmitPhoneChallengeButton = new System.Windows.Forms.Button();
+            this.txtSubmitPhoneForChallenge = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.SelectMethodGroupBox.SuspendLayout();
             this.VerifyCodeGroupBox.SuspendLayout();
             this.TwoFactorGroupBox.SuspendLayout();
+            this.SubmitPhoneChallengeGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -259,7 +264,6 @@
             this.TwoFactorButton.Text = "Auth";
             this.TwoFactorButton.UseVisualStyleBackColor = true;
             this.TwoFactorButton.Click += new System.EventHandler(this.TwoFactorButton_Click);
-
             // 
             // txtTwoFactorCode
             // 
@@ -277,11 +281,51 @@
             this.label5.TabIndex = 3;
             this.label5.Text = "Code:";
             // 
+            // SubmitPhoneChallengeGroup
+            // 
+            this.SubmitPhoneChallengeGroup.Controls.Add(this.SubmitPhoneChallengeButton);
+            this.SubmitPhoneChallengeGroup.Controls.Add(this.txtSubmitPhoneForChallenge);
+            this.SubmitPhoneChallengeGroup.Controls.Add(this.label6);
+            this.SubmitPhoneChallengeGroup.Location = new System.Drawing.Point(71, 206);
+            this.SubmitPhoneChallengeGroup.Name = "SubmitPhoneChallengeGroup";
+            this.SubmitPhoneChallengeGroup.Size = new System.Drawing.Size(274, 87);
+            this.SubmitPhoneChallengeGroup.TabIndex = 15;
+            this.SubmitPhoneChallengeGroup.TabStop = false;
+            this.SubmitPhoneChallengeGroup.Text = "Your account needs to submit phone number";
+            this.SubmitPhoneChallengeGroup.Visible = false;
+            // 
+            // SubmitPhoneChallengeButton
+            // 
+            this.SubmitPhoneChallengeButton.Location = new System.Drawing.Point(126, 51);
+            this.SubmitPhoneChallengeButton.Name = "SubmitPhoneChallengeButton";
+            this.SubmitPhoneChallengeButton.Size = new System.Drawing.Size(142, 23);
+            this.SubmitPhoneChallengeButton.TabIndex = 5;
+            this.SubmitPhoneChallengeButton.Text = "Submit and send code";
+            this.SubmitPhoneChallengeButton.UseVisualStyleBackColor = true;
+            this.SubmitPhoneChallengeButton.Click += new System.EventHandler(this.SubmitPhoneChallengeButton_Click);
+            // 
+            // txtSubmitPhoneForChallenge
+            // 
+            this.txtSubmitPhoneForChallenge.Location = new System.Drawing.Point(91, 25);
+            this.txtSubmitPhoneForChallenge.Name = "txtSubmitPhoneForChallenge";
+            this.txtSubmitPhoneForChallenge.Size = new System.Drawing.Size(177, 20);
+            this.txtSubmitPhoneForChallenge.TabIndex = 4;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(9, 28);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(79, 13);
+            this.label6.TabIndex = 3;
+            this.label6.Text = "Phone number:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(416, 125);
+            this.Controls.Add(this.SubmitPhoneChallengeGroup);
             this.Controls.Add(this.TwoFactorGroupBox);
             this.Controls.Add(this.RtBox);
             this.Controls.Add(this.GetFeedButton);
@@ -302,6 +346,8 @@
             this.VerifyCodeGroupBox.PerformLayout();
             this.TwoFactorGroupBox.ResumeLayout(false);
             this.TwoFactorGroupBox.PerformLayout();
+            this.SubmitPhoneChallengeGroup.ResumeLayout(false);
+            this.SubmitPhoneChallengeGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -331,6 +377,10 @@
         private System.Windows.Forms.Button TwoFactorButton;
         private System.Windows.Forms.TextBox txtTwoFactorCode;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.GroupBox SubmitPhoneChallengeGroup;
+        private System.Windows.Forms.Button SubmitPhoneChallengeButton;
+        private System.Windows.Forms.TextBox txtSubmitPhoneForChallenge;
+        private System.Windows.Forms.Label label6;
     }
 }
 
