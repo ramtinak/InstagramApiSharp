@@ -3,6 +3,8 @@ using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Logger;
 using System;
+using InstagramApiSharp.Enums;
+
 namespace InstagramApiSharp.API.Builder
 {
     public interface IInstaApiBuilder
@@ -64,5 +66,11 @@ namespace InstagramApiSharp.API.Builder
         /// <param name="androidDevice">Android device</param>
         /// <returns>API Builder</returns>
         IInstaApiBuilder SetDevice(AndroidDevice androidDevice);
+        /// <summary>
+        ///     Set instagram api version (for user agent version)
+        /// </summary>
+        /// <param name="apiVersion">Api version</param>
+        IInstaApiBuilder SetApiVersion(InstaApiVersionType apiVersion);
+
     }
 }

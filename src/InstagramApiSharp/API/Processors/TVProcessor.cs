@@ -21,9 +21,10 @@ namespace InstagramApiSharp.API.Processors
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
         private readonly InstaApi _instaApi;
+        private readonly HttpHelper _httpHelper;
         public TVProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
-            UserAuthValidate userAuthValidate, InstaApi instaApi)
+            UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
         {
             _deviceInfo = deviceInfo;
             _user = user;
@@ -31,6 +32,7 @@ namespace InstagramApiSharp.API.Processors
             _logger = logger;
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
+            _httpHelper = httpHelper;
         }
         /// <summary>
         ///     Get TV Guide (gets popular and suggested channels)
@@ -41,7 +43,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetIGTVGuideUri();
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
@@ -93,7 +95,7 @@ namespace InstagramApiSharp.API.Processors
                     data.Add("id", $"user_{userId}");
                 if (paginationParameters != null && !string.IsNullOrEmpty(paginationParameters.NextId))
                     data.Add("max_id", paginationParameters.NextId);
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
@@ -117,7 +119,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetIGTVSuggestedSearchesUri();
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
@@ -142,7 +144,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetIGTVSearchUri(query);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 

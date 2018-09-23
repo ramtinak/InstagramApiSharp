@@ -2,7 +2,7 @@
 using InstagramApiSharp.API;
 using InstagramApiSharp.Helpers;
 using Newtonsoft.Json;
-
+using InstagramApiSharp.API.Versions;
 namespace InstagramApiSharp.Classes.Android.DeviceInfo
 {
     internal class ApiRequestChallengeMessage : ApiRequestMessage
@@ -57,19 +57,19 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         {
             return JsonConvert.SerializeObject(new { security_code = verify, _csrftoken = "ReplaceCSRF", Guid, DeviceId });
         }
-        internal string GenerateSignature(string signatureKey, out string deviceid)
+        internal string GenerateSignature(InstaApiVersion apiVersion, string signatureKey, out string deviceid)
         {
             if (string.IsNullOrEmpty(signatureKey))
-                signatureKey = InstaApiConstants.IG_SIGNATURE_KEY;
+                signatureKey = apiVersion.SignatureKey;
             var res = CryptoHelper.CalculateHash(signatureKey,
                 JsonConvert.SerializeObject(this));
             deviceid = DeviceId;
             return res;
         }
-        internal string GenerateChallengeSignature(string signatureKey,string csrfToken, out string deviceid)
+        internal string GenerateChallengeSignature(InstaApiVersion apiVersion, string signatureKey,string csrfToken, out string deviceid)
         {
             if (string.IsNullOrEmpty(signatureKey))
-                signatureKey = InstaApiConstants.IG_SIGNATURE_KEY;
+                signatureKey = apiVersion.SignatureKey;
             var api = new ApiRequestChallengeMessage
             {
                 CsrtToken = csrfToken,

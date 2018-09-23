@@ -23,9 +23,10 @@ namespace InstagramApiSharp.API.Processors
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
         private readonly InstaApi _instaApi;
+        private readonly HttpHelper _httpHelper;
         public CommentProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
-            UserAuthValidate userAuthValidate, InstaApi instaApi)
+            UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
         {
             _deviceInfo = deviceInfo;
             _user = user;
@@ -33,6 +34,7 @@ namespace InstagramApiSharp.API.Processors
             _logger = logger;
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
+            _httpHelper = httpHelper;
         }
         /// <summary>
         ///     Get media comments
@@ -46,7 +48,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var commentsUri = UriCreator.GetMediaCommentsUri(mediaId, paginationParameters.NextId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -105,7 +107,7 @@ namespace InstagramApiSharp.API.Processors
             try
             { 
                 var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommentId, paginationParameters.NextId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -172,7 +174,7 @@ namespace InstagramApiSharp.API.Processors
                     {"radio_type", "wifi-none"}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -214,7 +216,7 @@ namespace InstagramApiSharp.API.Processors
                     {"radio_type", "wifi-none"}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -248,7 +250,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_csrftoken", _user.CsrfToken}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 return response.StatusCode == HttpStatusCode.OK
@@ -280,7 +282,7 @@ namespace InstagramApiSharp.API.Processors
                     {"comment_ids_to_delete", commentIds.EncodeList(false)}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 return response.StatusCode == HttpStatusCode.OK
@@ -300,7 +302,7 @@ namespace InstagramApiSharp.API.Processors
             if(!string.IsNullOrEmpty(nextMinId))
                 commentsUri = UriCreator.GetMediaCommentsMinIdUri(mediaId, nextMinId);
               
-            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
+            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
                        
@@ -318,7 +320,7 @@ namespace InstagramApiSharp.API.Processors
             if (!string.IsNullOrEmpty(nextMinId))
                 commentsUri = UriCreator.GetMediaInlineCommentsWithMinIdUri(mediaId, targetCommandId, nextMinId);
 
-            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
+            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
 
@@ -344,7 +346,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_csrftoken", _user.CsrfToken}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 return response.StatusCode == HttpStatusCode.OK
@@ -374,7 +376,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_csrftoken", _user.CsrfToken}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                
@@ -399,7 +401,7 @@ namespace InstagramApiSharp.API.Processors
             {
                 var instaUri = UriCreator.GetMediaCommetLikersUri(mediaId);
                 var request =
-                    HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
@@ -434,7 +436,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_csrftoken", _user.CsrfToken}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 return response.StatusCode == HttpStatusCode.OK
@@ -466,7 +468,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_csrftoken", _user.CsrfToken}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
@@ -497,7 +499,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_csrftoken", _user.CsrfToken}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 

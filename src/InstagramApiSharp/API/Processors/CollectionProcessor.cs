@@ -23,9 +23,10 @@ namespace InstagramApiSharp.API.Processors
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
         private readonly InstaApi _instaApi;
+        private readonly HttpHelper _httpHelper;
         public CollectionProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
-            UserAuthValidate userAuthValidate, InstaApi instaApi)
+            UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
         {
             _deviceInfo = deviceInfo;
             _user = user;
@@ -33,6 +34,7 @@ namespace InstagramApiSharp.API.Processors
             _logger = logger;
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
+            _httpHelper = httpHelper;
         }
         /// <summary>
         ///     Get your collection for given collection id
@@ -47,7 +49,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var collectionUri = UriCreator.GetCollectionUri(collectionId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -77,7 +79,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var collectionUri = UriCreator.GetCollectionsUri();
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -119,7 +121,7 @@ namespace InstagramApiSharp.API.Processors
                 };
 
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Get, createCollectionUri, _deviceInfo, data);
+                    _httpHelper.GetSignedRequest(HttpMethod.Get, createCollectionUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -157,7 +159,7 @@ namespace InstagramApiSharp.API.Processors
                 };
 
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Get, createCollectionUri, _deviceInfo, data);
+                    _httpHelper.GetSignedRequest(HttpMethod.Get, createCollectionUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == HttpStatusCode.OK)
@@ -198,7 +200,7 @@ namespace InstagramApiSharp.API.Processors
                 };
 
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Get, editCollectionUri, _deviceInfo, data);
+                    _httpHelper.GetSignedRequest(HttpMethod.Get, editCollectionUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)

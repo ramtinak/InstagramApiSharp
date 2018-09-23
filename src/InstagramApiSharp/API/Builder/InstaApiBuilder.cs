@@ -3,7 +3,7 @@ using System.Net.Http;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Logger;
-
+using InstagramApiSharp.Enums;
 namespace InstagramApiSharp.API.Builder
 {
     public class InstaApiBuilder : IInstaApiBuilder
@@ -16,7 +16,7 @@ namespace InstagramApiSharp.API.Builder
         private IInstaLogger _logger;
         private ApiRequestMessage _requestMessage;
         private UserSessionData _user;
-
+        private InstaApiVersionType? _apiVersionType;
         private InstaApiBuilder()
         {
         }
@@ -61,7 +61,10 @@ namespace InstagramApiSharp.API.Builder
                 _httpRequestProcessor =
                     new HttpRequestProcessor(_delay, _httpClient, _httpHandler, _requestMessage, _logger);
 
-            var instaApi = new InstaApi(_user, _logger, _device, _httpRequestProcessor);
+            if (_apiVersionType == null)
+                _apiVersionType = InstaApiVersionType.Version44;
+
+            var instaApi = new InstaApi(_user, _logger, _device, _httpRequestProcessor, _apiVersionType.Value);
             return instaApi;
         }
 
@@ -157,7 +160,15 @@ namespace InstagramApiSharp.API.Builder
             _device = androidDevice;
             return this;
         }
-
+        /// <summary>
+        ///     Set instagram api version (for user agent version)
+        /// </summary>
+        /// <param name="apiVersion">Api version</param>
+        public IInstaApiBuilder SetApiVersion(InstaApiVersionType apiVersion)
+        {
+            _apiVersionType = apiVersion;
+            return this;
+        }
         /// <summary>
         ///     Creates the builder.
         /// </summary>

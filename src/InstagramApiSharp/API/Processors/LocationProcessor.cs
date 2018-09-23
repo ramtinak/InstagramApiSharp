@@ -26,9 +26,10 @@ namespace InstagramApiSharp.API.Processors
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
         private readonly InstaApi _instaApi;
+        private readonly HttpHelper _httpHelper;
         public LocationProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
-            UserAuthValidate userAuthValidate, InstaApi instaApi)
+            UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
         {
             _deviceInfo = deviceInfo;
             _user = user;
@@ -36,6 +37,7 @@ namespace InstagramApiSharp.API.Processors
             _logger = logger;
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
+            _httpHelper = httpHelper;
         }
         /// <summary>
         ///     Searches for specific location by provided geo-data or search query.
@@ -70,7 +72,7 @@ namespace InstagramApiSharp.API.Processors
                 if (!Uri.TryCreate(uri, fields.AsQueryString(), out var newuri))
                     return Result.Fail<InstaLocationShortList>("Unable to create uri for location search");
 
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, newuri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, newuri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -100,7 +102,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var uri = _getFeedUriCreator.GetUri(locationId, paginationParameters.NextId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -161,7 +163,7 @@ namespace InstagramApiSharp.API.Processors
                 if (!Uri.TryCreate(uri, fields.AsQueryString(), out var newuri))
                     return Result.Fail<InstaUserSearchLocation>("Unable to create uri for user search by location");
 
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, newuri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, newuri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)

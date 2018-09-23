@@ -25,9 +25,10 @@ namespace InstagramApiSharp.API.Processors
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
         private readonly InstaApi _instaApi;
+        private readonly HttpHelper _httpHelper;
         public StoryProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
-            UserAuthValidate userAuthValidate, InstaApi instaApi)
+            UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
         {
             _deviceInfo = deviceInfo;
             _user = user;
@@ -35,6 +36,7 @@ namespace InstagramApiSharp.API.Processors
             _logger = logger;
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
+            _httpHelper = httpHelper;
         }
         /// <summary>
         ///     Get user story feed (stories from users followed by current user).
@@ -45,7 +47,7 @@ namespace InstagramApiSharp.API.Processors
             try
             { 
                 var storyFeedUri = UriCreator.GetStoryFeedUri();
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, storyFeedUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, storyFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 Debug.WriteLine(json);
@@ -70,7 +72,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userStoryUri = UriCreator.GetUserStoryUri(userId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userStoryUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userStoryUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
@@ -138,7 +140,7 @@ namespace InstagramApiSharp.API.Processors
                     UploaderProgress = upProgress
                 };
                 requestContent.Add(progressContent, "photo", $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
                 request.Content = requestContent;
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -186,7 +188,7 @@ namespace InstagramApiSharp.API.Processors
                     {"configure_mode", 1},
                     {"camera_position", "unknown"}
                 };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode)
@@ -269,7 +271,7 @@ namespace InstagramApiSharp.API.Processors
                         }
                     }
                 };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetStoryMediaInfoUploadUri(), _deviceInfo, videoMediaInfoData);
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetStoryMediaInfoUploadUri(), _deviceInfo, videoMediaInfoData);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -284,7 +286,7 @@ namespace InstagramApiSharp.API.Processors
                     {"media_type", "2"},
                 };
                 var videoUploadParams = JsonConvert.SerializeObject(videoUploadParamsObj);
-                request = HttpHelper.GetDefaultRequest(HttpMethod.Get, videoUri, _deviceInfo);
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Get, videoUri, _deviceInfo);
                 request.Headers.Add("X_FB_VIDEO_WATERFALL_ID", waterfallId);
                 request.Headers.Add("X-Instagram-Rupload-Params", videoUploadParams);
                 response = await _httpRequestProcessor.SendAsync(request);
@@ -305,7 +307,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     UploaderProgress = upProgress
                 };
-                request = HttpHelper.GetDefaultRequest(HttpMethod.Post, videoUri, _deviceInfo);
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Post, videoUri, _deviceInfo);
                 request.Content = progressContent;
                 var vidExt = Path.GetExtension(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4").Replace(".", "").ToLower();
                 if(vidExt == "mov")
@@ -334,7 +336,7 @@ namespace InstagramApiSharp.API.Processors
                     {"image_compression", "{\"lib_name\":\"moz\",\"lib_version\":\"3.1.m\",\"quality\":\"95\"}"},
                 };
                 var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
-                request = HttpHelper.GetDefaultRequest(HttpMethod.Get, photoUri, _deviceInfo);
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Get, photoUri, _deviceInfo);
                 request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
                 request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
                 response = await _httpRequestProcessor.SendAsync(request);
@@ -352,7 +354,7 @@ namespace InstagramApiSharp.API.Processors
                 var imageContent = new ByteArrayContent(imageBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                request = HttpHelper.GetDefaultRequest(HttpMethod.Post, photoUri, _deviceInfo);
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Post, photoUri, _deviceInfo);
                 request.Content = imageContent;
                 request.Headers.Add("X-Entity-Type", "image/jpeg");
                 request.Headers.Add("Offset", "0");
@@ -456,7 +458,7 @@ namespace InstagramApiSharp.API.Processors
                     {"audio_muted", false},
                     {"poster_frame_index", 0},
                 };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var uploadParamsObj = new JObject
                 {
                     {"num_step_auto_retry", 0},
@@ -501,7 +503,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userFeedUri = UriCreator.GetUserReelFeedUri(userId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -530,7 +532,7 @@ namespace InstagramApiSharp.API.Processors
                 if (paginationParameters.MaximumPagesToLoad > 1)
                     throw new Exception("Not supported");
                 var directInboxUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL +$"media/{StoryMediaId}/list_reel_media_viewer/?max_id={paginationParameters.NextId}", UriKind.RelativeOrAbsolute);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -572,7 +574,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                 };
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Add("Host", "i.instagram.com");
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -611,7 +613,7 @@ namespace InstagramApiSharp.API.Processors
                 };
 
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, deleteMediaUri, _deviceInfo, data);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, deleteMediaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -657,7 +659,7 @@ namespace InstagramApiSharp.API.Processors
                     {"reel_media_skipped", new JObject()}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -682,7 +684,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var storyFeedUri = UriCreator.GetHighlightFeedsUri(userId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, storyFeedUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, storyFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -724,7 +726,7 @@ namespace InstagramApiSharp.API.Processors
                 };
 
                 var storyFeedUri = UriCreator.GetHighlightCreateUri();
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, storyFeedUri, _deviceInfo, data);
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, storyFeedUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaHighlightFeed>(response, json);
@@ -781,7 +783,7 @@ namespace InstagramApiSharp.API.Processors
                     data.Add("removed_media_ids", "[]");
                 }
                 var storyFeedUri = UriCreator.GetHighlightEditUri(highlightId);
-                var request = HttpHelper.GetSignedRequest(HttpMethod.Post, storyFeedUri, _deviceInfo, data);
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, storyFeedUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<bool>(response, json);

@@ -25,6 +25,18 @@ namespace InstagramApiSharp.Classes
     /////    "nonce_code": "jygT2JF4dA",
     /////    "status": "ok"
     /////}
+    /////
+    ///// Vase id haei ke na phone set kardan, na email
+    /////
+    /////{
+    /////	"step_name": "submit_phone",
+    /////	"step_data": {
+    /////		"phone_number": "None"
+    /////	},
+    /////	"user_id": 8536818704,
+    /////	"nonce_code": "vAs9yOWHBz",
+    /////	"status": "ok"
+    /////}
     ///// </summary>
     public class ChallengeRequireVerifyMethod
     {
@@ -39,7 +51,9 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("status")]
         public string Status { get; set; }
         [JsonProperty("message")]
-        public string Message { get; set; }
+        internal string Message { get; set; }
+
+        public bool SubmitPhoneRequired => StepName == "submit_phone";
     }
 
     public class ChallengeRequireStepData
@@ -56,6 +70,8 @@ namespace InstagramApiSharp.Classes
         public string Email { get; set; }
         [JsonProperty("phone_number")]
         public string PhoneNumber { get; set; }
+
+        public bool SubmitPhoneRequired => PhoneNumber.ToLower().Contains("none");
     }
 
 }

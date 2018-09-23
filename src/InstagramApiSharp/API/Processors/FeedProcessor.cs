@@ -24,8 +24,9 @@ namespace InstagramApiSharp.API.Processors
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
         private readonly InstaApi _instaApi;
+        private readonly HttpHelper _httpHelper;
         public FeedProcessor(AndroidDevice deviceInfo, UserSessionData user, IHttpRequestProcessor httpRequestProcessor,
-            IInstaLogger logger, UserAuthValidate userAuthValidate, InstaApi instaApi)
+            IInstaLogger logger, UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
         {
             _deviceInfo = deviceInfo;
             _user = user;
@@ -33,6 +34,7 @@ namespace InstagramApiSharp.API.Processors
             _logger = logger;
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
+            _httpHelper = httpHelper;
         }
         /// <summary>
         ///     Get tag feed by tag value asynchronously
@@ -49,7 +51,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userFeedUri = UriCreator.GetTagFeedUri(tag, paginationParameters.NextId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
@@ -96,7 +98,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userFeedUri = UriCreator.GetUserFeedUri(paginationParameters.NextId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
@@ -144,7 +146,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var exploreUri = UriCreator.GetExploreUri(paginationParameters.NextId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, exploreUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, exploreUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
@@ -220,7 +222,7 @@ namespace InstagramApiSharp.API.Processors
         {
             UserAuthValidator.Validate(_userAuthValidate);
             var instaUri = UriCreator.GetUserLikeFeedUri(paginationParameters.NextId);
-            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
@@ -251,7 +253,7 @@ namespace InstagramApiSharp.API.Processors
         private async Task<IResult<InstaRecentActivityResponse>> GetFollowingActivityWithMaxIdAsync(string maxId)
         {
             var uri = UriCreator.GetFollowingRecentActivityUri(maxId);
-            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
@@ -264,7 +266,7 @@ namespace InstagramApiSharp.API.Processors
         private async Task<IResult<InstaActivityFeed>> GetRecentActivityInternalAsync(Uri uri,
             PaginationParameters paginationParameters)
         {
-            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request, HttpCompletionOption.ResponseContentRead);
             var activityFeed = new InstaActivityFeed();
             var json = await response.Content.ReadAsStringAsync();

@@ -23,9 +23,10 @@ namespace InstagramApiSharp.API.Processors
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
         private readonly InstaApi _instaApi;
+        private readonly HttpHelper _httpHelper;
         public HashtagProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
-            UserAuthValidate userAuthValidate, InstaApi instaApi)
+            UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
         {
             _deviceInfo = deviceInfo;
             _user = user;
@@ -33,6 +34,7 @@ namespace InstagramApiSharp.API.Processors
             _logger = logger;
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
+            _httpHelper = httpHelper;
         }
         /// <summary>
         ///     Searches for specific hashtag by search query.
@@ -53,7 +55,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userUri = UriCreator.GetSearchTagUri(query, count, excludeList, rankToken);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -90,7 +92,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userUri = UriCreator.GetTagInfoUri(tagname);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 

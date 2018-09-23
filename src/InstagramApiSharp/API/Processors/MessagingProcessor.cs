@@ -35,9 +35,11 @@ namespace InstagramApiSharp.API.Processors
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
+        private readonly HttpHelper _httpHelper;
         public MessagingProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor,
-            IInstaLogger logger, UserAuthValidate userAuthValidate, InstaApi instaApi)
+            IInstaLogger logger, UserAuthValidate userAuthValidate, InstaApi instaApi,
+            HttpHelper httpHelper)
         {
             _deviceInfo = deviceInfo;
             _user = user;
@@ -45,6 +47,7 @@ namespace InstagramApiSharp.API.Processors
             _logger = logger;
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
+            _httpHelper = httpHelper;
         }
         /// <summary>
         ///     Approve direct pending request
@@ -69,7 +72,7 @@ namespace InstagramApiSharp.API.Processors
                     instaUri = UriCreator.GetApprovePendingMultipleDirectRequestUri();
                     data.Add("thread_ids", threadIds.EncodeList(false));
                 }
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -112,7 +115,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var directInboxUri = UriCreator.GetDirectInboxUri(nextOrCursorId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 //Debug.WriteLine(json);
@@ -140,7 +143,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var directInboxUri = UriCreator.GetDirectInboxThreadUri(threadId, nextOrCursorId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -176,7 +179,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var directInboxUri = UriCreator.GetDirectPendingInboxUri(nextOrCursorId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -204,7 +207,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userUri = UriCreator.GetRankedRecipientsUri();
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -233,7 +236,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userUri = UriCreator.GetRecentRecipientsUri();
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -288,7 +291,7 @@ namespace InstagramApiSharp.API.Processors
                     {"item_id", itemId}
                 };
                 var request =
-                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -323,7 +326,7 @@ namespace InstagramApiSharp.API.Processors
                     {"item_ids", $"[{itemId}]"},
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -355,7 +358,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request =
-                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -443,7 +446,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 };
 
                 var request =
-                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -481,7 +484,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 };
 
                 var request =
-                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -564,7 +567,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request =
-                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -594,7 +597,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             try
             {
                 var directSendMessageUri = UriCreator.GetDirectSendMessageUri();
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, directSendMessageUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, directSendMessageUri, _deviceInfo);
                 var fields = new Dictionary<string, string> { { "text", text } };
                 if (!string.IsNullOrEmpty(recipients))
                     fields.Add("recipient_users", "[[" + recipients + "]]");
@@ -677,7 +680,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             try
             {
                 var instaUri = UriCreator.GetRankRecipientsByUserUri(username);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
 
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -694,7 +697,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     return Result.UnExpectedResponse<InstaDirectInboxThreadList>(response, json);
 
                 instaUri = UriCreator.GetParticipantRecipientUserUri(firstRecipient.Pk);
-                request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
 
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
@@ -709,7 +712,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
 
 
                 instaUri = UriCreator.GetParticipantRecipientUserUri(firstRecipient.Pk);
-                request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
 
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
@@ -751,7 +754,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                 };
                 var request =
-                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 //Debug.WriteLine(json);
@@ -790,7 +793,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     {new StringContent(_user.CsrfToken), "\"_csrftoken\""}
 
                 };
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
                 request.Content = requestContent;
                 request.Headers.Add("Host", "i.instagram.com");
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -826,7 +829,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request =
-                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -860,7 +863,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     {"title", title},
                 };
                 var request =
-                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -891,7 +894,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                 };
                 var request =
-                    HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 //Debug.WriteLine(json);
@@ -928,7 +931,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                         data.Add("thread_ids", threadIds.EncodeList(false));
                     }
                 }
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -984,7 +987,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 };
                 requestContent.Add(progressContent, "photo",
                     $"direct_temp_photo_{ApiRequestMessage.GenerateUploadId()}.jpg");
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
                 request.Content = requestContent;
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();

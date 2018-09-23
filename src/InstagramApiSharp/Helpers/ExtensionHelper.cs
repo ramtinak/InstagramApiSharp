@@ -7,11 +7,12 @@ using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using InstagramApiSharp.Enums;
+using InstagramApiSharp.API.Versions;
 namespace InstagramApiSharp
 {
     internal static class ExtensionHelper
     {
-        public static string GenerateUserAgent(this AndroidDevice deviceInfo)
+        public static string GenerateUserAgent(this AndroidDevice deviceInfo, InstaApiVersion apiVersion)
         {
             if (deviceInfo == null)
                 return InstaApiConstants.USER_AGENT_DEFAULT;
@@ -20,8 +21,8 @@ namespace InstagramApiSharp
 
             return string.Format(InstaApiConstants.USER_AGENT, deviceInfo.Dpi, deviceInfo.Resolution, deviceInfo.HardwareManufacturer,
                 deviceInfo.DeviceModelIdentifier, deviceInfo.FirmwareBrand, deviceInfo.HardwareModel,
-                InstaApiConstants.IG_APP_VERSION, deviceInfo.AndroidVer.APILevel,
-                deviceInfo.AndroidVer.VersionNumber, InstaApiConstants.IG_APP_API_VERSION);
+                apiVersion.AppVersion, deviceInfo.AndroidVer.APILevel,
+                deviceInfo.AndroidVer.VersionNumber, apiVersion.AppApiVersionCode);
         }
         public static string EncodeList(this string[] listOfValues, bool appendQuotation = true)
         {

@@ -2,6 +2,7 @@
 using System.Net;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using System.Collections.Generic;
+using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.Classes
 {
@@ -13,5 +14,6 @@ namespace InstagramApiSharp.Classes
         public bool IsAuthenticated { get; set; }
         public CookieContainer Cookies { get; set; }
         public List<Cookie> RawCookies { get; set; }
+        public InstaApiVersionType? InstaApiVersion { get; set; }
     }
 }

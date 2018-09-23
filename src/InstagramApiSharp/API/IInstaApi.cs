@@ -4,6 +4,8 @@ using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
+using System;
+
 namespace InstagramApiSharp.API
 {
     public interface IInstaApi
@@ -126,6 +128,8 @@ namespace InstagramApiSharp.API
         Task LoadStateDataFromStringAsync(string json);
 
         #region Async Members
+        
+        #region Challenge part
         /// <summary>
         ///     Get challenge require (checkpoint required) options
         /// </summary>
@@ -139,6 +143,14 @@ namespace InstagramApiSharp.API
         /// </summary>
         Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
         /// <summary>
+        ///     Submit phone number for challenge require (checkpoint required)
+        ///     <para>Note: This only needs , when you calling <see cref="IInstaApi.GetChallengeRequireVerifyMethodAsync"/> or
+        ///     <see cref="IInstaApi.ResetChallengeRequireVerifyMethodAsync"/> and
+        ///     <see cref="ChallengeRequireVerifyMethod.SubmitPhoneRequired"/> property is true.</para>
+        /// </summary>
+        /// <param name="phoneNumber">Phone number</param>
+        Task<IResult<ChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync(string phoneNumber);
+        /// <summary>
         ///     Request verification code email for challenge require (checkpoint required)
         /// </summary>
         Task<IResult<ChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync();
@@ -147,6 +159,8 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="verifyCode">Verification code</param>
         Task<IResult<InstaLoginResult>> VerifyCodeForChallengeRequireAsync(string verifyCode);
+        #endregion Challenge part
+
         /// <summary>
         ///     Set cookie and html document to verify login information.
         /// </summary>
@@ -209,7 +223,8 @@ namespace InstagramApiSharp.API
         /// <param name="password">Password</param>
         /// <param name="email">Email</param>
         /// <param name="firstName">First name (optional)</param>
-        Task<IResult<AccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName);        
+        /// <param name="delay">Delay between requests. null = 2.5 seconds</param>
+        Task<IResult<AccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName = "", TimeSpan? delay = null);        
         /// <summary>
         ///     Login using given credentials asynchronously
         /// </summary>

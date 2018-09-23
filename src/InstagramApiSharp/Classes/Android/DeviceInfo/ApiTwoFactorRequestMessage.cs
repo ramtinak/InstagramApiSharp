@@ -1,7 +1,7 @@
 ﻿using InstagramApiSharp.API;
 using InstagramApiSharp.Helpers;
 using Newtonsoft.Json;
-
+using InstagramApiSharp.API.Versions;
 namespace InstagramApiSharp.Classes.Android.DeviceInfo
 {
     internal class ApiTwoFactorRequestMessage
@@ -21,10 +21,10 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         public string two_factor_identifier { get; set; }
 
 
-        internal string GenerateSignature(string signatureKey)
+        internal string GenerateSignature(InstaApiVersion apiVersion, string signatureKey)
         {
             if (string.IsNullOrEmpty(signatureKey))
-                signatureKey = InstaApiConstants.IG_SIGNATURE_KEY;
+                signatureKey = apiVersion.SignatureKey;
             return CryptoHelper.CalculateHash(signatureKey,
                 JsonConvert.SerializeObject(this));
         }

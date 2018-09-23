@@ -24,8 +24,10 @@ namespace InstagramApiSharp.API.Processors
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
+        private readonly HttpHelper _httpHelper;
         public UserProcessor(AndroidDevice deviceInfo, UserSessionData user, IHttpRequestProcessor httpRequestProcessor,
-            IInstaLogger logger, UserAuthValidate userAuthValidate, InstaApi instaApi)
+            IInstaLogger logger, UserAuthValidate userAuthValidate, InstaApi instaApi,
+            HttpHelper httpHelper)
         {
             _deviceInfo = deviceInfo;
             _user = user;
@@ -33,6 +35,7 @@ namespace InstagramApiSharp.API.Processors
             _logger = logger;
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
+            _httpHelper = httpHelper;
         }
         #region public parts
         /// <summary>
@@ -53,7 +56,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -105,7 +108,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_csrftoken", _user.CsrfToken}
                 };
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
                 request.Content = new FormUrlEncodedContent(fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -160,7 +163,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userUri = UriCreator.GetUserFriendshipUri(userId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -185,7 +188,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetFullUserInfoUri(userId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -215,7 +218,7 @@ namespace InstagramApiSharp.API.Processors
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 var instaUri = UriCreator.GetFriendshipPendingRequestsUri(_user.RankToken);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -254,7 +257,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userUri = UriCreator.GetUserUri(username);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
                 request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_TIMEZONE,
                     InstaApiConstants.TIMEZONE_OFFSET.ToString()));
                 request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_COUNT, "1"));
@@ -484,7 +487,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var uri = UriCreator.GetUserTagsUri(userId, _user.RankToken, paginationParameters.NextId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK) return Result.Fail("", (InstaMediaList) null);
@@ -535,7 +538,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -584,7 +587,7 @@ namespace InstagramApiSharp.API.Processors
                     {"radio_type", "wifi-none"}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(json))
@@ -614,7 +617,7 @@ namespace InstagramApiSharp.API.Processors
                     {"radio_type", "wifi-none"}
                 };
                 var request =
-                    HttpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(json))
@@ -634,7 +637,7 @@ namespace InstagramApiSharp.API.Processors
         private async Task<IResult<InstaRecentActivityResponse>> GetFollowingActivityWithMaxIdAsync(string maxId)
         {
             var uri = UriCreator.GetFollowingRecentActivityUri(maxId);
-            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
@@ -647,7 +650,7 @@ namespace InstagramApiSharp.API.Processors
         private async Task<IResult<InstaActivityFeed>> GetRecentActivityInternalAsync(Uri uri,
             PaginationParameters paginationParameters)
         {
-            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request, HttpCompletionOption.ResponseContentRead);
             var activityFeed = new InstaActivityFeed();
             var json = await response.Content.ReadAsStringAsync();
@@ -684,7 +687,7 @@ namespace InstagramApiSharp.API.Processors
         {
             try
             {
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 json.PrintInDebug();
@@ -703,7 +706,7 @@ namespace InstagramApiSharp.API.Processors
 
         private async Task<IResult<InstaUserListShortResponse>> GetUserListByUriAsync(Uri uri)
         {
-            var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
             var response = await _httpRequestProcessor.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
             //Debug.WriteLine(json);
@@ -722,7 +725,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetUserMediaListUri(userId, paginationParameters.NextId);
-                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 //Debug.WriteLine(json);
