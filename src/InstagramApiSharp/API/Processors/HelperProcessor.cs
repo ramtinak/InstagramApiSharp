@@ -59,7 +59,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="isDirectVideo">Direct video</param>
         /// <param name="isDisappearingVideo">Disappearing video</param>
         public async Task<IResult<bool>> SendVideoAsync(Action<InstaUploaderProgress> progress, bool isDirectVideo, bool isDisappearingVideo,string caption, 
-            InstaViewMode viewMode, InstaStoryType storyType,  string recipients, string threadId, InstaVideoUpload video)
+            InstaViewMode viewMode, InstaStoryType storyType,  string recipients, string threadId, InstaVideoUpload video, Uri uri = null)
         {
             var upProgress = new InstaUploaderProgress
             {
@@ -250,7 +250,7 @@ namespace InstagramApiSharp.API.Processors
                     upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
                     progress?.Invoke(upProgress);
                 }
-                return await ConfigureVideo(progress, upProgress, uploadId, isDirectVideo, isDisappearingVideo,caption, viewMode,storyType, recipients, threadId);
+                return await ConfigureVideo(progress, upProgress, uploadId, isDirectVideo, isDisappearingVideo,caption, viewMode,storyType, recipients, threadId, uri);
             }
             catch (Exception exception)
             {
@@ -262,7 +262,7 @@ namespace InstagramApiSharp.API.Processors
         }
 
         private async Task<IResult<bool>> ConfigureVideo(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, string uploadId, bool isDirectVideo, bool isDisappearingVideo, string caption,
-            InstaViewMode viewMode, InstaStoryType storyType, string recipients, string threadId)
+            InstaViewMode viewMode, InstaStoryType storyType, string recipients, string threadId, Uri uri)
         {
             try
             {
@@ -384,7 +384,24 @@ namespace InstagramApiSharp.API.Processors
                                 break;
                         }
 
-
+                        if (uri != null)
+                        {
+                            var webUri = new JArray
+                            {
+                                new JObject
+                                {
+                                    {"webUri", uri.ToString()}
+                                }
+                            };
+                            var storyCta = new JArray
+                            {
+                                new JObject
+                                {
+                                    {"links",  webUri}
+                                }
+                            };
+                            data.Add("story_cta", storyCta.ToString(Formatting.None));
+                        }
                     }
                     instaUri = UriCreator.GetVideoStoryConfigureUri(true);
                     var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);

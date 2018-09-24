@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 
 namespace InstagramApiSharp.API
 {
@@ -67,6 +68,36 @@ namespace InstagramApiSharp.API
         public const string API_VERSION = "/v1";
         public const string BASE_INSTAGRAM_API_URL = INSTAGRAM_URL + API_SUFFIX + "/";
 
+        public static readonly JArray SupportedCapabalities = new JArray
+        {
+            new JObject
+            {
+                {"name","SUPPORTED_SDK_VERSIONS"},
+                {"value","9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0," +
+                    "21.0,22.0,23.0,24.0,25.0,26.0,27.0,28.0,29.0,30.0,31.0,32.0,33.0," +
+                    "34.0,35.0,36.0,37.0,38.0,39.0,40.0,41.0,42.0"}
+            },
+            new JObject
+            {
+                {"name","FACE_TRACKER_VERSION"},
+                {"value","10"}
+            },
+            new JObject
+            {
+                {"name","segmentation"},
+                {"value","segmentation_enabled"}
+            },
+            new JObject
+            {
+                {"name","COMPRESSION"},
+                {"value","ETC2_COMPRESSION"}
+            },
+            new JObject
+            {
+                {"name","WORLD_TRACKER"},
+                {"value","WORLD_TRACKER_ENABLED"}
+            }
+        };
 
         public const string CURRENTUSER = API_SUFFIX + "/accounts/current_user?edit=true";
         public const string SEARCH_TAGS = API_SUFFIX + "/tags/search/?q={0}&count={1}";
@@ -149,6 +180,7 @@ namespace InstagramApiSharp.API
         public const string UNLIKE_MEDIA = API_SUFFIX + "/media/{0}/unlike/";
         public const string MEDIA_COMMENTS = API_SUFFIX + "/media/{0}/comments/?can_support_threading=true";
         public const string MEDIA_INLINE_COMMENTS = API_SUFFIX + "/media/{0}/comments/{1}/inline_child_comments/";
+        public const string MEDIA_VALIDATE_REEL_URL = API_SUFFIX + "/media/validate_reel_url/";
 
         public const string MEDIA_LIKERS = API_SUFFIX + "/media/{0}/likers/";
         public const string FOLLOW_USER = API_SUFFIX + "/friendships/create/{0}/";

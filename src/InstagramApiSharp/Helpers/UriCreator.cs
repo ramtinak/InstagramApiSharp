@@ -1296,6 +1296,11 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for request for consent new user flow.");
             return instaUri;
         }
-
+        public static Uri GetValidateReelLinkAddressUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.MEDIA_VALIDATE_REEL_URL, out var instaUri))
+                throw new Exception("Cant create URI for request for validate reel url");
+            return instaUri;
+        }
     }
 }

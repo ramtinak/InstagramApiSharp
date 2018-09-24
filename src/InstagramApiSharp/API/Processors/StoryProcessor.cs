@@ -50,7 +50,6 @@ namespace InstagramApiSharp.API.Processors
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, storyFeedUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK) return Result.Fail("", (InstaStoryFeed) null);
                 var storyFeedResponse = JsonConvert.DeserializeObject<InstaStoryFeedResponse>(json);
                 var instaStoryFeed = ConvertersFabric.Instance.GetStoryFeedConverter(storyFeedResponse).Convert();
@@ -104,6 +103,30 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="caption">Caption</param>
         public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption)
         {
+            return await UploadStoryPhotoWithUrlAsync(progress, image, caption, null);
+        }
+        /// <summary>
+        ///     Upload story photo with adding link address
+        ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
+        /// </summary>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="uri">Uri to add</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoWithUrlAsync(InstaImage image, string caption, Uri uri)
+        {
+            return await UploadStoryPhotoWithUrlAsync(null, image, caption, uri);
+        }
+        /// <summary>
+        ///     Upload story photo with adding link address (with progress)
+        ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="uri">Uri to add</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoWithUrlAsync(Action<InstaUploaderProgress> progress, InstaImage image, 
+            string caption, Uri uri)
+        {
             UserAuthValidator.Validate(_userAuthValidate);
             var upProgress = new InstaUploaderProgress
             {
@@ -144,10 +167,11 @@ namespace InstagramApiSharp.API.Processors
                 request.Content = requestContent;
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+
                 if (response.IsSuccessStatusCode)
                 {
                     upProgress = progressContent?.UploaderProgress;
-                    return await ConfigureStoryPhotoAsync(progress, upProgress, image, uploadId, caption);
+                    return await ConfigureStoryPhotoAsync(progress, upProgress, image, uploadId, caption, uri);
                 }
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
@@ -167,8 +191,9 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to configure</param>
         /// <param name="uploadId">Upload id</param>
         /// <param name="caption">Caption</param>
+        /// <param name="uri">Uri to add</param>
         private async Task<IResult<InstaStoryMedia>> ConfigureStoryPhotoAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaImage image, string uploadId,
-            string caption)
+            string caption, Uri uri)
         {
             try
             {
@@ -188,6 +213,24 @@ namespace InstagramApiSharp.API.Processors
                     {"configure_mode", 1},
                     {"camera_position", "unknown"}
                 };
+                if (uri != null)
+                {
+                    var webUri = new JArray
+                    {
+                        new JObject
+                        {
+                            {"webUri", uri.ToString()}
+                        }
+                    };
+                    var storyCta = new JArray
+                    {
+                        new JObject
+                        {
+                            {"links",  webUri}
+                        }
+                    };
+                    data.Add("story_cta", storyCta.ToString(Formatting.None));
+                }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -231,6 +274,31 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload</param>
         /// <param name="caption">Caption</param>
         public async Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string caption)
+        {
+            return await UploadStoryVideoWithUrlAsync(progress, video, caption, null);
+        }
+        /// <summary>
+        ///     Upload story video (to self story) with adding link address
+        ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="uri">Uri to add</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryVideoWithUrlAsync(InstaVideoUpload video, string caption, Uri uri)
+        {
+            return await UploadStoryVideoWithUrlAsync(null, video, caption, uri);
+        }
+        /// <summary>
+        ///     Upload story video (to self story) with adding link address (with progress)
+        ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="uri">Uri to add</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryVideoWithUrlAsync(Action<InstaUploaderProgress> progress,
+            InstaVideoUpload video, string caption, Uri uri)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             var upProgress = new InstaUploaderProgress
@@ -370,7 +438,7 @@ namespace InstagramApiSharp.API.Processors
                     upProgress = progressContent?.UploaderProgress;
                     upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
                     progress?.Invoke(upProgress);
-                    return await ConfigureStoryVideoAsync(progress,upProgress, video, uploadId, caption);
+                    return await ConfigureStoryVideoAsync(progress,upProgress, video, uploadId, caption, uri);
                 }
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
@@ -395,6 +463,20 @@ namespace InstagramApiSharp.API.Processors
             return await _instaApi.HelperProcessor.SendVideoAsync(null, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video);
         }
         /// <summary>
+        ///     Upload story video [to self story, to direct threads or both(self and direct)] with adding link address
+        ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
+        /// </summary>
+        /// <param name="video">Video to upload</param>
+        /// <param name="uri">Uri to add</param>
+        /// <param name="storyType">Story type</param>
+        /// <param name="threadIds">Thread ids</param>
+        public async Task<IResult<bool>> UploadStoryVideoWithUrlAsync(InstaVideoUpload video, Uri uri,
+    InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendVideoAsync(null, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video, uri);
+        }
+        /// <summary>
         ///     Upload story video (to self story) with progress
         /// </summary>
         /// <param name="progress">Progress action</param>
@@ -406,13 +488,29 @@ namespace InstagramApiSharp.API.Processors
             return await _instaApi.HelperProcessor.SendVideoAsync(progress, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video);
         }
         /// <summary>
+        ///     Upload story video (to self story) with adding link address (with progress)
+        ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload</param>
+        /// <param name="storyType">Story type</param>
+        /// <param name="threadIds">Thread ids</param>
+        public async Task<IResult<bool>> UploadStoryVideoWithUrlAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, Uri uri,
+InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendVideoAsync(progress, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video, uri);
+        }
+
+        /// <summary>
         ///     Configure story video
         /// </summary>
         /// <param name="video">Video to configure</param>
         /// <param name="uploadId">Upload id</param>
         /// <param name="caption">Caption</param>
+        /// <param name="uri">Uri to add</param>
         private async Task<IResult<InstaStoryMedia>> ConfigureStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaVideoUpload video, string uploadId,
-            string caption)
+            string caption, Uri uri)
         {
             try
             {
@@ -458,6 +556,25 @@ namespace InstagramApiSharp.API.Processors
                     {"audio_muted", false},
                     {"poster_frame_index", 0},
                 };
+                if (uri != null)
+                {
+                    var webUri = new JArray
+                    {
+                        new JObject
+                        {
+                            {"webUri", uri.ToString()}
+                        }
+                    };
+                    var storyCta = new JArray
+                    {
+                        new JObject
+                        {
+                            {"links",  webUri}
+                        }
+                    };
+                    data.Add("story_cta", storyCta.ToString(Formatting.None));
+                }
+
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var uploadParamsObj = new JObject
                 {
@@ -586,7 +703,6 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception exception)
             {
-                Debug.WriteLine(exception.Message);
                 _logger?.LogException(exception);
                 return Result.Fail<InstaSharing>(exception);
             }
@@ -794,6 +910,42 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<bool>(exception.Message);
+            }
+        }
+
+        /// <summary>
+        ///     Validate url for adding to story link
+        /// </summary>
+        /// <param name="url">Url address</param>
+        public async Task<IResult<bool>> ValidateUrlAsync(string url)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (string.IsNullOrEmpty(url))
+                    return Result.Fail("Url cannot be null or empty.", false);
+
+                var instaUri = UriCreator.GetValidateReelLinkAddressUri();
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"url", url},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
             }
         }
     }
