@@ -1123,6 +1123,37 @@ namespace InstagramApiSharp.API
             }
         }
 
+        /// <summary>
+        ///     Set Accept Language
+        /// </summary>
+        /// <param name="LanguageCodeAndCountryCode">Language Code and Country Code. For example: en-US </param>
+        public bool SetAcceptLanguage(string LanguageCodeAndCountryCode)
+        {
+            try
+            {
+                InstaApiConstants.ACCEPT_LANGUAGE = LanguageCodeAndCountryCode;
+                return true;
+            }
+            catch (Exception exception)
+            {
+                return Result.Fail<bool>(exception).Value;
+            }
+        }
+
+        /// <summary>
+        ///     Get Accept Language
+        /// </summary>
+        public string GetAcceptLanguage()
+        {
+            try
+            {
+                return InstaApiConstants.ACCEPT_LANGUAGE;
+            }
+            catch (Exception exception)
+            {
+                return Result.Fail<string>(exception).Value;
+            }
+        }
 
         /// <summary>
         ///     Logout from instagram asynchronously

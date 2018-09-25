@@ -126,9 +126,19 @@ namespace InstagramApiSharp.API
         ///     Set state data from provided json string asynchronously
         /// </summary>
         Task LoadStateDataFromStringAsync(string json);
+        /// <summary>
+        ///     Set Accept Language
+        /// </summary>
+        /// <param name="LanguageCodeAndCountryCode">Language Code and Country Code. For example: en-US </param>
+        bool SetAcceptLanguage(string LanguageCodeAndCountryCode);
+
+        /// <summary>
+        ///     Get Accept Language
+        /// </summary>
+        string GetAcceptLanguage();
 
         #region Async Members
-        
+
         #region Challenge part
         /// <summary>
         ///     Get challenge require (checkpoint required) options
