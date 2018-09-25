@@ -18,5 +18,7 @@ namespace InstagramApiSharp.Classes.Models
         public int Type { get; set; }
 
         public string Pk { get; set; }
+
+        public List<InstaActivityMedia> Medias { get; set; } = new List<InstaActivityMedia>();
     }
 }

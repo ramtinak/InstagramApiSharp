@@ -41,7 +41,13 @@ namespace InstagramApiSharp.Converters
                         ConvertersFabric.Instance.GetUserShortConverter(SourceObject.Args.InlineFollow.UserInfo)
                             .Convert();
             }
-
+            if (SourceObject.Args.Media != null)
+                foreach (var media in SourceObject.Args.Media)
+                    activityStory.Medias.Add(new InstaActivityMedia
+                    {
+                        Id = media.Id,
+                        Image = media.Image
+                    });
             return activityStory;
         }
     }

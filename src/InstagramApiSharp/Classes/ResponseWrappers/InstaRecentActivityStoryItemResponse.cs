@@ -16,5 +16,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("text")] public string Text { get; set; }
 
         [JsonProperty("links")] public List<InstaLinkResponse> Links { get; set; }
+
+        [JsonProperty("media")] public List<InstaActivityMediaResponse> Media { get; set; }
     }
 }
