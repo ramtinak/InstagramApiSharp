@@ -11,7 +11,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty(TypeNameHandling = TypeNameHandling.Auto)]
         public List<InstaMediaItemResponse> Items { get; set; } = new List<InstaMediaItemResponse>();
 
-        [JsonProperty("suggested_users")]
-        public List<InstaUserResponse> SuggestedUsers { get; set; } = new List<InstaUserResponse>();
+        //[JsonProperty("suggested_users")]
+        [JsonIgnore]
+        public List<InstaSuggestionItemResponse> SuggestedUsers { get; set; } = new List<InstaSuggestionItemResponse>();
     }
 }

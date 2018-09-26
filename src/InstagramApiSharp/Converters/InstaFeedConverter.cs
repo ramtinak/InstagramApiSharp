@@ -19,6 +19,15 @@ namespace InstagramApiSharp.Converters
                 var feedItem = ConvertersFabric.Instance.GetSingleMediaConverter(instaUserFeedItemResponse).Convert();
                 feed.Medias.Add(feedItem);
             }
+            foreach (var suggestedItemResponse in SourceObject.SuggestedUsers)
+            {
+                try
+                {
+                    var suggestedItem = ConvertersFabric.Instance.GetSuggestionItemConverter(suggestedItemResponse).Convert();
+                    feed.SuggestedUserItems.Add(suggestedItem);
+                }
+                catch { }
+            }
 
             feed.NextMaxId = SourceObject.NextMaxId;
             return feed;

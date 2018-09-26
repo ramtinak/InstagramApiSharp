@@ -295,6 +295,11 @@ InstaHighlightReelResponse response)
             return new InstaCommentShortConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaSuggestionItem, InstaSuggestionItemResponse> GetSuggestionItemConverter(
+            InstaSuggestionItemResponse response)
+        {
+            return new InstaSuggestionItemConverter { SourceObject = response };
+        }
 
     }
 }
