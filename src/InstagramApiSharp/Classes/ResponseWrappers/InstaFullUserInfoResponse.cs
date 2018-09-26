@@ -25,7 +25,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("reel")]
         public InstaFullUserInfoUserStoryReelResponse Reel { get; set; }
         [JsonProperty("broadcast")]
-        public BroadcastSuggestedResponse Broadcast { get; set; }
+        public InstaBroadcastSuggestedResponse Broadcast { get; set; }
     }
 
     public class InstaFullUserInfoUserFeedResponse

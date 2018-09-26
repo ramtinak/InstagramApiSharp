@@ -37,7 +37,7 @@ namespace InstagramApiSharp.API
         private IMediaProcessor _mediaProcessor;
         private IMessagingProcessor _messagingProcessor;
         private IStoryProcessor _storyProcessor;
-        private TwoFactorLoginInfo _twoFactorInfo;
+        private InstaTwoFactorLoginInfo _twoFactorInfo;
         private InstaChallengeLoginInfo _challengeinfo;
         private UserSessionData _userSession;
         private UserSessionData _user
@@ -180,16 +180,16 @@ namespace InstagramApiSharp.API
         }
         #region Register new account with Phone number and email
         string _waterfallIdReg = "", _deviceIdReg = "", _phoneIdReg = "", _guidReg = "";
-        AccountRegistrationPhoneNumber _signUpPhoneNumberInfo;
+        InstaAccountRegistrationPhoneNumber _signUpPhoneNumberInfo;
         /// <summary>
         ///     Check email availability
         /// </summary>
         /// <param name="email">Email to check</param>
-        public async Task<IResult<CheckEmailRegistration>> CheckEmailAsync(string email)
+        public async Task<IResult<InstaCheckEmailRegistration>> CheckEmailAsync(string email)
         {
             return await CheckEmail(email);
         }
-        private async Task<IResult<CheckEmailRegistration>> CheckEmail(string email, bool useNewWaterfall = true)
+        private async Task<IResult<InstaCheckEmailRegistration>> CheckEmail(string email, bool useNewWaterfall = true)
         {
             try
             {
@@ -217,25 +217,25 @@ namespace InstagramApiSharp.API
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    var obj = JsonConvert.DeserializeObject<CheckEmailRegistration>(json);
+                    var obj = JsonConvert.DeserializeObject<InstaCheckEmailRegistration>(json);
                     if (obj.ErrorType == "fail")
-                        return Result.UnExpectedResponse<CheckEmailRegistration>(response, json);
+                        return Result.UnExpectedResponse<InstaCheckEmailRegistration>(response, json);
                     if (obj.ErrorType == "email_is_taken")
-                        return Result.Fail("Email is taken.", (CheckEmailRegistration)null);
+                        return Result.Fail("Email is taken.", (InstaCheckEmailRegistration)null);
                     if (obj.ErrorType == "invalid_email")
-                        return Result.Fail("Please enter a valid email address.", (CheckEmailRegistration)null);
+                        return Result.Fail("Please enter a valid email address.", (InstaCheckEmailRegistration)null);
 
-                    return Result.UnExpectedResponse<CheckEmailRegistration>(response, json);
+                    return Result.UnExpectedResponse<InstaCheckEmailRegistration>(response, json);
                 }
                 else
                 {
-                    var obj = JsonConvert.DeserializeObject<CheckEmailRegistration>(json);
+                    var obj = JsonConvert.DeserializeObject<InstaCheckEmailRegistration>(json);
                     if(obj.ErrorType == "fail")
-                        return Result.UnExpectedResponse<CheckEmailRegistration>(response, json);
+                        return Result.UnExpectedResponse<InstaCheckEmailRegistration>(response, json);
                     if (obj.ErrorType == "email_is_taken")
-                        return Result.Fail("Email is taken.", (CheckEmailRegistration)null);
+                        return Result.Fail("Email is taken.", (InstaCheckEmailRegistration)null);
                     if (obj.ErrorType == "invalid_email")
-                        return Result.Fail("Please enter a valid email address.", (CheckEmailRegistration)null);
+                        return Result.Fail("Please enter a valid email address.", (InstaCheckEmailRegistration)null);
 
                     return Result.Success(obj);
                 }
@@ -243,7 +243,7 @@ namespace InstagramApiSharp.API
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<CheckEmailRegistration>(exception);
+                return Result.Fail<InstaCheckEmailRegistration>(exception);
             }
         }
         /// <summary>
@@ -291,7 +291,7 @@ namespace InstagramApiSharp.API
         ///     Check username availablity. 
         /// </summary>
         /// <param name="username">Username</param>
-        public async Task<IResult<AccountCheckResponse>> CheckUsernameAsync(string username)
+        public async Task<IResult<InstaAccountCheckResponse>> CheckUsernameAsync(string username)
         {
             try
             {
@@ -304,13 +304,13 @@ namespace InstagramApiSharp.API
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                var obj = JsonConvert.DeserializeObject<AccountCheckResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountCheckResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountCheckResponse>(exception);
+                return Result.Fail<InstaAccountCheckResponse>(exception);
             }
         }
         /// <summary>
@@ -346,11 +346,11 @@ namespace InstagramApiSharp.API
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    var o = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumber>(json);
+                    var o = JsonConvert.DeserializeObject<InstaAccountRegistrationPhoneNumber>(json);
 
                     return Result.UnExpectedResponse<bool>(response, o.Message?.Errors?[0], json);
                 }
-                _signUpPhoneNumberInfo = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumber>(json);
+                _signUpPhoneNumberInfo = JsonConvert.DeserializeObject<InstaAccountRegistrationPhoneNumber>(json);
                 return Result.Success(true);
             }
             catch (Exception exception)
@@ -364,7 +364,7 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
         /// <param name="verificationCode">Verification code</param>
-        public async Task<IResult<PhoneNumberRegistration>> VerifySignUpSmsCodeAsync(string phoneNumber, string verificationCode)
+        public async Task<IResult<InstaPhoneNumberRegistration>> VerifySignUpSmsCodeAsync(string phoneNumber, string verificationCode)
         {
             try
             {
@@ -391,34 +391,34 @@ namespace InstagramApiSharp.API
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    var o = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumberVerifySms>(json);
+                    var o = JsonConvert.DeserializeObject<InstaAccountRegistrationPhoneNumberVerifySms>(json);
 
-                    return Result.Fail(o.Errors?.Nonce?[0], (PhoneNumberRegistration)null);
+                    return Result.Fail(o.Errors?.Nonce?[0], (InstaPhoneNumberRegistration)null);
                 }
 
-                var r = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumberVerifySms>(json);
+                var r = JsonConvert.DeserializeObject<InstaAccountRegistrationPhoneNumberVerifySms>(json);
                 if(r.ErrorType == "invalid_nonce")
-                    return Result.Fail(r.Errors?.Nonce?[0], (PhoneNumberRegistration)null);
+                    return Result.Fail(r.Errors?.Nonce?[0], (InstaPhoneNumberRegistration)null);
 
                 await GetRegistrationStepsAsync();
-                var obj = JsonConvert.DeserializeObject<PhoneNumberRegistration>(json);
+                var obj = JsonConvert.DeserializeObject<InstaPhoneNumberRegistration>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<PhoneNumberRegistration>(exception);
+                return Result.Fail<InstaPhoneNumberRegistration>(exception);
             }
         }
         /// <summary>
         ///     Get username suggestions
         /// </summary>
         /// <param name="name">Name</param>
-        public async Task<IResult<RegistrationSuggestionResponse>> GetUsernameSuggestionsAsync(string name)
+        public async Task<IResult<InstaRegistrationSuggestionResponse>> GetUsernameSuggestionsAsync(string name)
         {
             return await GetUsernameSuggestions(name);
         }
-        public async Task<IResult<RegistrationSuggestionResponse>> GetUsernameSuggestions(string name, bool useNewIds = true)
+        public async Task<IResult<InstaRegistrationSuggestionResponse>> GetUsernameSuggestions(string name, bool useNewIds = true)
         {
             try
             {
@@ -461,18 +461,18 @@ namespace InstagramApiSharp.API
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    var o = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumber>(json);
+                    var o = JsonConvert.DeserializeObject<InstaAccountRegistrationPhoneNumber>(json);
 
-                    return Result.Fail(o.Message?.Errors?[0], (RegistrationSuggestionResponse)null);
+                    return Result.Fail(o.Message?.Errors?[0], (InstaRegistrationSuggestionResponse)null);
                 }
 
-                var obj = JsonConvert.DeserializeObject<RegistrationSuggestionResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaRegistrationSuggestionResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<RegistrationSuggestionResponse>(exception);
+                return Result.Fail<InstaRegistrationSuggestionResponse>(exception);
             }
         }
         /// <summary>
@@ -483,7 +483,7 @@ namespace InstagramApiSharp.API
         /// <param name="username">Username to set</param>
         /// <param name="password">Password to set</param>
         /// <param name="firstName">First name to set</param>
-        public async Task<IResult<AccountCreation>> ValidateNewAccountWithPhoneNumberAsync(string phoneNumber, string verificationCode, string username, string password, string firstName)
+        public async Task<IResult<InstaAccountCreation>> ValidateNewAccountWithPhoneNumberAsync(string phoneNumber, string verificationCode, string username, string password, string firstName)
         {
             try
             {
@@ -494,7 +494,7 @@ namespace InstagramApiSharp.API
                 {
                     var acceptGdpr = await AcceptConsentRequiredAsync(null, phoneNumber);
                     if (!acceptGdpr.Succeeded)
-                        return Result.Fail(acceptGdpr.Info.Message, (AccountCreation)null);
+                        return Result.Fail(acceptGdpr.Info.Message, (InstaAccountCreation)null);
                 }
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
@@ -531,16 +531,16 @@ namespace InstagramApiSharp.API
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    var o = JsonConvert.DeserializeObject<AccountCreationResponse>(json);
+                    var o = JsonConvert.DeserializeObject<InstaAccountCreationResponse>(json);
 
-                    return Result.Fail(o.Errors?.Username?[0], (AccountCreation)null);
+                    return Result.Fail(o.Errors?.Username?[0], (InstaAccountCreation)null);
                 }
 
-                var r = JsonConvert.DeserializeObject<AccountCreationResponse>(json);
+                var r = JsonConvert.DeserializeObject<InstaAccountCreationResponse>(json);
                 if (r.ErrorType == "username_is_taken")
-                    return Result.Fail(r.Errors?.Username?[0], (AccountCreation)null);
+                    return Result.Fail(r.Errors?.Username?[0], (InstaAccountCreation)null);
 
-                var obj = JsonConvert.DeserializeObject<AccountCreation>(json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountCreation>(json);
                 if (obj.AccountCreated && obj.CreatedUser != null)
                     ValidateUserAsync(obj.CreatedUser, csrftoken, true, password);
                 return Result.Success(obj);
@@ -548,7 +548,7 @@ namespace InstagramApiSharp.API
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountCreation>(exception);
+                return Result.Fail<InstaAccountCreation>(exception);
             }
         }
 
@@ -584,18 +584,18 @@ namespace InstagramApiSharp.API
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    var o = JsonConvert.DeserializeObject<AccountRegistrationPhoneNumber>(json);
+                    var o = JsonConvert.DeserializeObject<InstaAccountRegistrationPhoneNumber>(json);
 
-                    return Result.Fail(o.Message?.Errors?[0], (RegistrationSuggestionResponse)null);
+                    return Result.Fail(o.Message?.Errors?[0], (InstaRegistrationSuggestionResponse)null);
                 }
 
-                var obj = JsonConvert.DeserializeObject<RegistrationSuggestionResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaRegistrationSuggestionResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<RegistrationSuggestionResponse>(exception);
+                return Result.Fail<InstaRegistrationSuggestionResponse>(exception);
             }
         }
 
@@ -607,9 +607,9 @@ namespace InstagramApiSharp.API
         /// <param name="email">Email</param>
         /// <param name="firstName">First name (optional)</param>
         /// <param name="delay">Delay between requests. null = 2.5 seconds</param>
-        public async Task<IResult<AccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName = "", TimeSpan? delay = null)
+        public async Task<IResult<InstaAccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName = "", TimeSpan? delay = null)
         {
-            var createResponse = new AccountCreation();
+            var createResponse = new InstaAccountCreation();
             try
             {
                 if (delay == null)
@@ -623,7 +623,7 @@ namespace InstagramApiSharp.API
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 var checkEmail = await CheckEmail(email, false);
                 if (!checkEmail.Succeeded)
-                    return Result.Fail(checkEmail.Info.Message, (AccountCreation)null);
+                    return Result.Fail(checkEmail.Info.Message, (InstaAccountCreation)null);
 
 
                 await Task.Delay((int)delay.Value.TotalMilliseconds);
@@ -631,7 +631,7 @@ namespace InstagramApiSharp.API
                 {
                     var acceptGdpr = await AcceptConsentRequiredAsync(email);
                     if (!acceptGdpr.Succeeded)
-                        return Result.Fail(acceptGdpr.Info.Message, (AccountCreation)null);
+                        return Result.Fail(acceptGdpr.Info.Message, (InstaAccountCreation)null);
                 }
 
                 await Task.Delay((int)delay.Value.TotalMilliseconds);
@@ -676,8 +676,8 @@ namespace InstagramApiSharp.API
                 var json = await response.Content.ReadAsStringAsync();
                 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<AccountCreation>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountCreation>(json);
+                    return Result.UnExpectedResponse<InstaAccountCreation>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountCreation>(json);
                 //{"account_created": false, "errors": {"email": ["Another account is using iranramtin73jokar@live.com."], "username": ["This username isn't available. Please try another."]}, "allow_contacts_sync": true, "status": "ok", "error_type": "email_is_taken, username_is_taken"}
                 //{"message": "feedback_required", "spam": true, "feedback_title": "Signup Error", "feedback_message": "Sorry! There\u2019s a problem signing you up right now. Please try again later. We restrict certain content and actions to protect our community. Tell us if you think we made a mistake.", "feedback_url": "repute/report_problem/instagram_signup/", "feedback_appeal_label": "Report problem", "feedback_ignore_label": "OK", "feedback_action": "report_problem", "status": "fail", "error_type": "signup_block"}
 
@@ -689,7 +689,7 @@ namespace InstagramApiSharp.API
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountCreation>(exception);
+                return Result.Fail<InstaAccountCreation>(exception);
             }
         }
         /// <summary>
@@ -961,12 +961,12 @@ namespace InstagramApiSharp.API
         ///     A null reference if not success; in this case, do LoginAsync first and check if Two Factor Authentication is
         ///     required, if not, don't run this method
         /// </returns>
-        public async Task<IResult<TwoFactorLoginInfo>> GetTwoFactorInfoAsync()
+        public async Task<IResult<InstaTwoFactorLoginInfo>> GetTwoFactorInfoAsync()
         {
             return await Task.Run(() =>
                 _twoFactorInfo != null
                     ? Result.Success(_twoFactorInfo)
-                    : Result.Fail<TwoFactorLoginInfo>("No Two Factor info available."));
+                    : Result.Fail<InstaTwoFactorLoginInfo>("No Two Factor info available."));
         }
 
 
@@ -1188,10 +1188,10 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///     Get challenge require (checkpoint required) options
         /// </summary>
-        public async Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync()
+        public async Task<IResult<InstaChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync()
         {
             if (_challengeinfo == null)
-                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (ChallengeRequireVerifyMethod)null);
+                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (InstaChallengeRequireVerifyMethod)null);
 
             try
             {
@@ -1204,28 +1204,28 @@ namespace InstagramApiSharp.API
                     var msg = "";
                     try
                     {
-                        var j = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
+                        var j = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyMethod>(json);
                         msg = j.Message;
                     }
                     catch { }
-                    return Result.UnExpectedResponse<ChallengeRequireVerifyMethod>(response, json);
+                    return Result.UnExpectedResponse<InstaChallengeRequireVerifyMethod>(response, json);
                 }
 
-                var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
+                var obj = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyMethod>(json);
                 return Result.Success(obj);
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex, (ChallengeRequireVerifyMethod)null);
+                return Result.Fail(ex, (InstaChallengeRequireVerifyMethod)null);
             }
         }
         /// <summary>
         ///     Reset challenge require (checkpoint required) method
         /// </summary>
-        public async Task<IResult<ChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync()
+        public async Task<IResult<InstaChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync()
         {
             if (_challengeinfo == null)
-                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (ChallengeRequireVerifyMethod)null);
+                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (InstaChallengeRequireVerifyMethod)null);
 
             try
             {
@@ -1244,25 +1244,25 @@ namespace InstagramApiSharp.API
                     var msg = "";
                     try
                     {
-                        var j = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
+                        var j = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyMethod>(json);
                         msg = j.Message;
                     }
                     catch { }
-                    return Result.UnExpectedResponse<ChallengeRequireVerifyMethod>(response, json);
+                    return Result.UnExpectedResponse<InstaChallengeRequireVerifyMethod>(response, json);
                 }
 
-                var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyMethod>(json);
+                var obj = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyMethod>(json);
                 return Result.Success(obj);
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex, (ChallengeRequireVerifyMethod)null);
+                return Result.Fail(ex, (InstaChallengeRequireVerifyMethod)null);
             }
         }
         /// <summary>
         ///     Request verification code sms for challenge require (checkpoint required)
         /// </summary>
-        public async Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync()
+        public async Task<IResult<InstaChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync()
         {
             return await RequestVerifyCodeToSMSForChallengeRequire();
         }
@@ -1270,18 +1270,18 @@ namespace InstagramApiSharp.API
         ///     Submit phone number for challenge require (checkpoint required)
         ///     <para>Note: This only needs , when you calling <see cref="IInstaApi.GetChallengeRequireVerifyMethodAsync"/> or
         ///     <see cref="IInstaApi.ResetChallengeRequireVerifyMethodAsync"/> and
-        ///     <see cref="ChallengeRequireVerifyMethod.SubmitPhoneRequired"/> property is true.</para>
+        ///     <see cref="InstaChallengeRequireVerifyMethod.SubmitPhoneRequired"/> property is true.</para>
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        public async Task<IResult<ChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync(string phoneNumber)
+        public async Task<IResult<InstaChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync(string phoneNumber)
         {
             return await RequestVerifyCodeToSMSForChallengeRequire(phoneNumber);
         }
 
-        private async Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequire(string phoneNumber = null)
+        private async Task<IResult<InstaChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequire(string phoneNumber = null)
         {
             if (_challengeinfo == null)
-                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (ChallengeRequireSMSVerify)null);
+                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (InstaChallengeRequireSMSVerify)null);
 
             try
             {
@@ -1307,28 +1307,28 @@ namespace InstagramApiSharp.API
                     var msg = "";
                     try
                     {
-                        var j = JsonConvert.DeserializeObject<ChallengeRequireSMSVerify>(json);
+                        var j = JsonConvert.DeserializeObject<InstaChallengeRequireSMSVerify>(json);
                         msg = j.Message;
                     }
                     catch { }
-                    return Result.Fail(msg, (ChallengeRequireSMSVerify)null);
+                    return Result.Fail(msg, (InstaChallengeRequireSMSVerify)null);
                 }
 
-                var obj = JsonConvert.DeserializeObject<ChallengeRequireSMSVerify>(json);
+                var obj = JsonConvert.DeserializeObject<InstaChallengeRequireSMSVerify>(json);
                 return Result.Success(obj);
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex, (ChallengeRequireSMSVerify)null);
+                return Result.Fail(ex, (InstaChallengeRequireSMSVerify)null);
             }
         }
         /// <summary>
         ///     Request verification code email for challenge require (checkpoint required)
         /// </summary>
-        public async Task<IResult<ChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync()
+        public async Task<IResult<InstaChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync()
         {
             if (_challengeinfo == null)
-                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (ChallengeRequireEmailVerify)null);
+                return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (InstaChallengeRequireEmailVerify)null);
 
             try
             {
@@ -1350,19 +1350,19 @@ namespace InstagramApiSharp.API
                     var msg = "";
                     try
                     {
-                        var j = JsonConvert.DeserializeObject<ChallengeRequireEmailVerify>(json);
+                        var j = JsonConvert.DeserializeObject<InstaChallengeRequireEmailVerify>(json);
                         msg = j.Message;
                     }
                     catch { }
-                    return Result.Fail(msg, (ChallengeRequireEmailVerify)null);
+                    return Result.Fail(msg, (InstaChallengeRequireEmailVerify)null);
                 }
 
-                var obj = JsonConvert.DeserializeObject<ChallengeRequireEmailVerify>(json);
+                var obj = JsonConvert.DeserializeObject<InstaChallengeRequireEmailVerify>(json);
                 return Result.Success(obj);
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex, (ChallengeRequireEmailVerify)null);
+                return Result.Fail(ex, (InstaChallengeRequireEmailVerify)null);
             }
         }
         /// <summary>
@@ -1402,14 +1402,14 @@ namespace InstagramApiSharp.API
                     var msg = "";
                     try
                     {
-                        var j = JsonConvert.DeserializeObject<ChallengeRequireVerifyCode>(json);
+                        var j = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyCode>(json);
                         msg = j.Message;
                     }
                     catch { }
                     return Result.UnExpectedResponse<InstaLoginResult>(response, msg + "\t"+ json);
                 }
 
-                var obj = JsonConvert.DeserializeObject<ChallengeRequireVerifyCode>(json);
+                var obj = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyCode>(json);
                 if (obj != null)
                 {
                     if (obj.LoggedInUser != null)
@@ -1484,7 +1484,7 @@ namespace InstagramApiSharp.API
                     var str = htmlDocument.Substring(htmlDocument.IndexOf(start) + start.Length);
                     str = str.Substring(0, str.IndexOf(end));
                     str = str.Substring(str.IndexOf("=") + 2);
-                    var o = JsonConvert.DeserializeObject<WebBrowserResponse>(str);
+                    var o = JsonConvert.DeserializeObject<InstaWebBrowserResponse>(str);
                     return await SetCookiesAndHtmlForFacebookLogin(o, cookie, facebookLogin);
                 }
                 catch (Exception ex)
@@ -1500,7 +1500,7 @@ namespace InstagramApiSharp.API
         /// <param name="webBrowserResponse">Web browser response object</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        public async Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(WebBrowserResponse webBrowserResponse, string cookie, bool facebookLogin = false)
+        public async Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaWebBrowserResponse webBrowserResponse, string cookie, bool facebookLogin = false)
         {
             if(webBrowserResponse == null)
                 return Result.Fail("", false);
@@ -1557,7 +1557,7 @@ namespace InstagramApiSharp.API
                             request.Headers.Add("Host", "i.instagram.com");
                             var response = await _httpRequestProcessor.SendAsync(request);
                             var json = await response.Content.ReadAsStringAsync();
-                            var obj = JsonConvert.DeserializeObject<FacebookLoginResponse>(json);
+                            var obj = JsonConvert.DeserializeObject<InstaFacebookLoginResponse>(json);
                             _user.FacebookUserId = obj.FbUserId;
                         }
                         catch(Exception)

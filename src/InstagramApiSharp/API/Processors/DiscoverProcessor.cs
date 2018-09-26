@@ -47,7 +47,7 @@ namespace InstagramApiSharp.API.Processors
         /// Get recent searches
         /// </summary>
         /// <returns></returns>
-        public async Task<IResult<DiscoverRecentSearchsResponse>> GetRecentSearchsAsync()
+        public async Task<IResult<InstaDiscoverRecentSearchesResponse>> GetRecentSearchsAsync()
         {
             try
             {
@@ -56,14 +56,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<DiscoverRecentSearchsResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<DiscoverRecentSearchsResponse>(json);
+                    return Result.UnExpectedResponse<InstaDiscoverRecentSearchesResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDiscoverRecentSearchesResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<DiscoverRecentSearchsResponse>(exception);
+                return Result.Fail<InstaDiscoverRecentSearchesResponse>(exception);
             }
         }
         /// <summary>
@@ -100,7 +100,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="searchType">Search type(only blended and users works)</param>
         /// <returns></returns>
-        public async Task<IResult<DiscoverSuggestionResponse>> GetSuggestedSearchesAsync(DiscoverSearchType searchType)
+        public async Task<IResult<InstaDiscoverSuggestionResponse>> GetSuggestedSearchesAsync(DiscoverSearchType searchType)
         {
             try
             {
@@ -110,14 +110,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<DiscoverSuggestionResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<DiscoverSuggestionResponse>(json);
+                    return Result.UnExpectedResponse<InstaDiscoverSuggestionResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDiscoverSuggestionResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<DiscoverSuggestionResponse>(exception);
+                return Result.Fail<InstaDiscoverSuggestionResponse>(exception);
             }
         }
         /// <summary>
@@ -176,14 +176,14 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<DicoverDefaultResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<DicoverDefaultResponse>(json);
+                    return Result.UnExpectedResponse<InstaDefaultResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<DicoverDefaultResponse>(exception);
+                return Result.Fail<InstaDefaultResponse>(exception);
             }
         }
     }

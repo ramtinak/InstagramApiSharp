@@ -13,5 +13,7 @@ namespace InstagramApiSharp.Classes.Models
         public int StickerVersion { get; set; }
 
         public List<InstaReelFeed> Items { get; set; } = new List<InstaReelFeed>();
+
+        public List<InstaBroadcast> Broadcasts { get; set; } = new List<InstaBroadcast>();
     }
 }

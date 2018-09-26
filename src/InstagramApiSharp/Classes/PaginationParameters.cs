@@ -1,4 +1,4 @@
-﻿namespace InstagramApiSharp.Classes
+﻿namespace InstagramApiSharp
 {
     public class PaginationParameters
     {

@@ -537,7 +537,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<bool>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountArchiveStoryResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
                 return Result.Success(false);
@@ -569,7 +569,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<bool>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountArchiveStoryResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
                 return Result.Success(false);
@@ -605,7 +605,7 @@ namespace InstagramApiSharp.API.Processors
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<bool>(response, json);
                 Debug.WriteLine(json);
-                var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountArchiveStoryResponse>(json);
                 //{"reel_auto_archive": "on", "message_prefs": null, "status": "ok"}
                 if (obj.ReelAutoArchive.ToLower() == "on")
                     return Result.Success(true);
@@ -640,7 +640,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<bool>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountArchiveStoryResponse>(json);
                 if(obj.ReelAutoArchive.ToLower() == "off")
                     return Result.Success(true);
                 return Result.Success(false);
@@ -676,7 +676,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<bool>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountArchiveStoryResponse>(json);
                 if (obj.Status.ToLower() == "off")
                     return Result.Success(true);
                 return Result.Success(false);
@@ -710,7 +710,7 @@ namespace InstagramApiSharp.API.Processors
                 Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<bool>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountArchiveStoryResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountArchiveStoryResponse>(json);
                 if (obj.MessagePrefs.ToLower() == "anyone" && repliesType == InstaMessageRepliesType.Everyone)
                     return Result.Success(true);
                 if (obj.MessagePrefs.ToLower() == "following" && repliesType == InstaMessageRepliesType.Following)
@@ -729,7 +729,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Check username availablity. (for logged in user)
         /// </summary>
         /// <param name="desiredUsername">Desired username</param>
-        public async Task<IResult<AccountCheckResponse>> CheckUsernameAsync(string desiredUsername)
+        public async Task<IResult<InstaAccountCheckResponse>> CheckUsernameAsync(string desiredUsername)
         {
             try
             {
@@ -745,14 +745,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<AccountCheckResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountCheckResponse>(json);
+                    return Result.UnExpectedResponse<InstaAccountCheckResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountCheckResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountCheckResponse>(exception);
+                return Result.Fail<InstaAccountCheckResponse>(exception);
             }
         }
         #endregion Story settings
@@ -762,7 +762,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get Security settings (two factor authentication and backup codes).
         /// </summary>
-        public async Task<IResult<AccountSecuritySettingsResponse>> GetSecuritySettingsInfoAsync()
+        public async Task<IResult<InstaAccountSecuritySettingsResponse>> GetSecuritySettingsInfoAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -778,14 +778,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<AccountSecuritySettingsResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountSecuritySettingsResponse>(json);
+                    return Result.UnExpectedResponse<InstaAccountSecuritySettingsResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountSecuritySettingsResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountSecuritySettingsResponse>(exception);
+                return Result.Fail<InstaAccountSecuritySettingsResponse>(exception);
             }
         }
         /// <summary>
@@ -808,7 +808,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<bool>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountCheckResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountCheckResponse>(json);
                 if (obj.Status.ToLower() == "ok")
                     return Result.Success(true);
                 return Result.Success(false);
@@ -823,7 +823,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Send two factor enable sms.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        public async Task<IResult<AccountTwoFactorSmsResponse>> SendTwoFactorEnableSmsAsync(string phoneNumber)
+        public async Task<IResult<InstaAccountTwoFactorSmsResponse>> SendTwoFactorEnableSmsAsync(string phoneNumber)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -841,14 +841,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<AccountTwoFactorSmsResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountTwoFactorSmsResponse>(json);
+                    return Result.UnExpectedResponse<InstaAccountTwoFactorSmsResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountTwoFactorSmsResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountTwoFactorSmsResponse>(exception);
+                return Result.Fail<InstaAccountTwoFactorSmsResponse>(exception);
             }
         }
         /// <summary>
@@ -856,7 +856,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
         /// <param name="verificationCode">Verification code</param>
-        public async Task<IResult<AccountTwoFactorResponse>> TwoFactorEnableAsync(string phoneNumber, string verificationCode)
+        public async Task<IResult<InstaAccountTwoFactorResponse>> TwoFactorEnableAsync(string phoneNumber, string verificationCode)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -875,20 +875,20 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<AccountTwoFactorResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountTwoFactorResponse>(json);
+                    return Result.UnExpectedResponse<InstaAccountTwoFactorResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountTwoFactorResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountTwoFactorResponse>(exception);
+                return Result.Fail<InstaAccountTwoFactorResponse>(exception);
             }
         }
         /// <summary>
         ///     Send confirm email.
         /// </summary>
-        public async Task<IResult<AccountConfirmEmailResponse>> SendConfirmEmailAsync()
+        public async Task<IResult<InstaAccountConfirmEmailResponse>> SendConfirmEmailAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -905,21 +905,21 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<AccountConfirmEmailResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountConfirmEmailResponse>(json);
+                    return Result.UnExpectedResponse<InstaAccountConfirmEmailResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountConfirmEmailResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountConfirmEmailResponse>(exception);
+                return Result.Fail<InstaAccountConfirmEmailResponse>(exception);
             }
         }
         /// <summary>
         ///     Send sms code.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        public async Task<IResult<AccountSendSmsResponse>> SendSmsCodeAsync(string phoneNumber)
+        public async Task<IResult<InstaAccountSendSmsResponse>> SendSmsCodeAsync(string phoneNumber)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -937,14 +937,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<AccountSendSmsResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountSendSmsResponse>(json);
+                    return Result.UnExpectedResponse<InstaAccountSendSmsResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountSendSmsResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountSendSmsResponse>(exception);
+                return Result.Fail<InstaAccountSendSmsResponse>(exception);
             }
         }
         /// <summary>
@@ -952,7 +952,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="phoneNumber">Phone number (ex: +9891234...)</param>
         /// <param name="verificationCode">Verification code</param>
-        public async Task<IResult<AccountVerifySmsResponse>> VerifySmsCodeAsync(string phoneNumber, string verificationCode)
+        public async Task<IResult<InstaAccountVerifySmsResponse>> VerifySmsCodeAsync(string phoneNumber, string verificationCode)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -971,14 +971,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<AccountVerifySmsResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<AccountVerifySmsResponse>(json);
+                    return Result.UnExpectedResponse<InstaAccountVerifySmsResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountVerifySmsResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<AccountVerifySmsResponse>(exception);
+                return Result.Fail<InstaAccountVerifySmsResponse>(exception);
             }
         }
         /// <summary>

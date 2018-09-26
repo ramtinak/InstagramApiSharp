@@ -127,7 +127,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Check username availablity.
         /// </summary>
         /// <param name="desiredUsername">Desired username</param>        
-        Task<IResult<AccountCheckResponse>> CheckUsernameAsync(string desiredUsername);
+        Task<IResult<InstaAccountCheckResponse>> CheckUsernameAsync(string desiredUsername);
         #endregion Story settings
 
         #region two factor authentication enable/disable
@@ -135,7 +135,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get Security settings (two factor authentication and backup codes).
         /// </summary>
-        Task<IResult<AccountSecuritySettingsResponse>> GetSecuritySettingsInfoAsync();
+        Task<IResult<InstaAccountSecuritySettingsResponse>> GetSecuritySettingsInfoAsync();
         /// <summary>
         ///     Disable two factor authentication.
         /// </summary>
@@ -144,28 +144,28 @@ namespace InstagramApiSharp.API.Processors
         ///     Send two factor enable sms.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        Task<IResult<AccountTwoFactorSmsResponse>> SendTwoFactorEnableSmsAsync(string phoneNumber);
+        Task<IResult<InstaAccountTwoFactorSmsResponse>> SendTwoFactorEnableSmsAsync(string phoneNumber);
         /// <summary>
         ///     Verify enable two factor.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
         /// <param name="verificationCode">Verification code</param>
-        Task<IResult<AccountTwoFactorResponse>> TwoFactorEnableAsync(string phoneNumber, string verificationCode);
+        Task<IResult<InstaAccountTwoFactorResponse>> TwoFactorEnableAsync(string phoneNumber, string verificationCode);
         /// <summary>
         ///     Send confirm email.
         /// </summary>
-        Task<IResult<AccountConfirmEmailResponse>> SendConfirmEmailAsync();
+        Task<IResult<InstaAccountConfirmEmailResponse>> SendConfirmEmailAsync();
         /// <summary>
         ///     Send sms code.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        Task<IResult<AccountSendSmsResponse>> SendSmsCodeAsync(string phoneNumber);
+        Task<IResult<InstaAccountSendSmsResponse>> SendSmsCodeAsync(string phoneNumber);
         /// <summary>
         ///     Verify sms code.
         /// </summary>
         /// <param name="phoneNumber">Phone number (ex: +9891234...)</param>
         /// <param name="verificationCode">Verification code</param>
-        Task<IResult<AccountVerifySmsResponse>> VerifySmsCodeAsync(string phoneNumber, string verificationCode);
+        Task<IResult<InstaAccountVerifySmsResponse>> VerifySmsCodeAsync(string phoneNumber, string verificationCode);
         /// <summary>
         ///     Regenerate two factor backup codes
         /// </summary>

@@ -20,7 +20,7 @@ namespace InstagramApiSharp.Classes.Models
     {
         public InstaFullUserInfoUserStoryReel Reel { get; set; }
 
-        public BroadcastSuggestedResponse Broadcast { get; set; }
+        public InstaBroadcastSuggestedResponse Broadcast { get; set; }
     }
 
     public class InstaFullUserInfoUserFeed

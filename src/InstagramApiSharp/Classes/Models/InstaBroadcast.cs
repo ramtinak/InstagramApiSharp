@@ -29,7 +29,7 @@ namespace InstagramApiSharp.Classes.Models
         [JsonProperty("cover_frame_url")]
         public string CoverFrameUrl { get; set; }
         [JsonProperty("broadcast_owner")]
-        public BroadcastUser BroadcastOwner { get; set; }
+        public InstaBroadcastUser BroadcastOwner { get; set; }
         [JsonProperty("published_time")]
         public int PublishedTime { get; set; }
         [JsonProperty("media_id")]
@@ -40,7 +40,7 @@ namespace InstagramApiSharp.Classes.Models
         public string OrganicTrackingToken { get; set; }
     }
 
-    public class BroadcastUser
+    public class InstaBroadcastUser
     {
         [JsonProperty("pk")]
         public long Pk { get; set; }

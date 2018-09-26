@@ -48,7 +48,7 @@ namespace InstagramApiSharp.Helpers
         /// </summary>
         /// <param name="htmlSource"></param>
         /// <returns></returns>
-        public static WebBrowserResponse GetLoggedInUserResponse(string htmlSource)
+        public static InstaWebBrowserResponse GetLoggedInUserResponse(string htmlSource)
         {
             if (string.IsNullOrEmpty(htmlSource) || string.IsNullOrWhiteSpace(htmlSource))
                 return null;
@@ -62,7 +62,7 @@ namespace InstagramApiSharp.Helpers
                     var str = htmlSource.Substring(htmlSource.IndexOf(start) + start.Length);
                     str = str.Substring(0, str.IndexOf(end));
                     str = str.Substring(str.IndexOf("=") + 2);
-                    var obj = JsonConvert.DeserializeObject<WebBrowserResponse>(str);
+                    var obj = JsonConvert.DeserializeObject<InstaWebBrowserResponse>(str);
                     return obj;
                 }
             }

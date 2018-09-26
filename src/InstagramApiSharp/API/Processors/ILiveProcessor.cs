@@ -19,29 +19,29 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        Task<IResult<BroadcastLiveHeartBeatViewerCountResponse>> GetHeartBeatAndViewerCountAsync(string broadcastId);
+        Task<IResult<InstaBroadcastLiveHeartBeatViewerCountResponse>> GetHeartBeatAndViewerCountAsync(string broadcastId);
         /// <summary>
         /// Get final viewer list.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        Task<IResult<BroadcastFinalViewerListResponse>> GetFinalViewerListAsync(string broadcastId);
+        Task<IResult<InstaBroadcastFinalViewerListResponse>> GetFinalViewerListAsync(string broadcastId);
         /// <summary>
         /// Get suggested broadcasts
         /// </summary>
         /// <returns></returns>
-        Task<IResult<BroadcastSuggestedResponse>> GetSuggestedBroadcastsAsync();
+        Task<IResult<InstaBroadcastSuggestedResponse>> GetSuggestedBroadcastsAsync();
         /// <summary>
         /// Get discover top live.
         /// </summary>
         /// <returns></returns>
-        Task<IResult<DiscoverTopLiveResponse>> GetDiscoverTopLiveAsync();
+        Task<IResult<InstaDiscoverTopLiveResponse>> GetDiscoverTopLiveAsync();
         /// <summary>
         /// Get top live status.
         /// </summary>
         /// <param name="broadcastIds">Broadcast ids</param>
         /// <returns></returns>
-        Task<IResult<BroadcastTopLiveStatusResponse>> GetTopLiveStatusAsync(params string[] broadcastIds);
+        Task<IResult<InstaBroadcastTopLiveStatusResponse>> GetTopLiveStatusAsync(params string[] broadcastIds);
         /// <summary>
         /// Get broadcast information.
         /// </summary>
@@ -53,14 +53,14 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        Task<IResult<BroadcastViewerListResponse>> GetViewerListAsync(string broadcastId);
+        Task<IResult<InstaBroadcastViewerListResponse>> GetViewerListAsync(string broadcastId);
         /// <summary>
         /// Get post live viewer list.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="maxId">Max id</param>
         /// <returns></returns>
-        Task<IResult<BroadcastViewerListResponse>> GetPostLiveViewerListAsync(string broadcastId, int? maxId = null);
+        Task<IResult<InstaBroadcastViewerListResponse>> GetPostLiveViewerListAsync(string broadcastId, int? maxId = null);
         /// <summary>
         /// Post a new comment to broadcast.
         /// </summary>
@@ -74,14 +74,14 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId"></param>
         /// <param name="commentId"></param>
         /// <returns></returns>
-        Task<IResult<BroadcastPinUnpinResponse>> PinCommentAsync(string broadcastId,string commentId);
+        Task<IResult<InstaBroadcastPinUnpinResponse>> PinCommentAsync(string broadcastId,string commentId);
         /// <summary>
         /// Unpin comment from broadcast.
         /// </summary>
         /// <param name="broadcastId"></param>
         /// <param name="commentId"></param>
         /// <returns></returns>
-        Task<IResult<BroadcastPinUnpinResponse>> UnPinCommentAsync(string broadcastId, string commentId);
+        Task<IResult<InstaBroadcastPinUnpinResponse>> UnPinCommentAsync(string broadcastId, string commentId);
         /// <summary>
         /// Get broadcast comments.
         /// </summary>
@@ -89,39 +89,39 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="lastCommentTs">Last comment time stamp</param>
         /// <param name="commentsRequested">Comments requested count</param>
         /// <returns></returns>
-        Task<IResult<BroadcastCommentResponse>> GetCommentsAsync(string broadcastId, int lastCommentTs = 0, int commentsRequested = 4);
+        Task<IResult<InstaBroadcastCommentResponse>> GetCommentsAsync(string broadcastId, int lastCommentTs = 0, int commentsRequested = 4);
         /// <summary>
         /// Enable broadcast comments.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        Task<IResult<BroadcastCommentEnableDisableResponse>> EnableCommentsAsync(string broadcastId);
+        Task<IResult<InstaBroadcastCommentEnableDisableResponse>> EnableCommentsAsync(string broadcastId);
         /// <summary>
         /// Disable broadcast comments.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        Task<IResult<BroadcastCommentEnableDisableResponse>> DisableCommentsAsync(string broadcastId);
+        Task<IResult<InstaBroadcastCommentEnableDisableResponse>> DisableCommentsAsync(string broadcastId);
         /// <summary>
         /// Like broadcast.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="likeCount">Like count (from 1 to 6)</param>
         /// <returns></returns>
-        Task<IResult<BroadcastLikeResponse>> LikeAsync(string broadcastId,int likeCount = 1);
+        Task<IResult<InstaBroadcastLikeResponse>> LikeAsync(string broadcastId,int likeCount = 1);
         /// <summary>
         /// Get broadcast like count.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="likeTs">Like time stamp</param>
         /// <returns></returns>
-        Task<IResult<BroadcastLikeResponse>> GetLikeCountAsync(string broadcastId, int likeTs = 0);
+        Task<IResult<InstaBroadcastLikeResponse>> GetLikeCountAsync(string broadcastId, int likeTs = 0);
         /// <summary>
         /// Add an broadcast to post live.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        Task<IResult<BroadcastAddToPostLiveResponse>> AddToPostLiveAsync(string broadcastId);
+        Task<IResult<InstaBroadcastAddToPostLiveResponse>> AddToPostLiveAsync(string broadcastId);
         /// <summary>
         /// Delete an broadcast from post live.
         /// </summary>
@@ -132,7 +132,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Get join requests to current live broadcast
         /// </summary>
         /// <param name="broadcastId">Broadcast</param>
-        Task<IResult<BroadcastFinalViewerListResponse>> GetJoinRequestsAsync(string broadcastId);
+        Task<IResult<InstaBroadcastFinalViewerListResponse>> GetJoinRequestsAsync(string broadcastId);
 
 
 
@@ -144,14 +144,14 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="previewHeight">Preview height</param>
         /// <param name="broadcastMessage">Broadcast start message</param>
         /// <returns></returns>
-        Task<IResult<BroadcastCreateResponse>> CreateAsync(int previewWidth = 720, int previewHeight = 1184, string broadcastMessage = "");
+        Task<IResult<InstaBroadcastCreateResponse>> CreateAsync(int previewWidth = 720, int previewHeight = 1184, string broadcastMessage = "");
         /// <summary>
         /// Start live broadcast. NOTE: YOU MUST CREATE AN BROADCAST FIRST(CreateAsync) AND THEN CALL THIS METHOD. 
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="sendNotifications">Send notifications</param>
         /// <returns></returns>
-        Task<IResult<BroadcastStartResponse>> StartAsync(string broadcastId, bool sendNotifications);
+        Task<IResult<InstaBroadcastStartResponse>> StartAsync(string broadcastId, bool sendNotifications);
         /// <summary>
         /// End live broadcast.
         /// </summary>

@@ -143,27 +143,27 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///     Get challenge require (checkpoint required) options
         /// </summary>
-        Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync();
+        Task<IResult<InstaChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync();
         /// <summary>
         ///     Reset challenge require (checkpoint required) method
         /// </summary>
-        Task<IResult<ChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync();
+        Task<IResult<InstaChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync();
         /// <summary>
         ///     Request verification code sms for challenge require (checkpoint required)
         /// </summary>
-        Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
+        Task<IResult<InstaChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
         /// <summary>
         ///     Submit phone number for challenge require (checkpoint required)
         ///     <para>Note: This only needs , when you calling <see cref="IInstaApi.GetChallengeRequireVerifyMethodAsync"/> or
         ///     <see cref="IInstaApi.ResetChallengeRequireVerifyMethodAsync"/> and
-        ///     <see cref="ChallengeRequireVerifyMethod.SubmitPhoneRequired"/> property is true.</para>
+        ///     <see cref="InstaChallengeRequireVerifyMethod.SubmitPhoneRequired"/> property is true.</para>
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        Task<IResult<ChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync(string phoneNumber);
+        Task<IResult<InstaChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync(string phoneNumber);
         /// <summary>
         ///     Request verification code email for challenge require (checkpoint required)
         /// </summary>
-        Task<IResult<ChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync();
+        Task<IResult<InstaChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync();
         /// <summary>
         ///     Verify verification code for challenge require (checkpoint required)
         /// </summary>
@@ -184,13 +184,13 @@ namespace InstagramApiSharp.API
         /// <param name="webBrowserResponse">Web browser response object</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(WebBrowserResponse webBrowserResponse, string cookies, bool validate = false);
+        Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaWebBrowserResponse webBrowserResponse, string cookies, bool validate = false);
         
         /// <summary>
         ///     Check email availability
         /// </summary>
         /// <param name="email">Email to check</param>
-        Task<IResult<CheckEmailRegistration>> CheckEmailAsync(string email);
+        Task<IResult<InstaCheckEmailRegistration>> CheckEmailAsync(string email);
         /// <summary>
         ///     Check phone number availability
         /// </summary>
@@ -200,7 +200,7 @@ namespace InstagramApiSharp.API
         ///     Check username availablity. 
         /// </summary>
         /// <param name="username">Username</param>
-        Task<IResult<AccountCheckResponse>> CheckUsernameAsync(string username);
+        Task<IResult<InstaAccountCheckResponse>> CheckUsernameAsync(string username);
         /// <summary>
         ///     Send sign up sms code
         /// </summary>
@@ -211,12 +211,12 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
         /// <param name="verificationCode">Verification code</param>
-        Task<IResult<PhoneNumberRegistration>> VerifySignUpSmsCodeAsync(string phoneNumber, string verificationCode);
+        Task<IResult<InstaPhoneNumberRegistration>> VerifySignUpSmsCodeAsync(string phoneNumber, string verificationCode);
         /// <summary>
         ///     Get username suggestions
         /// </summary>
         /// <param name="name">Name</param>
-        Task<IResult<RegistrationSuggestionResponse>> GetUsernameSuggestionsAsync(string name);
+        Task<IResult<InstaRegistrationSuggestionResponse>> GetUsernameSuggestionsAsync(string name);
         /// <summary>
         ///     Validate new account creation with phone number
         /// </summary>
@@ -225,7 +225,7 @@ namespace InstagramApiSharp.API
         /// <param name="username">Username to set</param>
         /// <param name="password">Password to set</param>
         /// <param name="firstName">First name to set</param>
-        Task<IResult<AccountCreation>> ValidateNewAccountWithPhoneNumberAsync(string phoneNumber, string verificationCode, string username, string password, string firstName);
+        Task<IResult<InstaAccountCreation>> ValidateNewAccountWithPhoneNumberAsync(string phoneNumber, string verificationCode, string username, string password, string firstName);
         /// <summary>
         ///     Create a new instagram account
         /// </summary>
@@ -234,7 +234,7 @@ namespace InstagramApiSharp.API
         /// <param name="email">Email</param>
         /// <param name="firstName">First name (optional)</param>
         /// <param name="delay">Delay between requests. null = 2.5 seconds</param>
-        Task<IResult<AccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName = "", TimeSpan? delay = null);        
+        Task<IResult<InstaAccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName = "", TimeSpan? delay = null);        
         /// <summary>
         ///     Login using given credentials asynchronously
         /// </summary>
@@ -268,7 +268,7 @@ namespace InstagramApiSharp.API
         ///     A null reference if not success; in this case, do LoginAsync first and check if Two Factor Authentication is
         ///     required, if not, don't run this method
         /// </returns>
-        Task<IResult<TwoFactorLoginInfo>> GetTwoFactorInfoAsync();
+        Task<IResult<InstaTwoFactorLoginInfo>> GetTwoFactorInfoAsync();
         /// <summary>
         ///     Send recovery code by Username
         /// </summary>

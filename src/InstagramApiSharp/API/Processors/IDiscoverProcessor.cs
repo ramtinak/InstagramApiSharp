@@ -25,7 +25,7 @@ namespace InstagramApiSharp.API.Processors
         /// Get recent searches
         /// </summary>
         /// <returns></returns>
-        Task<IResult<DiscoverRecentSearchsResponse>> GetRecentSearchsAsync();
+        Task<IResult<InstaDiscoverRecentSearchesResponse>> GetRecentSearchsAsync();
         /// <summary>
         /// Clear Recent searches
         /// </summary>
@@ -36,7 +36,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="searchType">Search type(only blended and users works)</param>
         /// <returns></returns>
-        Task<IResult<DiscoverSuggestionResponse>> GetSuggestedSearchesAsync(DiscoverSearchType searchType);
+        Task<IResult<InstaDiscoverSuggestionResponse>> GetSuggestedSearchesAsync(DiscoverSearchType searchType);
         /// <summary>
         /// Search user people
         /// </summary>
