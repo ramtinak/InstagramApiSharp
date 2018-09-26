@@ -48,7 +48,7 @@ namespace InstagramApiSharp.API
         public const string HEADER_IG_CAPABILITIES = "X-IG-Capabilities";
         public const string IG_CONNECTION_TYPE = "WIFI";
         public const string HEADER_IG_CONNECTION_TYPE = "X-IG-Connection-Type";
-        public const string ACCEPT_LANGUAGE = "en-US";
+        public static string ACCEPT_LANGUAGE = "en-US";
         public const string HEADER_ACCEPT_LANGUAGE = "Accept-Language";
         public const string ACCEPT_ENCODING = "gzip, deflate, sdch";
         public const string HEADER_ACCEPT_ENCODING = "gzip, deflate, sdch";
