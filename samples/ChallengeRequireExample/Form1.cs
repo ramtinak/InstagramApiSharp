@@ -26,6 +26,7 @@ using System.Text.RegularExpressions;
 using InstagramApiSharp.Classes.Models;
 using System.Net;
 using System.Net.Sockets;
+using InstagramApiSharp;
 /////////////////////////////////////////////////////////////////////
 ////////////////////// IMPORTANT NOTE ///////////////////////////////
 // Please check wiki pages for more information:
