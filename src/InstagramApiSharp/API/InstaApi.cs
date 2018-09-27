@@ -826,9 +826,8 @@ namespace InstagramApiSharp.API
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
-                if (response.StatusCode != HttpStatusCode.OK) //If the password is correct BUT 2-Factor Authentication is enabled, it will still get a 400 error (bad request)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    //Then check it
                     var loginFailReason = JsonConvert.DeserializeObject<InstaLoginBaseResponse>(json);
 
                     if (loginFailReason.InvalidCredentials)
@@ -1126,12 +1125,15 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///     Set Accept Language
         /// </summary>
-        /// <param name="LanguageCodeAndCountryCode">Language Code and Country Code. For example: en-US </param>
-        public bool SetAcceptLanguage(string LanguageCodeAndCountryCode)
+        /// <param name="languageCodeAndCountryCode">Language Code and Country Code. For example:
+        /// <para>en-US for united states</para>
+        /// <para>fa-IR for IRAN</para>
+        /// </param>
+        public bool SetAcceptLanguage(string languageCodeAndCountryCode)
         {
             try
             {
-                InstaApiConstants.ACCEPT_LANGUAGE = LanguageCodeAndCountryCode;
+                InstaApiConstants.ACCEPT_LANGUAGE = languageCodeAndCountryCode;
                 return true;
             }
             catch (Exception exception)

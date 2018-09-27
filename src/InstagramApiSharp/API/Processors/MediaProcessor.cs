@@ -882,6 +882,39 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<Uri>(exception.Message);
             }
         }
+        /// <summary>
+        ///     Report media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> ReportMediaAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetReportMediaUri(mediaId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"media_id", mediaId},
+                    {"reason", "1"},
+                    {"source_name", "photo_view_profile"},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
 
         private async Task<IResult<bool>> LikeUnlikeMediaInternal(string mediaId, Uri instaUri)
         {

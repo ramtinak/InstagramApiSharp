@@ -129,8 +129,11 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///     Set Accept Language
         /// </summary>
-        /// <param name="LanguageCodeAndCountryCode">Language Code and Country Code. For example: en-US </param>
-        bool SetAcceptLanguage(string LanguageCodeAndCountryCode);
+        /// <param name="languageCodeAndCountryCode">Language Code and Country Code. For example:
+        /// <para>en-US for united states</para>
+        /// <para>fa-IR for IRAN</para>
+        /// </param>
+        bool SetAcceptLanguage(string languageCodeAndCountryCode);
 
         /// <summary>
         ///     Get Accept Language

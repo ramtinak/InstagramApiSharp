@@ -1302,5 +1302,22 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for request for validate reel url");
             return instaUri;
         }
+        public static Uri GetReportMediaUri(string mediaId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_REPORT, mediaId),
+                    out var instaUri))
+                throw new Exception("Cant create URI for report media");
+            return instaUri;
+        }
+        public static Uri GetReportUserUri(long userId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USER_REPORT, userId),
+                    out var instaUri))
+                throw new Exception("Cant create URI for report user");
+            return instaUri;
+        }
+
     }
 }

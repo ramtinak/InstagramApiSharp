@@ -181,6 +181,7 @@ namespace InstagramApiSharp.API
         public const string MEDIA_COMMENTS = API_SUFFIX + "/media/{0}/comments/?can_support_threading=true";
         public const string MEDIA_INLINE_COMMENTS = API_SUFFIX + "/media/{0}/comments/{1}/inline_child_comments/";
         public const string MEDIA_VALIDATE_REEL_URL = API_SUFFIX + "/media/validate_reel_url/";
+        public const string MEDIA_REPORT = API_SUFFIX + "/media/{0}/flag_media/";
 
         public const string MEDIA_LIKERS = API_SUFFIX + "/media/{0}/likers/";
         public const string FOLLOW_USER = API_SUFFIX + "/friendships/create/{0}/";
@@ -248,7 +249,7 @@ namespace InstagramApiSharp.API
         public const string USER_CHECK_USERNAME = API_SUFFIX + "/users/check_username/";
         public const string USER_SEARCH = API_SUFFIX + "/users/search/?timezone_offset={0}&q={1}&count={2}";
         public const string USER_LOOKUP = API_SUFFIX + "/users/lookup/";
-
+        public const string USER_REPORT = API_SUFFIX + "/users/{0}/flag_user/";
 
         public const string FBSEARCH_RECENT_SEARCHES = API_SUFFIX + "/fbsearch/recent_searches/";
         public const string FBSEARCH_CLEAR_SEARCH_HISTORY = API_SUFFIX + "/fbsearch/clear_search_history";

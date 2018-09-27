@@ -529,7 +529,6 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetDenyFriendshipUri(userId);
-                //var instaUri = new Uri($"https://i.instagram.com/api/v1/friendships/ignore/{UserID}/", UriKind.RelativeOrAbsolute);
                 var fields = new Dictionary<string, string>
                 {
                     {"user_id", userId.ToString()},
@@ -571,6 +570,42 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             return await FollowUnfollowUserInternal(userId, UriCreator.GetUnFollowUserUri(userId));
         }
+
+        /// <summary>
+        ///     Report user
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<bool>> ReportUserAsync(long userId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetReportUserUri(userId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"user_id", userId.ToString()},
+                    {"source_name", "profile"},
+                    {"reason", "1"},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"is_spam", "true"}
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
+
         #endregion public parts
 
         #region private parts

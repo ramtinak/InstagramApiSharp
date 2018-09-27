@@ -103,7 +103,10 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="mediaId">media ID</param>
         /// <returns>Share link as Uri</returns>
         Task<IResult<Uri>> GetShareLinkFromMediaIdAsync(string mediaId);
-
-        //Task<IResult<bool>> UploadPhotoAsyncV2(InstaImage image, string caption, InstaLocationShort location = null);
+        /// <summary>
+        ///     Report media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        Task<IResult<bool>> ReportMediaAsync(string mediaId);
     }
 }
