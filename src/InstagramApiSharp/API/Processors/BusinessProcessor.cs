@@ -119,7 +119,48 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMediaInsights>(exception);
             }
         }
+        /// <summary>
+        ///     Get full media insights
+        /// </summary>
+        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier"/>)</param>
+        public async Task<IResult<InstaFullMediaInsights>> GetFullMediaInsightsAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetGraphStatisticsUri(InstaApiConstants.ACCEPT_LANGUAGE, InstaInsightSurfaceType.Post);
 
-
+                var queryParamsData = new JObject
+                {
+                    {"access_token", ""},
+                    {"id", mediaId}
+                };
+                var variables = new JObject
+                {
+                    {"query_params", queryParamsData}
+                };
+                var data = new Dictionary<string, string>
+                {
+                    {"access_token", "undefined"},
+                    {"fb_api_caller_class", "RelayModern"},
+                    {"variables", variables.ToString(Formatting.None)},
+                    {"doc_id", "1527362987318283"}
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaFullMediaInsights>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaFullMediaInsightsRootResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetFullMediaInsightsConverter(obj.Data.Media).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaFullMediaInsights>(exception);
+            }
+        }
     }
 }

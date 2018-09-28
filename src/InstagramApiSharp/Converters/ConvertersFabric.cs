@@ -322,5 +322,16 @@ InstaHighlightReelResponse response)
             return new InstaStatisticsDataPointConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaInsightsDataNode, InstaInsightsDataNodeResponse> GetInsightsDataNodeConverter(
+            InstaInsightsDataNodeResponse response)
+        {
+            return new InstaInsightsDataNodeConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaFullMediaInsights, InstaFullMediaInsightsResponse> GetFullMediaInsightsConverter(
+            InstaFullMediaInsightsResponse response)
+        {
+            return new InstaFullMediaInsightsConverter { SourceObject = response };
+        }
     }
 }
