@@ -229,5 +229,33 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+
+        /// <summary>
+        ///     Get promotable media feeds
+        /// </summary>
+        public async Task<IResult<InstaMediaList>> GetPromotableMediaFeedsAsync()
+        {
+            var mediaList = new InstaMediaList();
+            try
+            {
+                var instaUri = UriCreator.GetPromotableMediaFeedsUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaMediaList>(response, json);
+                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
+                    new InstaMediaListDataConverter());
+
+                mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();
+                mediaList.PageSize = mediaResponse.ResultsCount;
+                return Result.Success(mediaList);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, mediaList);
+            }
+        }
     }
 }

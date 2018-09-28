@@ -161,6 +161,9 @@ namespace InstagramApiSharp.API
         public const string DIRECT_THREAD_HIDE = API_SUFFIX + "/direct_v2/threads/{0}/hide/";
         public const string DIRECT_SHARE = API_SUFFIX + "/direct_share/inbox/";
 
+        public const string FEED_PROMOTABLE_MEDIA = API_SUFFIX + "/feed/promotable_media/";
+
+
         public const string GET_RECENT_ACTIVITY = API_SUFFIX + "/news/inbox/";
         public const string GET_FOLLOWING_RECENT_ACTIVITY = API_SUFFIX + "/news/";
         public const string LIKE_MEDIA = API_SUFFIX + "/media/{0}/like/";

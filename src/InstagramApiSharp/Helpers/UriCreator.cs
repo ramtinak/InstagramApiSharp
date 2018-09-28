@@ -1359,5 +1359,15 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for unstar thread");
             return instaUri;
         }
+        public static Uri GetPromotableMediaFeedsUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FEED_PROMOTABLE_MEDIA,
+                    out var instaUri))
+                throw new Exception("Cant create URI for promotable media feeds");
+            return instaUri;
+        }
+
+
     }
 }

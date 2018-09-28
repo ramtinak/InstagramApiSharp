@@ -43,5 +43,10 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="threadId">Thread id</param>
         Task<IResult<bool>> UnStarDirectThreadAsync(string threadId);
+        /// <summary>
+        ///     Get promotable media feeds
+        /// </summary>
+        Task<IResult<InstaMediaList>> GetPromotableMediaFeedsAsync();
+
     }
 }
