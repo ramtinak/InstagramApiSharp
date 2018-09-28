@@ -1343,5 +1343,21 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for media insights");
             return instaUri;
         }
+        public static Uri GetStarThreadUri(string threadId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_STAR, threadId),
+                    out var instaUri))
+                throw new Exception("Cant create URI for star thread");
+            return instaUri;
+        }
+        public static Uri GetUnStarThreadUri(string threadId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_UNSTAR, threadId),
+                    out var instaUri))
+                throw new Exception("Cant create URI for unstar thread");
+            return instaUri;
+        }
     }
 }

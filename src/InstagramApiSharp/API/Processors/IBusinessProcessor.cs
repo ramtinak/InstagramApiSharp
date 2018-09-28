@@ -33,7 +33,15 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier"/>)</param>
         Task<IResult<InstaFullMediaInsights>> GetFullMediaInsightsAsync(string mediaId);
-
-
+        /// <summary>
+        ///     Star direct thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        Task<IResult<bool>> StarDirectThreadAsync(string threadId);
+        /// <summary>
+        ///     Unstar direct thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        Task<IResult<bool>> UnStarDirectThreadAsync(string threadId);
     }
 }
