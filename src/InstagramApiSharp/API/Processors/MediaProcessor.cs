@@ -468,69 +468,73 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 var imagesUploadIds = new string[images.Length];
                 var index = 0;
-                foreach (var image in images)
+                if (images != null)
                 {
-                    var instaUri = UriCreator.GetUploadPhotoUri();
-                    var uploadId = ApiRequestMessage.GenerateUploadId();
-                    upProgress.UploadId = uploadId;
-                    upProgress.Name = $"[Album] Photo uploading {index}/{images.Length}";
-                    upProgress.UploadState = InstaUploadState.Uploading;
-                    progress?.Invoke(upProgress);
-                    var requestContent = new MultipartFormDataContent(uploadId)
+                    foreach (var image in images)
                     {
-                        {new StringContent(uploadId), "\"upload_id\""},
-                        {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
-                        {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                        var instaUri = UriCreator.GetUploadPhotoUri();
+                        var uploadId = ApiRequestMessage.GenerateUploadId();
+                        upProgress.UploadId = uploadId;
+                        upProgress.Name = $"[Album] Photo uploading {index}/{images.Length}";
+                        upProgress.UploadState = InstaUploadState.Uploading;
+                        progress?.Invoke(upProgress);
+                        var requestContent = new MultipartFormDataContent(uploadId)
                         {
-                            new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
-                            "\"image_compression\""
-                        },
-                        {new StringContent("1"), "\"is_sidecar\""}
-                    };
-                    byte[] fileBytes;
-                    if (image.ImageBytes == null)
-                        fileBytes = File.ReadAllBytes(image.Uri);
-                    else
-                        fileBytes = image.ImageBytes;
-                    var imageContent = new ByteArrayContent(fileBytes);
-                    imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
-                    imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                    var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
-                    {
-                        UploaderProgress = upProgress
-                    };
-                    requestContent.Add(progressContent, "photo",
-                        $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
+                            {new StringContent(uploadId), "\"upload_id\""},
+                            {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                            {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                            {
+                                new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                                "\"image_compression\""
+                            },
+                            {new StringContent("1"), "\"is_sidecar\""}
+                        };
+                        byte[] fileBytes;
+                        if (image.ImageBytes == null)
+                            fileBytes = File.ReadAllBytes(image.Uri);
+                        else
+                            fileBytes = image.ImageBytes;
+                        var imageContent = new ByteArrayContent(fileBytes);
+                        imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                        imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                        var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
+                        {
+                            UploaderProgress = upProgress
+                        };
+                        requestContent.Add(progressContent, "photo",
+                            $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
 
-                    var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                    request.Content = requestContent;
-                    var response = await _httpRequestProcessor.SendAsync(request);
-                    var json = await response.Content.ReadAsStringAsync();
-                    if (response.IsSuccessStatusCode)
-                    {
-                        upProgress = progressContent?.UploaderProgress;
-                        upProgress.UploadState = InstaUploadState.Uploaded;
-                        progress?.Invoke(upProgress);
-                        imagesUploadIds[index++] = uploadId;
-                    }
-                    else
-                    {
-                        upProgress.UploadState = InstaUploadState.Error;
-                        progress?.Invoke(upProgress);
-                        return Result.UnExpectedResponse<InstaMedia>(response, json);
+                        var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                        request.Content = requestContent;
+                        var response = await _httpRequestProcessor.SendAsync(request);
+                        var json = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            upProgress = progressContent?.UploaderProgress;
+                            upProgress.UploadState = InstaUploadState.Uploaded;
+                            progress?.Invoke(upProgress);
+                            imagesUploadIds[index++] = uploadId;
+                        }
+                        else
+                        {
+                            upProgress.UploadState = InstaUploadState.Error;
+                            progress?.Invoke(upProgress);
+                            return Result.UnExpectedResponse<InstaMedia>(response, json);
+                        }
                     }
                 }
 
                 var videosDic = new Dictionary<string, InstaVideo>();
                 var vidIndex = 0;
                 if (videos != null)
+                {
                     foreach (var video in videos)
                     {
                         var instaUri = UriCreator.GetUploadVideoUri();
                         var uploadId = ApiRequestMessage.GenerateUploadId();
                         upProgress.UploadId = uploadId;
                         upProgress.Name = $"[Album] Video uploading {index}/{images.Length}";
-                      
+
                         var requestContent = new MultipartFormDataContent(uploadId)
                         {
                             {new StringContent("0"), "\"upload_media_height\""},
@@ -590,7 +594,7 @@ namespace InstagramApiSharp.API.Processors
                         request.Headers.Add("job", first.Job);
                         response = await _httpRequestProcessor.SendAsync(request);
                         json = await response.Content.ReadAsStringAsync();
-                        
+
                         upProgress = progressContent?.UploaderProgress;
                         upProgress.UploadState = InstaUploadState.UploadingThumbnail;
                         progress?.Invoke(upProgress);
@@ -628,6 +632,7 @@ namespace InstagramApiSharp.API.Processors
                         progress?.Invoke(upProgress);
                         vidIndex++;
                     }
+                }
                 var config = await ConfigureAlbumAsync(progress, upProgress, imagesUploadIds, videosDic, caption, location);
                 return config;
             }
@@ -640,7 +645,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, string[] imagesUploadId, Dictionary<string,InstaVideo> videos, string caption, InstaLocationShort location)
+        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, string[] imagesUploadIds, Dictionary<string,InstaVideo> videos, string caption, InstaLocationShort location)
         {
             try
             {
@@ -650,58 +655,59 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetMediaAlbumConfigureUri();
                 var clientSidecarId = ApiRequestMessage.GenerateUploadId();
                 var childrenArray = new JArray();
-                foreach (var id in imagesUploadId)
-                    childrenArray.Add(new JObject
-                    {
-                        {"timezone_offset", "16200"},
-                        {"source_type", 4},
-                        {"upload_id", id},
-                        {"caption", ""},
-                    });
-
-                foreach (var id in videos)
+                if (imagesUploadIds != null)
                 {
-                    if (id.Value.Width == 0)
-                        id.Value.Width = 640;
-                    if (id.Value.Height == 0)
-                        id.Value.Height = 640;
-                    childrenArray.Add(new JObject
+                    foreach (var id in imagesUploadIds)
+                        childrenArray.Add(new JObject
+                        {
+                            {"timezone_offset", "16200"},
+                            {"source_type", 4},
+                            {"upload_id", id},
+                            {"caption", ""},
+                        });
+                }
+                if (videos != null)
+                {
+                    foreach (var id in videos)
                     {
-                        {"timezone_offset", "16200"},
-                        {"caption", ""},
-                        {"upload_id", id.Key},
-                        {"date_time_original", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fffZ")},
-                        {"source_type", "4"},
+                        childrenArray.Add(new JObject
                         {
-                            "extra", JsonConvert.SerializeObject(new JObject
+                            {"timezone_offset", "16200"},
+                            {"caption", ""},
+                            {"upload_id", id.Key},
+                            {"date_time_original", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fffZ")},
+                            {"source_type", "4"},
                             {
-                                {"source_width", 0},
-                                {"source_height", 0}
-                            })
-                        },
-                        {
-                            "clips", JsonConvert.SerializeObject(new JArray{
-                                new JObject
+                                "extra", JsonConvert.SerializeObject(new JObject
                                 {
-                                    {"length", id.Value.Length},
-                                    {"source_type", "4"},
-                                }
-                            })
-                        },
-                        {
-                            "device", JsonConvert.SerializeObject(new JObject{
-                                {"manufacturer", _deviceInfo.HardwareManufacturer},
-                                {"model", _deviceInfo.DeviceModelIdentifier},
-                                {"android_release", _deviceInfo.AndroidVer.VersionNumber},
-                                {"android_version", _deviceInfo.AndroidVer.APILevel}
-                            })
-                        },
-                        {"length", id.Value.Length},
-                        {"poster_frame_index", 0},
-                        {"audio_muted", false},
-                        {"filter_type", "0"},
-                        {"video_result", "deprecated"},
-                    });
+                                    {"source_width", 0},
+                                    {"source_height", 0}
+                                })
+                            },
+                            {
+                                "clips", JsonConvert.SerializeObject(new JArray{
+                                    new JObject
+                                    {
+                                        {"length", id.Value.Length},
+                                        {"source_type", "4"},
+                                    }
+                                })
+                            },
+                            {
+                                "device", JsonConvert.SerializeObject(new JObject{
+                                    {"manufacturer", _deviceInfo.HardwareManufacturer},
+                                    {"model", _deviceInfo.DeviceModelIdentifier},
+                                    {"android_release", _deviceInfo.AndroidVer.VersionNumber},
+                                    {"android_version", _deviceInfo.AndroidVer.APILevel}
+                                })
+                            },
+                            {"length", id.Value.Length},
+                            {"poster_frame_index", 0},
+                            {"audio_muted", false},
+                            {"filter_type", "0"},
+                            {"video_result", "deprecated"},
+                        });
+                    }
                 }
                 var data = new JObject
                 {
