@@ -218,14 +218,6 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload (no need to set thumbnail)</param>
         /// <param name="recipients">Recipients (user ids/pk)</param>
         Task<IResult<bool>> SendDirectVideoToRecipientsAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, params string[] recipients);
-        [Obsolete("SendNewDirectMessageAsync is deprecated. Use SendDirectTextAsync instead.")]
-        /// <summary>
-        ///     Send new direct message. (use this function, if you didn't send any message to this user before)
-        /// </summary>
-        /// <param name="username">Username to send</param>
-        /// <param name="text">Message text</param>
-        /// <returns>List of threads</returns>
-        Task<IResult<InstaDirectInboxThreadList>> SendNewDirectMessageAsync(string username, string text);
         /// <summary>
         ///     Share media to direct thread
         /// </summary>
