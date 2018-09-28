@@ -6,13 +6,21 @@
  * 
  * IRANIAN DEVELOPERS
  */
+using InstagramApiSharp.Classes;
+using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.Models.Business;
+using InstagramApiSharp.Classes.ResponseWrappers;
+using InstagramApiSharp.Classes.ResponseWrappers.Business;
+using InstagramApiSharp.Enums;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace InstagramApiSharp.API.Processors
 {
     public interface IBusinessProcessor
     {
+        Task<IResult<InstaStatistics>> GetStatisticsAsync();
+        //Task<IResult<object>> GetInsightsAsync(DateTime date);
+
     }
 }

@@ -1318,6 +1318,13 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for report user");
             return instaUri;
         }
-
+        public static Uri GetGraphStatisticsUri(string locale)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GRAPH_QL_STATISTICS, locale),
+                    out var instaUri))
+                throw new Exception("Cant create URI for graph ql statistics");
+            return instaUri;
+        }
     }
 }

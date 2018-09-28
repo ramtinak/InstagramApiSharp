@@ -15,19 +15,10 @@ namespace InstagramApiSharp.API
         public const string HEADER_X_INSTAGRAM_AJAX = "X-Instagram-AJAX";
         public const string HEADER_X_REQUESTED_WITH = "X-Requested-With";
         public const string HEADER_XML_HTTP_REQUEST = "XMLHttpRequest";
-        // / <summary>
-        // /     For 44.0.0.9.93 verison
-        // / </summary>
-        // public const string IG_APP_API_VERSION = "107092322";
-        // / <summary>
-        // /     InstagramApiSharp is based on 44.0.0.9.93 version but user agent is 61.0.0.19.86
-        // / </summary>
-        //public const string IG_APP_VERSION = "61.0.0.19.86";
         public const string USER_AGENT =
             "Instagram {6} Android ({7}/{8}; {0}; {1}; {2}; {3}; {4}; {5}; en_US; {9})";
         public const string USER_AGENT_DEFAULT =
         "Instagram 44.0.0.9.93 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 107092322)";
-        // v35 "Instagram 61.0.0.19.86 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G935F; hero2lte; samsungexynos8890; en_US; 95414346)";
         public const string HEADER_USER_AGENT = "User-Agent";
 
         public const string HEADER_QUERY = "q";
@@ -36,15 +27,9 @@ namespace InstagramApiSharp.API
         public const string HEADER_EXCLUDE_LIST = "exclude_list";
 
         public const string FB_ACCESS_TOKEN = "EAABwzLixnjYBADcFesqNbHwRoDFmpBpEVZB2hcOAhMh1A3gGyxoW82CZBXKUEAYDAfNrA2Ntt4Pf21mXIT5Bv2CYIY3OhWJZCChIxAopXyOYQq4KkZBUsRL3deG7550cL9qiJaPEwlnK9pTQCWSUok5ZBZBNaUyW78eiQeTJCfBOQxYbjNG8CU";
-        //public const string
-        //    IG_SIGNATURE_KEY =
-        //      "25f955cc0c8f080a0592aa1fd2572d60afacd5f3c03090cf47ca409068b0d2e1";
-        // //v35 "be01114435207c0a0b11a5cf68faeb82ec4eee37c52e8429af5fff6b54b80b28";
-
         public const string HEADER_IG_SIGNATURE = "signed_body";
         public const string IG_SIGNATURE_KEY_VERSION = "4";
         public const string HEADER_IG_SIGNATURE_KEY_VERSION = "ig_sig_key_version";
-        //public const string IG_CAPABILITIES = "3brTPw==";//v35 "3brTBw==";
         public const string HEADER_IG_CAPABILITIES = "X-IG-Capabilities";
         public const string IG_CONNECTION_TYPE = "WIFI";
         public const string HEADER_IG_CONNECTION_TYPE = "X-IG-Connection-Type";
@@ -52,12 +37,12 @@ namespace InstagramApiSharp.API
         public const string HEADER_ACCEPT_LANGUAGE = "Accept-Language";
         public const string ACCEPT_ENCODING = "gzip, deflate, sdch";
         public const string HEADER_ACCEPT_ENCODING = "gzip, deflate, sdch";
-        public const string TIMEZONE = "Pacific/Auckland";
+        public const string TIMEZONE = "Asia/Tehran";
         public const string HEADER_PHONE_ID = "phone_id";
         public const string HEADER_TIMEZONE = "timezone_offset";
         public const string HEADER_XGOOGLE_AD_IDE = "X-Google-AD-ID";
         public const string HEADER_IG_APP_ID = "X-IG-App-ID";
-        public const string IG_APP_ID = "567067343352427";//567067343352427
+        public const string IG_APP_ID = "567067343352427";
 
         public const string COMMENT_BREADCRUMB_KEY = "iN4$aGr0m";
         public const int TIMEZONE_OFFSET = 16200;
@@ -439,6 +424,8 @@ namespace InstagramApiSharp.API
 
         public const string CONSENT_NEW_USER_FLOW = API_SUFFIX + "/consent/new_user_flow/";
         public const string CONSENT_NEW_USER_FLOW_BEGINS = API_SUFFIX + "/consent/new_user_flow_begins/";
+        //Statistics
+        public const string GRAPH_QL_STATISTICS = API_SUFFIX + "/ads/graphql/?locale={0}&vc_policy=insights_policy&surface=account";
 
         public static readonly Uri BaseInstagramUri = new Uri(BASE_INSTAGRAM_API_URL);
     }

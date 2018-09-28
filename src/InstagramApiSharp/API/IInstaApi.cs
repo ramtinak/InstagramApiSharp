@@ -69,7 +69,11 @@ namespace InstagramApiSharp.API
         ///     Instagram TV api functions
         /// </summary>
         ITVProcessor TVProcessor { get; }
-
+        /// <summary>
+        ///     Business api functions
+        ///     <para>Note: All functions of this interface only works with business accounts!</para>
+        /// </summary>
+        IBusinessProcessor BusinessProcessor { get; }
         #endregion
 
 

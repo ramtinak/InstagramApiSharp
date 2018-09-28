@@ -23,6 +23,9 @@ using InstagramApiSharp.Classes.Models;
 using System.Net;
 using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Enums;
+using InstagramApiSharp.Classes.ResponseWrappers.Business;
+using InstagramApiSharp.Classes.Models.Business;
+
 namespace InstagramApiSharp.API.Processors
 {
     internal class BusinessProcessor : IBusinessProcessor
@@ -48,6 +51,47 @@ namespace InstagramApiSharp.API.Processors
             _httpHelper = httpHelper;
         }
         #endregion Properties and constructor
+
+        public async Task<IResult<InstaStatistics>> GetStatisticsAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetGraphStatisticsUri(InstaApiConstants.ACCEPT_LANGUAGE);
+                var queryParamsData = new JObject
+                {
+                    {"access_token", ""},
+                    {"id", _user.LoggedInUser.Pk.ToString()}
+                };
+                var variables = new JObject
+                {
+                    {"query_params", queryParamsData},
+                    {"timezone", InstaApiConstants.TIMEZONE}
+                };
+                var data = new Dictionary<string, string>
+                {
+                    {"access_token", "undefined"},
+                    {"fb_api_caller_class", "RelayModern"},
+                    {"variables", variables.ToString(Formatting.None)},
+                    {"doc_id", "1618080801573402"}
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaStatistics>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaStatisticsRootResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetStatisticsConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaStatistics>(exception);
+            }
+        }
+
 
     }
 }

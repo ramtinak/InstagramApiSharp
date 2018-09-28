@@ -37,6 +37,14 @@ namespace InstagramApiSharp.API
         private IMediaProcessor _mediaProcessor;
         private IMessagingProcessor _messagingProcessor;
         private IStoryProcessor _storyProcessor;
+        private IUserProcessor _userProcessor;
+        private ILiveProcessor _liveProcessor;
+        private IDiscoverProcessor _discoverProcessor;
+        private IAccountProcessor _accountProcessor;
+        ITVProcessor _tvProcessor;
+        HelperProcessor _helperProcessor;
+        IBusinessProcessor _businessProcessor;
+
         private InstaTwoFactorLoginInfo _twoFactorInfo;
         private InstaChallengeLoginInfo _challengeinfo;
         private UserSessionData _userSession;
@@ -46,21 +54,15 @@ namespace InstagramApiSharp.API
             set { _userSession = value; _userAuthValidate.User = value; }
         }
         private UserAuthValidate _userAuthValidate;
-        private IUserProcessor _userProcessor;
 
-        private ILiveProcessor _liveProcessor;
         /// <summary>
         ///     Live api functions.
         /// </summary>
         public ILiveProcessor LiveProcessor => _liveProcessor;
-
-        private IDiscoverProcessor _discoverProcessor;
         /// <summary>
         ///     Discover api functions.
         /// </summary>
         public IDiscoverProcessor DiscoverProcessor => _discoverProcessor;
-
-        private IAccountProcessor _accountProcessor;
         /// <summary>
         ///     Account api functions.
         /// </summary>
@@ -101,18 +103,19 @@ namespace InstagramApiSharp.API
         ///     User api functions.
         /// </summary>
         public IUserProcessor UserProcessor => _userProcessor;
-
-        HelperProcessor _helperProcessor;
         /// <summary>
         ///     Helper processor for other processors
         /// </summary>
         internal HelperProcessor HelperProcessor => _helperProcessor;
-
-        ITVProcessor _tvProcessor;
         /// <summary>
         ///     Instagram TV api functions
         /// </summary>
         public ITVProcessor TVProcessor => _tvProcessor;
+        /// <summary>
+        ///     Business api functions
+        ///     <para>Note: All functions of this interface only works with business accounts!</para>
+        /// </summary>
+        public IBusinessProcessor BusinessProcessor => _businessProcessor;
 
         public InstaApi(UserSessionData user, IInstaLogger logger, AndroidDevice deviceInfo,
             IHttpRequestProcessor httpRequestProcessor, InstaApiVersionType apiVersionType)
@@ -1774,6 +1777,7 @@ namespace InstagramApiSharp.API
             _accountProcessor = new AccountProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
             _helperProcessor = new HelperProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
             _tvProcessor = new TVProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
+            _businessProcessor = new BusinessProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
 
 
         }

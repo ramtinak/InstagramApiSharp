@@ -1,6 +1,9 @@
 ﻿using System;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.Models.Business;
 using InstagramApiSharp.Classes.ResponseWrappers;
+using InstagramApiSharp.Classes.ResponseWrappers.Business;
+using InstagramApiSharp.Converters.Business;
 
 namespace InstagramApiSharp.Converters
 {
@@ -279,13 +282,13 @@ InstaHighlightReelResponse response)
         }
 
         public IObjectConverter<InstaInlineCommentList, InstaInlineCommentListResponse> GetInlineCommentsConverter(
-    InstaInlineCommentListResponse response)
+            InstaInlineCommentListResponse response)
         {
             return new InstaInlineCommentListConverter { SourceObject = response };
         }
 
         public IObjectConverter<InstaFullUserInfo, InstaFullUserInfoResponse> GetFullUserInfoConverter(
-    InstaFullUserInfoResponse response)
+            InstaFullUserInfoResponse response)
         {
             return new InstaFullUserInfoConverter { SourceObject = response };
         }
@@ -299,6 +302,24 @@ InstaHighlightReelResponse response)
             InstaSuggestionItemResponse response)
         {
             return new InstaSuggestionItemConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaStatistics, InstaStatisticsRootResponse> GetStatisticsConverter(
+            InstaStatisticsRootResponse response)
+        {
+            return new InstaStatisticsConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaMediaShort, InstaMediaShortResponse> GetMediaShortConverter(
+            InstaMediaShortResponse response)
+        {
+            return new InstaMediaShortConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaStatisticsDataPointItem, InstaStatisticsDataPointItemResponse> GetStatisticsDataPointConverter(
+            InstaStatisticsDataPointItemResponse response)
+        {
+            return new InstaStatisticsDataPointConverter { SourceObject = response };
         }
 
     }
