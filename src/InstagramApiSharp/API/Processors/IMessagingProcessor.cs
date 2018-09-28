@@ -70,6 +70,13 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadId">Thread id</param>
         /// <param name="itemId">Item id (message id)</param>
         Task<IResult<bool>> LikeThreadMessageAsync(string threadId, string itemId);
+        
+        /// <summary>
+        ///     UnLike direct message in a thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="itemId">Item id (message id)</param>
+        Task<IResult<bool>> UnLikeThreadMessageAsync(string threadId, string itemId);
 
         /// <summary>
         ///     Mark direct message as seen

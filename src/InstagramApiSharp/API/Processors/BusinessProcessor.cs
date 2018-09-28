@@ -102,7 +102,7 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetMediaInsightsUri(mediaPk);
+                var instaUri = UriCreator.GetMediaSingleInsightsUri(mediaPk);
                 var request =
                     _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -162,5 +162,6 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaFullMediaInsights>(exception);
             }
         }
+
     }
 }

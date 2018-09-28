@@ -1193,7 +1193,7 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for user search by location");
             return instaUri;
         }
-        public static Uri GetLikeDirectMessageUri()
+        public static Uri GetLikeUnlikeDirectMessageUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_REACTION, out var instaUri))
                 throw new Exception("Cant create URI for like direct message");
@@ -1326,11 +1326,19 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for graph ql statistics");
             return instaUri;
         }
-        public static Uri GetMediaInsightsUri(string mediaPk)
+        public static Uri GetMediaSingleInsightsUri(string mediaPk)
         {
             if (
-                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.INSIGHTS_MEDIA, mediaPk, 
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.INSIGHTS_MEDIA_SINGLE, mediaPk, 
                 InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION),
+                    out var instaUri))
+                throw new Exception("Cant create URI for single media insights");
+            return instaUri;
+        }
+        public static Uri GetMediaInsightsUri(string unixTime)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.INSIGHTS_MEDIA, unixTime),
                     out var instaUri))
                 throw new Exception("Cant create URI for media insights");
             return instaUri;

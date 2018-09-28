@@ -263,20 +263,8 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetLikeDirectMessageUri();
-                //item_type=reaction&reaction_type=like&action=send_item&thread_ids=[340282366841710300949128132202173515958]&client_context=95ffd205-3764-49ac-9529-98b0b5843259&_csrftoken=hbBLcOgXuVNDEOD180DwiaMrcdRUgKmm&_uuid=6324ecb2-e663-4dc8-a3a1-289c699cc876&node_type=item&reaction_status=created&item_id=28340859537572358811808588978192384
+                var instaUri = UriCreator.GetLikeUnlikeDirectMessageUri();
 
-
-                //item_type=reaction&
-                //reaction_type=like&
-                //action=send_item&
-                //thread_ids=[340282366841710300949128132202173515958]&
-                //client_context=95ffd205-3764-49ac-9529-98b0b5843259&
-                //_csrftoken=hbBLcOgXuVNDEOD180DwiaMrcdRUgKmm&
-                //_uuid=6324ecb2-e663-4dc8-a3a1-289c699cc876&
-                //node_type=item&
-                //reaction_status=created&
-                //item_id=28340859537572358811808588978192384
                 var data = new Dictionary<string, string>
                 {
                     {"item_type", "reaction"},
@@ -305,7 +293,46 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+        /// <summary>
+        ///     UnLike direct message in a thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="itemId">Item id (message id)</param>
+        public async Task<IResult<bool>> UnLikeThreadMessageAsync(string threadId, string itemId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetLikeUnlikeDirectMessageUri();
 
+                var data = new Dictionary<string, string>
+                {
+                    {"item_type", "reaction"},
+                    {"reaction_type", "like"},
+                    {"action", "send_item"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"thread_ids", $"[{threadId}]"},
+                    {"client_context", Guid.NewGuid().ToString()},
+                    {"node_type", "item"},
+                    {"reaction_status", "deleted"},
+                    {"item_id", itemId}
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
         /// <summary>
         ///     Mark direct message as seen
         /// </summary>
