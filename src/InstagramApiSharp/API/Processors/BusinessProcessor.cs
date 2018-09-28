@@ -51,7 +51,9 @@ namespace InstagramApiSharp.API.Processors
             _httpHelper = httpHelper;
         }
         #endregion Properties and constructor
-
+        /// <summary>
+        ///     Get statistics of current account
+        /// </summary>
         public async Task<IResult<InstaStatistics>> GetStatisticsAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -89,6 +91,32 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaStatistics>(exception);
+            }
+        }
+        /// <summary>
+        ///     Get media insights
+        /// </summary>
+        /// <param name="mediaPk">Media PK (<see cref="InstaMedia.Pk"/>)</param>
+        public async Task<IResult<InstaMediaInsights>> GetMediaInsightsAsync(string mediaPk)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetMediaInsightsUri(mediaPk);
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaMediaInsights>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaMediaInsightsContainer>(json);
+                return Result.Success(obj.MediaOrganicInsights);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMediaInsights>(exception);
             }
         }
 

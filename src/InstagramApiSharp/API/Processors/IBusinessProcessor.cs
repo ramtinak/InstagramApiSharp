@@ -19,8 +19,15 @@ namespace InstagramApiSharp.API.Processors
 {
     public interface IBusinessProcessor
     {
+        /// <summary>
+        ///     Get statistics of current account
+        /// </summary>
         Task<IResult<InstaStatistics>> GetStatisticsAsync();
-        //Task<IResult<object>> GetInsightsAsync(DateTime date);
+        /// <summary>
+        ///     Get media insight
+        /// </summary>
+        /// <param name="mediaPk">Media PK (<see cref="InstaMedia.Pk"/>)</param>
+        Task<IResult<InstaMediaInsights>> GetMediaInsightsAsync(string mediaPk);
 
     }
 }

@@ -425,7 +425,8 @@ namespace InstagramApiSharp.API
         public const string CONSENT_NEW_USER_FLOW = API_SUFFIX + "/consent/new_user_flow/";
         public const string CONSENT_NEW_USER_FLOW_BEGINS = API_SUFFIX + "/consent/new_user_flow_begins/";
         //Statistics
-        public const string GRAPH_QL_STATISTICS = API_SUFFIX + "/ads/graphql/?locale={0}&vc_policy=insights_policy&surface=account";
+        public const string GRAPH_QL_STATISTICS = API_SUFFIX + "/ads/graphql/?locale={0}&vc_policy=insights_policy&surface={1}";
+        public const string INSIGHTS_MEDIA = API_SUFFIX + "/insights/media_organic_insights/{0}?{1}={2}";
 
         public static readonly Uri BaseInstagramUri = new Uri(BASE_INSTAGRAM_API_URL);
     }
