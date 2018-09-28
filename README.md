@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.1.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.2.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -74,6 +74,15 @@ Task<IResult<object>>
 Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.2.0
+- [Bugfix] for [#55](https://github.com/ramtinak/InstagramApiSharp/issues/55) and add some properties to InstaFeed
+- [Bugfix] for [#53](https://github.com/ramtinak/InstagramApiSharp/issues/53) and add some properties to InstaRecentActivityFeed
+- [Add] Set accept language to InstaApi (thx to [@Lorymi](https://github.com/Lorymi) )
+- [Cleanup] and code refactoring some classes
+- [Add] Report media to MediaProcessor
+- [Add] Report user to UserProcessor
+- [Add] Business support to IInstaApi.BusinessProcessor
+
 v1.1.1.1
 - [Add] upload story with link address(story cta) to StoryProcessor (only works for verified accounts or accounts with more than 10k followers)
 
@@ -114,33 +123,6 @@ v1.1.0.7
 v1.1.0.5
 - [Add] Progress changed action to every uploading functions(media, story, direct)
 - [Bugfix] for random android version (thx to [@aspmaker](https://github.com/aspmaker) )
-
-v1.1.0.2
-- [Add] ShareMediaToThreadAsync to MessagingProcessor
-- [Add] GetFullUserInfoAsync to UserProcessor
-- [Add] 1 new device to AndroidDevices
-- [Cleanup] some classes
-
-v1.1.0.1
-- [Change] SendDirectMessageAsync to SendDirectTextAsync
-- [Fix] SendDirectTextAsync issue
-- [Add] DeleteMultipleCommentsAsync to CommentProcessor
-- [Add] Like/Unlike comment to CommentProcessor
-- [Update] GetMediaCommentsAsync in CommentProcessor
-- [Add] Pagination support to GetMediaRepliesCommentsAsync
-- [Wiki Update] for [Direct messaging page](https://github.com/ramtinak/InstagramApiSharp/wiki/Direct-messaging) 
-
-v1.1.0.0
-- [Add] UploadVideoAsync to TVProcessor
-- [Change] User agent to v61.0.0.19.86 for supporting new apis
-- [Add] Support FelixShare (igtv shared video) in direct threads
-- [Add] Some new properties to direct threads (new api)
-- [Add] Some new properties to InstaUserInfo
-- [Update] InstaCurrentUser.Gender to InstaGenderType
-- [Add] Some new properties to InstaMedia
-- [Add] Some new properties to InstaStory
-- [Update] InstaTagFeed class
-- [Bugfix] for GetMediaRepliesCommentsAsync in CommentProcessor
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 

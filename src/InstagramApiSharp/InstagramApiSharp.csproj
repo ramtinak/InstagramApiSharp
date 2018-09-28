@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452;uap10.0</TargetFrameworks>
-    <VersionPrefix>1.1.1</VersionPrefix>
+    <VersionPrefix>1.1.2</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.1.1</Version>
-    <AssemblyVersion>1.1.1.1</AssemblyVersion>
-    <FileVersion>1.1.1.1</FileVersion>
+    <Version>1.1.2.0</Version>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2.0</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -36,7 +36,16 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.1.1
+    <PackageReleaseNotes>v1.1.2.0
+- [Bugfix] for #55 and add some properties to InstaFeed
+- [Bugfix] for #53 and add some properties to InstaRecentActivityFeed
+- [Add] Set accept language to InstaApi (thx to @Lorymi )
+- [Cleanup] and code refactoring some classes
+- [Add] Report media to MediaProcessor
+- [Add] Report user to UserProcessor
+- [Add] Business support to IInstaApi.BusinessProcessor
+
+v1.1.1.1
 - [Add] upload story with link address (story cta) to StoryProcessor (only works for verified accounts or accounts with more than 10k followers)
 
 v1.1.1.0
