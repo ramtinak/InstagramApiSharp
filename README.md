@@ -143,8 +143,8 @@ Do whatever you want to do! Except changing library name!!!!
 
 ## Terms and conditions
 - Use this Api at your own risk.
-- By using this api in your app, you agreed [Instagram Policy](https://www.instagram.com/about/legal/terms/api/).
-- Please don't use this library for sending spam or massive direct messages.
+
+
 
 ## Donation
 No need to donate.
