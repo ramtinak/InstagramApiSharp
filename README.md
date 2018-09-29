@@ -147,8 +147,8 @@ Do whatever you want to do! Except changing library name!!!!
 - Please don't use this library for sending spam or massive direct messages.
 
 ## Donation
-If you in Iran, feel free to donate:
-https://zarinp.al/@ramtin
+No need to donate.
+
 
 ## Contribute
 Feel free to contribute and submit pull requests.
@@ -164,7 +164,7 @@ This code is in no way affiliated with, authorized, maintained, sponsored or end
 
 | Name | Github | Email | Telegram | Instagram |
 | ------ | ------ | ------ | ------ | ------ |
-| Ramtin Jokar | [@Ramtinak](https://github.com/ramtinak) | [Ramtinak@live.com](mailto:ramtinak@live.com) | https://t.me/Ramtinak | https://instagram.com/Rmt4006 |
+| Ramtin Jokar | [@Ramtinak](https://github.com/ramtinak) | [Ramtinak@live.com](mailto:ramtinak@live.com) | - | - |
 | Ali Noshahi | [@NGame1](https://github.com/NGame1) | [NGame1390@hotmail.com](mailto:ngame1390@hotmail.com) | https://t.me/NGameW | https://instagram.com/alingame |
 
 
