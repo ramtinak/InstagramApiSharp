@@ -3,7 +3,7 @@
  * 
  * Github source: https://github.com/ramtinak/InstagramApiSharp
  * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
- * Update date: 23 September 2018
+ * Update date: 01 October 2018
  * IRANIAN DEVELOPERS
  */
 using InstagramApiSharp.API;
@@ -161,6 +161,11 @@ namespace ChallengeRequireExample
                         }
                         else
                             MessageBox.Show(challenge.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else if(logInResult.Value == InstaLoginResult.TwoFactorRequired)
+                    {
+                        TwoFactorGroupBox.Visible = true;
+                        Size = ChallengeSize;
                     }
                 }
             }
