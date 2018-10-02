@@ -21,12 +21,13 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>Return true if the media is deleted</returns>
         Task<IResult<bool>> DeleteMediaAsync(string mediaId, InstaMediaType mediaType);
         /// <summary>
-        ///     Edit the caption of the media (photo/video)
+        ///     Edit the caption/location of the media (photo/video/album)
         /// </summary>
         /// <param name="mediaId">The media ID</param>
         /// <param name="caption">The new caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
         /// <returns>Return true if everything is ok</returns>
-        Task<IResult<bool>> EditMediaAsync(string mediaId, string caption);
+        Task<IResult<InstaMedia>> EditMediaAsync(string mediaId, string caption, InstaLocationShort location = null);
         /// <summary>
         ///     Upload video
         /// </summary>

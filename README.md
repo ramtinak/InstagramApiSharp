@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.2.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.2.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -74,6 +74,12 @@ Task<IResult<object>>
 Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.2.1
+- [Update] edit media function (location support)
+- [Bugfix] for caption in upload photo [large photo]
+- [Bugfix] for caption in upload video [large video]
+- [Bugfix] for caption in upload album [large album]
+
 v1.1.2.0
 - [Bugfix] for [#55](https://github.com/ramtinak/InstagramApiSharp/issues/55) and add some properties to InstaFeed
 - [Bugfix] for [#53](https://github.com/ramtinak/InstagramApiSharp/issues/53) and add some properties to InstaRecentActivityFeed
@@ -144,11 +150,8 @@ Do whatever you want to do! Except changing library name!!!!
 ## Terms and conditions
 - Use this Api at your own risk.
 
-
-
 ## Donation
 No need to donate.
-
 
 ## Contribute
 Feel free to contribute and submit pull requests.
@@ -159,7 +162,6 @@ Special thanks to [mgp25](https://github.com/mgp25) and his [php wrapper](https:
 ## Legal
 This code is in no way affiliated with, authorized, maintained, sponsored or endorsed by Instagram or any of its affiliates or subsidiaries. This is an independent and unofficial API wrapper.
 
-
 ## Developers
 
 | Name | Github | Email | Telegram | Instagram |
@@ -169,4 +171,4 @@ This code is in no way affiliated with, authorized, maintained, sponsored or end
 
 
 
-Iranian developers - (c) 2018
+Iranian developers - (c) 2018 | Tabestan & Paeez 1397.

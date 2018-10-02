@@ -720,27 +720,6 @@ namespace InstagramApiSharp.API.Processors
                     {"upload_id", uploadId},
                     {"image_compression", "{\"lib_name\":\"moz\",\"lib_version\":\"3.1.m\",\"quality\":\"95\"}"},
                 };
-                var uploadParamsObj = new JObject
-                {
-                    {"_csrftoken", _user.CsrfToken},
-                    {"_uid", _user.LoggedInUser.Pk},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"media_info", new JObject
-                        {
-                                {"capture_mode", "normal"},
-                                {"media_type", 1},
-                                {"caption", caption ?? string.Empty},
-                                {"mentions", new JArray()},
-                                {"hashtags", new JArray()},
-                                {"locations", new JArray()},
-                                {"stickers", new JArray()},
-                        }
-                    }
-                };
-                request = _httpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetStoryMediaInfoUploadUri(), _deviceInfo, uploadParamsObj);
-                response = await _httpRequestProcessor.SendAsync(request);
-                json = await response.Content.ReadAsStringAsync();
-
 
                 var uploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
                 request = _httpHelper.GetDefaultRequest(HttpMethod.Get, photoUri, _deviceInfo);
@@ -811,21 +790,14 @@ namespace InstagramApiSharp.API.Processors
                 var rnd = new Random();
                 var data = new JObject
                 {
-                    {"timezone_offset", "16200"},
+                    {"timezone_offset", InstaApiConstants.TIMEZONE_OFFSET.ToString()},
                     {"_csrftoken", _user.CsrfToken},
-                    {"client_shared_at", (DateTime.UtcNow.ToUnixTime() - rnd.Next(25,55)).ToString()},
-                    {"story_media_creation_date", (DateTime.UtcNow.ToUnixTime() - rnd.Next(50,70)).ToString()},
                     {"media_folder", "Camera"},
-                    {"source_type", "3"},
+                    {"source_type", "4"},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"caption", caption ?? string.Empty},
-                    {"date_time_original", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fffZ")},
-                    {"capture_type", "normal"},
-                    {"mas_opt_in", "NOT_PROMPTED"},
                     {"upload_id", uploadId},
-                    {"client_timestamp", DateTime.UtcNow.ToUnixTime()},
-                    {"date_time_digitalized", DateTime.Now.ToString("yyyy:dd:MM+h:mm:ss")},
                     {
                         "device", new JObject{
                             {"manufacturer", _deviceInfo.HardwareManufacturer},
@@ -846,21 +818,34 @@ namespace InstagramApiSharp.API.Processors
                 {
                     data.Add("location", location.GetJson());
                 }
-
+                data.ToString(Formatting.Indented).PrintInDebug();
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Add("retry_context", retryContext);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                //Debug.WriteLine(json);
+                
                 var mediaResponse =
                      JsonConvert.DeserializeObject<InstaMediaItemResponse>(json, new InstaMediaDataConverter());
                 var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
+                var obj = converter.Convert();
+                if (obj.Caption == null && !string.IsNullOrEmpty(caption))
+                {
+                    var editedMedia = await _instaApi.MediaProcessor.EditMediaAsync(obj.InstaIdentifier, caption, location);
+                    if (editedMedia.Succeeded)
+                    {
+                        upProgress.UploadState = InstaUploadState.Configured;
+                        progress?.Invoke(upProgress);
+                        upProgress.UploadState = InstaUploadState.Completed;
+                        progress?.Invoke(upProgress);
+                        return Result.Success(editedMedia.Value);
+                    }
+                }
                 upProgress.UploadState = InstaUploadState.Configured;
                 progress?.Invoke(upProgress);
 
                 upProgress.UploadState = InstaUploadState.Completed;
                 progress?.Invoke(upProgress);
-                return Result.Success(converter.Convert());
+                return Result.Success(obj);
             }
             catch (Exception exception)
             {

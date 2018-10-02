@@ -105,12 +105,13 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         /// <summary>
-        ///     Edit the caption of the media (photo/video)
+        ///     Edit the caption/location of the media (photo/video/album)
         /// </summary>
         /// <param name="mediaId">The media ID</param>
         /// <param name="caption">The new caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
         /// <returns>Return true if everything is ok</returns>
-        public async Task<IResult<bool>> EditMediaAsync(string mediaId, string caption)
+        public async Task<IResult<InstaMedia>> EditMediaAsync(string mediaId, string caption, InstaLocationShort location = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -122,21 +123,29 @@ namespace InstagramApiSharp.API.Processors
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
                     {"_csrftoken", _user.CsrfToken},
-                    {"caption_text", caption}
+                    {"caption_text", caption ?? string.Empty}
                 };
-
+                if (location != null)
+                {
+                    data.Add("location", location.GetJson());
+                }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, editMediaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == HttpStatusCode.OK)
-                    return Result.Success(true);
+                {
+                    var mediaResponse = JsonConvert.DeserializeObject<InstaMediaItemResponse>(json,
+                        new InstaMediaDataConverter());
+                    var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
+                    return Result.Success(converter.Convert());
+                }
                 var error = JsonConvert.DeserializeObject<BadStatusResponse>(json);
-                return Result.Fail(error.Message, false);
+                return Result.Fail(error.Message, (InstaMedia)null);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
+                return Result.Fail<InstaMedia>(exception);
             }
         }
         /// <summary>
@@ -353,12 +362,12 @@ namespace InstagramApiSharp.API.Processors
                 }
                 upProgress.UploadState = InstaUploadState.Configured;
                 progress?.Invoke(upProgress);
-                var success = await ExposeVideoAsync(uploadId);
+                var success = await ExposeVideoAsync(uploadId, caption, location);
                 if (success.Succeeded)
                 {
                     upProgress.UploadState = InstaUploadState.Completed;
                     progress?.Invoke(upProgress);
-                    return Result.Success(success.Value);
+                    return success;
                 }
 
                 upProgress.UploadState = InstaUploadState.Error;
@@ -374,7 +383,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaMedia>> ExposeVideoAsync(string uploadId)
+        private async Task<IResult<InstaMedia>> ExposeVideoAsync(string uploadId, string caption, InstaLocationShort location)
         {
             try
             {
@@ -396,12 +405,19 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 var jObject = JsonConvert.DeserializeObject<ImageThumbnailResponse>(json);
 
-                if (jObject.Status.ToLower() == "ok")
+                if (response.IsSuccessStatusCode)
                 {
                     var mediaResponse = JsonConvert.DeserializeObject<InstaMediaItemResponse>(json, 
                         new InstaMediaDataConverter());
                     var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
-                    return Result.Success(converter.Convert());
+                    var obj = converter.Convert();
+                    if (obj.Caption == null && !string.IsNullOrEmpty(caption))
+                    {
+                        var editedMedia = await _instaApi.MediaProcessor.EditMediaAsync(obj.InstaIdentifier, caption, location);
+                        if (editedMedia.Succeeded)
+                            return Result.Success(editedMedia.Value);
+                    }
+                    return Result.Success(obj);
                 }
 
                 return Result.Fail<InstaMedia>(jObject.Status);
@@ -466,10 +482,11 @@ namespace InstagramApiSharp.API.Processors
             {
                 upProgress.Name = "Album upload";
                 progress?.Invoke(upProgress);
-                var imagesUploadIds = new string[images.Length];
+                string[] imagesUploadIds = null;
                 var index = 0;
                 if (images != null)
                 {
+                    imagesUploadIds = new string[images.Length];
                     foreach (var image in images)
                     {
                         var instaUri = UriCreator.GetUploadPhotoUri();
@@ -746,6 +763,18 @@ namespace InstagramApiSharp.API.Processors
                 var mediaResponse = JsonConvert.DeserializeObject<InstaMediaAlbumResponse>(json);
                 var converter = ConvertersFabric.Instance.GetSingleMediaFromAlbumConverter(mediaResponse);
                 var obj = converter.Convert();
+                if (obj.Caption == null && !string.IsNullOrEmpty(caption))
+                {
+                    var editedMedia = await _instaApi.MediaProcessor.EditMediaAsync(obj.InstaIdentifier, caption, location);
+                    if (editedMedia.Succeeded)
+                    {
+                        upProgress.UploadState = InstaUploadState.Configured;
+                        progress?.Invoke(upProgress);
+                        upProgress.UploadState = InstaUploadState.Completed;
+                        progress?.Invoke(upProgress);
+                        return Result.Success(editedMedia.Value);
+                    }
+                }
                 upProgress.UploadState = InstaUploadState.Configured;
                 progress?.Invoke(upProgress);
                 upProgress.UploadState = InstaUploadState.Completed;
