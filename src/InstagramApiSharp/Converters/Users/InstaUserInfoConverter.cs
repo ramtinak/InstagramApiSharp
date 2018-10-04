@@ -1,7 +1,8 @@
 ﻿using System;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
-
+using InstagramApiSharp.Enums;
+using System.Linq;
 namespace InstagramApiSharp.Converters
 {
     internal class InstaUserInfoConverter : IObjectConverter<InstaUserInfo, InstaUserInfoContainerResponse>
@@ -44,10 +45,60 @@ namespace InstagramApiSharp.Converters
                 PublicPhoneCountryCode = SourceObject.User.PublicPhoneCountryCode ?? string.Empty,
                 IsEligibleForSchool = SourceObject.User.IsEligibleForSchool,
                 IsFavoriteForStories = SourceObject.User.IsFavoriteForStories,
-                FollowingTagCount = SourceObject.User.FollowingTagCount
+                FollowingTagCount = SourceObject.User.FollowingTagCount,
+                
+                // business account
+                AddressStreet = SourceObject.User.AddressStreet,
+                CanBeReportedAsFraud = SourceObject.User.CanBeReportedAsFraud ?? false,
+                Category = SourceObject.User.Category,
+                CityId = SourceObject.User.CityId ?? 0,
+                CityName = SourceObject.User.CityName,
+                DirectMessaging = SourceObject.User.DirectMessaging,
+                FbPageCallToActionId = SourceObject.User.FbPageCallToActionId,
+                HasHighlightReels = SourceObject.User.HasHighlightReels ?? false,
+                HighlightReshareDisabled = SourceObject.User.HighlightReshareDisabled ?? false,
+                IsBestie = SourceObject.User.IsBestie ?? false,
+                IsCallToActionEnabled = SourceObject.User.IsCallToActionEnabled ?? false,
+                IsFavoriteForHighlights = SourceObject.User.IsFavoriteForHighlights ?? false,
+                IsInterestAccount = SourceObject.User.IsInterestAccount ?? false,
+                IsPotentialBusiness = SourceObject.User.IsPotentialBusiness ?? false,
+                Latitude = SourceObject.User.Latitude ?? 0,
+                Longitude = SourceObject.User.Longitude ?? 0,
+                PublicEmail = SourceObject.User.PublicEmail,
+                ShoppablePostsCount = SourceObject.User.ShoppablePostsCount ?? 0,
+                ShowAccountTransparencyDetails = SourceObject.User.ShowAccountTransparencyDetails ?? false,
+                ShowShoppableFeed = SourceObject.User.ShowShoppableFeed ?? false,
+                ZipCode = SourceObject.User.Zip
             };
             if (SourceObject.User.BiographyWithEntities != null && SourceObject.User.BiographyWithEntities.Entities != null)
                 userInfo.BiographyWithEntities = SourceObject.User.BiographyWithEntities;
+            if (!string.IsNullOrEmpty(SourceObject.User.BusinessContactMethod))
+            {
+                try
+                {
+                    var t = SourceObject.User.BusinessContactMethod.Replace("_", "");
+                    if (Enum.TryParse(t, true, out InstaBusinessContactType type))
+                        userInfo.BusinessContactMethod = type;
+                }
+                catch { }
+            }
+            if (SourceObject.User.HdProfilePicUrlInfo != null)
+            {
+                try
+                {
+                    userInfo.HdProfilePicUrlInfo = ConvertersFabric.Instance.GetImageConverter(SourceObject.User.HdProfilePicUrlInfo).Convert();
+                }
+                catch { }
+            }
+            if (SourceObject.User.HdProfilePicVersions != null && SourceObject.User.HdProfilePicVersions.Any())
+            {
+                try
+                {
+                    foreach (var img in SourceObject.User.HdProfilePicVersions)
+                        userInfo.HdProfilePicVersions.Add(ConvertersFabric.Instance.GetImageConverter(img).Convert());
+                }
+                catch { }
+            }
             return userInfo;
         }
     }
