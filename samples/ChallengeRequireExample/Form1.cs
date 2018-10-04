@@ -94,7 +94,7 @@ namespace ChallengeRequireExample
 
             InstaApi = InstaApiBuilder.CreateBuilder()
                 .SetUser(userSession)
-                .UseLogger(new DebugLogger(LogLevel.Exceptions))
+                .UseLogger(new DebugLogger(LogLevel.All))
                 .SetRequestDelay(RequestDelay.FromSeconds(0, 1))
                 .Build();
             Text = $"{AppName} Connecting";
