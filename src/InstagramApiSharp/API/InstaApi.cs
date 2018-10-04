@@ -603,14 +603,14 @@ namespace InstagramApiSharp.API
         }
 
         /// <summary>
-        ///     Create a new instagram account
+        ///     Create a new instagram account [NEW FUNCTION, BUT NOT WORKING?!!!!!!!!!!]
         /// </summary>
         /// <param name="username">Username</param>
         /// <param name="password">Password</param>
         /// <param name="email">Email</param>
         /// <param name="firstName">First name (optional)</param>
         /// <param name="delay">Delay between requests. null = 2.5 seconds</param>
-        public async Task<IResult<InstaAccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName = "", TimeSpan? delay = null)
+        private async Task<IResult<InstaAccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName = "", TimeSpan? delay = null)
         {
             var createResponse = new InstaAccountCreation();
             try
@@ -684,6 +684,69 @@ namespace InstagramApiSharp.API
                 //{"account_created": false, "errors": {"email": ["Another account is using iranramtin73jokar@live.com."], "username": ["This username isn't available. Please try another."]}, "allow_contacts_sync": true, "status": "ok", "error_type": "email_is_taken, username_is_taken"}
                 //{"message": "feedback_required", "spam": true, "feedback_title": "Signup Error", "feedback_message": "Sorry! There\u2019s a problem signing you up right now. Please try again later. We restrict certain content and actions to protect our community. Tell us if you think we made a mistake.", "feedback_url": "repute/report_problem/instagram_signup/", "feedback_appeal_label": "Report problem", "feedback_ignore_label": "OK", "feedback_action": "report_problem", "status": "fail", "error_type": "signup_block"}
 
+                if (obj.AccountCreated && obj.CreatedUser != null)
+                    ValidateUserAsync(obj.CreatedUser, csrftoken, true, password);
+
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaAccountCreation>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Create a new instagram account
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <param name="password">Password</param>
+        /// <param name="email">Email</param>
+        /// <param name="firstName">First name (optional)</param>
+        /// <returns></returns>
+        public async Task<IResult<InstaAccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName)
+        {
+            InstaAccountCreation createResponse = new InstaAccountCreation();
+            try
+            {
+                var _deviceIdReg = ApiRequestMessage.GenerateDeviceId();
+                var _phoneIdReg = Guid.NewGuid().ToString();
+                var _waterfallIdReg = Guid.NewGuid().ToString();
+                var _guidReg = Guid.NewGuid().ToString();
+                var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                await firstResponse.Content.ReadAsStringAsync();
+
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
+
+                var postData = new Dictionary<string, string>
+                {
+                    {"allow_contacts_sync",       "true"},
+                    {"sn_result",                 "API_ERROR:+null"},
+                    {"phone_id",                  _phoneIdReg},
+                    {"_csrftoken",                csrftoken},
+                    {"username",                  username},
+                    {"first_name",                firstName},
+                    {"adid",                      Guid.NewGuid().ToString()},
+                    {"guid",                      _guidReg},
+                    {"device_id",                 _deviceIdReg},
+                    {"email",                     email},
+                    {"sn_nonce",                  ""},
+                    {"force_sign_up_code",        ""},
+                    {"waterfall_id",              _waterfallIdReg},
+                    {"qs_stamp",                  ""},
+                    {"password",                  password},
+                };
+                var instaUri = UriCreator.GetCreateAccountUri();
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaAccountCreation>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountCreation>(json);
                 if (obj.AccountCreated && obj.CreatedUser != null)
                     ValidateUserAsync(obj.CreatedUser, csrftoken, true, password);
 

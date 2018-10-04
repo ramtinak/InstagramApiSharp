@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.2.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.2.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -74,6 +74,12 @@ Task<IResult<object>>
 Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.2.3
+- [Bugfix] for [#58](https://github.com/ramtinak/InstagramApiSharp/issues/58) (thx to [@mstrifonov](https://github.com/mstrifonov) and [@murdock477](https://github.com/murdock477) for report and tests)
+
+v1.1.2.2
+- [Change] minimun target platform to 10240(uwp)
+
 v1.1.2.1
 - [Update] edit media function (location support)
 - [Bugfix] for caption in upload photo [large photo]
