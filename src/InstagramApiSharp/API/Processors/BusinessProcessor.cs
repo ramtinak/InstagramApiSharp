@@ -162,7 +162,8 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaFullMediaInsights>(exception);
             }
         }
-
+        
+        #region Direct threads
         /// <summary>
         ///     Star direct thread
         /// </summary>
@@ -229,6 +230,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+        #endregion Direct threads
 
         /// <summary>
         ///     Get promotable media feeds
@@ -255,6 +257,80 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail(exception, mediaList);
+            }
+        }
+
+        /// <summary>
+        ///     Get business get buttons (partners)
+        /// </summary>
+        public async Task<IResult<InstaBusinessPartnersList>> GetBusinessButtonsAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var data = new JObject();
+                var dataStr = _httpHelper.GetSignature(data);
+                var instaUri = UriCreator.GetBusinessInstantExperienceUri(dataStr);
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessPartnersList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessPartnerContainer>(json);
+                var partners = new InstaBusinessPartnersList();
+
+                foreach (var p in obj.Partners)
+                    partners.Add(p);
+
+                return Result.Success(partners);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessPartnersList>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Validate an uri for an button(instagram partner)
+        ///     <para>Note: Use <see cref="IBusinessProcessor.GetBusinessButtonsAsync"/> to get business buttons(instagram partner) list!</para>
+        /// </summary>
+        /// <param name="desirePartner">Desire partner (Use <see cref="IBusinessProcessor.GetBusinessButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
+        /// <param name="uri">Uri to check</param>
+        public async Task<IResult<bool>> ValidateUrlAsync(InstaBusinessPartner desirePartner, Uri uri)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if(desirePartner?.AppId == null)
+                    return Result.Fail<bool>("Desire partner cannot be null");
+                if (uri == null)
+                    return Result.Fail<bool>("Uri cannot be null");
+
+                var instaUri = UriCreator.GetBusinessValidateUrlUri();
+
+                var data = new JObject
+                {
+                    {"app_id", desirePartner.AppId},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"url", uri.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaBusinessValidateUrl>(json);
+                return obj.IsValid ? Result.Success(true) : Result.Fail<bool>(obj.ErrorMessage);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
             }
         }
     }

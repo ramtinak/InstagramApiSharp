@@ -130,5 +130,12 @@ namespace InstagramApiSharp.Helpers
             return request;
         }
 
+        public string GetSignature(JObject data)
+        {
+            var hash = CryptoHelper.CalculateHash(_apiVersion.SignatureKey, data.ToString(Formatting.None));
+            var payload = data.ToString(Formatting.None);
+            var signature = $"{hash}.{payload}";
+            return signature;
+        }
     }
 }

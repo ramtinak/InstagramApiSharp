@@ -1367,7 +1367,38 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for promotable media feeds");
             return instaUri;
         }
-
-
+        public static Uri GetBusinessValidateUrlUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.BUSINESS_VALIDATE_URL,
+                    out var instaUri))
+                throw new Exception("Cant create URI for business validate url");
+            return instaUri;
+        }
+        public static Uri GetUpdateBusinessInfoUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_UPDATE_BUSINESS_INFO,
+                    out var instaUri))
+                throw new Exception("Cant create URI for update business info");
+            return instaUri;
+        }
+        public static Uri GetSetBusinessCategoryUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.BUSINESS_SET_CATEGORY,
+                    out var instaUri))
+                throw new Exception("Cant create URI for set business category");
+            return instaUri;
+        }
+        public static Uri GetBusinessInstantExperienceUri(string data)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.BUSINESS_INSTANT_EXPERIENCE,
+                data, InstaApiConstants.IG_SIGNATURE_KEY_VERSION),
+                    out var instaUri))
+                throw new Exception("Cant create URI for business instant experience");
+            return instaUri;
+        }
     }
 }

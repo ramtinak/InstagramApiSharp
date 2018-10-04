@@ -48,5 +48,17 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         Task<IResult<InstaMediaList>> GetPromotableMediaFeedsAsync();
 
+        /// <summary>
+        ///     Get business get buttons (partners)
+        /// </summary>
+        Task<IResult<InstaBusinessPartnersList>> GetBusinessButtonsAsync();
+        /// <summary>
+        ///     Validate an uri for an button(instagram partner)
+        ///     <para>Note: Use <see cref="IBusinessProcessor.GetBusinessButtonsAsync"/> to get business buttons(instagram partner) list!</para>
+        /// </summary>
+        /// <param name="desirePartner">Desire partner (Use <see cref="IBusinessProcessor.GetBusinessButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
+        /// <param name="uri">Uri to check</param>
+        Task<IResult<bool>> ValidateUrlAsync(InstaBusinessPartner desirePartner, Uri uri);
+
     }
 }

@@ -232,6 +232,7 @@ namespace InstagramApiSharp.API
         public const string ACCOUNTS_SET_BIOGRAPHY = API_SUFFIX + "/accounts/set_biography/";
         public const string ACCOUNTS_READ_MSISDN_HEADER = API_SUFFIX + "/accounts/read_msisdn_header/";
         public const string ACCOUNTS_CONTACT_POINT_PREFILL = API_SUFFIX + "/accounts/contact_point_prefill/";
+        public const string ACCOUNTS_UPDATE_BUSINESS_INFO = API_SUFFIX + "/accounts/update_business_info/";
 
         public const string USER_CHECK_EMAIL = API_SUFFIX + "/users/check_email/";
         public const string USER_REEL_SETTINGS = API_SUFFIX + "/users/reel_settings/";
@@ -430,10 +431,18 @@ namespace InstagramApiSharp.API
         public const string CONSENT_NEW_USER_FLOW = API_SUFFIX + "/consent/new_user_flow/";
         public const string CONSENT_NEW_USER_FLOW_BEGINS = API_SUFFIX + "/consent/new_user_flow_begins/";
         //Statistics
-        public const string GRAPH_QL_STATISTICS = API_SUFFIX + "/ads/graphql/?locale={0}&vc_policy=insights_policy&surface={1}";
+        public const string GRAPH_QL = API_SUFFIX + "/ads/graphql/";
+        public const string GRAPH_QL_STATISTICS = GRAPH_QL + "?locale={0}&vc_policy=insights_policy&surface={1}";
         public const string INSIGHTS_MEDIA_SINGLE = API_SUFFIX + "/insights/media_organic_insights/{0}?{1}={2}";
         public const string INSIGHTS_MEDIA = API_SUFFIX + "/insights/account_organic_insights/?show_promotions_in_landing_page=true&first={0}";
 
+
+        public const string BUSINESS_VALIDATE_URL = API_SUFFIX + "/business/instant_experience/ix_validate_url/";
+        public const string BUSINESS_SET_CATEGORY = API_SUFFIX + "/business/account/set_business_category/";
+        /// <summary>
+        /// /api/v1/business/instant_experience/get_ix_partners_bundle/?signed_body=b941ff07b83716087710019790b3529ab123c8deabfb216e056651e9cf4b4ca7.{}&ig_sig_key_version=4
+        /// </summary>
+        public const string BUSINESS_INSTANT_EXPERIENCE = API_SUFFIX + "/business/instant_experience/get_ix_partners_bundle/?signed_body={0}&ig_sig_key_version={1}";
 
         public static readonly Uri BaseInstagramUri = new Uri(BASE_INSTAGRAM_API_URL);
     }
