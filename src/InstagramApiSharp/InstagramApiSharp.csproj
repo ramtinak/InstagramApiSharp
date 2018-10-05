@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.2.3</Version>
-    <AssemblyVersion>1.1.2.3</AssemblyVersion>
-    <FileVersion>1.1.2.3</FileVersion>
+    <Version>1.1.2.4</Version>
+    <AssemblyVersion>1.1.2.4</AssemblyVersion>
+    <FileVersion>1.1.2.4</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -28,6 +28,7 @@ Support:
 - Discover functions.
 - Search peoples.
 - IGTV functions.
+- Business functions.
 - Can pass challenge required and two factor authentication.
 - and many more.
 
@@ -36,7 +37,21 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.2.3
+    <PackageReleaseNotes>v1.1.2.4
+- [Add] ValidateUrlAsync to BusinessProcessor
+- [Add] GetBusinessPartnersButtonsAsync to BusinessProcessor
+- [Add] AddOrChangeBusinessButtonAsync to BusinessProcessor
+- [Add] RemoveBusinessButtonAsync to BusinessProcessor
+- [Add] GetSuggestedCategoriesAsync to BusinessProcessor
+- [Add] GetCategoriesAsync to BusinessProcessor
+- [Add] GetSubCategoriesAsync to BusinessProcessor
+- [Add] SearchCityLocationAsync to BusinessProcessor
+- [Add] ChangeBusinessCategoryAsync to BusinessProcessor
+- [Add] GetBusinessAccountInformationAsync to BusinessProcessor
+- [Add] RemoveBusinessLocationAsync to BusinessProcessor
+- [Add] UpdateBusinessInfoAsync to BusinessProcessor
+
+v1.1.2.3
 - [Bugfix] for #58 (thx to @mstrifonov and @murdock477 for report and tests)
 
 v1.1.2.2

@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.2.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.2.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -26,7 +26,7 @@ Note: this library uses [Json.NET v10.0.3 and above](https://www.nuget.org/packa
 | ------ | ------ |
 | .NET Framework | 4.5.2 |
 | .NET Standard | 2.0 |
-| .NET Core(UWP) | 10.0.14393 |
+| .NET Core(UWP) | 10.0.10240 |
 
 ## Overview
 There's a lot of functions and bug fix me and [NGame1](https://github.com/NGame1) added to this library.
@@ -49,7 +49,7 @@ Some of features:
 | Delete media (photo/video/album) | Upload story (photo/video/album) | Change password | Send direct message |
 | Search location | Get location feed | Collection create/get by id/get all/add items | Support challenge required |
 | Upload album (videos/photo) | Highlight support | Share story | Send direct photo/video/ stories/profile/ link/location |
-| IG TV support | Share media to direct thread |
+| IG TV support | Share media to direct thread | Business account support |
 
 ## Usage
 #### Use builder to get Insta API instance:
@@ -74,6 +74,20 @@ Task<IResult<object>>
 Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.2.4
+- [Add] ValidateUrlAsync to BusinessProcessor
+- [Add] GetBusinessPartnersButtonsAsync to BusinessProcessor
+- [Add] AddOrChangeBusinessButtonAsync to BusinessProcessor
+- [Add] RemoveBusinessButtonAsync to BusinessProcessor
+- [Add] GetSuggestedCategoriesAsync to BusinessProcessor
+- [Add] GetCategoriesAsync to BusinessProcessor
+- [Add] GetSubCategoriesAsync to BusinessProcessor
+- [Add] SearchCityLocationAsync to BusinessProcessor
+- [Add] ChangeBusinessCategoryAsync to BusinessProcessor
+- [Add] GetBusinessAccountInformationAsync to BusinessProcessor
+- [Add] RemoveBusinessLocationAsync to BusinessProcessor
+- [Add] UpdateBusinessInfoAsync to BusinessProcessor
+
 v1.1.2.3
 - [Bugfix] for [#58](https://github.com/ramtinak/InstagramApiSharp/issues/58) (thx to [@mstrifonov](https://github.com/mstrifonov) and [@murdock477](https://github.com/murdock477) for report and tests)
 
@@ -94,47 +108,6 @@ v1.1.2.0
 - [Add] Report media to MediaProcessor
 - [Add] Report user to UserProcessor
 - [Add] Business support to IInstaApi.BusinessProcessor
-
-v1.1.1.1
-- [Add] upload story with link address(story cta) to StoryProcessor (only works for verified accounts or accounts with more than 10k followers)
-
-v1.1.1.0
-- [Add] auto accept consent require in signup with phone and email
-- [Update] signup with phone and email. (no need to call LoginAsync after account created.)
-- [Add] submit phone number for challenge require (special thx to [@learn-itnow](https://github.com/learn-itnow) for helping me)
-- [Add] support for changing api version(v35, v44 and v61), in IInstaApiBuilder
-- [Revert] api version to v44 as default (this will fixes consent required issue) (special thx to [@learn-itnow](https://github.com/learn-itnow) for helping me)
-- [Remove] static from HttpHelper class
-- [Update] challenge functions for using current device information
-- [Add wiki] FAQ page
-
-v1.1.0.9
-- [Rename]  SuggestedSearchesAsync to GetSuggestedSearchesAsync in TVProcessor
-- [Bugfix]  for GetFullUserInfoAsync
-- [Update]  [Direct messaging wiki](https://github.com/ramtinak/InstagramApiSharp/wiki/Direct-messaging)
-- [Add]  [TV wiki](https://github.com/ramtinak/InstagramApiSharp/wiki/TV)
-
-v1.1.0.8
-- [Add] CheckUsernameAsync to IInstaApi
-- [Add] GetRequestForDownloadAccountDataAsync to AccountProcessor
-- [Add] Progress changed action to change profile picture
-- [Bugfix] for GetFullUserInfoAsync (thx to https://t.me/rohollah for report)
-- [Bugfix] for random android version (thx to [@aspmaker](https://github.com/aspmaker) )
-- [Cleanup] some functions
-
-v1.1.0.7
-- [Bugfix] for ShareMediaToThreadAsync (thx to [@huseyinkarael](https://github.com/huseyinkarael) for report)
-- [Bugfix] for image/video uploader (thx to [@alexrepetskyi](https://github.com/alexrepetskyi) for report)
-- [Bugfix] for like/unlike comment (thx to [@aspmaker](https://github.com/aspmaker) for report)
-- [Bugfix] for GetMediaCommentsAsync (thx to [@aspmaker](https://github.com/aspmaker) for report)
-- [Bugfix] for GetMediaRepliesCommentsAsync (thx to [@aspmaker](https://github.com/aspmaker) for report)
-- [Add] Some new property to InstaComment
-- [Add] LeaveGroupThreadAsync to MessagingProcessor
-- [Add] 1 new device to AndroidDevices
-
-v1.1.0.5
-- [Add] Progress changed action to every uploading functions(media, story, direct)
-- [Bugfix] for random android version (thx to [@aspmaker](https://github.com/aspmaker) )
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 

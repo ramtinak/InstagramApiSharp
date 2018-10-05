@@ -505,7 +505,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get sub categories of an category
         /// </summary>
-        /// <param name="categoryId">Category id</param>
+        /// <param name="categoryId">Category id (Use <see cref="IBusinessProcessor.GetCategoriesAsync"/> to get category id)</param>
         public async Task<IResult<InstaBusinessCategoryList>> GetSubCategoriesAsync(string categoryId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
