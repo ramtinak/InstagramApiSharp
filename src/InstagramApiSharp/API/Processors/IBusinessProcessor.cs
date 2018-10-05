@@ -67,10 +67,15 @@ namespace InstagramApiSharp.API.Processors
         ///     Get suggested categories
         /// </summary>
         Task<IResult<InstaBusinessSugesstedCategoryList>> GetSuggestedCategoriesAsync();
-
         /// <summary>
         ///     Get all categories
         /// </summary>
         Task<IResult<InstaBusinessCategoryList>> GetCategoriesAsync();
+        /// <summary>
+        ///     Get sub categories of an category
+        /// </summary>
+        /// <param name="categoryId">Category id</param>
+        Task<IResult<InstaBusinessCategoryList>> GetSubCategoriesAsync(string categoryId);
+
     }
 }
