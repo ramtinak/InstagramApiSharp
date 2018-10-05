@@ -367,6 +367,93 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+        /// <summary>
+        ///     Get suggested categories 
+        /// </summary>
+        public async Task<IResult<InstaBusinessSugesstedCategoryList>> GetSuggestedCategoriesAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetBusinessGraphQLUri();
+
+                var zero = new JObject
+                {
+                    {"page_name", _user.UserName.ToLower()},
+                    {"num_result", "5"}
+                };
+                var queryParams = new JObject
+                {
+                    {"0", zero}
+                };
+                var data = new Dictionary<string, string>
+                {
+                    {"query_id", "706774002864790"},
+                    {"locale", InstaApiConstants.ACCEPT_LANGUAGE.Replace("-", "_")},
+                    {"vc_policy", "ads_viewer_context_policy"},
+                    {"signed_body", $"{_httpHelper._apiVersion.SignatureKey}."},
+                    {InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION},
+                    {"strip_nulls", "true"},
+                    {"strip_defaults", "true"},
+                    {"query_params", queryParams.ToString(Formatting.None)},
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessSugesstedCategoryList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessSugesstedCategoryList>(json, new InstaBusinessSuggestedCategoryDataConverter());
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessSugesstedCategoryList>(exception);
+            }
+        }
+        /// <summary>
+        ///     Get all categories 
+        /// </summary>
+        public async Task<IResult<InstaBusinessCategoryList>> GetCategoriesAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetBusinessGraphQLUri();
+
+                var queryParams = new JObject
+                {
+                    {"0", "-1"}
+                };
+                var data = new Dictionary<string, string>
+                {
+                    {"query_id", "425892567746558"},
+                    {"locale", InstaApiConstants.ACCEPT_LANGUAGE.Replace("-", "_")},
+                    {"vc_policy", "ads_viewer_context_policy"},
+                    {"signed_body", $"{_httpHelper._apiVersion.SignatureKey}."},
+                    {InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION},
+                    {"strip_nulls", "true"},
+                    {"strip_defaults", "true"},
+                    {"query_params", queryParams.ToString(Formatting.None)},
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessCategoryList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessCategoryList>(json, new InstaBusinessCategoryDataConverter());
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessCategoryList>(exception);
+            }
+        }
 
     }
 }

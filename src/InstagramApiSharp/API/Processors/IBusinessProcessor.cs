@@ -63,5 +63,14 @@ namespace InstagramApiSharp.API.Processors
         ///     Remove button from your business account
         /// </summary>
         Task<IResult<bool>> RemoveBusinessButtonAsync();
+        /// <summary>
+        ///     Get suggested categories
+        /// </summary>
+        Task<IResult<InstaBusinessSugesstedCategoryList>> GetSuggestedCategoriesAsync();
+
+        /// <summary>
+        ///     Get all categories
+        /// </summary>
+        Task<IResult<InstaBusinessCategoryList>> GetCategoriesAsync();
     }
 }

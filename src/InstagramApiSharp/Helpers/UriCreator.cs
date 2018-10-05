@@ -1400,5 +1400,13 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for business instant experience");
             return instaUri;
         }
+        public static Uri GetBusinessGraphQLUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GRAPH_QL,
+                    out var instaUri))
+                throw new Exception("Cant create URI for business graph ql");
+            return instaUri;
+        }
     }
 }
