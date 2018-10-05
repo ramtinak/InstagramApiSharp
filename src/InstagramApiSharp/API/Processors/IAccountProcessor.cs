@@ -47,7 +47,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="phone">Phone number (leave null if you don't want to change it)</param>
         /// <param name="gender">Gender type (leave null if you don't want to change it)</param>
         /// <param name="newUsername">New username (optional) (leave null if you don't want to change it)</param>
-        Task<IResult<InstaAccountUserResponse>> EditProfileAsync(string name, string biography, string url, string email, string phone, InstaGenderType? gender, string newUsername = null);
+        Task<IResult<InstaUserEdit>> EditProfileAsync(string name, string biography, string url, string email, string phone, InstaGenderType? gender, string newUsername = null);
         /// <summary>
         ///     Set biography (support hashtags and user mentions)
         /// </summary>
@@ -56,7 +56,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         /// Get request for edit profile.
         /// </summary>        
-        Task<IResult<InstaAccountUserResponse>> GetRequestForEditProfileAsync();
+        Task<IResult<InstaUserEditContainerResponse>> GetRequestForEditProfileAsync();
         /// <summary>
         ///     Set name and phone number.
         /// </summary>
@@ -66,18 +66,18 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Remove profile picture.
         /// </summary>        
-        Task<IResult<InstaAccountUserResponse>> RemoveProfilePictureAsync();
+        Task<IResult<InstaUserEditContainerResponse>> RemoveProfilePictureAsync();
         /// <summary>
         ///     Change profile picture(only jpg and jpeg formats).
         /// </summary>
         /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>        
-        Task<IResult<InstaAccountUserResponse>> ChangeProfilePictureAsync(byte[] pictureBytes);
+        Task<IResult<InstaUserEditContainerResponse>> ChangeProfilePictureAsync(byte[] pictureBytes);
         /// <summary>
         ///     Change profile picture(only jpg and jpeg formats).
         /// </summary> 
         /// <param name="progress">Progress action</param>
         /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>
-        Task<IResult<InstaAccountUserResponse>> ChangeProfilePictureAsync(Action<InstaUploaderProgress> progress, byte[] pictureBytes);
+        Task<IResult<InstaUserEditContainerResponse>> ChangeProfilePictureAsync(Action<InstaUploaderProgress> progress, byte[] pictureBytes);
         /// <summary>
         ///     Get request for download backup account data.
         /// </summary>

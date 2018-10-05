@@ -1,4 +1,5 @@
 ﻿using System;
+using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.Models.Business;
 using InstagramApiSharp.Classes.ResponseWrappers;
@@ -332,6 +333,12 @@ InstaHighlightReelResponse response)
             InstaFullMediaInsightsResponse response)
         {
             return new InstaFullMediaInsightsConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaBusinessUser, InstaBusinessUserContainerResponse> GetBusinessUserConverter(
+            InstaBusinessUserContainerResponse response)
+        {
+            return new InstaBusinessUserConverter { SourceObject = response };
         }
     }
 }

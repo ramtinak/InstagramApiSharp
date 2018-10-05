@@ -190,14 +190,14 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="phone">Phone number (leave null if you don't want to change it)</param>
         /// <param name="gender">Gender type (leave null if you don't want to change it)</param>
         /// <param name="newUsername">New username (optional) (leave null if you don't want to change it)</param>
-        public async Task<IResult<InstaAccountUserResponse>> EditProfileAsync(string name, string biography, string url, string email, string phone, InstaGenderType? gender, string newUsername = null)
+        public async Task<IResult<InstaUserEdit>> EditProfileAsync(string name, string biography, string url, string email, string phone, InstaGenderType? gender, string newUsername = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var editRequest = await GetRequestForEditProfileAsync();
                 if(!editRequest.Succeeded)
-                    return Result.Fail("Edit request returns badrequest", (InstaAccountUserResponse)null);
+                    return Result.Fail("Edit request returns badrequest", (InstaUserEdit)null);
                 var user = editRequest.Value.User.Username;
 
                 if (string.IsNullOrEmpty(newUsername))
@@ -241,15 +241,15 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaAccountUserResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaAccountUserResponse>(json);
+                    return Result.UnExpectedResponse<InstaUserEdit>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaUserEditContainerResponse>(json);
 
-                return Result.Success(obj);
+                return Result.Success(obj.User);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaAccountUserResponse>(exception);
+                return Result.Fail<InstaUserEdit>(exception);
             }
         }
         /// <summary>
@@ -292,7 +292,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get request for edit profile.
         /// </summary>
-        public async Task<IResult<InstaAccountUserResponse>> GetRequestForEditProfileAsync()
+        public async Task<IResult<InstaUserEditContainerResponse>> GetRequestForEditProfileAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -302,14 +302,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaAccountUserResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaAccountUserResponse>(json);
+                    return Result.UnExpectedResponse<InstaUserEditContainerResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaUserEditContainerResponse>(json);
                 return Result.Success(obj);            
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaAccountUserResponse>(exception);
+                return Result.Fail<InstaUserEditContainerResponse>(exception);
             }
         }
         /// <summary>
@@ -352,7 +352,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Remove profile picture.
         /// </summary>
-        public async Task<IResult<InstaAccountUserResponse>> RemoveProfilePictureAsync()
+        public async Task<IResult<InstaUserEditContainerResponse>> RemoveProfilePictureAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -369,8 +369,8 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaAccountUserResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaAccountUserResponse>(json);
+                    return Result.UnExpectedResponse<InstaUserEditContainerResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaUserEditContainerResponse>(json);
 
                 return Result.Success(obj);
             }
@@ -378,14 +378,14 @@ namespace InstagramApiSharp.API.Processors
             {
                 Debug.WriteLine(exception.Message);
                 _logger?.LogException(exception);
-                return Result.Fail<InstaAccountUserResponse>(exception);
+                return Result.Fail<InstaUserEditContainerResponse>(exception);
             }
         }
         /// <summary>
         ///     Change profile picture(only jpg and jpeg formats).
         /// </summary>
         /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>
-        public async Task<IResult<InstaAccountUserResponse>> ChangeProfilePictureAsync(byte[] pictureBytes)
+        public async Task<IResult<InstaUserEditContainerResponse>> ChangeProfilePictureAsync(byte[] pictureBytes)
         {
             return await ChangeProfilePictureAsync(null, pictureBytes);
         }
@@ -394,7 +394,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary> 
         /// <param name="progress">Progress action</param>
         /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>
-        public async Task<IResult<InstaAccountUserResponse>> ChangeProfilePictureAsync(Action<InstaUploaderProgress> progress, byte[] pictureBytes)
+        public async Task<IResult<InstaUserEditContainerResponse>> ChangeProfilePictureAsync(Action<InstaUploaderProgress> progress, byte[] pictureBytes)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             var upProgress = new InstaUploaderProgress
@@ -430,10 +430,10 @@ namespace InstagramApiSharp.API.Processors
                 {
                     upProgress.UploadState = InstaUploadState.Error;
                     progress?.Invoke(upProgress);
-                    return Result.UnExpectedResponse<InstaAccountUserResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaUserEditContainerResponse>(response, json);
                 }
 
-                var obj = JsonConvert.DeserializeObject<InstaAccountUserResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaUserEditContainerResponse>(json);
                 upProgress.UploadState = InstaUploadState.Completed;
                 progress?.Invoke(upProgress);
                 return Result.Success(obj);
@@ -443,7 +443,7 @@ namespace InstagramApiSharp.API.Processors
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
-                return Result.Fail<InstaAccountUserResponse>(exception);
+                return Result.Fail<InstaUserEditContainerResponse>(exception);
             }
         }
         /// <summary>

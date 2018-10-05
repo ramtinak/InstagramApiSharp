@@ -499,7 +499,6 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaBusinessCategoryList>(exception);
             }
         }
-
         /// <summary>
         ///     Search city location for business account
         /// </summary>
@@ -543,6 +542,46 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaBusinessCityLocationList>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Change business category
+        ///     <para>Note: Get it from <see cref="IBusinessProcessor.GetSubCategoriesAsync(string)"/></para>
+        /// </summary>
+        /// <param name="subCategoryId">Sub category id (Get it from <see cref="IBusinessProcessor.GetSubCategoriesAsync(string)"/>)
+        /// </param>
+        public async Task<IResult<InstaBusinessUser>> ChangeBusinessCategoryAsync(string subCategoryId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (string.IsNullOrEmpty(subCategoryId))
+                    return Result.Fail<InstaBusinessUser>("Sub category id cannot be null or empty");
+
+                var instaUri = UriCreator.GetSetBusinessCategoryUri();
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"category_id", subCategoryId},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
             }
         }
     }

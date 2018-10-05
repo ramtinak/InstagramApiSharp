@@ -8,11 +8,12 @@
  */
 using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
-using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Enums;
+using InstagramApiSharp.Classes.ResponseWrappers;
+
 namespace InstagramApiSharp.Classes
 {
-    public class InstaAccountUserResponse
+    public class InstaUserEditContainerResponse
     {
         [JsonProperty("user")]
         public InstaUserEdit User { get; set; }
@@ -92,9 +93,9 @@ namespace InstagramApiSharp.Classes
         {
             get
             {
-                //return (InstaGenderType)Enum.ToObject(typeof(InstaGenderType), GenderNum);
                 return (InstaGenderType)GenderNum;
             }
         }
+
     }
 }
