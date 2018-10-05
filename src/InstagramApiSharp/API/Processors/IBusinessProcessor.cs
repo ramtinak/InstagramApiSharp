@@ -51,18 +51,24 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get business get buttons (partners)
         /// </summary>
-        Task<IResult<InstaBusinessPartnersList>> GetBusinessButtonsAsync();
+        Task<IResult<InstaBusinessPartnersList>> GetBusinessPartnersButtonsAsync();
         /// <summary>
         ///     Validate an uri for an button(instagram partner)
-        ///     <para>Note: Use <see cref="IBusinessProcessor.GetBusinessButtonsAsync"/> to get business buttons(instagram partner) list!</para>
+        ///     <para>Note: Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!</para>
         /// </summary>
-        /// <param name="desirePartner">Desire partner (Use <see cref="IBusinessProcessor.GetBusinessButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
-        /// <param name="uri">Uri to check</param>
+        /// <param name="desirePartner">Desire partner (Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
+        /// <param name="uri">Uri to check (Must be related to desire partner!)</param>
         Task<IResult<bool>> ValidateUrlAsync(InstaBusinessPartner desirePartner, Uri uri);
         /// <summary>
         ///     Remove button from your business account
         /// </summary>
-        Task<IResult<bool>> RemoveBusinessButtonAsync();
+        Task<IResult<InstaBusinessUser>> RemoveBusinessButtonAsync();
+        /// <summary>
+        ///     Add button to your business account
+        /// </summary>
+        /// <param name="businessPartner">Desire partner button (Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
+        /// <param name="uri">Uri (related to Business partner button)</param>
+        Task<IResult<InstaBusinessUser>> AddOrChangeBusinessButtonAsync(InstaBusinessPartner businessPartner, Uri uri);
         /// <summary>
         ///     Get suggested categories
         /// </summary>

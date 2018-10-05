@@ -263,7 +263,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get business get buttons (partners)
         /// </summary>
-        public async Task<IResult<InstaBusinessPartnersList>> GetBusinessButtonsAsync()
+        public async Task<IResult<InstaBusinessPartnersList>> GetBusinessPartnersButtonsAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -295,10 +295,10 @@ namespace InstagramApiSharp.API.Processors
         }
         /// <summary>
         ///     Validate an uri for an button(instagram partner)
-        ///     <para>Note: Use <see cref="IBusinessProcessor.GetBusinessButtonsAsync"/> to get business buttons(instagram partner) list!</para>
+        ///     <para>Note: Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!</para>
         /// </summary>
-        /// <param name="desirePartner">Desire partner (Use <see cref="IBusinessProcessor.GetBusinessButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
-        /// <param name="uri">Uri to check</param>
+        /// <param name="desirePartner">Desire partner (Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
+        /// <param name="uri">Uri to check (Must be related to desire partner!)</param>
         public async Task<IResult<bool>> ValidateUrlAsync(InstaBusinessPartner desirePartner, Uri uri)
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -335,7 +335,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Remove button from your business account
         /// </summary>
-        public async Task<IResult<bool>> RemoveBusinessButtonAsync()
+        public async Task<IResult<InstaBusinessUser>> RemoveBusinessButtonAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -355,15 +355,64 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<bool>(response, json);
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
 
-                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
-                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.Fail<bool>(obj.Message);
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
+            }
+        }
+        /// <summary>
+        ///     Add button to your business account
+        /// </summary>
+        /// <param name="businessPartner">Desire partner button (Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
+        /// <param name="uri">Uri (related to Business partner button)</param>
+        public async Task<IResult<InstaBusinessUser>> AddOrChangeBusinessButtonAsync(InstaBusinessPartner businessPartner, Uri uri)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (businessPartner == null)
+                    return Result.Fail<InstaBusinessUser>("Business partner cannot be null");
+                if (uri == null)
+                    return Result.Fail<InstaBusinessUser>("Uri related to business partner cannot be null");
+
+                var validateUri = await ValidateUrlAsync(businessPartner, uri);
+                if (!validateUri.Succeeded)
+                    return Result.Fail<InstaBusinessUser>(validateUri.Info.Message);
+
+                var instaUri = UriCreator.GetUpdateBusinessInfoUri();
+               
+                var data = new JObject
+                {
+                    {"ix_url", uri.ToString()},
+                    {"ix_app_id", businessPartner.AppId},
+                    {"is_call_to_action_enabled","1"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
             }
         }
         /// <summary>
