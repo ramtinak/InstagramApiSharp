@@ -333,5 +333,40 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+        /// <summary>
+        ///     Remove button from your business account
+        /// </summary>
+        public async Task<IResult<bool>> RemoveBusinessButtonAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetUpdateBusinessInfoUri();
+
+                var data = new JObject
+                {
+                    {"is_call_to_action_enabled","0"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.Fail<bool>(obj.Message);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
     }
 }

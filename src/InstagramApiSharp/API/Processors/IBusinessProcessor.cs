@@ -59,6 +59,9 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="desirePartner">Desire partner (Use <see cref="IBusinessProcessor.GetBusinessButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
         /// <param name="uri">Uri to check</param>
         Task<IResult<bool>> ValidateUrlAsync(InstaBusinessPartner desirePartner, Uri uri);
-
+        /// <summary>
+        ///     Remove button from your business account
+        /// </summary>
+        Task<IResult<bool>> RemoveBusinessButtonAsync();
     }
 }
