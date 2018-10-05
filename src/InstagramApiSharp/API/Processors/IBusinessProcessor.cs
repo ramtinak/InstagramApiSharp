@@ -88,5 +88,25 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="subCategoryId">Sub category id (Get it from <see cref="IBusinessProcessor.GetSubCategoriesAsync(string)"/>)
         /// </param>
         Task<IResult<InstaBusinessUser>> ChangeBusinessCategoryAsync(string subCategoryId);
+        /// <summary>
+        ///     Update business information
+        /// </summary>
+        /// <param name="phoneNumberWithCountryCode">Phone number with country code [set null if you don't want to change it]</param>
+        /// <param name="cityLocation">City Location (get it from <see cref="IBusinessProcessor.SearchCityLocationAsync(string)"/>)</param>
+        /// <param name="streetAddress">Street address</param>
+        /// <param name="zipCode">Zip code</param>
+        /// <param name="businessContactType">Phone contact type (<see cref="InstaUserInfo.BusinessContactMethod"/>) [set null if you don't want to change it]</param>
+        Task<IResult<InstaBusinessUser>> UpdateBusinessInfoAsync(string phoneNumberWithCountryCode,
+            InstaBusinessCityLocation cityLocation,
+            string streetAddress, string zipCode,
+            InstaBusinessContactType? businessContactType);
+        /// <summary>
+        ///     Remove business location
+        /// </summary>
+        Task<IResult<InstaBusinessUser>> RemoveBusinessLocationAsync();
+        /// <summary>
+        ///     Get logged in business account information
+        /// </summary>
+        Task<IResult<InstaUserInfo>> GetBusinessAccountInformationAsync();
     }
 }

@@ -171,5 +171,13 @@ namespace InstagramApiSharp.Classes.Models
         ///     Only for business account
         /// </summary>
         public bool HighlightReshareDisabled { get; set; }
+        /// <summary>
+        ///     Only for business account
+        /// </summary>
+        public string PageName { get; set; }
+        /// <summary>
+        ///     Only for business account
+        /// </summary>
+        public long? PageId { get; set; }
     }
 }

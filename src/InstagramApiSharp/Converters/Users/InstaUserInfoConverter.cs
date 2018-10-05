@@ -68,7 +68,9 @@ namespace InstagramApiSharp.Converters
                 ShoppablePostsCount = SourceObject.User.ShoppablePostsCount ?? 0,
                 ShowAccountTransparencyDetails = SourceObject.User.ShowAccountTransparencyDetails ?? false,
                 ShowShoppableFeed = SourceObject.User.ShowShoppableFeed ?? false,
-                ZipCode = SourceObject.User.Zip
+                ZipCode = SourceObject.User.Zip,
+                PageId = SourceObject.User.PageId ?? 0,
+                PageName = SourceObject.User.PageName
             };
             if (SourceObject.User.BiographyWithEntities != null && SourceObject.User.BiographyWithEntities.Entities != null)
                 userInfo.BiographyWithEntities = SourceObject.User.BiographyWithEntities;

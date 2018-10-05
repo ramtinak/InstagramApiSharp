@@ -121,6 +121,9 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("highlight_reshare_disabled")] public bool? HighlightReshareDisabled { get; set; }
 
+        [JsonProperty("page_name")] public string PageName { get; set; }
+
+        [JsonProperty("page_id")] public long? PageId { get; set; }
 
     }
 }

@@ -293,7 +293,6 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaBusinessPartnersList>(exception);
             }
         }
-
         /// <summary>
         ///     Validate an uri for an button(instagram partner)
         ///     <para>Note: Use <see cref="IBusinessProcessor.GetBusinessButtonsAsync"/> to get business buttons(instagram partner) list!</para>
@@ -544,7 +543,6 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaBusinessCityLocationList>(exception);
             }
         }
-
         /// <summary>
         ///     Change business category
         ///     <para>Note: Get it from <see cref="IBusinessProcessor.GetSubCategoriesAsync(string)"/></para>
@@ -583,6 +581,99 @@ namespace InstagramApiSharp.API.Processors
                 _logger?.LogException(exception);
                 return Result.Fail<InstaBusinessUser>(exception);
             }
+        }
+        /// <summary>
+        ///     Update business information
+        /// </summary>
+        /// <param name="phoneNumberWithCountryCode">Phone number with country code [set null if you don't want to change it]</param>
+        /// <param name="cityLocation">City Location (get it from <see cref="IBusinessProcessor.SearchCityLocationAsync(string)"/>)</param>
+        /// <param name="streetAddress">Street address</param>
+        /// <param name="zipCode">Zip code</param>
+        /// <param name="businessContactType">Phone contact type (<see cref="InstaUserInfo.BusinessContactMethod"/>) [set null if you don't want to change it]</param>
+        public async Task<IResult<InstaBusinessUser>> UpdateBusinessInfoAsync(string phoneNumberWithCountryCode,
+            InstaBusinessCityLocation cityLocation, 
+            string streetAddress, string zipCode,
+            InstaBusinessContactType? businessContactType)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var info = await GetBusinessAccountInformationAsync();
+                if (!info.Succeeded)
+                    return Result.Fail<InstaBusinessUser>("Cannot get current business information");
+
+                var user = info.Value;
+                if(!user.IsBusiness)
+                    return Result.Fail<InstaBusinessUser>($"'{user.Username}' is not a business account");
+
+                var instaUri = UriCreator.GetUpdateBusinessInfoUri();
+
+
+                if(phoneNumberWithCountryCode == null)
+                    phoneNumberWithCountryCode = $"{user.PublicPhoneCountryCode}{user.PublicPhoneNumber}";
+
+                if (businessContactType == null)
+                    businessContactType = user.BusinessContactMethod;
+
+                var publicPhoneContact = new JObject
+                {
+                    {"public_phone_number", phoneNumberWithCountryCode},
+                    {"business_contact_method", businessContactType.ToString().ToUpper()},
+                };
+
+
+                var cityId = "0";
+                if (cityLocation != null)
+                    cityId = cityLocation.Id;
+
+                var businessAddress = new JObject
+                {
+                    {"address_street", streetAddress ?? string.Empty},
+                    {"city_id", cityId},
+                    {"zip", zipCode ?? string.Empty},
+                };
+                
+
+                var data = new JObject
+                {
+                    {"page_id", user.PageId.Value.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"public_phone_contact", publicPhoneContact.ToString(Formatting.None)},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"public_email", user.PublicEmail ?? string.Empty},
+                    {"business_address", businessAddress.ToString(Formatting.None)},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
+            }
+        }
+        /// <summary>
+        ///     Remove business location
+        /// </summary>
+        public async Task<IResult<InstaBusinessUser>> RemoveBusinessLocationAsync()
+        {
+            return await UpdateBusinessInfoAsync(null, null, null, null, null);
+        }
+        /// <summary>
+        ///     Get logged in business account information
+        /// </summary>
+        public async Task<IResult<InstaUserInfo>> GetBusinessAccountInformationAsync()
+        {
+            return await _instaApi.UserProcessor.GetUserInfoByIdAsync(_user.LoggedInUser.Pk);
         }
     }
 }
