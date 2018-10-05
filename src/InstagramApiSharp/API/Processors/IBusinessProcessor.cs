@@ -76,6 +76,10 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="categoryId">Category id</param>
         Task<IResult<InstaBusinessCategoryList>> GetSubCategoriesAsync(string categoryId);
-
+        /// <summary>
+        ///     Search location for business account
+        /// </summary>
+        /// <param name="cityOrTown">City/town name</param>
+        Task<IResult<InstaBusinessCityLocationList>> SearchCityLocationAsync(string cityOrTown);
     }
 }

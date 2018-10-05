@@ -466,14 +466,6 @@ namespace InstagramApiSharp.API.Processors
                 if (string.IsNullOrEmpty(categoryId))
                     return Result.Fail<InstaBusinessCategoryList>("Category id cannot be null or empty");
 
-                //query_id=425892567746558&
-                //locale=en_US&
-                //vc_policy=ads_viewer_context_policy&
-                //signed_body=1ebc15eb3daf996c42d699ce628a19d05cf37d5480d0376a8b8ed4a3faac0198.&
-                //ig_sig_key_version=4&
-                //strip_nulls=true&
-                //strip_defaults=true&
-                //query_params={"0":"1000"}
                 var instaUri = UriCreator.GetBusinessGraphQLUri();
 
                 var queryParams = new JObject
@@ -505,6 +497,52 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaBusinessCategoryList>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Search city location for business account
+        /// </summary>
+        /// <param name="cityOrTown">City/town name</param>
+        public async Task<IResult<InstaBusinessCityLocationList>> SearchCityLocationAsync(string cityOrTown)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (string.IsNullOrEmpty(cityOrTown))
+                    return Result.Fail<InstaBusinessCityLocationList>("CityOrTown cannot be null or empty");
+
+                var instaUri = UriCreator.GetBusinessGraphQLUri();
+
+                var queryParams = new JObject
+                {
+                    {"0", cityOrTown}
+                };
+                var data = new Dictionary<string, string>
+                {
+                    {"query_id", "1860980127555904"},
+                    {"locale", InstaApiConstants.ACCEPT_LANGUAGE.Replace("-", "_")},
+                    {"vc_policy", "ads_viewer_context_policy"},
+                    {"signed_body", $"{_httpHelper._apiVersion.SignatureKey}."},
+                    {InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION},
+                    {"strip_nulls", "true"},
+                    {"strip_defaults", "true"},
+                    {"query_params", queryParams.ToString(Formatting.None)},
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessCityLocationList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessCityLocationList>(json, new InstaBusinessCityLocationDataConverter());
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessCityLocationList>(exception);
             }
         }
     }
