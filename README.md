@@ -76,7 +76,7 @@ Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for docume
 ## Version changes
 v1.1.2.6
 - [Add] SetRequestDelay to IInstaApi
-- [Wiki update] for FAQ
+- [Wiki update] for [FAQ page](https://github.com/ramtinak/InstagramApiSharp/wiki/FAQ)
 
 v1.1.2.5
 - [Bugfix] for uploading video album (thx to [@rasaradin](https://github.com/rasaradin) for report)
