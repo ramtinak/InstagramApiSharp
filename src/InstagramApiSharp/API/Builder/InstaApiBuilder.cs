@@ -145,6 +145,8 @@ namespace InstagramApiSharp.API.Builder
         /// </returns>
         public IInstaApiBuilder SetRequestDelay(IRequestDelay delay)
         {
+            if (delay == null)
+                delay = RequestDelay.Empty();
             _delay = delay;
             return this;
         }

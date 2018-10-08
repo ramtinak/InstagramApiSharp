@@ -22,6 +22,7 @@ namespace InstagramApiSharp.API
 {
     internal class InstaApi : IInstaApi
     {
+        private IRequestDelay _delay = RequestDelay.Empty();
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private InstaApiVersionType _apiVersionType;
@@ -170,6 +171,19 @@ namespace InstagramApiSharp.API
             ValidateUser();
             ValidateLoggedIn();
             return await _userProcessor.GetCurrentUserAsync();
+        }
+
+        /// <summary>
+        ///     Set delay between requests. Useful when API supposed to be used for mass-bombing.
+        /// </summary>
+        /// <param name="delay">Timespan delay</param>
+        public void SetRequestDelay(IRequestDelay delay)
+        {
+            if (delay == null)
+                delay = RequestDelay.Empty();
+            _delay = delay;
+            _httpRequestProcessor.Delay = _delay;
+            
         }
         #region Authentication/State data
         private bool _isUserAuthenticated;

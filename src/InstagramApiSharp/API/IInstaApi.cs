@@ -143,6 +143,11 @@ namespace InstagramApiSharp.API
         ///     Get Accept Language
         /// </summary>
         string GetAcceptLanguage();
+        /// <summary>
+        ///     Set delay between requests. Useful when API supposed to be used for mass-bombing.
+        /// </summary>
+        /// <param name="delay">Timespan delay</param>
+        void SetRequestDelay(IRequestDelay delay);
 
         #region Async Members
 

@@ -15,5 +15,6 @@ namespace InstagramApiSharp.Classes
         Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage, HttpCompletionOption completionOption);
         Task<string> SendAndGetJsonAsync(HttpRequestMessage requestMessage, HttpCompletionOption completionOption);
         Task<string> GeJsonAsync(Uri requestUri);
+        IRequestDelay Delay { get; set; }
     }
 }
