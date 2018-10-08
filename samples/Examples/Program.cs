@@ -47,7 +47,7 @@ namespace Examples
                 // create new InstaApi instance using Builder
                 _instaApi = InstaApiBuilder.CreateBuilder()
                     .SetUser(userSession)
-                    .UseLogger(new DebugLogger(LogLevel.Exceptions)) // use logger for requests and debug messages
+                    .UseLogger(new DebugLogger(LogLevel.All)) // use logger for requests and debug messages
                     .SetRequestDelay(delay)
                     .Build();
                 // create account
