@@ -157,4 +157,4 @@ This code is in no way affiliated with, authorized, maintained, sponsored or end
 
 
 
-Iranian developers - (c) 2018 | Tabestan & Paeez 1397.
+Iranian developers - (c) 2018 | Tabestan & Paeiz 1397.
