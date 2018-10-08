@@ -42,8 +42,13 @@ namespace InstagramApiSharp.Logger
         public void LogException(Exception ex)
         {
             if (_logLevel < LogLevel.Exceptions) return;
+#if WINDOWS_UWP
+            System.Diagnostics.Debug.WriteLine($"Exception: {ex}");
+            System.Diagnostics.Debug.WriteLine($"Stacktrace: {ex.StackTrace}");
+#else
             Console.WriteLine($"Exception: {ex}");
             Console.WriteLine($"Stacktrace: {ex.StackTrace}");
+#endif
         }
 
         public void LogInfo(string info)
@@ -94,7 +99,11 @@ namespace InstagramApiSharp.Logger
 
         private void Write(string message)
         {
+#if WINDOWS_UWP
+            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString()}:\t{message}");
+#else
             Console.WriteLine($"{DateTime.Now.ToString()}:\t{message}");
+#endif
         }
     }
 }
