@@ -13,7 +13,7 @@ namespace InstagramApiSharp.Helpers
         /// <summary>
         /// 20kb
         /// </summary>
-        private const int defaultBufferSize = 5 * 4096;
+        private const int defaultBufferSize = 25 * 4096;
 
         private HttpContent content;
         private readonly int _bufferSize;
@@ -29,6 +29,8 @@ namespace InstagramApiSharp.Helpers
             }
 
             this.content = content ?? throw new ArgumentNullException("content");
+            if (bufferSize < 5120)
+                bufferSize = defaultBufferSize;
             _bufferSize = bufferSize;
             this.progress = progress;
 

@@ -483,8 +483,8 @@ namespace InstagramApiSharp.API.Processors
                 upProgress.Name = "Album upload";
                 progress?.Invoke(upProgress);
                 string[] imagesUploadIds = null;
-                var index = 0;
-                if (images != null)
+                var index = 1;
+                if (images != null && images.Any())
                 {
                     imagesUploadIds = new string[images.Length];
                     foreach (var image in images)
@@ -542,15 +542,15 @@ namespace InstagramApiSharp.API.Processors
                 }
 
                 var videosDic = new Dictionary<string, InstaVideo>();
-                var vidIndex = 0;
-                if (videos != null)
+                var vidIndex = 1;
+                if (videos != null && videos.Any())
                 {
                     foreach (var video in videos)
                     {
                         var instaUri = UriCreator.GetUploadVideoUri();
                         var uploadId = ApiRequestMessage.GenerateUploadId();
                         upProgress.UploadId = uploadId;
-                        upProgress.Name = $"[Album] Video uploading {index}/{images.Length}";
+                        upProgress.Name = $"[Album] Video uploading {vidIndex}/{videos.Length}";
 
                         var requestContent = new MultipartFormDataContent(uploadId)
                         {

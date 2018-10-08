@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.2.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.2.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -74,6 +74,9 @@ Task<IResult<object>>
 Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.2.5
+- [Bugfix] for uploading video album (thx to [@rasaradin](https://github.com/rasaradin) for report)
+
 v1.1.2.4
 - [Add] ValidateUrlAsync to BusinessProcessor
 - [Add] GetBusinessPartnersButtonsAsync to BusinessProcessor

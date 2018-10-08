@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.2.4</Version>
-    <AssemblyVersion>1.1.2.4</AssemblyVersion>
-    <FileVersion>1.1.2.4</FileVersion>
+    <Version>1.1.2.5</Version>
+    <AssemblyVersion>1.1.2.5</AssemblyVersion>
+    <FileVersion>1.1.2.5</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -37,7 +37,10 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.2.4
+    <PackageReleaseNotes>v1.1.2.5
+- [Bugfix] for uploading video album (thx to rohollah saberi for report)
+
+v1.1.2.4
 - [Add] ValidateUrlAsync to BusinessProcessor
 - [Add] GetBusinessPartnersButtonsAsync to BusinessProcessor
 - [Add] AddOrChangeBusinessButtonAsync to BusinessProcessor
