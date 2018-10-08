@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.2.7</Version>
-    <AssemblyVersion>1.1.2.7</AssemblyVersion>
-    <FileVersion>1.1.2.7</FileVersion>
+    <Version>1.1.2.8</Version>
+    <AssemblyVersion>1.1.2.8</AssemblyVersion>
+    <FileVersion>1.1.2.8</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -37,7 +37,10 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.2.7
+    <PackageReleaseNotes>v1.1.2.8
+- [Bugfix] for uploading album (photos)
+
+v1.1.2.7
 - [Support] DebugLogger for uwp
 
 v1.1.2.6

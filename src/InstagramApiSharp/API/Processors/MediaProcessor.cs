@@ -483,7 +483,7 @@ namespace InstagramApiSharp.API.Processors
                 upProgress.Name = "Album upload";
                 progress?.Invoke(upProgress);
                 string[] imagesUploadIds = null;
-                var index = 1;
+                var index = 0;
                 if (images != null && images.Any())
                 {
                     imagesUploadIds = new string[images.Length];
@@ -492,7 +492,7 @@ namespace InstagramApiSharp.API.Processors
                         var instaUri = UriCreator.GetUploadPhotoUri();
                         var uploadId = ApiRequestMessage.GenerateUploadId();
                         upProgress.UploadId = uploadId;
-                        upProgress.Name = $"[Album] Photo uploading {index}/{images.Length}";
+                        upProgress.Name = $"[Album] Photo uploading {index + 1}/{images.Length}";
                         upProgress.UploadState = InstaUploadState.Uploading;
                         progress?.Invoke(upProgress);
                         var requestContent = new MultipartFormDataContent(uploadId)
