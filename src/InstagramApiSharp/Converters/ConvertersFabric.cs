@@ -5,6 +5,7 @@ using InstagramApiSharp.Classes.Models.Business;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.Business;
 using InstagramApiSharp.Converters.Business;
+using InstagramApiSharp.Converters.Users;
 
 namespace InstagramApiSharp.Converters
 {
@@ -303,6 +304,12 @@ InstaHighlightReelResponse response)
             InstaSuggestionItemResponse response)
         {
             return new InstaSuggestionItemConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaSuggestions, InstaSuggestionUserContainerResponse> GetSuggestionsConverter(
+            InstaSuggestionUserContainerResponse response)
+        {
+            return new InstaSuggestionsConverter { SourceObject = response };
         }
 
         public IObjectConverter<InstaStatistics, InstaStatisticsRootResponse> GetStatisticsConverter(

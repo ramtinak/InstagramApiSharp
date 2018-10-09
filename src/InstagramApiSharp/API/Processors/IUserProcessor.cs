@@ -150,6 +150,11 @@ namespace InstagramApiSharp.API.Processors
         /// </returns>
         Task<IResult<InstaMediaList>> GetUserTagsAsync(long userId, PaginationParameters paginationParameters);
         /// <summary>
+        ///     Get suggestion users
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        Task<IResult<InstaSuggestions>> GetSuggesstionUsersAsync(PaginationParameters paginationParameters);
+        /// <summary>
         ///     Ignore user friendship requst.
         /// </summary>
         /// <param name="userId">User id (pk)</param>
