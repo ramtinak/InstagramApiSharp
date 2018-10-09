@@ -39,7 +39,12 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="tagname">Tag name</param>
         Task<IResult<InstaHashtagStory>> GetHashtagStoriesAsync(string tagname);
-        
+        /// <summary>
+        ///     Get top (ranked) hashtag media list
+        /// </summary>
+        /// <param name="tagname">Tag name</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        Task<IResult<InstaHashtagMedia>> GetTopHashtagMediaListAsync(string tagname, PaginationParameters paginationParameters);
         /// <summary>
         ///     Get recent hashtag media list
         /// </summary>

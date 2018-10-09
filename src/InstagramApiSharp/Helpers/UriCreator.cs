@@ -1434,8 +1434,8 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetHashtagRecentMediaUri(string hashtag, string rankToken = null, string nextId = null,
-            int? page = null, IEnumerable<long> nextMediaIds = null)
+        public static Uri GetHashtagRecentMediaUri(string hashtag, string rankToken = null,
+            string nextId = null, int? page = null, IEnumerable<long> nextMediaIds = null)
         {
             if (
                 !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_RECENT, hashtag),
@@ -1461,6 +1461,26 @@ namespace InstagramApiSharp.Helpers
             }
             return instaUri;
         }
-
+        public static Uri GetHashtagRankedMediaUri(string hashtag, string rankToken = null,
+            string nextId = null, int? page = null)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_RANKED, hashtag),
+                    out var instaUri))
+                throw new Exception("Cant create URI for hashtag ranked(top) media");
+            if (!string.IsNullOrEmpty(rankToken))
+                instaUri = instaUri.AddQueryParameter("rank_token", rankToken);
+            if (!string.IsNullOrEmpty(nextId))
+            {
+                instaUri = instaUri
+                    .AddQueryParameter("max_id", nextId);
+            }
+            if (page != null && page > 0)
+            {
+                instaUri = instaUri
+                    .AddQueryParameter("page", page.ToString());
+            }
+            return instaUri;
+        }
     }
 }
