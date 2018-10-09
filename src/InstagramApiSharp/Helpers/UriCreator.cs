@@ -3,6 +3,7 @@ using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace InstagramApiSharp.Helpers
 {
@@ -1433,6 +1434,33 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetHashtagRecentMediaUri(string hashtag, string rankToken = null, string nextId = null,
+            int? page = null, IEnumerable<long> nextMediaIds = null)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_RECENT, hashtag),
+                    out var instaUri))
+                throw new Exception("Cant create URI for hashtag recent media");
+            if(!string.IsNullOrEmpty(rankToken))
+                instaUri = instaUri.AddQueryParameter("rank_token", rankToken);
+            if (!string.IsNullOrEmpty(nextId))
+            {
+                instaUri = instaUri
+                    .AddQueryParameter("max_id", nextId);
+            }
+            if (page != null && page > 0)
+            {
+                instaUri = instaUri
+                    .AddQueryParameter("page", page.ToString());
+            }
+            if (nextMediaIds != null && nextMediaIds.Any())
+            {
+                var mediaIds = $"[{string.Join(",", nextMediaIds)}]";
+                instaUri = instaUri
+                     .AddQueryParameter("next_media_ids", mediaIds);
+            }
+            return instaUri;
+        }
 
     }
 }

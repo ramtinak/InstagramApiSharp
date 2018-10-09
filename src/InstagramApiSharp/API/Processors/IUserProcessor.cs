@@ -153,7 +153,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Get suggestion users
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        Task<IResult<InstaSuggestions>> GetSuggesstionUsersAsync(PaginationParameters paginationParameters);
+        Task<IResult<InstaSuggestions>> GetSuggestionUsersAsync(PaginationParameters paginationParameters);
         /// <summary>
         ///     Ignore user friendship requst.
         /// </summary>

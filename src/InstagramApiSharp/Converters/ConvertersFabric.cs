@@ -361,5 +361,12 @@ InstaHighlightReelResponse response)
         {
             return new InstaHashtagStoryConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaHashtagMedia, InstaHashtagMediaListResponse> GetHashtagMediaListConverter(
+            InstaHashtagMediaListResponse response)
+        {
+            return new InstaHashtagMediaConverter { SourceObject = response };
+        }
+
     }
 }

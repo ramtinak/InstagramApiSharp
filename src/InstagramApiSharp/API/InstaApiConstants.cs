@@ -370,7 +370,7 @@ namespace InstagramApiSharp.API
         public const string TAG_FOLLOW = API_SUFFIX + "/tags/follow/{0}/";
         public const string TAG_UNFOLLOW = API_SUFFIX + "/tags/unfollow/{0}/";
         public const string TAG_STORY = API_SUFFIX + "/tags/{0}/story/";
-
+        public const string TAG_RECENT = API_SUFFIX + "/tags/{0}/recent_sections/";
 
         /// <summary>
         /// post params:

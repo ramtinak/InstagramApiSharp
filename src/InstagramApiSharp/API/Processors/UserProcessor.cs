@@ -524,7 +524,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Get suggestion users
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        public async Task<IResult<InstaSuggestions>> GetSuggesstionUsersAsync(PaginationParameters paginationParameters)
+        public async Task<IResult<InstaSuggestions>> GetSuggestionUsersAsync(PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -533,18 +533,18 @@ namespace InstagramApiSharp.API.Processors
                 {
                     return ConvertersFabric.Instance.GetSuggestionsConverter(suggestResponse).Convert();
                 }
-                var suggestionsResponse = await GetSuggesstionUsers(paginationParameters);
+                var suggestionsResponse = await GetSuggestionUsers(paginationParameters);
                 if(!suggestionsResponse.Succeeded)
                     return Result.Fail(suggestionsResponse.Info, Convert(suggestionsResponse.Value));
 
-                suggestionsResponse.Value.MaxId = paginationParameters.NextId = suggestionsResponse.Value.MaxId;
+                paginationParameters.NextId = suggestionsResponse.Value.MaxId;
 
                 paginationParameters.PagesLoaded++;
                 while (suggestionsResponse.Value.MoreAvailable
                      && !string.IsNullOrEmpty(paginationParameters.NextId)
                      && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var moreSuggestions = await GetSuggesstionUsers(paginationParameters);
+                    var moreSuggestions = await GetSuggestionUsers(paginationParameters);
                     if (!moreSuggestions.Succeeded)
                         return Result.Fail(moreSuggestions.Info, Convert(moreSuggestions.Value));
 
@@ -838,9 +838,8 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaSuggestionUserContainerResponse>> GetSuggesstionUsers(PaginationParameters paginationParameters)
+        private async Task<IResult<InstaSuggestionUserContainerResponse>> GetSuggestionUsers(PaginationParameters paginationParameters)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetDiscoverPeopleUri();

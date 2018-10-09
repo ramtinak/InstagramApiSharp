@@ -194,7 +194,7 @@ namespace InstagramApiSharp.API.Processors
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaHashtagStory>(response, json);
 
-                var obj = JsonConvert.DeserializeObject<InstaHashtagStoryContainerResponse>(tagname);
+                var obj = JsonConvert.DeserializeObject<InstaHashtagStoryContainerResponse>(json);
 
                 return Result.Success(ConvertersFabric.Instance.GetHashtagStoryConverter(obj).Convert());
             }
@@ -204,7 +204,81 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaHashtagStory>(exception);
             }
         }
+        /// <summary>
+        ///     Get recent hashtag media list
+        /// </summary>
+        /// <param name="tagname">Tag name</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaHashtagMedia>> GetRecentHashtagMediaListAsync(string tagname, PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                InstaHashtagMedia Convert(InstaHashtagMediaListResponse hashtagMediaListResponse)
+                {
+                    return ConvertersFabric.Instance.GetHashtagMediaListConverter(hashtagMediaListResponse).Convert();
+                }
+                var mediaResponse = await GetHashtagRecentMedia(tagname,
+                    _user.RankToken ?? Guid.NewGuid().ToString(),
+                    paginationParameters.NextId);
+                if(!mediaResponse.Succeeded)
+                    Result.Fail(mediaResponse.Info, Convert(mediaResponse.Value));
 
+                paginationParameters.NextId = mediaResponse.Value.NextMaxId;
+                paginationParameters.PagesLoaded++;
+                while (mediaResponse.Value.MoreAvailable
+                    && !string.IsNullOrEmpty(paginationParameters.NextId)
+                    && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var moreMedias = await GetHashtagRecentMedia(tagname, _user.RankToken ?? Guid.NewGuid().ToString(),
+                        paginationParameters.NextId, mediaResponse.Value.NextPage, mediaResponse.Value.NextMediaIds);
+                    if (!moreMedias.Succeeded)
+                        return Result.Fail(moreMedias.Info, Convert(moreMedias.Value));
 
+                    mediaResponse.Value.MoreAvailable = moreMedias.Value.MoreAvailable;
+                    mediaResponse.Value.NextMaxId = paginationParameters.NextId = moreMedias.Value.NextMaxId;
+                    mediaResponse.Value.AutoLoadMoreEnabled = moreMedias.Value.AutoLoadMoreEnabled;
+                    mediaResponse.Value.NextMediaIds = moreMedias.Value.NextMediaIds;
+                    mediaResponse.Value.NextPage = moreMedias.Value.NextPage;
+                }
+
+                return Result.Success(ConvertersFabric.Instance.GetHashtagMediaListConverter(mediaResponse.Value).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaHashtagMedia>(exception);
+            }
+        }
+
+        private async Task<IResult<InstaHashtagMediaListResponse>> GetHashtagRecentMedia(string tagname,
+            string rankToken = null,
+            string maxId = null,
+            int? page = null,
+            List<long> nextMediaIds = null)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetHashtagRecentMediaUri(tagname, rankToken,
+                    maxId, page, nextMediaIds);
+
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaHashtagMediaListResponse>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaHashtagMediaListResponse>(json);
+
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaHashtagMediaListResponse>(exception);
+            }
+        }
     }
 }
