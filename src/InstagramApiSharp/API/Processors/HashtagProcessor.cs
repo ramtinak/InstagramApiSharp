@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.Models.Hashtags;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Converters;
 using InstagramApiSharp.Helpers;
@@ -175,6 +176,35 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+        /// <summary>
+        ///     Get stories of an hashtag
+        /// </summary>
+        /// <param name="tagname">Tag name</param>
+        public async Task<IResult<InstaHashtagStory>> GetHashtagStoriesAsync(string tagname)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetHashtagStoryUri(tagname);
+                
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaHashtagStory>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaHashtagStoryContainerResponse>(tagname);
+
+                return Result.Success(ConvertersFabric.Instance.GetHashtagStoryConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaHashtagStory>(exception);
+            }
+        }
+
 
     }
 }

@@ -1424,5 +1424,15 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for unfollow hashtag");
             return instaUri;
         }
+        public static Uri GetHashtagStoryUri(string hashtag)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_STORY, hashtag),
+                    out var instaUri))
+                throw new Exception("Cant create URI for hashtag story");
+            return instaUri;
+        }
+
+
     }
 }

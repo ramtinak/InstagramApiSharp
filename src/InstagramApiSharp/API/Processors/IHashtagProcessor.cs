@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.Models.Hashtags;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -33,5 +34,12 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="tagname">Tag name</param>
         Task<IResult<bool>> UnFollowHashtagAsync(string tagname);
+        /// <summary>
+        ///     Get stories of an hashtag
+        /// </summary>
+        /// <param name="tagname">Tag name</param>
+        Task<IResult<InstaHashtagStory>> GetHashtagStoriesAsync(string tagname);
+
+
     }
 }

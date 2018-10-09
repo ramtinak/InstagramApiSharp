@@ -2,9 +2,11 @@
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.Models.Business;
+using InstagramApiSharp.Classes.Models.Hashtags;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.Business;
 using InstagramApiSharp.Converters.Business;
+using InstagramApiSharp.Converters.Hashtags;
 using InstagramApiSharp.Converters.Users;
 
 namespace InstagramApiSharp.Converters
@@ -346,6 +348,18 @@ InstaHighlightReelResponse response)
             InstaBusinessUserContainerResponse response)
         {
             return new InstaBusinessUserConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaHashtagOwner, InstaHashtagOwnerResponse> GetHashtagOwnerConverter(
+            InstaHashtagOwnerResponse response)
+        {
+            return new InstaHashtagOwnerConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaHashtagStory, InstaHashtagStoryContainerResponse> GetHashtagStoryConverter(
+            InstaHashtagStoryContainerResponse response)
+        {
+            return new InstaHashtagStoryConverter { SourceObject = response };
         }
     }
 }
