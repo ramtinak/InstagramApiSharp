@@ -8,11 +8,15 @@
  */
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
+using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.ResponseWrappers;
+using InstagramApiSharp.Converters;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
@@ -146,8 +150,71 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<DiscoverSearchResponse>(exception);
             }
         }
-        
-        
+
+
+        #region Other functions
+
+        /// <summary>
+        ///     Sync your phone contact list to instagram
+        ///     <para>Note:You can find your friends in instagram with this function</para>
+        /// </summary>
+        /// <param name="instaContacts">Contact list</param>
+        public async Task<IResult<InstaContactUserList>> SyncContactsAsync(params InstaContact[] instaContacts)
+        {
+            try
+            {
+                var contacts = new InstaContactList();
+                contacts.AddRange(instaContacts);
+                return await SyncContactsAsync(contacts);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaContactUserList>(exception);
+            }
+        }
+        /// <summary>
+        ///     Sync your phone contact list to instagram
+        ///     <para>Note:You can find your friends in instagram with this function</para>
+        /// </summary>
+        /// <param name="instaContacts">Contact list</param>
+        public async Task<IResult<InstaContactUserList>> SyncContactsAsync(InstaContactList instaContacts)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetSyncContactsUri();
+
+                var jsonContacts = JsonConvert.SerializeObject(instaContacts);
+
+                var fields = new Dictionary<string, string>
+                {
+                    {"contacts", jsonContacts}
+                };
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaContactUserList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaContactUserListResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetUserContactListConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaContactUserList>(exception);
+            }
+        }
+
+        #endregion Other functions
+
+
+
 
         /// <summary>
         /// NOT COMPLETE

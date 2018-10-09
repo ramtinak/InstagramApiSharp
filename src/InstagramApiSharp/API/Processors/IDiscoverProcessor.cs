@@ -7,6 +7,7 @@
  * IRANIAN DEVELOPERS
  */
 using InstagramApiSharp.Classes;
+using InstagramApiSharp.Classes.Models;
 using System.Threading.Tasks;
 
 namespace InstagramApiSharp.API.Processors
@@ -45,7 +46,22 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         Task<IResult<DiscoverSearchResponse>> SearchPeopleAsync(string content, int count = 30);
 
+        #region Other functions
 
+        /// <summary>
+        ///     Sync your phone contact list to instagram
+        ///     <para>Note:You can find your friends in instagram with this function</para>
+        /// </summary>
+        /// <param name="instaContacts">Contact list</param>
+        Task<IResult<InstaContactUserList>> SyncContactsAsync(params InstaContact[] instaContacts);
+        /// <summary>
+        ///     Sync your phone contact list to instagram
+        ///     <para>Note:You can find your friends in instagram with this function</para>
+        /// </summary>
+        /// <param name="instaContacts">Contact list</param>
+        Task<IResult<InstaContactUserList>> SyncContactsAsync(InstaContactList instaContacts);
+
+        #endregion Other functions
 
         ///// <summary>
         ///// NOT COMPLETE

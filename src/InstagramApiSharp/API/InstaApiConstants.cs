@@ -373,6 +373,9 @@ namespace InstagramApiSharp.API
         public const string TAG_RECENT = API_SUFFIX + "/tags/{0}/recent_sections/";
         public const string TAG_RANKED = API_SUFFIX + "/tags/{0}/ranked_sections/";
 
+        public const string ADDRESSBOOK_LINK = API_SUFFIX + "/address_book/link/?include=extra_display_name,thumbnails";
+
+
         /// <summary>
         /// post params:
         /// <para>"action":"click"</para>

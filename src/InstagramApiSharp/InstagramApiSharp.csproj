@@ -289,4 +289,8 @@ v1.0.4.0
   <ItemGroup>
     <PackageReference Update="NETStandard.Library" Version="2.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Converters\Account\" />
+  </ItemGroup>
 </Project>

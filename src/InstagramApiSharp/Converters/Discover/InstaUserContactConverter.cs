@@ -1,17 +1,17 @@
-using System;
+﻿using System;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
 
 namespace InstagramApiSharp.Converters
 {
-    internal class InstaUserShortConverter : IObjectConverter<InstaUserShort, InstaUserShortResponse>
+    internal class InstaUserContactConverter : IObjectConverter<InstaUserContact, InstaUserContactResponse>
     {
-        public InstaUserShortResponse SourceObject { get; set; }
+        public InstaUserContactResponse SourceObject { get; set; }
 
-        public InstaUserShort Convert()
+        public InstaUserContact Convert()
         {
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
-            var user = new InstaUserShort
+            var user = new InstaUserContact
             {
                 Pk = SourceObject.Pk,
                 UserName = SourceObject.UserName,
@@ -20,6 +20,7 @@ namespace InstagramApiSharp.Converters
                 ProfilePicture = SourceObject.ProfilePicture,
                 ProfilePictureId = SourceObject.ProfilePictureId,
                 IsVerified = SourceObject.IsVerified,
+                ExtraDisplayName = SourceObject.ExtraDisplayName,
                 ProfilePicUrl = SourceObject.ProfilePicture
             };
             return user;

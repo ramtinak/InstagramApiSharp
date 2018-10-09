@@ -368,5 +368,17 @@ InstaHighlightReelResponse response)
             return new InstaHashtagMediaConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaUserContact, InstaUserContactResponse> GetSingleUserContactConverter(
+            InstaUserContactResponse response)
+        {
+            return new InstaUserContactConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaContactUserList, InstaContactUserListResponse> GetUserContactListConverter(
+            InstaContactUserListResponse response)
+        {
+            return new InstaUserContactListConverter { SourceObject = response };
+        }
+
     }
 }

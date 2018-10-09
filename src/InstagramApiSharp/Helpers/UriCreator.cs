@@ -1482,5 +1482,14 @@ namespace InstagramApiSharp.Helpers
             }
             return instaUri;
         }
+        public static Uri GetSyncContactsUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ADDRESSBOOK_LINK,
+                    out var instaUri))
+                throw new Exception("Cant create URI for sync contacts");
+            return instaUri;
+        }
+
     }
 }
