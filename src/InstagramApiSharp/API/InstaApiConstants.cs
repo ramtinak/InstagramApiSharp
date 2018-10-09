@@ -367,6 +367,9 @@ namespace InstagramApiSharp.API
         /// <para>related_types = ["location","hashtag"]</para>
         /// </summary>
         public const string TAG_RELATED = API_SUFFIX + "/tags/{0}/related/";
+        public const string TAG_FOLLOW = API_SUFFIX + "/tags/follow/{0}/";
+        public const string TAG_UNFOLLOW = API_SUFFIX + "/tags/unfollow/{0}/";
+
         /// <summary>
         /// post params:
         /// <para>"action":"click"</para>

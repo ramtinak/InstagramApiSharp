@@ -1408,5 +1408,21 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for business graph ql");
             return instaUri;
         }
+        public static Uri GetFollowHashtagUri(string hashtag)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_FOLLOW, hashtag),
+                    out var instaUri))
+                throw new Exception("Cant create URI for follow hashtag");
+            return instaUri;
+        }
+        public static Uri GetUnFollowHashtagUri(string hashtag)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_UNFOLLOW, hashtag),
+                    out var instaUri))
+                throw new Exception("Cant create URI for unfollow hashtag");
+            return instaUri;
+        }
     }
 }

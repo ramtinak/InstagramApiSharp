@@ -23,5 +23,15 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="tagname">Tagname</param>
         /// <returns>Hashtag information</returns>
         Task<IResult<InstaHashtag>> GetHashtagInfoAsync(string tagname);
+        /// <summary>
+        ///     Follow a hashtag
+        /// </summary>
+        /// <param name="tagname">Tag name</param>
+        Task<IResult<bool>> FollowHashtagAsync(string tagname);
+        /// <summary>
+        ///     Unfollow a hashtag
+        /// </summary>
+        /// <param name="tagname">Tag name</param>
+        Task<IResult<bool>> UnFollowHashtagAsync(string tagname);
     }
 }
