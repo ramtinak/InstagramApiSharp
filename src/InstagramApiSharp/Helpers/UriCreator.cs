@@ -1491,5 +1491,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetDirectPresenceUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_PRESENCE,
+                    out var instaUri))
+                throw new Exception("Cant create URI for direct presence");
+            return instaUri;
+        }
     }
 }

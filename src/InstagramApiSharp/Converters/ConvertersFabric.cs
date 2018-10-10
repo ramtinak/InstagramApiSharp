@@ -380,5 +380,16 @@ InstaHighlightReelResponse response)
             return new InstaUserContactListConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaUserPresence, InstaUserPresenceResponse> GetSingleUserPresenceConverter(
+            InstaUserPresenceResponse response)
+        {
+            return new InstaSingleUserPresenceConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaUserPresenceList, InstaUserPresenceContainerResponse> GetUserPresenceListConverter(
+            InstaUserPresenceContainerResponse response)
+        {
+            return new InstaUserPresenceListConverter { SourceObject = response };
+        }
     }
 }

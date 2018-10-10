@@ -874,6 +874,34 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 return Result.Fail<bool>(exception);
             }
         }
+        /// <summary>
+        ///     Get direct users presence
+        ///     <para>Note: You can use this function to find out who is online and who isn't.</para>
+        /// </summary>
+        public async Task<IResult<InstaUserPresenceList>> GetUsersPresenceAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetDirectPresenceUri();
+                
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUserPresenceList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaUserPresenceContainerResponse>(json,
+                    new InstaUserPresenceContainerDataConverter());
+                return Result.Success(ConvertersFabric.Instance.GetUserPresenceListConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUserPresenceList>(exception);
+            }
+        }
         private async Task<IResult<bool>> DeclineDirectPendingRequests(bool all, params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);

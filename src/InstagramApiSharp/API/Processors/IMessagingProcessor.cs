@@ -250,5 +250,10 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="threadId">Thread id</param>
         Task<IResult<bool>> LeaveGroupThreadAsync(string threadId);
+        /// <summary>
+        ///     Get direct users presence
+        ///     <para>Note: You can use this function to find out who is online and who isn't.</para>
+        /// </summary>
+        Task<IResult<InstaUserPresenceList>> GetUsersPresenceAsync();
     }
 }

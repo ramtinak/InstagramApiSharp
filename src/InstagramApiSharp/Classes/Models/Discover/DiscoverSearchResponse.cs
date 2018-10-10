@@ -12,7 +12,7 @@ using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes
 {
-    public class DiscoverSearchResponse
+    public class InstaDiscoverSearchResponse
     {
         [JsonProperty("num_results")]
         public int NumResults { get; set; }

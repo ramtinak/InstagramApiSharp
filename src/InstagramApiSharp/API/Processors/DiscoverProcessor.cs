@@ -130,7 +130,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="text">Text to search</param>
         /// <param name="count">Count</param>
         /// <returns></returns>
-        public async Task<IResult<DiscoverSearchResponse>> SearchPeopleAsync(string text, int count = 30)
+        public async Task<IResult<InstaDiscoverSearchResponse>> SearchPeopleAsync(string text, int count = 30)
         {
             try
             {
@@ -140,14 +140,14 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<DiscoverSearchResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<DiscoverSearchResponse>(json);
+                    return Result.UnExpectedResponse<InstaDiscoverSearchResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDiscoverSearchResponse>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<DiscoverSearchResponse>(exception);
+                return Result.Fail<InstaDiscoverSearchResponse>(exception);
             }
         }
 

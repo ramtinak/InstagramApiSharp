@@ -44,7 +44,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="text">Text to search</param>
         /// <param name="count">Count</param>
         /// <returns></returns>
-        Task<IResult<DiscoverSearchResponse>> SearchPeopleAsync(string content, int count = 30);
+        Task<IResult<InstaDiscoverSearchResponse>> SearchPeopleAsync(string content, int count = 30);
 
         #region Other functions
 
