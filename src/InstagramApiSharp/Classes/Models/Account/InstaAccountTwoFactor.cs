@@ -9,16 +9,16 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaAccountTwoFactorResponse
+    public class InstaAccountTwoFactor
     {
         [JsonProperty("backup_codes")]
         public List<string> BackupCodes { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        internal string Status { get; set; }
         [JsonProperty("error_type")]
-        public string ErrorType { get; set; }
+        internal string ErrorType { get; set; }
         [JsonProperty("message")]
         public string Message { get; set; }
     }

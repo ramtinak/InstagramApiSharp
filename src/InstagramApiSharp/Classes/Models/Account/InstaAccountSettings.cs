@@ -9,9 +9,10 @@
 
 using System.Collections.Generic;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Enums;
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.Models
 {
     public class InstaStorySettings
     {
@@ -37,7 +38,7 @@ namespace InstagramApiSharp.Classes
         }
     
         [JsonProperty("message_prefs")]
-        public string MessagePrefs { get; set; }
+        internal string MessagePrefs { get; set; }
         [JsonProperty("blocked_reels")]
         public InstaAccountBlockedReels BlockedReels { get; set; }
         [JsonProperty("besties")]
@@ -57,7 +58,7 @@ namespace InstagramApiSharp.Classes
     public class InstaAccountBlockedReels
     {
         [JsonProperty("users")]
-        public List<InstaBroadcastUser> Users { get; set; }
+        public List<InstaUserResponse> Users { get; set; }
         [JsonProperty("big_list")]
         public bool BigList { get; set; }
         [JsonProperty("page_size")]
@@ -67,7 +68,7 @@ namespace InstagramApiSharp.Classes
     public class InstaAccountBesties
     {
         [JsonProperty("users")]
-        public List<InstaBroadcastUser> Users { get; set; }
+        public List<InstaUserResponse> Users { get; set; }
         [JsonProperty("big_list")]
         public bool BigList { get; set; }
         [JsonProperty("page_size")]

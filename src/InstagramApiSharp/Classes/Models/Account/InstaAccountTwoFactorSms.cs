@@ -8,16 +8,16 @@
  */
 
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaAccountTwoFactorSmsResponse
+    public class InstaAccountTwoFactorSms
     {
         [JsonProperty("phone_verification_settings")]
         public InstaAccountPhoneVerificationSettings PhoneVerificationSettings { get; set; }
         [JsonProperty("obfuscated_phone_number")]
         public string ObfuscatedPhoneNumber { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        internal string Status { get; set; }
     }
 
     public class InstaAccountPhoneVerificationSettings

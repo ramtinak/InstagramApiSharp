@@ -9,10 +9,10 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.Models
 {
    
-    public class InstaAccountSecuritySettingsResponse
+    public class InstaAccountSecuritySettings
     {
         [JsonProperty("phone_number")]
         public string PhoneNumber { get; set; }
@@ -27,7 +27,7 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("backup_codes")]
         public List<string> BackupCodes { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        internal string Status { get; set; }
     }
 
 }

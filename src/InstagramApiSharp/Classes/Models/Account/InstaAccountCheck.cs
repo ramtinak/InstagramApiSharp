@@ -8,9 +8,9 @@
  */
 
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaAccountCheckResponse
+    public class InstaAccountCheck
     {
         [JsonProperty("username")]
         public string Username { get; set; }

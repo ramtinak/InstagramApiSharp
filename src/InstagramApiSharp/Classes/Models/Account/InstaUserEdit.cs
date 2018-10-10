@@ -11,14 +11,14 @@ using Newtonsoft.Json;
 using InstagramApiSharp.Enums;
 using InstagramApiSharp.Classes.ResponseWrappers;
 
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaUserEditContainerResponse
+    public class InstaUserEditContainer
     {
         [JsonProperty("user")]
         public InstaUserEdit User { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        internal string Status { get; set; }
     }
 
     public class InstaUserEdit

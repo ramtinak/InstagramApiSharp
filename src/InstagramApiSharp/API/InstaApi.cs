@@ -308,7 +308,7 @@ namespace InstagramApiSharp.API
         ///     Check username availablity. 
         /// </summary>
         /// <param name="username">Username</param>
-        public async Task<IResult<InstaAccountCheckResponse>> CheckUsernameAsync(string username)
+        public async Task<IResult<InstaAccountCheck>> CheckUsernameAsync(string username)
         {
             try
             {
@@ -321,13 +321,13 @@ namespace InstagramApiSharp.API
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                var obj = JsonConvert.DeserializeObject<InstaAccountCheckResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaAccountCheck>(json);
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaAccountCheckResponse>(exception);
+                return Result.Fail<InstaAccountCheck>(exception);
             }
         }
         /// <summary>

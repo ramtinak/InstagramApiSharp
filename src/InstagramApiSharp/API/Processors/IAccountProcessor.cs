@@ -56,7 +56,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         /// Get request for edit profile.
         /// </summary>        
-        Task<IResult<InstaUserEditContainerResponse>> GetRequestForEditProfileAsync();
+        Task<IResult<InstaUserEdit>> GetRequestForEditProfileAsync();
         /// <summary>
         ///     Set name and phone number.
         /// </summary>
@@ -66,18 +66,18 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Remove profile picture.
         /// </summary>        
-        Task<IResult<InstaUserEditContainerResponse>> RemoveProfilePictureAsync();
+        Task<IResult<InstaUserEdit>> RemoveProfilePictureAsync();
         /// <summary>
         ///     Change profile picture(only jpg and jpeg formats).
         /// </summary>
         /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>        
-        Task<IResult<InstaUserEditContainerResponse>> ChangeProfilePictureAsync(byte[] pictureBytes);
+        Task<IResult<InstaUserEdit>> ChangeProfilePictureAsync(byte[] pictureBytes);
         /// <summary>
         ///     Change profile picture(only jpg and jpeg formats).
         /// </summary> 
         /// <param name="progress">Progress action</param>
         /// <param name="pictureBytes">Picture(JPG,JPEG) bytes</param>
-        Task<IResult<InstaUserEditContainerResponse>> ChangeProfilePictureAsync(Action<InstaUploaderProgress> progress, byte[] pictureBytes);
+        Task<IResult<InstaUserEdit>> ChangeProfilePictureAsync(Action<InstaUploaderProgress> progress, byte[] pictureBytes);
         /// <summary>
         ///     Get request for download backup account data.
         /// </summary>
@@ -127,7 +127,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Check username availablity.
         /// </summary>
         /// <param name="desiredUsername">Desired username</param>        
-        Task<IResult<InstaAccountCheckResponse>> CheckUsernameAsync(string desiredUsername);
+        Task<IResult<InstaAccountCheck>> CheckUsernameAsync(string desiredUsername);
         #endregion Story settings
 
         #region two factor authentication enable/disable
@@ -135,7 +135,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get Security settings (two factor authentication and backup codes).
         /// </summary>
-        Task<IResult<InstaAccountSecuritySettingsResponse>> GetSecuritySettingsInfoAsync();
+        Task<IResult<InstaAccountSecuritySettings>> GetSecuritySettingsInfoAsync();
         /// <summary>
         ///     Disable two factor authentication.
         /// </summary>
@@ -144,32 +144,32 @@ namespace InstagramApiSharp.API.Processors
         ///     Send two factor enable sms.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        Task<IResult<InstaAccountTwoFactorSmsResponse>> SendTwoFactorEnableSmsAsync(string phoneNumber);
+        Task<IResult<InstaAccountTwoFactorSms>> SendTwoFactorEnableSmsAsync(string phoneNumber);
         /// <summary>
         ///     Verify enable two factor.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
         /// <param name="verificationCode">Verification code</param>
-        Task<IResult<InstaAccountTwoFactorResponse>> TwoFactorEnableAsync(string phoneNumber, string verificationCode);
+        Task<IResult<InstaAccountTwoFactor>> TwoFactorEnableAsync(string phoneNumber, string verificationCode);
         /// <summary>
         ///     Send confirm email.
         /// </summary>
-        Task<IResult<InstaAccountConfirmEmailResponse>> SendConfirmEmailAsync();
+        Task<IResult<InstaAccountConfirmEmail>> SendConfirmEmailAsync();
         /// <summary>
         ///     Send sms code.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        Task<IResult<InstaAccountSendSmsResponse>> SendSmsCodeAsync(string phoneNumber);
+        Task<IResult<InstaAccountSendSms>> SendSmsCodeAsync(string phoneNumber);
         /// <summary>
         ///     Verify sms code.
         /// </summary>
         /// <param name="phoneNumber">Phone number (ex: +9891234...)</param>
         /// <param name="verificationCode">Verification code</param>
-        Task<IResult<InstaAccountVerifySmsResponse>> VerifySmsCodeAsync(string phoneNumber, string verificationCode);
+        Task<IResult<InstaAccountVerifySms>> VerifySmsCodeAsync(string phoneNumber, string verificationCode);
         /// <summary>
         ///     Regenerate two factor backup codes
         /// </summary>
-        Task<IResult<TwoFactorRegenBackupCodesResponse>> RegenerateTwoFactorBackupCodesAsync();
+        Task<IResult<TwoFactorRegenBackupCodes>> RegenerateTwoFactorBackupCodesAsync();
         #endregion two factor authentication enable/disable
 
 

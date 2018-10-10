@@ -212,7 +212,7 @@ namespace InstagramApiSharp.API
         ///     Check username availablity. 
         /// </summary>
         /// <param name="username">Username</param>
-        Task<IResult<InstaAccountCheckResponse>> CheckUsernameAsync(string username);
+        Task<IResult<InstaAccountCheck>> CheckUsernameAsync(string username);
         /// <summary>
         ///     Send sign up sms code
         /// </summary>

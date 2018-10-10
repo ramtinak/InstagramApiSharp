@@ -1,14 +1,12 @@
 ﻿using Newtonsoft.Json;
 
-namespace InstagramApiSharp.Classes.ResponseWrappers
+namespace InstagramApiSharp.Classes.Models
 {
-    public class TwoFactorRegenBackupCodesResponse
+    public class TwoFactorRegenBackupCodes
     {
         [JsonProperty("backup_codes")]
         public string[] BackupCodes { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
-
+        internal string Status { get; set; }
     }
-
 }

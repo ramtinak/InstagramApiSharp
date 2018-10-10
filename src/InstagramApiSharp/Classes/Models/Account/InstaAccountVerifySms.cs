@@ -9,18 +9,18 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaAccountVerifySmsResponse
+    public class InstaAccountVerifySms
     {
         [JsonProperty("verified")]
         public bool Verified { get; set; }
         [JsonProperty("errors")]
         public InstaAccountVerifySmsErrors Errors { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        internal string Status { get; set; }
         [JsonProperty("error_type")]
-        public string ErrorType { get; set; }
+        internal string ErrorType { get; set; }
     }
 
     public class InstaAccountVerifySmsErrors

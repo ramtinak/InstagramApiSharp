@@ -8,9 +8,9 @@
  */
 
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaAccountConfirmEmailResponse
+    public class InstaAccountConfirmEmail
     {
         [JsonProperty("is_email_legit")]
         public bool IsEmailLegit { get; set; }
@@ -19,7 +19,7 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("body")]
         public string Body { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        internal string Status { get; set; }
     }
 
 }

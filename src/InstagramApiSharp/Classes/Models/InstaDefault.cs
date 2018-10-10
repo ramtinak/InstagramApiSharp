@@ -6,18 +6,19 @@
  * 
  * IRANIAN DEVELOPERS
  */
-using Newtonsoft.Json;
 
-namespace InstagramApiSharp.Classes
+using Newtonsoft.Json;
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaAccountSendSmsResponse
+    public class InstaDefault
     {
-        [JsonProperty("phone_number_valid")]
-        public bool PhoneNumberValid { get; set; }
-        [JsonProperty("phone_verification_settings")]
-        public InstaAccountPhoneVerificationSettings PhoneVerificationSettings { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
+        [JsonProperty("message")]
+        public string Message { get; set; }
     }
-
+    internal class InstaDefaultResponse : InstaDefault
+    {
+        public bool IsSucceed { get { return Status.ToLower() == "ok"; } }
+    }
 }
