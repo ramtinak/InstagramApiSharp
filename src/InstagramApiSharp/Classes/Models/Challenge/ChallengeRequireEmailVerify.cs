@@ -10,20 +10,6 @@
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes
 {
-    ///// <summary>
-    /////{
-    /////    "step_name": "verify_email",
-    /////    "step_data": {
-    /////        "security_code": "None",
-    /////        "resend_delay": 60,
-    /////        "contact_point": "r*******r@yahoo.com",
-    /////        "form_type": "email"
-    /////    },
-    /////    "user_id": 7405924766,
-    /////    "nonce_code": "jygT2JF4dA",
-    /////    "status": "ok"
-    /////} 
-    ///// </summary>
     public class InstaChallengeRequireEmailVerify
     {
         [JsonProperty("step_name")]
@@ -35,7 +21,7 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("nonce_code")]
         public string NonceCode { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        internal string Status { get; set; }
         [JsonProperty("message")]
         public string Message { get; set; }
     }

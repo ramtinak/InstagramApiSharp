@@ -299,7 +299,7 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///    Send Two Factor Login SMS Again
         /// </summary>
-        Task<IResult<TwoFactorLoginSMSResponse>> SendTwoFactorLoginSMSAsync();
+        Task<IResult<TwoFactorLoginSMS>> SendTwoFactorLoginSMSAsync();
         /// <summary>
         ///     Logout from instagram asynchronously
         /// </summary>

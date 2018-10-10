@@ -1,4 +1,13 @@
-﻿using InstagramApiSharp.Classes.Models.Business;
+﻿/*
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * 
+ * Github source: https://github.com/ramtinak/InstagramApiSharp
+ * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
+ * 
+ * IRANIAN DEVELOPERS
+ */
+
+using InstagramApiSharp.Classes.Models.Business;
 using InstagramApiSharp.Classes.ResponseWrappers.Business;
 namespace InstagramApiSharp.Converters.Business
 {

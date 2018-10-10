@@ -11,7 +11,7 @@ using InstagramApiSharp.Converters.Users;
 
 namespace InstagramApiSharp.Converters
 {
-    internal class ConvertersFabric : IConvertersFabric
+    internal class ConvertersFabric
     {
         private static readonly Lazy<ConvertersFabric> LazyInstance =
             new Lazy<ConvertersFabric>(() => new ConvertersFabric());

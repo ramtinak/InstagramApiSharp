@@ -1,4 +1,13 @@
-﻿using InstagramApiSharp.Classes;
+﻿/*
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * 
+ * Github source: https://github.com/ramtinak/InstagramApiSharp
+ * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
+ * 
+ * IRANIAN DEVELOPERS
+ */
+
+using InstagramApiSharp.Classes;
 using InstagramApiSharp.Enums;
 using System;
 using System.IO;
@@ -11,7 +20,7 @@ namespace InstagramApiSharp.Helpers
     internal class ProgressableStreamContent : HttpContent
     {
         /// <summary>
-        /// 20kb
+        ///     100kb
         /// </summary>
         private const int defaultBufferSize = 25 * 4096;
 

@@ -10,34 +10,6 @@
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes
 {
-    ///// <summary>
-    /////{
-    /////    "step_name": "select_verify_method",
-    /////    "step_data": {
-    /////        "choice": "1",
-    /////        "fb_access_token": "None",
-    /////        "big_blue_token": "None",
-    /////        "google_oauth_token": "true",
-    /////        "email": "r*******r@yahoo.com",
-    /////        "phone_number": "+98 *** *** **06"
-    /////    },
-    /////    "user_id": 7405924766,
-    /////    "nonce_code": "jygT2JF4dA",
-    /////    "status": "ok"
-    /////}
-    /////
-    ///// Vase id haei ke na phone set kardan, na email
-    /////
-    /////{
-    /////	"step_name": "submit_phone",
-    /////	"step_data": {
-    /////		"phone_number": "None"
-    /////	},
-    /////	"user_id": 8536818704,
-    /////	"nonce_code": "vAs9yOWHBz",
-    /////	"status": "ok"
-    /////}
-    ///// </summary>
     public class InstaChallengeRequireVerifyMethod
     {
         [JsonProperty("step_name")]
@@ -49,7 +21,7 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("nonce_code")]
         public string NonceCode { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        internal string Status { get; set; }
         [JsonProperty("message")]
         internal string Message { get; set; }
 

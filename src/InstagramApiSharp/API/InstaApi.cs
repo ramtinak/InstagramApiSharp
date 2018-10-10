@@ -1169,12 +1169,12 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///    Send Two Factor Login SMS Again
         /// </summary>
-        public async Task<IResult<TwoFactorLoginSMSResponse>> SendTwoFactorLoginSMSAsync()
+        public async Task<IResult<TwoFactorLoginSMS>> SendTwoFactorLoginSMSAsync()
         {
             try
             {
                 if (_twoFactorInfo == null)
-                    return Result.Fail<TwoFactorLoginSMSResponse>("Run LoginAsync first");
+                    return Result.Fail<TwoFactorLoginSMS>("Run LoginAsync first");
 
                 var postData = new Dictionary<string, string>
                 {
@@ -1190,7 +1190,7 @@ namespace InstagramApiSharp.API
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var result = await response.Content.ReadAsStringAsync();
 
-                var T = JsonConvert.DeserializeObject<TwoFactorLoginSMSResponse>(result);
+                var T = JsonConvert.DeserializeObject<TwoFactorLoginSMS>(result);
                 if (!string.IsNullOrEmpty(T.TwoFactorInfo.TwoFactorIdentifier))
                     _twoFactorInfo.TwoFactorIdentifier = T.TwoFactorInfo.TwoFactorIdentifier;
                 return Result.Success(T);
@@ -1198,7 +1198,7 @@ namespace InstagramApiSharp.API
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<TwoFactorLoginSMSResponse>(exception);
+                return Result.Fail<TwoFactorLoginSMS>(exception);
             }
         }
 

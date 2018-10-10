@@ -2,7 +2,7 @@
 
 namespace InstagramApiSharp.Classes
 {
-    public class TwoFactorLoginSMSResponse
+    public class TwoFactorLoginSMS
     {
         [JsonProperty("two_factor_required")]
         public bool TwoFactorRequired { get; set; }

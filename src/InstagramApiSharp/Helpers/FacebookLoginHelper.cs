@@ -1,4 +1,13 @@
-﻿using InstagramApiSharp.API;
+﻿/*
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * 
+ * Github source: https://github.com/ramtinak/InstagramApiSharp
+ * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
+ * 
+ * IRANIAN DEVELOPERS
+ */
+
+using InstagramApiSharp.API;
 using InstagramApiSharp.Classes;
 using Newtonsoft.Json;
 using System;
@@ -6,8 +15,8 @@ using System;
 namespace InstagramApiSharp.Helpers
 {
     /// <summary>
-    /// Facebook login helper.
-    /// <para>Note: you must clear all caches from all urls in this class.</para>
+    ///     Facebook login helper.
+    ///     <para>Note: you must clear all caches from all urls in this class.</para>
     /// </summary>
     public class FacebookLoginHelper
     {
@@ -22,10 +31,8 @@ namespace InstagramApiSharp.Helpers
         static readonly Uri FacebookTelemetryAddress = new Uri("https://connect.facebook.net/log/fbevents_telemetry/");
         static readonly Uri FacebookArbiterAddress = new Uri("https://staticxx.facebook.com/connect/xd_arbiter/");
         /// <summary>
-        /// Check FacebookLoginExample project to see how it's works.
+        ///     Check FacebookLoginExample project to see how it's works.
         /// </summary>
-        /// <param name="uri"></param>
-        /// <returns></returns>
         public static bool FirstStep(Uri uri)
         {
             return uri.ToString() == InstagramUriAddress.ToString() ||
@@ -35,19 +42,15 @@ namespace InstagramApiSharp.Helpers
                         uri.ToString().StartsWith("https://www.instagram.com/accounts/onetap/");
         }
         /// <summary>
-        /// Check FacebookLoginExample project to see how it's works.
+        ///     Check FacebookLoginExample project to see how it's works.
         /// </summary>
-        /// <param name="innerHtml"></param>
-        /// <returns></returns>
         public static bool SecondStep(string innerHtml)
         {
             return innerHtml.Contains("button") && innerHtml.Contains("_5f5mN       jIbKX KUBKM      yZn4P   ");
         }
         /// <summary>
-        /// Get logged in user response
+        ///     Get logged in user response
         /// </summary>
-        /// <param name="htmlSource"></param>
-        /// <returns></returns>
         public static InstaWebBrowserResponse GetLoggedInUserResponse(string htmlSource)
         {
             if (string.IsNullOrEmpty(htmlSource) || string.IsNullOrWhiteSpace(htmlSource))
