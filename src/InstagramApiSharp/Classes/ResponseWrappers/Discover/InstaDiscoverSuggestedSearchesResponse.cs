@@ -8,22 +8,16 @@
  */
 
 using System.Collections.Generic;
-using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    public class InstaDiscoverSearchResponse
+    public class InstaDiscoverSuggestedSearchesResponse
     {
-        [JsonProperty("num_results")]
-        public int NumResults { get; set; }
-        [JsonProperty("users")]
-        public List<InstaBroadcastUser> Users { get; set; }
-        [JsonProperty("has_more")]
-        public bool HasMore { get; set; }
         [JsonProperty("rank_token")]
         public string RankToken { get; set; }
+        [JsonProperty("suggested")]
+        public List<InstaDiscoverSearchesResponse> Suggested { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
     }
-
 }

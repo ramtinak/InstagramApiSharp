@@ -753,7 +753,7 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetSuggestedSearchUri(API.Processors.DiscoverSearchType searchType)
+        public static Uri GetSuggestedSearchUri(InstaDiscoverSearchType searchType)
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FBSEARCH_SUGGESTED_SEARCHS, searchType.ToString().ToLower()), out var instaUri))
                 throw new Exception("Cant create URI for suggested search");

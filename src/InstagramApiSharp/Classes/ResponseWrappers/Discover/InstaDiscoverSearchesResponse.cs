@@ -7,27 +7,20 @@
  * IRANIAN DEVELOPERS
  */
 
+using System;
 using System.Collections.Generic;
-using InstagramApiSharp.Classes.Models;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    public class InstaDiscoverRecentSearchesResponse
-    {
-        [JsonProperty("recent")]
-        public List<InstaRecentSearches> Recent { get; set; }
-        [JsonProperty("status")]
-        public string Status { get; set; }
-    }
-
-    public class InstaRecentSearches
+    public class InstaDiscoverSearchesResponse
     {
         [JsonProperty("position")]
         public int Position { get; set; }
         [JsonProperty("user")]
-        public InstaBroadcastUser User { get; set; }
+        public InstaUserResponse User { get; set; }
         [JsonProperty("client_time")]
-        public int ClientTime { get; set; }
+        public int? ClientTime { get; set; }
     }
 }

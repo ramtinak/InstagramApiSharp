@@ -11,6 +11,7 @@ using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Converters;
+using InstagramApiSharp.Enums;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
@@ -48,10 +49,9 @@ namespace InstagramApiSharp.API.Processors
 
 
         /// <summary>
-        /// Get recent searches
+        ///     Get recent searches
         /// </summary>
-        /// <returns></returns>
-        public async Task<IResult<InstaDiscoverRecentSearchesResponse>> GetRecentSearchsAsync()
+        public async Task<IResult<InstaDiscoverRecentSearches>> GetRecentSearchesAsync()
         {
             try
             {
@@ -59,21 +59,22 @@ namespace InstagramApiSharp.API.Processors
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaDiscoverRecentSearchesResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaDiscoverRecentSearches>(response, json);
+
                 var obj = JsonConvert.DeserializeObject<InstaDiscoverRecentSearchesResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetDiscoverRecentSearchesConverter(obj).Convert());
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDiscoverRecentSearchesResponse>(exception);
+                return Result.Fail<InstaDiscoverRecentSearches>(exception);
             }
         }
         /// <summary>
-        /// Clear Recent searches
+        ///     Clear Recent searches
         /// </summary>
-        /// <returns></returns>
         public async Task<IResult<bool>> ClearRecentSearchsAsync()
         {
             try
@@ -85,11 +86,12 @@ namespace InstagramApiSharp.API.Processors
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<bool>(response, json);
+
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
                 return obj.Status == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
             }
@@ -100,54 +102,55 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         /// <summary>
-        /// Get suggested searches
+        ///     Get suggested searches
         /// </summary>
         /// <param name="searchType">Search type(only blended and users works)</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaDiscoverSuggestionResponse>> GetSuggestedSearchesAsync(DiscoverSearchType searchType)
+        public async Task<IResult<InstaDiscoverSuggestedSearches>> GetSuggestedSearchesAsync(InstaDiscoverSearchType searchType =
+            InstaDiscoverSearchType.Users)
         {
             try
             {
                 var instaUri = UriCreator.GetSuggestedSearchUri(searchType);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaDiscoverSuggestionResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaDiscoverSuggestionResponse>(json);
-                return Result.Success(obj);
+                    return Result.UnExpectedResponse<InstaDiscoverSuggestedSearches>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaDiscoverSuggestedSearchesResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetDiscoverSuggestedSearchesConverter(obj).Convert());
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDiscoverSuggestionResponse>(exception);
+                return Result.Fail<InstaDiscoverSuggestedSearches>(exception);
             }
         }
         /// <summary>
-        /// Search user people
+        ///     Search user people
         /// </summary>
-        /// <param name="text">Text to search</param>
+        /// <param name="query">Text to search</param>
         /// <param name="count">Count</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaDiscoverSearchResponse>> SearchPeopleAsync(string text, int count = 30)
+        public async Task<IResult<InstaDiscoverSearchResult>> SearchPeopleAsync(string query, int count = 30)
         {
             try
             {
-                var instaUri = UriCreator.GetSearchUserUri(text, count);
+                var instaUri = UriCreator.GetSearchUserUri(query, count);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaDiscoverSearchResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaDiscoverSearchResponse>(json);
-                return Result.Success(obj);
+                    return Result.UnExpectedResponse<InstaDiscoverSearchResult>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaDiscoverSearchResultResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetDiscoverSearchResultConverter(obj).Convert());
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDiscoverSearchResponse>(exception);
+                return Result.Fail<InstaDiscoverSearchResult>(exception);
             }
         }
 
@@ -217,7 +220,7 @@ namespace InstagramApiSharp.API.Processors
 
 
         /// <summary>
-        /// NOT COMPLETE
+        ///     NOT COMPLETE
         /// </summary>
         /// <returns></returns>
         private async Task<IResult<object>> DiscoverPeopleAsync()

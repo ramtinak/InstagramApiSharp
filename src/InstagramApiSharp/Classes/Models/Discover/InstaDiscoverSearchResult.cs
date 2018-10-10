@@ -7,15 +7,20 @@
  * IRANIAN DEVELOPERS
  */
 
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+using System.Text;
+
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaDiscoverSuggestionResponse : InstaDiscoverRecentSearchesResponse
+    public class InstaDiscoverSearchResult
     {
-        [JsonProperty("rank_token")]
+        public int NumResults { get; set; }
+
+        public List<InstaUser> Users { get; set; } = new List<InstaUser>();
+
+        public bool HasMoreAvailable { get; set; }
+
         public string RankToken { get; set; }
-        [JsonProperty("suggested")]
-        public List<InstaRecentSearches> Suggested { get; set; }
     }
 }

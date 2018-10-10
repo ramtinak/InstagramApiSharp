@@ -391,5 +391,29 @@ InstaHighlightReelResponse response)
         {
             return new InstaUserPresenceListConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaDiscoverSearches, InstaDiscoverSearchesResponse> GetDiscoverSearchesConverter(
+            InstaDiscoverSearchesResponse response)
+        {
+            return new InstaDiscoverSearchesConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaDiscoverRecentSearches, InstaDiscoverRecentSearchesResponse> GetDiscoverRecentSearchesConverter(
+            InstaDiscoverRecentSearchesResponse response)
+        {
+            return new InstaDiscoverRecentSearchesConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaDiscoverSuggestedSearches, InstaDiscoverSuggestedSearchesResponse> GetDiscoverSuggestedSearchesConverter(
+            InstaDiscoverSuggestedSearchesResponse response)
+        {
+            return new InstaDiscoverSuggestedSearchesConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaDiscoverSearchResult, InstaDiscoverSearchResultResponse> GetDiscoverSearchResultConverter(
+            InstaDiscoverSearchResultResponse response)
+        {
+            return new InstaDiscoverSearchResultConverter { SourceObject = response };
+        }
     }
 }
