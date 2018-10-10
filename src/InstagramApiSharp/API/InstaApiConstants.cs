@@ -60,7 +60,7 @@ namespace InstagramApiSharp.API
                 {"name","SUPPORTED_SDK_VERSIONS"},
                 {"value","9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0," +
                     "21.0,22.0,23.0,24.0,25.0,26.0,27.0,28.0,29.0,30.0,31.0,32.0,33.0," +
-                    "34.0,35.0,36.0,37.0,38.0,39.0,40.0,41.0,42.0"}
+                    "34.0,35.0,36.0,37.0,38.0,39.0,40.0,41.0,42.0,43.0,44.0"}
             },
             new JObject
             {
@@ -242,6 +242,7 @@ namespace InstagramApiSharp.API
         public const string USER_SEARCH = API_SUFFIX + "/users/search/?timezone_offset={0}&q={1}&count={2}";
         public const string USER_LOOKUP = API_SUFFIX + "/users/lookup/";
         public const string USER_REPORT = API_SUFFIX + "/users/{0}/flag_user/";
+        public const string USER_NAMETAG_CONFIG = API_SUFFIX + "/users/nametag_config/";
 
         public const string FBSEARCH_RECENT_SEARCHES = API_SUFFIX + "/fbsearch/recent_searches/";
         public const string FBSEARCH_CLEAR_SEARCH_HISTORY = API_SUFFIX + "/fbsearch/clear_search_history";
@@ -263,9 +264,10 @@ namespace InstagramApiSharp.API
         /// <para>user=["1 user id"]</para>
         /// </summary>
         public const string FBSEARCH_HIDE_SEARCH_ENTITIES = API_SUFFIX + "/fbsearch/hide_search_entities/";
-
         public const string FBSEARCH_TOPSEARCH = API_SUFFIX + "/fbsearch/topsearch/";
 
+        public const string FB_GET_INVITE_SUGGESTIONS = API_SUFFIX + "/fb/get_invite_suggestions/";
+        public const string FB_ENTRYPOINT_INFO = API_SUFFIX + "/fb/fb_entrypoint_info/";
 
         public const string DISCOVER_AYML = API_SUFFIX + "/discover/ayml/";
         public const string DISCOVER_TOP_LIVE = API_SUFFIX + "/discover/top_live/";
@@ -376,6 +378,7 @@ namespace InstagramApiSharp.API
 
         public const string ADDRESSBOOK_LINK = API_SUFFIX + "/address_book/link/?include=extra_display_name,thumbnails";
 
+        public const string ARCHIVE_REEL_DAY_SHELLS = API_SUFFIX + "/archive/reel/day_shells/?include_cover=0";
 
         /// <summary>
         /// post params:

@@ -4,7 +4,7 @@ using InstagramApiSharp.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Newtonsoft.Json;
 namespace InstagramApiSharp.Helpers
 {
     internal class UriCreator
@@ -159,8 +159,8 @@ namespace InstagramApiSharp.Helpers
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.EXPLORE, out var instaUri))
                 throw new Exception("Cant create URI for explore posts");
-            var query = string.Empty;
-            if (!string.IsNullOrEmpty(maxId)) query += $"max_id={maxId}";
+            var query = $"is_prefetch=true&supported_capabilities_new={JsonConvert.SerializeObject(InstaApiConstants.SupportedCapabalities)}";
+            if (!string.IsNullOrEmpty(maxId)) query += $"&max_id={maxId}";
             var uriBuilder = new UriBuilder(instaUri) { Query = query };
             return uriBuilder.Uri;
         }
