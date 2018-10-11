@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 
@@ -55,7 +56,14 @@ namespace InstagramApiSharp.API.Processors
         ///     <see cref="InstaFriendshipStatus" />
         /// </returns>
         Task<IResult<InstaFriendshipStatus>> GetFriendshipStatusAsync(long userId);
-
+        /// <summary>
+        ///     Get friendship status for multiple user ids.
+        /// </summary>
+        /// <param name="userIds">List of user identifier (PK)</param>
+        /// <returns>
+        ///     <see cref="InstaFriendshipShortStatusList" />
+        /// </returns>
+        Task<IResult<InstaFriendshipShortStatusList>> GetFriendshipStatusesAsync(params long[] userIds);
         /// <summary>
         ///     Get full user info (user info, feeds, stories, broadcasts)
         /// </summary>

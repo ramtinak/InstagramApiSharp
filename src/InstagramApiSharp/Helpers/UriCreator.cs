@@ -1499,5 +1499,14 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for direct presence");
             return instaUri;
         }
+
+        public static Uri GetFriendshipShowManyUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FRIENDSHIPS_SHOW_MANY,
+                    out var instaUri))
+                throw new Exception("Cant create URI for friendship show many");
+            return instaUri;
+        }
     }
 }

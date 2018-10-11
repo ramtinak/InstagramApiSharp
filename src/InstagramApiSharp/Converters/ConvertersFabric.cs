@@ -415,5 +415,11 @@ InstaHighlightReelResponse response)
         {
             return new InstaDiscoverSearchResultConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaFriendshipShortStatusList, InstaFriendshipShortStatusListResponse> GetFriendshipShortStatusListConverter(
+            InstaFriendshipShortStatusListResponse response)
+        {
+            return new InstaFriendshipShortStatusListConverter { SourceObject = response };
+        }
     }
 }

@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.2.8</Version>
-    <AssemblyVersion>1.1.2.8</AssemblyVersion>
-    <FileVersion>1.1.2.8</FileVersion>
+    <Version>1.1.2.9</Version>
+    <AssemblyVersion>1.1.2.9</AssemblyVersion>
+    <FileVersion>1.1.2.9</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 

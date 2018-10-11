@@ -62,8 +62,10 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaFriendshipStatus>(response, json);
-                var JRes = JsonConvert.DeserializeObject<InstaFriendshipStatus>(json);
-                return Result.Success(JRes);
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
+                   new InstaFriendShipDataConverter());
+                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+                return Result.Success(converter.Convert());
             }
             catch (Exception ex)
             {
@@ -177,6 +179,48 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaFriendshipStatus>(exception.Message);
+            }
+        }
+        /// <summary>
+        ///     Get friendship status for multiple user ids.
+        /// </summary>
+        /// <param name="userIds">Array of user identifier (PK)</param>
+        /// <returns>
+        ///     <see cref="InstaFriendshipShortStatusList" />
+        /// </returns>
+        public async Task<IResult<InstaFriendshipShortStatusList>> GetFriendshipStatusesAsync(params long[] userIds)
+        { 
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (userIds == null || userIds != null && !userIds.Any())
+                    throw new ArgumentException("At least one user id is require.");
+
+                var userUri = UriCreator.GetFriendshipShowManyUri();
+
+                var data = new Dictionary<string, string>
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"user_ids", string.Join(",", userIds)},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, userUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaFriendshipShortStatusList>(response, json);
+
+                var friendshipStatusesResponse = JsonConvert.DeserializeObject<InstaFriendshipShortStatusListResponse>(json,
+                    new InstaFriendShipShortDataConverter());
+                var converter = ConvertersFabric.Instance.GetFriendshipShortStatusListConverter(friendshipStatusesResponse);
+
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaFriendshipShortStatusList>(exception.Message);
             }
         }
 
@@ -585,8 +629,10 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaFriendshipStatus>(response, json);
-                var JRes = JsonConvert.DeserializeObject<InstaFriendshipStatus>(json);
-                return Result.Success(JRes);
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
+                    new InstaFriendShipDataConverter());
+                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+                return Result.Success(converter.Convert());
             }
             catch (Exception ex)
             {

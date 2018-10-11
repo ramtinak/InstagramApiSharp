@@ -278,13 +278,8 @@ namespace InstagramApiSharp.API
         public const string FRIENDSHIPS_APPROVE = API_SUFFIX + "/friendships/approve/{0}/";
         public const string FRIENDSHIPS_IGNORE = API_SUFFIX + "/friendships/ignore/{0}/";
         public const string FRIENDSHIPS_PENDING_REQUESTS = API_SUFFIX + "/friendships/pending/?rank_mutual=0&rank_token={0}";
-        /// <summary>
-        /// get friendship status
-        /// <para>post data:</para>
-        /// <para>include_reel_info = 0</para>
-        /// <para>user_ids = user ids(PK) split with comma</para>
-        /// </summary>
         public const string FRIENDSHIPS_SHOW_MANY = API_SUFFIX + "/friendships/show_many/";
+
         /// <summary>
         /// mute friend reel
         /// <para>{0}: user id</para>

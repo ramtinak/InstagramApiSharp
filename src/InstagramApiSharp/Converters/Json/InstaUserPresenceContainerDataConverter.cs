@@ -31,7 +31,7 @@ namespace InstagramApiSharp.Converters.Json
             var presence = token.ToObject<InstaUserPresenceContainerResponse>();
 
             var userPresenceRoot = token?.SelectToken("user_presence");
-            var extras = userPresenceRoot.ToObject<InstaUserPresenceExtraResponse>();
+            var extras = userPresenceRoot.ToObject<InstaExtraResponse>();
             try
             {
                 foreach (var item in extras.Extras)

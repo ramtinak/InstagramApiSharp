@@ -30,9 +30,4 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonIgnore]
         public long Pk { get; set; }
     }
-    internal class InstaUserPresenceExtraResponse
-    {
-        [JsonExtensionData]
-        internal IDictionary<string, JToken> Extras { get; set; }
-    }
 }
