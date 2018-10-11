@@ -16,6 +16,7 @@ namespace InstagramApiSharp.Converters
                 Id = SourceObject.Id,
                 Name = SourceObject.Name,
                 MediaCount = SourceObject.MediaCount,
+                ProfilePicUrl = SourceObject.ProfilePicUrl
             };
             return hashtag;
         }

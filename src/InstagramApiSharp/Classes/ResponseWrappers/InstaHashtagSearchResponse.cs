@@ -6,7 +6,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaHashtagSearchResponse : BaseStatusResponse
     {
-        [JsonProperty("results")] public List<InstaHashtagResponse> Tags { get; set; }
+        [JsonIgnore] public List<InstaHashtagResponse> Tags { get; set; } = new List<InstaHashtagResponse>();
 
         [JsonProperty("has_more")] public bool? MoreAvailable { get; set; }
 

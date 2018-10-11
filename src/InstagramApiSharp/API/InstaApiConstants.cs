@@ -243,6 +243,8 @@ namespace InstagramApiSharp.API
         public const string USER_LOOKUP = API_SUFFIX + "/users/lookup/";
         public const string USER_REPORT = API_SUFFIX + "/users/{0}/flag_user/";
         public const string USER_NAMETAG_CONFIG = API_SUFFIX + "/users/nametag_config/";
+        public const string USERS_FOLLOWING_TAG_INFO = API_SUFFIX + "/users/{0}/following_tags_info/";
+
 
         public const string FBSEARCH_RECENT_SEARCHES = API_SUFFIX + "/fbsearch/recent_searches/";
         public const string FBSEARCH_CLEAR_SEARCH_HISTORY = API_SUFFIX + "/fbsearch/clear_search_history";
@@ -370,6 +372,7 @@ namespace InstagramApiSharp.API
         public const string TAG_STORY = API_SUFFIX + "/tags/{0}/story/";
         public const string TAG_RECENT = API_SUFFIX + "/tags/{0}/recent_sections/";
         public const string TAG_RANKED = API_SUFFIX + "/tags/{0}/ranked_sections/";
+        public const string TAG_SUGGESTED = API_SUFFIX + "/tags/suggested/";
 
         public const string ADDRESSBOOK_LINK = API_SUFFIX + "/address_book/link/?include=extra_display_name,thumbnails";
 
@@ -380,10 +383,6 @@ namespace InstagramApiSharp.API
         /// <para>"action":"click"</para>
         /// </summary>
         public const string NEWS_LOG = API_SUFFIX + "/news/log/";
-        /// <summary>
-        /// get
-        /// </summary>
-        public const string USERS_FOLLOWING_TAG_INFO = API_SUFFIX + "/users/{0}/following_tags_info/";
         /// <summary>
         /// user id 
         /// </summary>

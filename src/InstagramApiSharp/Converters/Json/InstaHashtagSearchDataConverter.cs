@@ -8,18 +8,20 @@
  */
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
+using InstagramApiSharp.Classes.Models.Business;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 
 namespace InstagramApiSharp.Converters.Json
 {
-    internal class InstaFriendShipShortDataConverter : JsonConverter
+    internal class InstaHashtagSearchDataConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(InstaFriendshipShortStatusListResponse);
+            return objectType == typeof(InstaHashtagSearchResponse);
         }
 
         public override object ReadJson(JsonReader reader,
@@ -27,25 +29,21 @@ namespace InstagramApiSharp.Converters.Json
             object existingValue,
             JsonSerializer serializer)
         {
-            var root = JToken.Load(reader);
-            var statusSubContainer = root["friendship_statuses"];
-            var list = new InstaFriendshipShortStatusListResponse();
-            var extras = statusSubContainer.ToObject<InstaExtraResponse>();
-
-            if (extras != null && extras.Extras != null && extras.Extras.Any())
+            var token = JToken.Load(reader);
+            var container = token["results"];
+            var tags = token.ToObject<InstaHashtagSearchResponse>();
+            if (container != null && container.Any())
             {
-                foreach (var item in extras.Extras)
+                foreach (var item in container)
                 {
                     try
                     {
-                        var f = item.Value.ToObject<InstaFriendshipShortStatusResponse>();
-                        f.Pk = long.Parse(item.Key);
-                        list.Add(f);
+                        tags.Tags.Add(item.ToObject<InstaHashtagResponse>());
                     }
                     catch { }
                 }
             }
-            return list;
+            return tags;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

@@ -1508,5 +1508,14 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for friendship show many");
             return instaUri;
         }
+
+        public static Uri GetSuggestedTagsUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.TAG_SUGGESTED,
+                    out var instaUri))
+                throw new Exception("Cant create URI for suggested tags");
+            return instaUri;
+        }
     }
 }

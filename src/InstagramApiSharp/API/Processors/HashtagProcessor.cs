@@ -10,6 +10,7 @@ using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.Models.Hashtags;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Converters;
+using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
@@ -66,7 +67,8 @@ namespace InstagramApiSharp.API.Processors
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaHashtagSearch>(response, json);
 
-                var tagsResponse = JsonConvert.DeserializeObject<InstaHashtagSearchResponse>(json);
+                var tagsResponse = JsonConvert.DeserializeObject<InstaHashtagSearchResponse>(json,
+                    new InstaHashtagSearchDataConverter());
                 tags = ConvertersFabric.Instance.GetHashTagsSearchConverter(tagsResponse).Convert();
 
                 if (tags.Any() && excludeList != null && excludeList.Contains(tags.First().Id))
@@ -300,7 +302,38 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaHashtagMedia>(exception);
             }
         }
+        /// <summary>
+        ///     Get suggested hashtags
+        /// </summary>
+        /// <returns>
+        ///     List of hashtags
+        /// </returns>
+        public async Task<IResult<InstaHashtagSearch>> GetSuggestedHashtagsAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var tags = new InstaHashtagSearch();
+            try
+            {
+                var userUri = UriCreator.GetSuggestedTagsUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
 
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaHashtagSearch>(response, json);
+
+                var tagsResponse = JsonConvert.DeserializeObject<InstaHashtagSearchResponse>(json,
+                    new InstaHashtagSuggestedDataConverter());
+
+                tags = ConvertersFabric.Instance.GetHashTagsSearchConverter(tagsResponse).Convert(); 
+                return Result.Success(tags);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, tags);
+            }
+        }
 
         private async Task<IResult<InstaHashtagMediaListResponse>> GetHashtagTopMedia(string tagname,
          string rankToken = null,
