@@ -23,7 +23,8 @@ namespace InstagramApiSharp.Converters.Users
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
             var users = new InstaUserChainingList
             {
-                Status = SourceObject.Status
+                Status = SourceObject.Status,
+                IsBackup = SourceObject.IsBackup
             };
             if (SourceObject.Users != null && SourceObject.Users.Any())
             {
