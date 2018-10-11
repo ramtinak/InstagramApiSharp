@@ -1517,5 +1517,15 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for suggested tags");
             return instaUri;
         }
+
+        public static Uri GetFollowingTagsInfoUri(long userId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USERS_FOLLOWING_TAG_INFO,
+                userId), out var instaUri))
+                throw new Exception("Cant create URI for suggested tags");
+            return instaUri;
+        }
+
     }
 }

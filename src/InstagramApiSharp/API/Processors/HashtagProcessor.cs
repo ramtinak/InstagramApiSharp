@@ -334,6 +334,39 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, tags);
             }
         }
+        /// <summary>
+        ///     Get following hashtags information
+        /// </summary>
+        /// <param name="userId">User identifier (pk)</param>
+        /// <returns>
+        ///     List of hashtags
+        /// </returns>
+        public async Task<IResult<InstaHashtagSearch>> GetFollowingHashtagsInfoAsync(long userId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var tags = new InstaHashtagSearch();
+            try
+            {
+                var userUri = UriCreator.GetFollowingTagsInfoUri(userId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaHashtagSearch>(response, json);
+
+                var tagsResponse = JsonConvert.DeserializeObject<InstaHashtagSearchResponse>(json,
+                    new InstaHashtagSuggestedDataConverter());
+
+                tags = ConvertersFabric.Instance.GetHashTagsSearchConverter(tagsResponse).Convert();
+                return Result.Success(tags);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, tags);
+            }
+        }
 
         private async Task<IResult<InstaHashtagMediaListResponse>> GetHashtagTopMedia(string tagname,
          string rankToken = null,

@@ -58,7 +58,14 @@ namespace InstagramApiSharp.API.Processors
         ///     List of hashtags
         /// </returns>
         Task<IResult<InstaHashtagSearch>> GetSuggestedHashtagsAsync();
-
+        /// <summary>
+        ///     Get following hashtags information
+        /// </summary>
+        /// <param name="userId">User identifier (pk)</param>
+        /// <returns>
+        ///     List of hashtags
+        /// </returns>
+        Task<IResult<InstaHashtagSearch>> GetFollowingHashtagsInfoAsync(long userId);
 
     }
 }
