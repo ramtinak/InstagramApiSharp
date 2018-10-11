@@ -168,8 +168,14 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> DeleteHighlightFeedAsync(string highlightId, string mediaId);
         /// <summary>
         ///     Get user highlights archive
+        ///     <para>Note: Use <see cref="IStoryProcessor.GetHighlightsArchiveMediasAsync(string)"/> to get hightlight medias of an specific day.</para>
         /// </summary>
         Task<IResult<InstaHighlightShortList>> GetHighlightsArchiveAsync();
-
+        /// <summary>
+        ///     Get highlights archive medias
+        ///     <para>Note: get highlight id from <see cref="IStoryProcessor.GetHighlightsArchiveAsync"/></para>
+        /// </summary>
+        /// <param name="highlightId">Highlight id (Get it from <see cref="IStoryProcessor.GetHighlightsArchiveAsync"/>)</param>
+        Task<IResult<InstaHighlightSingleFeed>> GetHighlightsArchiveMediasAsync(string highlightId);
     }
 }

@@ -1555,5 +1555,14 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetReelMediaUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FEED_REEL_MEDIA,
+                out var instaUri))
+                throw new Exception("Cant create URI for reel media");
+            return instaUri;
+        }
+
     }
 }

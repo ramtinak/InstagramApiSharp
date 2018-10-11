@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using InstagramApiSharp.Classes.Models;
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaHighlightFeedsResponse
@@ -20,11 +21,12 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("tray")]
         public List<InstaHighlightFeedResponse> Items { get; set; } = new List<InstaHighlightFeedResponse>();
     }
-    public class InstaHighlightReelResponse
+    public class InstaHighlightReelResponse : InstaDefault
     {
-        [JsonProperty("reel")]
+        [JsonIgnore]
         public InstaHighlightSingleFeedResponse Reel { get; set; }
     }
+
     public class InstaHighlightSingleFeedResponse : InstaHighlightFeedResponse
     {
         [JsonProperty("items")]

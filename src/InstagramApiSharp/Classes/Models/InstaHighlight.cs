@@ -15,7 +15,7 @@ namespace InstagramApiSharp.Classes.Models
     {
         public bool ShowEmptyState { get; set; }
 
-        public string Status { get; set; }
+        internal string Status { get; set; }
 
         public List<InstaHighlightFeed> Items { get; set; } = new List<InstaHighlightFeed>();
     }
