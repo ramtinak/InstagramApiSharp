@@ -605,7 +605,37 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaSuggestions>(exception);
             }
         }
+        /// <summary>
+        ///     Get suggestion details
+        /// </summary>
+        /// <param name="userIds">List of user ids (pk)</param>
+        public async Task<IResult<InstaSuggestionItemList>> GetSuggestionDetailsAsync(params long[] userIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (userIds == null || userIds != null && !userIds.Any())
+                    throw new ArgumentException("At least one user id is require.");
+                var instaUri = UriCreator.GetDiscoverSuggestionDetailsUri(userIds.ToList());
+                
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
 
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaSuggestionItemList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaSuggestionItemListResponse>(json, 
+                    new InstaSuggestionUserDetailDataConverter());
+                return Result.Success(ConvertersFabric.Instance.GetSuggestionItemListConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaSuggestionItemList>(exception);
+            }
+        }
         /// <summary>
         ///     Ignore user friendship requst.
         /// </summary>

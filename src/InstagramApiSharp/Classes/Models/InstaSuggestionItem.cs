@@ -39,4 +39,5 @@ namespace InstagramApiSharp.Classes.Models
 
         public string Uuid { get; set; }
     }
+    public class InstaSuggestionItemList : List<InstaSuggestionItem> { }
 }

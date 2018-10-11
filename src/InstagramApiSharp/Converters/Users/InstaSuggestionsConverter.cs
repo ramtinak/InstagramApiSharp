@@ -21,28 +21,14 @@ namespace InstagramApiSharp.Converters.Users
                 if (SourceObject.SuggestedUsers != null && SourceObject.SuggestedUsers?.Suggestions != null &&
                 SourceObject.SuggestedUsers?.Suggestions?.Count > 0)
                 {
-                    foreach (var item in SourceObject.SuggestedUsers.Suggestions)
-                    {
-                        try
-                        {
-                            var convertedItem = ConvertersFabric.Instance.GetSuggestionItemConverter(item).Convert();
-                            suggest.SuggestedUsers.Add(convertedItem);
-                        }
-                        catch { }
-                    }
+                    suggest.SuggestedUsers = ConvertersFabric.Instance
+                        .GetSuggestionItemListConverter(SourceObject.SuggestedUsers.Suggestions).Convert();
                 }
                 if (SourceObject.NewSuggestedUsers != null && SourceObject.NewSuggestedUsers?.Suggestions != null &&
                     SourceObject.NewSuggestedUsers?.Suggestions?.Count > 0)
                 {
-                    foreach (var item in SourceObject.NewSuggestedUsers.Suggestions)
-                    {
-                        try
-                        {
-                            var convertedItem = ConvertersFabric.Instance.GetSuggestionItemConverter(item).Convert();
-                            suggest.NewSuggestedUsers.Add(convertedItem);
-                        }
-                        catch { }
-                    }
+                    suggest.NewSuggestedUsers = ConvertersFabric.Instance
+                        .GetSuggestionItemListConverter(SourceObject.NewSuggestedUsers.Suggestions).Convert();
                 }
             }
             catch { }

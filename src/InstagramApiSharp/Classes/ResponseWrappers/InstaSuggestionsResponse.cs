@@ -31,7 +31,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
     public class InstaSuggestionResponse
     {
         [JsonProperty("suggestions")]
-        public List<InstaSuggestionItemResponse> Suggestions { get; set; } = new List<InstaSuggestionItemResponse>();
+        public InstaSuggestionItemListResponse Suggestions { get; set; } = new InstaSuggestionItemListResponse();
     }
     
 }

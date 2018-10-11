@@ -1,6 +1,7 @@
 ﻿using InstagramApiSharp.API;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Enums;
+using InstagramApiSharp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1524,6 +1525,15 @@ namespace InstagramApiSharp.Helpers
                 !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USERS_FOLLOWING_TAG_INFO,
                 userId), out var instaUri))
                 throw new Exception("Cant create URI for suggested tags");
+            return instaUri;
+        }
+
+        public static Uri GetDiscoverSuggestionDetailsUri(List<long> chainedIds)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DISCOVER_FETCH_SUGGESTION_DETAILS,
+                string.Join(",", chainedIds)), out var instaUri))
+                throw new Exception("Cant create URI for discover suggestion details");
             return instaUri;
         }
 

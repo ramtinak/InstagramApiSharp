@@ -308,6 +308,12 @@ InstaHighlightReelResponse response)
             return new InstaSuggestionItemConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaSuggestionItemList, InstaSuggestionItemListResponse> GetSuggestionItemListConverter(
+            InstaSuggestionItemListResponse response)
+        {
+            return new InstaSuggestionItemListConverter { SourceObject = response };
+        }
+
         public IObjectConverter<InstaSuggestions, InstaSuggestionUserContainerResponse> GetSuggestionsConverter(
             InstaSuggestionUserContainerResponse response)
         {

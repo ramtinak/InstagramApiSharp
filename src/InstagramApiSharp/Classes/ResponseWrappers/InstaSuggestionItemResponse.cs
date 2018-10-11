@@ -38,6 +38,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("uuid")] public string Uuid { get; set; }
     }
-    
+    public class InstaSuggestionItemListResponse : List<InstaSuggestionItemResponse> { }
 
 }
