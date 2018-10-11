@@ -800,8 +800,8 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var storyFeedUri = UriCreator.GetHighlightFeedsUri(userId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, storyFeedUri, _deviceInfo);
+                var instaUri = UriCreator.GetHighlightFeedsUri(userId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -842,8 +842,8 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
                     {"media_ids", $"[{ExtensionHelper.EncodeList(new[] { mediaId })}]"}
                 };
 
-                var storyFeedUri = UriCreator.GetHighlightCreateUri();
-                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, storyFeedUri, _deviceInfo, data);
+                var instaUri = UriCreator.GetHighlightCreateUri();
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaHighlightFeed>(response, json);
@@ -899,8 +899,8 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
                     data.Add("added_media_ids", $"[{ExtensionHelper.EncodeList(new[] { mediaId })}]");
                     data.Add("removed_media_ids", "[]");
                 }
-                var storyFeedUri = UriCreator.GetHighlightEditUri(highlightId);
-                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, storyFeedUri, _deviceInfo, data);
+                var instaUri = UriCreator.GetHighlightEditUri(highlightId);
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<bool>(response, json);
@@ -913,6 +913,32 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
                 return Result.Fail<bool>(exception.Message);
             }
         }
+
+        /// <summary>
+        ///     Get user highlights archive
+        /// </summary>
+        public async Task<IResult<InstaHighlightShortList>> GetHighlightsArchiveAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetHighlightsArchiveUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaHighlightShortList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaHighlightShortListResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetHighlightShortListConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaHighlightShortList>(exception.Message);
+            }
+        }
+
 
         /// <summary>
         ///     Validate url for adding to story link

@@ -439,5 +439,17 @@ InstaHighlightReelResponse response)
         {
             return new InstaUserChainingListConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaHighlightShort, InstaHighlightShortResponse> GetSingleHighlightShortConverter(
+            InstaHighlightShortResponse response)
+        {
+            return new InstaHighlightShortConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaHighlightShortList, InstaHighlightShortListResponse> GetHighlightShortListConverter(
+            InstaHighlightShortListResponse response)
+        {
+            return new InstaHighlightShortListConverter { SourceObject = response };
+        }
     }
 }

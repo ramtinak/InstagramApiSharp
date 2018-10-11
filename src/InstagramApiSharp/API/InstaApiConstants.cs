@@ -53,6 +53,8 @@ namespace InstagramApiSharp.API
         public const string API_VERSION = "/v1";
         public const string BASE_INSTAGRAM_API_URL = INSTAGRAM_URL + API_SUFFIX + "/";
 
+        public const string SUPPORTED_CAPABALITIES_HEADER = "supported_capabilities_new";
+
         public static readonly JArray SupportedCapabalities = new JArray
         {
             new JObject
@@ -377,7 +379,7 @@ namespace InstagramApiSharp.API
         public const string ADDRESSBOOK_LINK = API_SUFFIX + "/address_book/link/?include=extra_display_name,thumbnails";
 
         public const string ARCHIVE_REEL_DAY_SHELLS = API_SUFFIX + "/archive/reel/day_shells/?include_cover=0";
-
+        
         /// <summary>
         /// post params:
         /// <para>"action":"click"</para>

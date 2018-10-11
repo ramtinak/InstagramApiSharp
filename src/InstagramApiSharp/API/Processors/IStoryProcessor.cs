@@ -166,5 +166,10 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="highlightId">Highlight id</param>
         /// <param name="mediaId">Media id (CoverMedia.MediaId)</param>
         Task<IResult<bool>> DeleteHighlightFeedAsync(string highlightId, string mediaId);
+        /// <summary>
+        ///     Get user highlights archive
+        /// </summary>
+        Task<IResult<InstaHighlightShortList>> GetHighlightsArchiveAsync();
+
     }
 }

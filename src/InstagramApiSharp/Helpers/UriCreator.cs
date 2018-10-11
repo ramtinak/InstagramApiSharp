@@ -1546,5 +1546,14 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetHighlightsArchiveUri()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ARCHIVE_REEL_DAY_SHELLS,
+                out var instaUri))
+                throw new Exception("Cant create URI for highlights archive");
+            return instaUri;
+        }
+
     }
 }
