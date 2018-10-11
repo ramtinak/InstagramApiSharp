@@ -275,10 +275,7 @@ namespace InstagramApiSharp.API
         public const string DISCOVER_TOP_LIVE = API_SUFFIX + "/discover/top_live/";
         public const string DISCOVER_TOP_LIVE_STATUS = API_SUFFIX + "/discover/top_live_status/";
         public const string DISCOVER_CHAINING = API_SUFFIX + "/discover/chaining/?target_id={0}";
-        /// <summary>
-        ///  /discover/fetch_suggestion_details/?target_id={0}&chained_ids={1}
-        /// </summary>
-        public const string DISCOVER_FETCH_SUGGESTION_DETAILS = API_SUFFIX + "/discover/fetch_suggestion_details/?chained_ids={0}";
+        public const string DISCOVER_FETCH_SUGGESTION_DETAILS = API_SUFFIX + "/discover/fetch_suggestion_details/?target_id={0}&chained_ids={1}";
 
         public const string FRIENDSHIPS_APPROVE = API_SUFFIX + "/friendships/approve/{0}/";
         public const string FRIENDSHIPS_IGNORE = API_SUFFIX + "/friendships/ignore/{0}/";

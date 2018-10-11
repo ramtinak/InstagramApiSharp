@@ -616,7 +616,7 @@ namespace InstagramApiSharp.API.Processors
             {
                 if (userIds == null || userIds != null && !userIds.Any())
                     throw new ArgumentException("At least one user id is require.");
-                var instaUri = UriCreator.GetDiscoverSuggestionDetailsUri(userIds.ToList());
+                var instaUri = UriCreator.GetDiscoverSuggestionDetailsUri(_user.LoggedInUser.Pk, userIds.ToList());
                 
                 var request =
                     _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);

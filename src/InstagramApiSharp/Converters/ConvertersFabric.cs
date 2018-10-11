@@ -427,5 +427,17 @@ InstaHighlightReelResponse response)
         {
             return new InstaFriendshipShortStatusListConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaUserChaining, InstaUserChainingResponse> GetSingleUserChainingConverter(
+            InstaUserChainingResponse response)
+        {
+            return new InstaUserChainingConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaUserChainingList, InstaUserChainingContainerResponse> GetUserChainingListConverter(
+            InstaUserChainingContainerResponse response)
+        {
+            return new InstaUserChainingListConverter { SourceObject = response };
+        }
     }
 }

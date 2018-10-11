@@ -1528,12 +1528,21 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetDiscoverSuggestionDetailsUri(List<long> chainedIds)
+        public static Uri GetDiscoverSuggestionDetailsUri(long userId, List<long> chainedIds)
         {
             if (
                 !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DISCOVER_FETCH_SUGGESTION_DETAILS,
-                string.Join(",", chainedIds)), out var instaUri))
+                userId, string.Join(",", chainedIds)), out var instaUri))
                 throw new Exception("Cant create URI for discover suggestion details");
+            return instaUri;
+        }
+
+        public static Uri GetDiscoverChainingUri(long userId)
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.DISCOVER_CHAINING, userId), out var instaUri))
+                throw new Exception("Cant create URI for discover chaining");
             return instaUri;
         }
 

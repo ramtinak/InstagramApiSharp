@@ -153,7 +153,30 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaDiscoverSearchResult>(exception);
             }
         }
+        /// <summary>
+        ///     Get discover user chaining list 
+        /// </summary>
+        public async Task<IResult<InstaUserChainingList>> GetChainingUsersAsync()
+        {
+            try
+            {
+                var instaUri = UriCreator.GetDiscoverChainingUri(_user.LoggedInUser.Pk);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
 
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUserChainingList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaUserChainingContainerResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetUserChainingListConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUserChainingList>(exception);
+            }
+        }
 
         #region Other functions
 
