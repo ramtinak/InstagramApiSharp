@@ -17,13 +17,19 @@ namespace InstagramApiSharp.API.Processors
     public interface IDiscoverProcessor
     {
         /// <summary>
-        ///     Get recent searches
-        /// </summary>
-        Task<IResult<InstaDiscoverRecentSearches>> GetRecentSearchesAsync();
-        /// <summary>
         ///     Clear Recent searches
         /// </summary>
         Task<IResult<bool>> ClearRecentSearchsAsync();
+
+        /// <summary>
+        ///     Get discover user chaining list 
+        /// </summary>
+        Task<IResult<InstaUserChainingList>> GetChainingUsersAsync();
+
+        /// <summary>
+        ///     Get recent searches
+        /// </summary>
+        Task<IResult<InstaDiscoverRecentSearches>> GetRecentSearchesAsync();
         /// <summary>
         ///     Get suggested searches
         /// </summary>
@@ -36,11 +42,6 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="query">Query to search</param>
         /// <param name="count">Count</param>
         Task<IResult<InstaDiscoverSearchResult>> SearchPeopleAsync(string query, int count = 50);
-        /// <summary>
-        ///     Get discover user chaining list 
-        /// </summary>
-        Task<IResult<InstaUserChainingList>> GetChainingUsersAsync();
-
         #region Other functions
 
         /// <summary>

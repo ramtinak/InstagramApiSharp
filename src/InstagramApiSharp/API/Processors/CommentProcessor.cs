@@ -18,12 +18,12 @@ namespace InstagramApiSharp.API.Processors
     internal class CommentProcessor : ICommentProcessor
     {
         private readonly AndroidDevice _deviceInfo;
+        private readonly HttpHelper _httpHelper;
         private readonly IHttpRequestProcessor _httpRequestProcessor;
+        private readonly InstaApi _instaApi;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
-        private readonly InstaApi _instaApi;
-        private readonly HttpHelper _httpHelper;
         public CommentProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
             UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
@@ -36,6 +36,201 @@ namespace InstagramApiSharp.API.Processors
             _instaApi = instaApi;
             _httpHelper = httpHelper;
         }
+        /// <summary>
+        ///     Comment media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="text">Comment text</param>
+        public async Task<IResult<InstaComment>> CommentMediaAsync(string mediaId, string text)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetPostCommetUri(mediaId);
+                var breadcrumb = CryptoHelper.GetCommentBreadCrumbEncoded(text);
+                var fields = new Dictionary<string, string>
+                {
+                    {"user_breadcrumb", breadcrumb},
+                    {"idempotence_token", Guid.NewGuid().ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"comment_text", text},
+                    {"containermodule", "comments_feed_timeline"},
+                    {"radio_type", "wifi-none"}
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaComment>(response, json);
+                var commentResponse = JsonConvert.DeserializeObject<InstaCommentResponse>(json,
+                    new InstaCommentDataConverter());
+                var converter = ConvertersFabric.Instance.GetCommentConverter(commentResponse);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, (InstaComment)null);
+            }
+        }
+
+        /// <summary>
+        ///     Delete media comment
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentId">Comment id</param>
+        public async Task<IResult<bool>> DeleteCommentAsync(string mediaId, string commentId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetDeleteCommentUri(mediaId, commentId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
+
+        /// <summary>
+        ///     Delete media comments(multiple)
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentIds">Comment id</param>
+        public async Task<IResult<bool>> DeleteMultipleCommentsAsync(string mediaId, params string[] commentIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetDeleteMultipleCommentsUri(mediaId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"comment_ids_to_delete", commentIds.EncodeList(false)}
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
+
+        /// <summary>
+        ///     Disable media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> DisableMediaCommentAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetDisableMediaCommetsUri(mediaId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
+
+        /// <summary>
+        ///     Allow media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> EnableMediaCommentAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetAllowMediaCommetsUri(mediaId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
+
+        /// <summary>
+        ///     Get media comments likers
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetMediaCommetLikersUri(mediaId);
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, false);
+            }
+        }
+
         /// <summary>
         ///     Get media comments
         /// </summary>
@@ -151,45 +346,37 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         /// <summary>
-        ///     Comment media
+        ///     Like media comment
         /// </summary>
-        /// <param name="mediaId">Media id</param>
-        /// <param name="text">Comment text</param>
-        public async Task<IResult<InstaComment>> CommentMediaAsync(string mediaId, string text)
+        /// <param name="commentId">Comment id</param>
+        public async Task<IResult<bool>> LikeCommentAsync(string commentId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetPostCommetUri(mediaId);
-                var breadcrumb = CryptoHelper.GetCommentBreadCrumbEncoded(text);
+                var instaUri = UriCreator.GetLikeCommentUri(commentId);
                 var fields = new Dictionary<string, string>
                 {
-                    {"user_breadcrumb", breadcrumb},
-                    {"idempotence_token", Guid.NewGuid().ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"comment_text", text},
-                    {"containermodule", "comments_feed_timeline"},
-                    {"radio_type", "wifi-none"}
+                    {"_csrftoken", _user.CsrfToken}
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaComment>(response, json);
-                var commentResponse = JsonConvert.DeserializeObject<InstaCommentResponse>(json,
-                    new InstaCommentDataConverter());
-                var converter = ConvertersFabric.Instance.GetCommentConverter(commentResponse);
-                return Result.Success(converter.Convert());
+
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, (InstaComment) null);
+                return Result.Fail(exception.Message, false);
             }
         }
+
         /// <summary>
         ///     Inline comment media
         /// </summary>
@@ -233,18 +420,21 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         /// <summary>
-        ///     Delete media comment
+        ///     Report media comment
         /// </summary>
         /// <param name="mediaId">Media id</param>
         /// <param name="commentId">Comment id</param>
-        public async Task<IResult<bool>> DeleteCommentAsync(string mediaId, string commentId)
+        public async Task<IResult<bool>> ReportCommentAsync(string mediaId, string commentId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetDeleteCommentUri(mediaId, commentId);
+                var instaUri = UriCreator.GetReportCommetUri(mediaId, commentId);
                 var fields = new Dictionary<string, string>
                 {
+                    {"media_id", mediaId},
+                    {"comment_id", commentId},
+                    {"reason", "1"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_csrftoken", _user.CsrfToken}
@@ -263,28 +453,28 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception.Message, false);
             }
         }
+
         /// <summary>
-        ///     Delete media comments(multiple)
+        ///     Unlike media comment
         /// </summary>
-        /// <param name="mediaId">Media id</param>
-        /// <param name="commentIds">Comment id</param>
-        public async Task<IResult<bool>> DeleteMultipleCommentsAsync(string mediaId, params string[] commentIds)
+        /// <param name="commentId">Comment id</param>
+        public async Task<IResult<bool>> UnlikeCommentAsync(string commentId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetDeleteMultipleCommentsUri(mediaId);
+                var instaUri = UriCreator.GetUnLikeCommentUri(commentId);
                 var fields = new Dictionary<string, string>
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"comment_ids_to_delete", commentIds.EncodeList(false)}
+                    {"_csrftoken", _user.CsrfToken}
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
@@ -295,8 +485,9 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception.Message, false);
             }
         }
+
         private async Task<IResult<InstaCommentListResponse>> GetCommentListWithMaxIdAsync(string mediaId,
-            string nextMaxId, string nextMinId)
+                            string nextMaxId, string nextMinId)
         {
             var commentsUri = UriCreator.GetMediaCommentsUri(mediaId, nextMaxId);
             if(!string.IsNullOrEmpty(nextMinId))
@@ -328,190 +519,6 @@ namespace InstagramApiSharp.API.Processors
                 return Result.UnExpectedResponse<InstaInlineCommentListResponse>(response, json);
             var commentListResponse = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
             return Result.Success(commentListResponse);
-        }
-        /// <summary>
-        ///     Allow media comments
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        public async Task<IResult<bool>> EnableMediaCommentAsync(string mediaId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetAllowMediaCommetsUri(mediaId);
-                var fields = new Dictionary<string, string>
-                {
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken}
-                };
-                var request =
-                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                return response.StatusCode == HttpStatusCode.OK
-                    ? Result.Success(true)
-                    : Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
-            }
-        }
-        /// <summary>
-        ///     Disable media comments
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        public async Task<IResult<bool>> DisableMediaCommentAsync(string mediaId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetDisableMediaCommetsUri(mediaId);
-                var fields = new Dictionary<string, string>
-                {
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken}
-                };
-                var request =
-                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-               
-                return response.StatusCode == HttpStatusCode.OK
-                    ? Result.Success(true)
-                    : Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
-            }
-        }
-        /// <summary>
-        ///     Get media comments likers
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        public async Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetMediaCommetLikersUri(mediaId);
-                var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                
-                return response.StatusCode == HttpStatusCode.OK
-                    ? Result.Success(true)
-                    : Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
-            }
-        }
-        /// <summary>
-        ///     Report media comment
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        /// <param name="commentId">Comment id</param>
-        public async Task<IResult<bool>> ReportCommentAsync(string mediaId, string commentId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            { 
-                var instaUri = UriCreator.GetReportCommetUri(mediaId, commentId);
-                var fields = new Dictionary<string, string>
-                {
-                    {"media_id", mediaId},
-                    {"comment_id", commentId},
-                    {"reason", "1"},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken}
-                };
-                var request =
-                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                return response.StatusCode == HttpStatusCode.OK
-                    ? Result.Success(true)
-                    : Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
-            }
-        }
-
-
-        /// <summary>
-        ///     Like media comment
-        /// </summary>
-        /// <param name="commentId">Comment id</param>
-        public async Task<IResult<bool>> LikeCommentAsync(string commentId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetLikeCommentUri(commentId);
-                var fields = new Dictionary<string, string>
-                {
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken}
-                };
-                var request =
-                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                
-                return response.StatusCode == HttpStatusCode.OK
-                    ? Result.Success(true)
-                    : Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
-            }
-        }
-        /// <summary>
-        ///     Unlike media comment
-        /// </summary>
-        /// <param name="commentId">Comment id</param>
-        public async Task<IResult<bool>> UnlikeCommentAsync(string commentId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetUnLikeCommentUri(commentId);
-                var fields = new Dictionary<string, string>
-                {
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken}
-                };
-                var request =
-                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                
-                return response.StatusCode == HttpStatusCode.OK
-                    ? Result.Success(true)
-                    : Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
-            }
         }
     }
 }

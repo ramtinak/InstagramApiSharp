@@ -17,25 +17,28 @@ namespace InstagramApiSharp.API.Processors
     public interface ITVProcessor
     {
         /// <summary>
-        ///     Get TV Guide (gets popular and suggested channels)
+        ///     Get channel by user id (pk) => channel owner
         /// </summary>
-        Task<IResult<InstaTV>> GetTVGuideAsync();
+        /// <param name="userId">User id (pk) => channel owner</param>
+        /// <param name="paginationParameters">Pagination parameters</param>
+        Task<IResult<InstaTVChannel>> GetChannelByIdAsync(long userId, PaginationParameters paginationParameters);
+
         /// <summary>
         ///     Get channel by <seealso cref="InstaTVChannelType"/>
         /// </summary>
         /// <param name="channelType">Channel type</param>
         /// <param name="paginationParameters">Pagination parameters</param>
         Task<IResult<InstaTVChannel>> GetChannelByTypeAsync(InstaTVChannelType channelType, PaginationParameters paginationParameters);
-        /// <summary>
-        ///     Get channel by user id (pk) => channel owner
-        /// </summary>
-        /// <param name="userId">User id (pk) => channel owner</param>
-        /// <param name="paginationParameters">Pagination parameters</param>
-        Task<IResult<InstaTVChannel>> GetChannelByIdAsync(long userId, PaginationParameters paginationParameters);
+
         /// <summary>
         ///     Get suggested searches
         /// </summary>
         Task<IResult<InstaTVSearch>> GetSuggestedSearchesAsync();
+
+        /// <summary>
+        ///     Get TV Guide (gets popular and suggested channels)
+        /// </summary>
+        Task<IResult<InstaTV>> GetTVGuideAsync();
         /// <summary>
         ///     Search channels
         /// </summary>

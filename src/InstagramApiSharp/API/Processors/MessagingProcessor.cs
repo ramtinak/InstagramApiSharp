@@ -30,12 +30,12 @@ namespace InstagramApiSharp.API.Processors
     internal class MessagingProcessor : IMessagingProcessor
     {
         private readonly AndroidDevice _deviceInfo;
+        private readonly HttpHelper _httpHelper;
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly InstaApi _instaApi;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
-        private readonly HttpHelper _httpHelper;
         public MessagingProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor,
             IInstaLogger logger, UserAuthValidate userAuthValidate, InstaApi instaApi,
@@ -254,6 +254,68 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get direct users presence
+        ///     <para>Note: You can use this function to find out who is online and who isn't.</para>
+        /// </summary>
+        public async Task<IResult<InstaUserPresenceList>> GetUsersPresenceAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetDirectPresenceUri();
+
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUserPresenceList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaUserPresenceContainerResponse>(json,
+                    new InstaUserPresenceContainerDataConverter());
+                return Result.Success(ConvertersFabric.Instance.GetUserPresenceListConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUserPresenceList>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Leave from group thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        public async Task<IResult<bool>> LeaveGroupThreadAsync(string threadId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetLeaveThreadUri(threadId);
+                var clientContext = Guid.NewGuid().ToString();
+                var data = new Dictionary<string, string>
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                //Debug.WriteLine(json);
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Like direct message in a thread
         /// </summary>
         /// <param name="threadId">Thread id</param>
@@ -276,46 +338,6 @@ namespace InstagramApiSharp.API.Processors
                     {"client_context", Guid.NewGuid().ToString()},
                     {"node_type", "item"},
                     {"reaction_status", "created"},
-                    {"item_id", itemId}
-                };
-                var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<bool>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
-                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
-            }
-        }
-        /// <summary>
-        ///     UnLike direct message in a thread
-        /// </summary>
-        /// <param name="threadId">Thread id</param>
-        /// <param name="itemId">Item id (message id)</param>
-        public async Task<IResult<bool>> UnLikeThreadMessageAsync(string threadId, string itemId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetLikeUnlikeDirectMessageUri();
-
-                var data = new Dictionary<string, string>
-                {
-                    {"item_type", "reaction"},
-                    {"reaction_type", "like"},
-                    {"action", "send_item"},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"thread_ids", $"[{threadId}]"},
-                    {"client_context", Guid.NewGuid().ToString()},
-                    {"node_type", "item"},
-                    {"reaction_status", "deleted"},
                     {"item_id", itemId}
                 };
                 var request =
@@ -411,6 +433,7 @@ namespace InstagramApiSharp.API.Processors
         {
             return await SendDirectDisappearingPhotoAsync(null, image, viewMode, threadIds);
         }
+
         /// <summary>
         ///     Send disappearing photo to direct thread (video will remove after user saw it) with progress
         /// </summary>
@@ -424,6 +447,7 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             return await _instaApi.HelperProcessor.SendPhotoAsync(progress, false, true, "", viewMode, InstaStoryType.Direct, null, threadIds.EncodeList(), image);
         }
+
         /// <summary>
         ///     Send disappearing video to direct thread (video will remove after user saw it)
         /// </summary>
@@ -435,6 +459,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         {
             return await SendDirectDisappearingVideoAsync(null, video, viewMode, threadIds);
         }
+
         /// <summary>
         ///     Send disappearing video to direct thread (video will remove after user saw it) with progress
         /// </summary>
@@ -448,6 +473,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             UserAuthValidator.Validate(_userAuthValidate);
             return await _instaApi.HelperProcessor.SendVideoAsync(progress, false, true, "", viewMode, InstaStoryType.Direct, null, threadIds.EncodeList(), video);
         }
+
         /// <summary>
         ///     Send link address to direct thread
         /// </summary>
@@ -538,6 +564,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             UserAuthValidator.Validate(_userAuthValidate);
             return await SendDirectPhotoAsync(null, image, threadId);
         }
+
         /// <summary>
         ///     Send photo to direct thread (single) with progress
         /// </summary>
@@ -550,6 +577,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             UserAuthValidator.Validate(_userAuthValidate);
             return await SendDirectPhoto(progress, null, threadId, image);
         }
+
         /// <summary>
         ///     Send photo to multiple recipients (multiple user)
         /// </summary>
@@ -560,6 +588,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         {
             return await SendDirectPhotoToRecipientsAsync(null, image, recipients);
         }
+
         /// <summary>
         ///     Send photo to multiple recipients (multiple user) with progress
         /// </summary>
@@ -572,6 +601,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             UserAuthValidator.Validate(_userAuthValidate);
             return await SendDirectPhoto(progress, string.Join(",", recipients), null, image);
         }
+
         /// <summary>
         ///     Send profile to direct thrad
         /// </summary>
@@ -663,6 +693,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         {
             return await SendDirectVideoAsync(null, video, threadId);
         }
+
         /// <summary>
         ///     Send video to direct thread (single) with progress
         /// </summary>
@@ -672,8 +703,9 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         public async Task<IResult<bool>> SendDirectVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string threadId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendVideoAsync(progress,true, false, "", InstaViewMode.Replayable, InstaStoryType.Both, null, threadId, video);
+            return await _instaApi.HelperProcessor.SendVideoAsync(progress, true, false, "", InstaViewMode.Replayable, InstaStoryType.Both, null, threadId, video);
         }
+
         /// <summary>
         ///     Send video to multiple recipients (multiple user)
         /// </summary>
@@ -684,6 +716,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             UserAuthValidator.Validate(_userAuthValidate);
             return await SendDirectVideoToRecipientsAsync(null, video, recipients);
         }
+
         /// <summary>
         ///     Send video to multiple recipients (multiple user) with progress
         /// </summary>
@@ -695,6 +728,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             UserAuthValidator.Validate(_userAuthValidate);
             return await _instaApi.HelperProcessor.SendVideoAsync(progress, true, false, "", InstaViewMode.Replayable, InstaStoryType.Both, recipients.EncodeList(false), null, video);
         }
+
         /// <summary>
         ///     Share media to direct thread
         /// </summary>
@@ -778,6 +812,46 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         }
 
         /// <summary>
+        ///     UnLike direct message in a thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="itemId">Item id (message id)</param>
+        public async Task<IResult<bool>> UnLikeThreadMessageAsync(string threadId, string itemId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetLikeUnlikeDirectMessageUri();
+
+                var data = new Dictionary<string, string>
+                {
+                    {"item_type", "reaction"},
+                    {"reaction_type", "like"},
+                    {"action", "send_item"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"thread_ids", $"[{threadId}]"},
+                    {"client_context", Guid.NewGuid().ToString()},
+                    {"node_type", "item"},
+                    {"reaction_status", "deleted"},
+                    {"item_id", itemId}
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+        /// <summary>
         ///     Unmute direct thread
         /// </summary>
         /// <param name="threadId">Thread id</param>
@@ -840,66 +914,6 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             {
                 _logger?.LogException(exception);
                 return Result.Fail<bool>(exception);
-            }
-        }
-        /// <summary>
-        ///     Leave from group thread
-        /// </summary>
-        /// <param name="threadId">Thread id</param>
-        public async Task<IResult<bool>> LeaveGroupThreadAsync(string threadId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetLeaveThreadUri(threadId);
-                var clientContext = Guid.NewGuid().ToString();
-                var data = new Dictionary<string, string>
-                {
-                    {"_csrftoken", _user.CsrfToken},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                };
-                var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                //Debug.WriteLine(json);
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<bool>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
-                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
-            }
-        }
-        /// <summary>
-        ///     Get direct users presence
-        ///     <para>Note: You can use this function to find out who is online and who isn't.</para>
-        /// </summary>
-        public async Task<IResult<InstaUserPresenceList>> GetUsersPresenceAsync()
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetDirectPresenceUri();
-                
-                var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaUserPresenceList>(response, json);
-
-                var obj = JsonConvert.DeserializeObject<InstaUserPresenceContainerResponse>(json,
-                    new InstaUserPresenceContainerDataConverter());
-                return Result.Success(ConvertersFabric.Instance.GetUserPresenceListConverter(obj).Convert());
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaUserPresenceList>(exception);
             }
         }
         private async Task<IResult<bool>> DeclineDirectPendingRequests(bool all, params string[] threadIds)

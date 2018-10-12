@@ -9,6 +9,56 @@ namespace InstagramApiSharp.API.Processors
     public interface IHashtagProcessor
     {
         /// <summary>
+        ///     Follow a hashtag
+        /// </summary>
+        /// <param name="tagname">Tag name</param>
+        Task<IResult<bool>> FollowHashtagAsync(string tagname);
+
+        /// <summary>
+        ///     Get following hashtags information
+        /// </summary>
+        /// <param name="userId">User identifier (pk)</param>
+        /// <returns>
+        ///     List of hashtags
+        /// </returns>
+        Task<IResult<InstaHashtagSearch>> GetFollowingHashtagsInfoAsync(long userId);
+
+        /// <summary>
+        ///     Gets the hashtag information by user tagname.
+        /// </summary>
+        /// <param name="tagname">Tagname</param>
+        /// <returns>Hashtag information</returns>
+        Task<IResult<InstaHashtag>> GetHashtagInfoAsync(string tagname);
+
+        /// <summary>
+        ///     Get stories of an hashtag
+        /// </summary>
+        /// <param name="tagname">Tag name</param>
+        Task<IResult<InstaHashtagStory>> GetHashtagStoriesAsync(string tagname);
+
+        /// <summary>
+        ///     Get recent hashtag media list
+        /// </summary>
+        /// <param name="tagname">Tag name</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        Task<IResult<InstaHashtagMedia>> GetRecentHashtagMediaListAsync(string tagname, PaginationParameters paginationParameters);
+
+        /// <summary>
+        ///     Get suggested hashtags
+        /// </summary>
+        /// <returns>
+        ///     List of hashtags
+        /// </returns>
+        Task<IResult<InstaHashtagSearch>> GetSuggestedHashtagsAsync();
+
+        /// <summary>
+        ///     Get top (ranked) hashtag media list
+        /// </summary>
+        /// <param name="tagname">Tag name</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        Task<IResult<InstaHashtagMedia>> GetTopHashtagMediaListAsync(string tagname, PaginationParameters paginationParameters);
+
+        /// <summary>
         ///     Searches for specific hashtag by search query.
         /// </summary>
         /// <param name="query">Search query</param>
@@ -19,53 +69,9 @@ namespace InstagramApiSharp.API.Processors
         /// </returns>
         Task<IResult<InstaHashtagSearch>> SearchHashtagAsync(string query, IEnumerable<long> excludeList = null, string rankToken = null);
         /// <summary>
-        ///     Gets the hashtag information by user tagname.
-        /// </summary>
-        /// <param name="tagname">Tagname</param>
-        /// <returns>Hashtag information</returns>
-        Task<IResult<InstaHashtag>> GetHashtagInfoAsync(string tagname);
-        /// <summary>
-        ///     Follow a hashtag
-        /// </summary>
-        /// <param name="tagname">Tag name</param>
-        Task<IResult<bool>> FollowHashtagAsync(string tagname);
-        /// <summary>
         ///     Unfollow a hashtag
         /// </summary>
         /// <param name="tagname">Tag name</param>
         Task<IResult<bool>> UnFollowHashtagAsync(string tagname);
-        /// <summary>
-        ///     Get stories of an hashtag
-        /// </summary>
-        /// <param name="tagname">Tag name</param>
-        Task<IResult<InstaHashtagStory>> GetHashtagStoriesAsync(string tagname);
-        /// <summary>
-        ///     Get top (ranked) hashtag media list
-        /// </summary>
-        /// <param name="tagname">Tag name</param>
-        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        Task<IResult<InstaHashtagMedia>> GetTopHashtagMediaListAsync(string tagname, PaginationParameters paginationParameters);
-        /// <summary>
-        ///     Get recent hashtag media list
-        /// </summary>
-        /// <param name="tagname">Tag name</param>
-        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        Task<IResult<InstaHashtagMedia>> GetRecentHashtagMediaListAsync(string tagname, PaginationParameters paginationParameters);
-        /// <summary>
-        ///     Get suggested hashtags
-        /// </summary>
-        /// <returns>
-        ///     List of hashtags
-        /// </returns>
-        Task<IResult<InstaHashtagSearch>> GetSuggestedHashtagsAsync();
-        /// <summary>
-        ///     Get following hashtags information
-        /// </summary>
-        /// <param name="userId">User identifier (pk)</param>
-        /// <returns>
-        ///     List of hashtags
-        /// </returns>
-        Task<IResult<InstaHashtagSearch>> GetFollowingHashtagsInfoAsync(long userId);
-
     }
 }

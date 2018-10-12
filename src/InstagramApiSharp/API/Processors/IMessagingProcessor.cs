@@ -65,18 +65,23 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaRecipients>> GetRecentRecipientsAsync();
 
         /// <summary>
+        ///     Get direct users presence
+        ///     <para>Note: You can use this function to find out who is online and who isn't.</para>
+        /// </summary>
+        Task<IResult<InstaUserPresenceList>> GetUsersPresenceAsync();
+
+        /// <summary>
+        ///     Leave from group thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        Task<IResult<bool>> LeaveGroupThreadAsync(string threadId);
+
+        /// <summary>
         ///     Like direct message in a thread
         /// </summary>
         /// <param name="threadId">Thread id</param>
         /// <param name="itemId">Item id (message id)</param>
         Task<IResult<bool>> LikeThreadMessageAsync(string threadId, string itemId);
-        
-        /// <summary>
-        ///     UnLike direct message in a thread
-        /// </summary>
-        /// <param name="threadId">Thread id</param>
-        /// <param name="itemId">Item id (message id)</param>
-        Task<IResult<bool>> UnLikeThreadMessageAsync(string threadId, string itemId);
 
         /// <summary>
         ///     Mark direct message as seen
@@ -99,6 +104,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> SendDirectDisappearingPhotoAsync(InstaImage image,
      InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
+
         /// <summary>
         ///     Send disappearing photo to direct thread (video will remove after user saw it) with progress
         /// </summary>
@@ -108,6 +114,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> SendDirectDisappearingPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image,
      InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
+
         /// <summary>
         ///     Send disappearing video to direct thread (video will remove after user saw it)
         /// </summary>
@@ -117,6 +124,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         Task<IResult<bool>> SendDirectDisappearingVideoAsync(InstaVideoUpload video,
        InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
+
         /// <summary>
         ///     Send disappearing video to direct thread (video will remove after user saw it) with progress
         /// </summary>
@@ -127,6 +135,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         Task<IResult<bool>> SendDirectDisappearingVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video,
        InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
+
         /// <summary>
         ///     Send link address to direct thread
         /// </summary>
@@ -151,6 +160,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadId">Thread id</param>
         /// <returns>Returns True is sent</returns>
         Task<IResult<bool>> SendDirectPhotoAsync(InstaImage image, string threadId);
+
         /// <summary>
         ///     Send photo to direct thread (single)
         /// </summary>
@@ -159,6 +169,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadId">Thread id</param>
         /// <returns>Returns True is sent</returns>
         Task<IResult<bool>> SendDirectPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string threadId);
+
         /// <summary>
         ///     Send photo to multiple recipients (multiple user)
         /// </summary>
@@ -166,6 +177,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="recipients">Recipients (user ids/pk)</param>
         /// <returns>Returns True is sent</returns>
         Task<IResult<bool>> SendDirectPhotoToRecipientsAsync(InstaImage image, params string[] recipients);
+
         /// <summary>
         ///     Send photo to multiple recipients (multiple user) with progress
         /// </summary>
@@ -174,6 +186,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="recipients">Recipients (user ids/pk)</param>
         /// <returns>Returns True is sent</returns>
         Task<IResult<bool>> SendDirectPhotoToRecipientsAsync(Action<InstaUploaderProgress> progress, InstaImage image, params string[] recipients);
+
         /// <summary>
         ///     Send profile to direct thread
         /// </summary>
@@ -198,6 +211,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload (no need to set thumbnail)</param>
         /// <param name="threadId">Thread id</param>
         Task<IResult<bool>> SendDirectVideoAsync(InstaVideoUpload video, string threadId);
+
         /// <summary>
         ///     Send video to direct thread (single) with progress
         /// </summary>
@@ -205,12 +219,14 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload (no need to set thumbnail)</param>
         /// <param name="threadId">Thread id</param>
         Task<IResult<bool>> SendDirectVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string threadId);
+
         /// <summary>
         ///     Send video to multiple recipients (multiple user)
         /// </summary>
         /// <param name="video">Video to upload (no need to set thumbnail)</param>
         /// <param name="recipients">Recipients (user ids/pk)</param>
         Task<IResult<bool>> SendDirectVideoToRecipientsAsync(InstaVideoUpload video, params string[] recipients);
+
         /// <summary>
         ///     Send video to multiple recipients (multiple user) with progress
         /// </summary>
@@ -218,6 +234,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload (no need to set thumbnail)</param>
         /// <param name="recipients">Recipients (user ids/pk)</param>
         Task<IResult<bool>> SendDirectVideoToRecipientsAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, params string[] recipients);
+
         /// <summary>
         ///     Share media to direct thread
         /// </summary>
@@ -233,6 +250,13 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="userIdToSend">User id(PK)</param>
         /// <param name="threadId">Thread id</param>
         Task<IResult<InstaSharing>> ShareUserAsync(string userIdToSend, string threadId);
+
+        /// <summary>
+        ///     UnLike direct message in a thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="itemId">Item id (message id)</param>
+        Task<IResult<bool>> UnLikeThreadMessageAsync(string threadId, string itemId);
         /// <summary>
         ///     Unmute direct thread
         /// </summary>
@@ -245,15 +269,5 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadId">Thread id</param>
         /// <param name="title">New title</param>
         Task<IResult<bool>> UpdateDirectThreadTitleAsync(string threadId, string title);
-        /// <summary>
-        ///     Leave from group thread
-        /// </summary>
-        /// <param name="threadId">Thread id</param>
-        Task<IResult<bool>> LeaveGroupThreadAsync(string threadId);
-        /// <summary>
-        ///     Get direct users presence
-        ///     <para>Note: You can use this function to find out who is online and who isn't.</para>
-        /// </summary>
-        Task<IResult<InstaUserPresenceList>> GetUsersPresenceAsync();
     }
 }

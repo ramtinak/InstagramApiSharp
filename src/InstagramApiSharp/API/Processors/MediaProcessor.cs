@@ -22,12 +22,12 @@ namespace InstagramApiSharp.API.Processors
     internal class MediaProcessor : IMediaProcessor
     {
         private readonly AndroidDevice _deviceInfo;
+        private readonly HttpHelper _httpHelper;
         private readonly IHttpRequestProcessor _httpRequestProcessor;
+        private readonly InstaApi _instaApi;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
-        private readonly InstaApi _instaApi;
-        private readonly HttpHelper _httpHelper;
         public MediaProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
             UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
@@ -39,32 +39,6 @@ namespace InstagramApiSharp.API.Processors
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
             _httpHelper = httpHelper;
-        }
-        /// <summary>
-        ///     Get media ID from an url (got from "share link")
-        /// </summary>
-        /// <param name="uri">Uri to get media ID</param>
-        /// <returns>Media ID</returns>
-        public async Task<IResult<string>> GetMediaIdFromUrlAsync(Uri uri)
-        {
-            try
-            {
-                var collectionUri = UriCreator.GetMediaIdFromUrlUri(uri);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<string>(response, json);
-
-                var data = JsonConvert.DeserializeObject<InstaOembedUrlResponse>(json);
-                return Result.Success(data.MediaId);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<string>(exception);
-            }
         }
         /// <summary>
         ///     Delete a media (photo, video or album)
@@ -104,6 +78,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
+
         /// <summary>
         ///     Edit the caption/location of the media (photo/video/album)
         /// </summary>
@@ -148,309 +123,200 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
+
         /// <summary>
-        ///     Upload video
+        ///     Get media by its id asynchronously
         /// </summary>
-        /// <param name="video">Video and thumbnail to upload</param>
-        /// <param name="caption">Caption</param>
-        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        public async Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption, InstaLocationShort location = null)
-        {
-            return await UploadVideoAsync(null, video, caption, location);
-        }
-        /// <summary>
-        ///     Upload video with progress
-        /// </summary>
-        /// <param name="progress">Progress action</param>
-        /// <param name="video">Video and thumbnail to upload</param>
-        /// <param name="caption">Caption</param>
-        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        public async Task<IResult<InstaMedia>> UploadVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string caption, InstaLocationShort location = null)
+        /// <param name="mediaId">Maximum count of pages to retrieve</param>
+        /// <returns>
+        ///     <see cref="InstaMedia" />
+        /// </returns>
+        public async Task<IResult<InstaMedia>> GetMediaByIdAsync(string mediaId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            var upProgress = new InstaUploaderProgress
-            {
-                Caption = caption ?? string.Empty,
-                UploadState = InstaUploadState.Preparing
-            };
             try
             {
-                var instaUri = UriCreator.GetUploadVideoUri();
-                var uploadId = ApiRequestMessage.GenerateUploadId();
-                upProgress.UploadId = uploadId;
-                progress?.Invoke(upProgress);
-                var requestContent = new MultipartFormDataContent(uploadId)
-                {
-                    {new StringContent("2"), "\"media_type\""},
-                    {new StringContent(uploadId), "\"upload_id\""},
-                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
-                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
-                    {
-                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
-                        "\"image_compression\""
-                    }
-                };
-
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = requestContent;
+                var mediaUri = UriCreator.GetMediaUri(mediaId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, mediaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-
-                var videoResponse = JsonConvert.DeserializeObject<VideoUploadJobResponse>(json);
-                if (videoResponse == null)
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaMedia>(response, json);
+                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
+                    new InstaMediaListDataConverter());
+                if (mediaResponse.Medias?.Count > 1)
                 {
-                    upProgress.UploadState = InstaUploadState.Error;
-                    progress?.Invoke(upProgress);
-                    return Result.Fail<InstaMedia>("Failed to get response from instagram video upload endpoint");
+                    var errorMessage = $"Got wrong media count for request with media id={mediaId}";
+                    _logger?.LogInfo(errorMessage);
+                    return Result.Fail<InstaMedia>(errorMessage);
                 }
 
-                byte[] fileBytes;
-                if (video.Video.VideoBytes == null)
-                    fileBytes = File.ReadAllBytes(video.Video.Uri);
-                else
-                    fileBytes = video.Video.VideoBytes;
-                var first = videoResponse.VideoUploadUrls[0];
-                instaUri = new Uri(Uri.EscapeUriString(first.Url));
-
-
-                requestContent = new MultipartFormDataContent(uploadId)
-                {
-                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
-                    {
-                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
-                        "\"image_compression\""
-                    }
-                };
-
-
-                var videoContent = new ByteArrayContent(fileBytes);
-                videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
-                videoContent.Headers.Add("Content-Type", "application/octet-stream");
-                videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4")}\"");
-                var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
-                {
-                    UploaderProgress = upProgress
-                };
-                requestContent.Add(progressContent);
-                request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = requestContent;
-                request.Headers.Host = "upload.instagram.com";
-                request.Headers.Add("Cookie2", "$Version=1");
-                request.Headers.Add("Session-ID", uploadId);
-                request.Headers.Add("job", first.Job);
-                response = await _httpRequestProcessor.SendAsync(request);
-                json = await response.Content.ReadAsStringAsync();
-                upProgress = progressContent.UploaderProgress;
-                await UploadVideoThumbnailAsync(progress, upProgress, video.VideoThumbnail, uploadId);
-
-                return await ConfigureVideoAsync(progress, upProgress, video.Video, uploadId, caption, location);
+                var converter =
+                    ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse.Medias.FirstOrDefault());
+                return Result.Success(converter.Convert());
             }
             catch (Exception exception)
             {
-                upProgress.UploadState = InstaUploadState.Error;
-                progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
                 return Result.Fail<InstaMedia>(exception);
             }
         }
 
-        private async Task<IResult<bool>> UploadVideoThumbnailAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaImage image, string uploadId)
+        /// <summary>
+        ///     Get media ID from an url (got from "share link")
+        /// </summary>
+        /// <param name="uri">Uri to get media ID</param>
+        /// <returns>Media ID</returns>
+        public async Task<IResult<string>> GetMediaIdFromUrlAsync(Uri uri)
         {
             try
             {
-                var instaUri = UriCreator.GetUploadPhotoUri();
-                upProgress.UploadState = InstaUploadState.UploadingThumbnail;
-                progress?.Invoke(upProgress);
-                var requestContent = new MultipartFormDataContent(uploadId)
-                {
-                    {new StringContent(uploadId), "\"upload_id\""},
-                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
-                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
-                    {
-                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
-                        "\"image_compression\""
-                    }
-                };
-                byte[] fileBytes;
-                if (image.ImageBytes == null)
-                    fileBytes = File.ReadAllBytes(image.Uri);
-                else
-                    fileBytes = image.ImageBytes;
-
-                var imageContent = new ByteArrayContent(fileBytes);
-                imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
-                imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                requestContent.Add(imageContent, "photo", $"pending_media_{uploadId}.jpg");
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = requestContent;
+                var collectionUri = UriCreator.GetMediaIdFromUrlUri(uri);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                var imgResp = JsonConvert.DeserializeObject<ImageThumbnailResponse>(json);
-                if (imgResp.Status.ToLower() == "ok")
-                {
-                    upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
-                    progress?.Invoke(upProgress);
-                    return Result.Success(true);
-                }
 
-                upProgress.UploadState = InstaUploadState.Error;
-                progress?.Invoke(upProgress);
-                return Result.Fail<bool>("Could not upload thumbnail");
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<string>(response, json);
+
+                var data = JsonConvert.DeserializeObject<InstaOembedUrlResponse>(json);
+                return Result.Success(data.MediaId);
             }
             catch (Exception exception)
             {
-                upProgress.UploadState = InstaUploadState.Error;
-                progress?.Invoke(upProgress);
+                _logger?.LogException(exception);
+                return Result.Fail<string>(exception);
+            }
+        }
+        /// <summary>
+        ///     Get users (short) who liked certain media. Normaly it return around 1000 last users.
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<InstaLikersList>> GetMediaLikersAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var likers = new InstaLikersList();
+                var likersUri = UriCreator.GetMediaLikersUri(mediaId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, likersUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaLikersList>(response, json);
+                var mediaLikersResponse = JsonConvert.DeserializeObject<InstaMediaLikersResponse>(json);
+                likers.UsersCount = mediaLikersResponse.UsersCount;
+                if (mediaLikersResponse.UsersCount < 1) return Result.Success(likers);
+                likers.AddRange(
+                    mediaLikersResponse.Users.Select(ConvertersFabric.Instance.GetUserShortConverter)
+                        .Select(converter => converter.Convert()));
+                return Result.Success(likers);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaLikersList>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Get share link from media Id
+        /// </summary>
+        /// <param name="mediaId">media ID</param>
+        /// <returns>Share link as Uri</returns>
+        public async Task<IResult<Uri>> GetShareLinkFromMediaIdAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var collectionUri = UriCreator.GetShareLinkFromMediaId(mediaId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<Uri>(response, json);
+
+                var data = JsonConvert.DeserializeObject<InstaPermalinkResponse>(json);
+                return Result.Success(new Uri(data.Permalink));
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<Uri>(exception.Message);
+            }
+        }
+
+        /// <summary>
+        ///     Like media (photo or video)
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> LikeMediaAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                return await LikeUnlikeMediaInternal(mediaId, UriCreator.GetLikeMediaUri(mediaId));
+            }
+            catch (Exception exception)
+            {
                 _logger?.LogException(exception);
                 return Result.Fail<bool>(exception);
             }
         }
 
-        private async Task<IResult<InstaMedia>> ConfigureVideoAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaVideo video, string uploadId, string caption, InstaLocationShort location)
+        /// <summary>
+        ///     Report media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> ReportMediaAsync(string mediaId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                upProgress.UploadState = InstaUploadState.Configuring;
-                progress?.Invoke(upProgress);
-                var instaUri = UriCreator.GetMediaConfigureUri();
-                var data = new JObject
+                var instaUri = UriCreator.GetReportMediaUri(mediaId);
+                var fields = new Dictionary<string, string>
                 {
-                    {"caption", caption ?? string.Empty},
-                    {"upload_id", uploadId},
-                    {"source_type", "3"},
-                    {"camera_position", "unknown"},
-                    {
-                        "extra", new JObject
-                        {
-                            {"source_width", 0},
-                            {"source_height", 0}
-                        }
-                    },
-                    {
-                        "clips", new JArray{
-                            new JObject
-                            {
-                                {"length", 0},
-                                {"creation_date", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fff")},
-                                {"source_type", "3"},
-                                {"camera_position", "back"}
-                            }
-                        }
-                    },
-                    {"poster_frame_index", 0},
-                    {"audio_muted", false},
-                    {"filter_type", "0"},
-                    {"video_result", ""},
-                    {"_csrftoken", _user.CsrfToken},
+                    {"media_id", mediaId},
+                    {"reason", "1"},
+                    {"source_name", "photo_view_profile"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.UserName}
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
                 };
-                if (location != null)
-                {
-                    data.Add("location", location.GetJson());
-                    data.Add("date_time_digitalized", DateTime.Now.ToString("yyyy:dd:MM+h:mm:ss"));
-                }
-                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                {
-                    upProgress.UploadState = InstaUploadState.Error;
-                    progress?.Invoke(upProgress);
-                    return Result.UnExpectedResponse<InstaMedia>(response, json);
-                }
-                upProgress.UploadState = InstaUploadState.Configured;
-                progress?.Invoke(upProgress);
-                var success = await ExposeVideoAsync(uploadId, caption, location);
-                if (success.Succeeded)
-                {
-                    upProgress.UploadState = InstaUploadState.Completed;
-                    progress?.Invoke(upProgress);
-                    return success;
-                }
-
-                upProgress.UploadState = InstaUploadState.Error;
-                progress?.Invoke(upProgress);
-                return Result.Fail<InstaMedia>("Cannot expose media");
-            }
-            catch (Exception exception)
-            {
-                upProgress.UploadState = InstaUploadState.Error;
-                progress?.Invoke(upProgress);
-                _logger?.LogException(exception);
-                return Result.Fail<InstaMedia>(exception);
-            }
-        }
-
-        private async Task<IResult<InstaMedia>> ExposeVideoAsync(string uploadId, string caption, InstaLocationShort location)
-        {
-            try
-            {
-                var instaUri = UriCreator.GetMediaConfigureUri();
-                var data = new JObject
-                {
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"experiment", "ig_android_profile_contextual_feed"},
-                    {"id", _user.LoggedInUser.Pk},
-                    {"upload_id", uploadId},
-
-                };
-
-                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                var jObject = JsonConvert.DeserializeObject<ImageThumbnailResponse>(json);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var mediaResponse = JsonConvert.DeserializeObject<InstaMediaItemResponse>(json, 
-                        new InstaMediaDataConverter());
-                    var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
-                    var obj = converter.Convert();
-                    if (obj.Caption == null && !string.IsNullOrEmpty(caption))
-                    {
-                        var editedMedia = await _instaApi.MediaProcessor.EditMediaAsync(obj.InstaIdentifier, caption, location);
-                        if (editedMedia.Succeeded)
-                            return Result.Success(editedMedia.Value);
-                    }
-                    return Result.Success(obj);
-                }
-
-                return Result.Fail<InstaMedia>(jObject.Status);
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaMedia>(exception);
+                return Result.Fail(exception.Message, false);
             }
         }
+
         /// <summary>
-        ///     Upload photo
+        ///     Remove like from media (photo or video)
         /// </summary>
-        /// <param name="image">Photo to upload</param>
-        /// <param name="caption">Caption</param>
-        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        public async Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption, InstaLocationShort location = null)
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> UnLikeMediaAsync(string mediaId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(null, image, caption, location);
+            try
+            {
+                return await LikeUnlikeMediaInternal(mediaId, UriCreator.GetUnLikeMediaUri(mediaId));
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
         }
-        /// <summary>
-        ///     Upload photo with progress
-        /// </summary>
-        /// <param name="progress">Progress action</param>
-        /// <param name="image">Photo to upload</param>
-        /// <param name="caption">Caption</param>
-        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        public async Task<IResult<InstaMedia>> UploadPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption, InstaLocationShort location = null)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(progress, image, caption, location);
-        }
+
         /// <summary>
         ///     Upload album (videos and photos)
         /// </summary>
@@ -462,6 +328,7 @@ namespace InstagramApiSharp.API.Processors
         {
             return await UploadAlbumAsync(null, images, videos, caption, location);
         }
+
         /// <summary>
         ///     Upload album (videos and photos)
         /// </summary>
@@ -662,7 +529,138 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, string[] imagesUploadIds, Dictionary<string,InstaVideo> videos, string caption, InstaLocationShort location)
+        /// <summary>
+        ///     Upload photo
+        /// </summary>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        public async Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption, InstaLocationShort location = null)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(null, image, caption, location);
+        }
+
+        /// <summary>
+        ///     Upload photo with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        public async Task<IResult<InstaMedia>> UploadPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption, InstaLocationShort location = null)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(progress, image, caption, location);
+        }
+
+        /// <summary>
+        ///     Upload video
+        /// </summary>
+        /// <param name="video">Video and thumbnail to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        public async Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption, InstaLocationShort location = null)
+        {
+            return await UploadVideoAsync(null, video, caption, location);
+        }
+        /// <summary>
+        ///     Upload video with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video and thumbnail to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        public async Task<IResult<InstaMedia>> UploadVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string caption, InstaLocationShort location = null)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var upProgress = new InstaUploaderProgress
+            {
+                Caption = caption ?? string.Empty,
+                UploadState = InstaUploadState.Preparing
+            };
+            try
+            {
+                var instaUri = UriCreator.GetUploadVideoUri();
+                var uploadId = ApiRequestMessage.GenerateUploadId();
+                upProgress.UploadId = uploadId;
+                progress?.Invoke(upProgress);
+                var requestContent = new MultipartFormDataContent(uploadId)
+                {
+                    {new StringContent("2"), "\"media_type\""},
+                    {new StringContent(uploadId), "\"upload_id\""},
+                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                    {
+                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                        "\"image_compression\""
+                    }
+                };
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                request.Content = requestContent;
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                var videoResponse = JsonConvert.DeserializeObject<VideoUploadJobResponse>(json);
+                if (videoResponse == null)
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
+                    return Result.Fail<InstaMedia>("Failed to get response from instagram video upload endpoint");
+                }
+
+                byte[] fileBytes;
+                if (video.Video.VideoBytes == null)
+                    fileBytes = File.ReadAllBytes(video.Video.Uri);
+                else
+                    fileBytes = video.Video.VideoBytes;
+                var first = videoResponse.VideoUploadUrls[0];
+                instaUri = new Uri(Uri.EscapeUriString(first.Url));
+
+
+                requestContent = new MultipartFormDataContent(uploadId)
+                {
+                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                    {
+                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                        "\"image_compression\""
+                    }
+                };
+
+
+                var videoContent = new ByteArrayContent(fileBytes);
+                videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                videoContent.Headers.Add("Content-Type", "application/octet-stream");
+                videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4")}\"");
+                var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
+                {
+                    UploaderProgress = upProgress
+                };
+                requestContent.Add(progressContent);
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                request.Content = requestContent;
+                request.Headers.Host = "upload.instagram.com";
+                request.Headers.Add("Cookie2", "$Version=1");
+                request.Headers.Add("Session-ID", uploadId);
+                request.Headers.Add("job", first.Job);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+                upProgress = progressContent.UploaderProgress;
+                await UploadVideoThumbnailAsync(progress, upProgress, video.VideoThumbnail, uploadId);
+
+                return await ConfigureVideoAsync(progress, upProgress, video.Video, uploadId, caption, location);
+            }
+            catch (Exception exception)
+            {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMedia>(exception);
+            }
+        }
+
+        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, string[] imagesUploadIds, Dictionary<string, InstaVideo> videos, string caption, InstaLocationShort location)
         {
             try
             {
@@ -789,165 +787,127 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
-        /// <summary>
-        ///     Get users (short) who liked certain media. Normaly it return around 1000 last users.
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        public async Task<IResult<InstaLikersList>> GetMediaLikersAsync(string mediaId)
+
+        private async Task<IResult<InstaMedia>> ConfigureVideoAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaVideo video, string uploadId, string caption, InstaLocationShort location)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var likers = new InstaLikersList();
-                var likersUri = UriCreator.GetMediaLikersUri(mediaId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, likersUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaLikersList>(response, json);
-                var mediaLikersResponse = JsonConvert.DeserializeObject<InstaMediaLikersResponse>(json);
-                likers.UsersCount = mediaLikersResponse.UsersCount;
-                if (mediaLikersResponse.UsersCount < 1) return Result.Success(likers);
-                likers.AddRange(
-                    mediaLikersResponse.Users.Select(ConvertersFabric.Instance.GetUserShortConverter)
-                        .Select(converter => converter.Convert()));
-                return Result.Success(likers);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaLikersList>(exception);
-            }
-        }
-        /// <summary>
-        ///     Like media (photo or video)
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        public async Task<IResult<bool>> LikeMediaAsync(string mediaId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                return await LikeUnlikeMediaInternal(mediaId, UriCreator.GetLikeMediaUri(mediaId));
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
-            }
-        }
-        /// <summary>
-        ///     Remove like from media (photo or video)
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        public async Task<IResult<bool>> UnLikeMediaAsync(string mediaId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                return await LikeUnlikeMediaInternal(mediaId, UriCreator.GetUnLikeMediaUri(mediaId));
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
-            }
-        }
-        /// <summary>
-        ///     Get media by its id asynchronously
-        /// </summary>
-        /// <param name="mediaId">Maximum count of pages to retrieve</param>
-        /// <returns>
-        ///     <see cref="InstaMedia" />
-        /// </returns>
-        public async Task<IResult<InstaMedia>> GetMediaByIdAsync(string mediaId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var mediaUri = UriCreator.GetMediaUri(mediaId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, mediaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaMedia>(response, json);
-                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
-                    new InstaMediaListDataConverter());
-                if (mediaResponse.Medias?.Count > 1)
+                upProgress.UploadState = InstaUploadState.Configuring;
+                progress?.Invoke(upProgress);
+                var instaUri = UriCreator.GetMediaConfigureUri();
+                var data = new JObject
                 {
-                    var errorMessage = $"Got wrong media count for request with media id={mediaId}";
-                    _logger?.LogInfo(errorMessage);
-                    return Result.Fail<InstaMedia>(errorMessage);
+                    {"caption", caption ?? string.Empty},
+                    {"upload_id", uploadId},
+                    {"source_type", "3"},
+                    {"camera_position", "unknown"},
+                    {
+                        "extra", new JObject
+                        {
+                            {"source_width", 0},
+                            {"source_height", 0}
+                        }
+                    },
+                    {
+                        "clips", new JArray{
+                            new JObject
+                            {
+                                {"length", 0},
+                                {"creation_date", DateTime.Now.ToString("yyyy-dd-MMTh:mm:ss-0fff")},
+                                {"source_type", "3"},
+                                {"camera_position", "back"}
+                            }
+                        }
+                    },
+                    {"poster_frame_index", 0},
+                    {"audio_muted", false},
+                    {"filter_type", "0"},
+                    {"video_result", ""},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.UserName}
+                };
+                if (location != null)
+                {
+                    data.Add("location", location.GetJson());
+                    data.Add("date_time_digitalized", DateTime.Now.ToString("yyyy:dd:MM+h:mm:ss"));
+                }
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Host = "i.instagram.com";
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
+                    return Result.UnExpectedResponse<InstaMedia>(response, json);
+                }
+                upProgress.UploadState = InstaUploadState.Configured;
+                progress?.Invoke(upProgress);
+                var success = await ExposeVideoAsync(uploadId, caption, location);
+                if (success.Succeeded)
+                {
+                    upProgress.UploadState = InstaUploadState.Completed;
+                    progress?.Invoke(upProgress);
+                    return success;
                 }
 
-                var converter =
-                    ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse.Medias.FirstOrDefault());
-                return Result.Success(converter.Convert());
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                return Result.Fail<InstaMedia>("Cannot expose media");
+            }
+            catch (Exception exception)
+            {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMedia>(exception);
+            }
+        }
+
+        private async Task<IResult<InstaMedia>> ExposeVideoAsync(string uploadId, string caption, InstaLocationShort location)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetMediaConfigureUri();
+                var data = new JObject
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"experiment", "ig_android_profile_contextual_feed"},
+                    {"id", _user.LoggedInUser.Pk},
+                    {"upload_id", uploadId},
+
+                };
+
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Host = "i.instagram.com";
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var jObject = JsonConvert.DeserializeObject<ImageThumbnailResponse>(json);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var mediaResponse = JsonConvert.DeserializeObject<InstaMediaItemResponse>(json,
+                        new InstaMediaDataConverter());
+                    var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
+                    var obj = converter.Convert();
+                    if (obj.Caption == null && !string.IsNullOrEmpty(caption))
+                    {
+                        var editedMedia = await _instaApi.MediaProcessor.EditMediaAsync(obj.InstaIdentifier, caption, location);
+                        if (editedMedia.Succeeded)
+                            return Result.Success(editedMedia.Value);
+                    }
+                    return Result.Success(obj);
+                }
+
+                return Result.Fail<InstaMedia>(jObject.Status);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaMedia>(exception);
-            }
-        }
-        /// <summary>
-        ///     Get share link from media Id
-        /// </summary>
-        /// <param name="mediaId">media ID</param>
-        /// <returns>Share link as Uri</returns>
-        public async Task<IResult<Uri>> GetShareLinkFromMediaIdAsync(string mediaId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var collectionUri = UriCreator.GetShareLinkFromMediaId(mediaId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<Uri>(response, json);
-
-                var data = JsonConvert.DeserializeObject<InstaPermalinkResponse>(json);
-                return Result.Success(new Uri(data.Permalink));
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<Uri>(exception.Message);
-            }
-        }
-        /// <summary>
-        ///     Report media
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        public async Task<IResult<bool>> ReportMediaAsync(string mediaId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetReportMediaUri(mediaId);
-                var fields = new Dictionary<string, string>
-                {
-                    {"media_id", mediaId},
-                    {"reason", "1"},
-                    {"source_name", "photo_view_profile"},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken}
-                };
-                var request =
-                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                return response.StatusCode == HttpStatusCode.OK
-                    ? Result.Success(true)
-                    : Result.UnExpectedResponse<bool>(response, json);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
             }
         }
 
@@ -967,6 +927,58 @@ namespace InstagramApiSharp.API.Processors
             return response.StatusCode == HttpStatusCode.OK
                 ? Result.Success(true)
                 : Result.UnExpectedResponse<bool>(response, json);
+        }
+
+        private async Task<IResult<bool>> UploadVideoThumbnailAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaImage image, string uploadId)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetUploadPhotoUri();
+                upProgress.UploadState = InstaUploadState.UploadingThumbnail;
+                progress?.Invoke(upProgress);
+                var requestContent = new MultipartFormDataContent(uploadId)
+                {
+                    {new StringContent(uploadId), "\"upload_id\""},
+                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
+                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
+                    {
+                        new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
+                        "\"image_compression\""
+                    }
+                };
+                byte[] fileBytes;
+                if (image.ImageBytes == null)
+                    fileBytes = File.ReadAllBytes(image.Uri);
+                else
+                    fileBytes = image.ImageBytes;
+
+                var imageContent = new ByteArrayContent(fileBytes);
+                imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                requestContent.Add(imageContent, "photo", $"pending_media_{uploadId}.jpg");
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                request.Content = requestContent;
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var imgResp = JsonConvert.DeserializeObject<ImageThumbnailResponse>(json);
+                if (imgResp.Status.ToLower() == "ok")
+                {
+                    upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
+                    progress?.Invoke(upProgress);
+                    return Result.Success(true);
+                }
+
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                return Result.Fail<bool>("Could not upload thumbnail");
+            }
+            catch (Exception exception)
+            {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
         }
     }
 }

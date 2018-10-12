@@ -20,13 +20,13 @@ namespace InstagramApiSharp.API.Processors
     {
         private readonly AndroidDevice _deviceInfo;
         private readonly IUriCreatorNextId _getFeedUriCreator = new GetLocationFeedUriCreator();
+        private readonly HttpHelper _httpHelper;
         private readonly IHttpRequestProcessor _httpRequestProcessor;
+        private readonly InstaApi _instaApi;
         private readonly IInstaLogger _logger;
         private readonly IUriCreator _searchLocationUriCreator = new SearchLocationUriCreator();
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
-        private readonly InstaApi _instaApi;
-        private readonly HttpHelper _httpHelper;
         public LocationProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
             UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
@@ -38,54 +38,6 @@ namespace InstagramApiSharp.API.Processors
             _userAuthValidate = userAuthValidate;
             _instaApi = instaApi;
             _httpHelper = httpHelper;
-        }
-        /// <summary>
-        ///     Searches for specific location by provided geo-data or search query.
-        /// </summary>
-        /// <param name="latitude">Latitude</param>
-        /// <param name="longitude">Longitude</param>
-        /// <param name="query">Search query</param>
-        /// <returns>
-        ///     List of locations (short format)
-        /// </returns>
-        public async Task<IResult<InstaLocationShortList>> SearchLocationAsync(double latitude, double longitude, string query)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var uri = _searchLocationUriCreator.GetUri();
-
-                var fields = new Dictionary<string, string>
-                {
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
-                    {"longitude", longitude.ToString(CultureInfo.InvariantCulture)},
-                    {"rank_token", _user.RankToken}
-                };
-
-                if (!string.IsNullOrEmpty(query))
-                    fields.Add("search_query", query);
-                else
-                    fields.Add("timestamp", DateTimeHelper.GetUnixTimestampSeconds().ToString());
-                if (!Uri.TryCreate(uri, fields.AsQueryString(), out var newuri))
-                    return Result.Fail<InstaLocationShortList>("Unable to create uri for location search");
-
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, newuri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaLocationShortList>(response, json);
-                var locations = JsonConvert.DeserializeObject<InstaLocationSearchResponse>(json);
-                var converter = ConvertersFabric.Instance.GetLocationsSearchConverter(locations);
-                return Result.Success(converter.Convert());
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaLocationShortList>(exception);
-            }
         }
         /// <summary>
         ///     Gets the feed of particular location.
@@ -133,6 +85,55 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaLocationFeed>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Searches for specific location by provided geo-data or search query.
+        /// </summary>
+        /// <param name="latitude">Latitude</param>
+        /// <param name="longitude">Longitude</param>
+        /// <param name="query">Search query</param>
+        /// <returns>
+        ///     List of locations (short format)
+        /// </returns>
+        public async Task<IResult<InstaLocationShortList>> SearchLocationAsync(double latitude, double longitude, string query)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var uri = _searchLocationUriCreator.GetUri();
+
+                var fields = new Dictionary<string, string>
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
+                    {"longitude", longitude.ToString(CultureInfo.InvariantCulture)},
+                    {"rank_token", _user.RankToken}
+                };
+
+                if (!string.IsNullOrEmpty(query))
+                    fields.Add("search_query", query);
+                else
+                    fields.Add("timestamp", DateTimeHelper.GetUnixTimestampSeconds().ToString());
+                if (!Uri.TryCreate(uri, fields.AsQueryString(), out var newuri))
+                    return Result.Fail<InstaLocationShortList>("Unable to create uri for location search");
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, newuri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaLocationShortList>(response, json);
+                var locations = JsonConvert.DeserializeObject<InstaLocationSearchResponse>(json);
+                var converter = ConvertersFabric.Instance.GetLocationsSearchConverter(locations);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaLocationShortList>(exception);
             }
         }
         /// <summary>

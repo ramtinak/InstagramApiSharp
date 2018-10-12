@@ -7,6 +7,45 @@ namespace InstagramApiSharp.API.Processors
     public interface ICommentProcessor
     {
         /// <summary>
+        ///     Comment media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="text">Comment text</param>
+        Task<IResult<InstaComment>> CommentMediaAsync(string mediaId, string text);
+
+        /// <summary>
+        ///     Delete media comment
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentId">Comment id</param>
+        Task<IResult<bool>> DeleteCommentAsync(string mediaId, string commentId);
+
+        /// <summary>
+        ///     Delete media comments(multiple)
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="commentIds">Comment id</param>
+        Task<IResult<bool>> DeleteMultipleCommentsAsync(string mediaId, params string[] commentIds);
+
+        /// <summary>
+        ///     Disable media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        Task<IResult<bool>> DisableMediaCommentAsync(string mediaId);
+
+        /// <summary>
+        ///     Allow media comments
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        Task<IResult<bool>> EnableMediaCommentAsync(string mediaId);
+
+        /// <summary>
+        ///     Get media comments likers
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId);
+
+        /// <summary>
         ///     Get media comments
         /// </summary>
         /// <param name="mediaId">Media id</param>
@@ -22,23 +61,11 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaInlineCommentList>>
            GetMediaRepliesCommentsAsync(string mediaId, string targetCommentId, PaginationParameters paginationParameters);
         /// <summary>
-        ///     Comment media
+        ///     Like media comment
         /// </summary>
-        /// <param name="mediaId">Media id</param>
-        /// <param name="text">Comment text</param>
-        Task<IResult<InstaComment>> CommentMediaAsync(string mediaId, string text);
-        /// <summary>
-        ///     Delete media comment
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
         /// <param name="commentId">Comment id</param>
-        Task<IResult<bool>> DeleteCommentAsync(string mediaId, string commentId);
-        /// <summary>
-        ///     Delete media comments(multiple)
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        /// <param name="commentIds">Comment id</param>
-        Task<IResult<bool>> DeleteMultipleCommentsAsync(string mediaId, params string[] commentIds);
+        Task<IResult<bool>> LikeCommentAsync(string commentId);
+
         /// <summary>
         ///     Inline comment media
         /// </summary>
@@ -47,31 +74,11 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="text">Comment text</param>
         Task<IResult<InstaComment>> ReplyCommentMediaAsync(string mediaId, string targetCommentId, string text);
         /// <summary>
-        ///     Allow media comments
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        Task<IResult<bool>> EnableMediaCommentAsync(string mediaId);
-        /// <summary>
-        ///     Disable media comments
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        Task<IResult<bool>> DisableMediaCommentAsync(string mediaId);
-        /// <summary>
-        ///     Get media comments likers
-        /// </summary>
-        /// <param name="mediaId">Media id</param>
-        Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId);
-        /// <summary>
         ///     Report media comment
         /// </summary>
         /// <param name="mediaId">Media id</param>
         /// <param name="commentId">Comment id</param>
         Task<IResult<bool>> ReportCommentAsync(string mediaId, string commentId);
-        /// <summary>
-        ///     Like media comment
-        /// </summary>
-        /// <param name="commentId">Comment id</param>
-        Task<IResult<bool>> LikeCommentAsync(string commentId);
         /// <summary>
         ///     Unlike media comment
         /// </summary>

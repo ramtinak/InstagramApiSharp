@@ -32,12 +32,12 @@ namespace InstagramApiSharp.API.Processors
     {
         #region Properties and constructor
         private readonly AndroidDevice _deviceInfo;
+        private readonly HttpHelper _httpHelper;
         private readonly IHttpRequestProcessor _httpRequestProcessor;
+        private readonly InstaApi _instaApi;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
-        private readonly InstaApi _instaApi;
-        private readonly HttpHelper _httpHelper;
         public BusinessProcessor(AndroidDevice deviceInfo, UserSessionData user,
             IHttpRequestProcessor httpRequestProcessor, IInstaLogger logger,
             UserAuthValidate userAuthValidate, InstaApi instaApi, HttpHelper httpHelper)
@@ -51,6 +51,278 @@ namespace InstagramApiSharp.API.Processors
             _httpHelper = httpHelper;
         }
         #endregion Properties and constructor
+        /// <summary>
+        ///     Add button to your business account
+        /// </summary>
+        /// <param name="businessPartner">Desire partner button (Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
+        /// <param name="uri">Uri (related to Business partner button)</param>
+        public async Task<IResult<InstaBusinessUser>> AddOrChangeBusinessButtonAsync(InstaBusinessPartner businessPartner, Uri uri)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (businessPartner == null)
+                    return Result.Fail<InstaBusinessUser>("Business partner cannot be null");
+                if (uri == null)
+                    return Result.Fail<InstaBusinessUser>("Uri related to business partner cannot be null");
+
+                var validateUri = await ValidateUrlAsync(businessPartner, uri);
+                if (!validateUri.Succeeded)
+                    return Result.Fail<InstaBusinessUser>(validateUri.Info.Message);
+
+                var instaUri = UriCreator.GetUpdateBusinessInfoUri();
+
+                var data = new JObject
+                {
+                    {"ix_url", uri.ToString()},
+                    {"ix_app_id", businessPartner.AppId},
+                    {"is_call_to_action_enabled","1"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Change business category
+        ///     <para>Note: Get it from <see cref="IBusinessProcessor.GetSubCategoriesAsync(string)"/></para>
+        /// </summary>
+        /// <param name="subCategoryId">Sub category id (Get it from <see cref="IBusinessProcessor.GetSubCategoriesAsync(string)"/>)
+        /// </param>
+        public async Task<IResult<InstaBusinessUser>> ChangeBusinessCategoryAsync(string subCategoryId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (string.IsNullOrEmpty(subCategoryId))
+                    return Result.Fail<InstaBusinessUser>("Sub category id cannot be null or empty");
+
+                var instaUri = UriCreator.GetSetBusinessCategoryUri();
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"category_id", subCategoryId},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Get logged in business account information
+        /// </summary>
+        public async Task<IResult<InstaUserInfo>> GetBusinessAccountInformationAsync()
+        {
+            return await _instaApi.UserProcessor.GetUserInfoByIdAsync(_user.LoggedInUser.Pk);
+        }
+
+        /// <summary>
+        ///     Get business get buttons (partners)
+        /// </summary>
+        public async Task<IResult<InstaBusinessPartnersList>> GetBusinessPartnersButtonsAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var data = new JObject();
+                var dataStr = _httpHelper.GetSignature(data);
+                var instaUri = UriCreator.GetBusinessInstantExperienceUri(dataStr);
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessPartnersList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessPartnerContainer>(json);
+                var partners = new InstaBusinessPartnersList();
+
+                foreach (var p in obj.Partners)
+                    partners.Add(p);
+
+                return Result.Success(partners);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessPartnersList>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Get all categories 
+        /// </summary>
+        public async Task<IResult<InstaBusinessCategoryList>> GetCategoriesAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetBusinessGraphQLUri();
+
+                var queryParams = new JObject
+                {
+                    {"0", "-1"}
+                };
+                var data = new Dictionary<string, string>
+                {
+                    {"query_id", "425892567746558"},
+                    {"locale", InstaApiConstants.ACCEPT_LANGUAGE.Replace("-", "_")},
+                    {"vc_policy", "ads_viewer_context_policy"},
+                    {"signed_body", $"{_httpHelper._apiVersion.SignatureKey}."},
+                    {InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION},
+                    {"strip_nulls", "true"},
+                    {"strip_defaults", "true"},
+                    {"query_params", queryParams.ToString(Formatting.None)},
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessCategoryList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessCategoryList>(json, new InstaBusinessCategoryDataConverter());
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessCategoryList>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Get full media insights
+        /// </summary>
+        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier"/>)</param>
+        public async Task<IResult<InstaFullMediaInsights>> GetFullMediaInsightsAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetGraphStatisticsUri(InstaApiConstants.ACCEPT_LANGUAGE, InstaInsightSurfaceType.Post);
+
+                var queryParamsData = new JObject
+                {
+                    {"access_token", ""},
+                    {"id", mediaId}
+                };
+                var variables = new JObject
+                {
+                    {"query_params", queryParamsData}
+                };
+                var data = new Dictionary<string, string>
+                {
+                    {"access_token", "undefined"},
+                    {"fb_api_caller_class", "RelayModern"},
+                    {"variables", variables.ToString(Formatting.None)},
+                    {"doc_id", "1527362987318283"}
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaFullMediaInsights>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaFullMediaInsightsRootResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetFullMediaInsightsConverter(obj.Data.Media).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaFullMediaInsights>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Get media insights
+        /// </summary>
+        /// <param name="mediaPk">Media PK (<see cref="InstaMedia.Pk"/>)</param>
+        public async Task<IResult<InstaMediaInsights>> GetMediaInsightsAsync(string mediaPk)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetMediaSingleInsightsUri(mediaPk);
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaMediaInsights>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaMediaInsightsContainer>(json);
+                return Result.Success(obj.MediaOrganicInsights);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMediaInsights>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Get promotable media feeds
+        /// </summary>
+        public async Task<IResult<InstaMediaList>> GetPromotableMediaFeedsAsync()
+        {
+            var mediaList = new InstaMediaList();
+            try
+            {
+                var instaUri = UriCreator.GetPromotableMediaFeedsUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaMediaList>(response, json);
+                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
+                    new InstaMediaListDataConverter());
+
+                mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();
+                mediaList.PageSize = mediaResponse.ResultsCount;
+                return Result.Success(mediaList);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, mediaList);
+            }
+        }
+
         /// <summary>
         ///     Get statistics of current account
         /// </summary>
@@ -91,75 +363,6 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaStatistics>(exception);
-            }
-        }
-        /// <summary>
-        ///     Get media insights
-        /// </summary>
-        /// <param name="mediaPk">Media PK (<see cref="InstaMedia.Pk"/>)</param>
-        public async Task<IResult<InstaMediaInsights>> GetMediaInsightsAsync(string mediaPk)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetMediaSingleInsightsUri(mediaPk);
-                var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaMediaInsights>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaMediaInsightsContainer>(json);
-                return Result.Success(obj.MediaOrganicInsights);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaMediaInsights>(exception);
-            }
-        }
-        /// <summary>
-        ///     Get full media insights
-        /// </summary>
-        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier"/>)</param>
-        public async Task<IResult<InstaFullMediaInsights>> GetFullMediaInsightsAsync(string mediaId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetGraphStatisticsUri(InstaApiConstants.ACCEPT_LANGUAGE, InstaInsightSurfaceType.Post);
-
-                var queryParamsData = new JObject
-                {
-                    {"access_token", ""},
-                    {"id", mediaId}
-                };
-                var variables = new JObject
-                {
-                    {"query_params", queryParamsData}
-                };
-                var data = new Dictionary<string, string>
-                {
-                    {"access_token", "undefined"},
-                    {"fb_api_caller_class", "RelayModern"},
-                    {"variables", variables.ToString(Formatting.None)},
-                    {"doc_id", "1527362987318283"}
-                };
-                var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaFullMediaInsights>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaFullMediaInsightsRootResponse>(json);
-                return Result.Success(ConvertersFabric.Instance.GetFullMediaInsightsConverter(obj.Data.Media).Convert());
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaFullMediaInsights>(exception);
             }
         }
         
@@ -233,188 +436,51 @@ namespace InstagramApiSharp.API.Processors
         #endregion Direct threads
 
         /// <summary>
-        ///     Get promotable media feeds
+        ///     Get sub categories of an category
         /// </summary>
-        public async Task<IResult<InstaMediaList>> GetPromotableMediaFeedsAsync()
-        {
-            var mediaList = new InstaMediaList();
-            try
-            {
-                var instaUri = UriCreator.GetPromotableMediaFeedsUri();
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaMediaList>(response, json);
-                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
-                    new InstaMediaListDataConverter());
-
-                mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();
-                mediaList.PageSize = mediaResponse.ResultsCount;
-                return Result.Success(mediaList);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception, mediaList);
-            }
-        }
-
-        /// <summary>
-        ///     Get business get buttons (partners)
-        /// </summary>
-        public async Task<IResult<InstaBusinessPartnersList>> GetBusinessPartnersButtonsAsync()
+        /// <param name="categoryId">Category id (Use <see cref="IBusinessProcessor.GetCategoriesAsync"/> to get category id)</param>
+        public async Task<IResult<InstaBusinessCategoryList>> GetSubCategoriesAsync(string categoryId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var data = new JObject();
-                var dataStr = _httpHelper.GetSignature(data);
-                var instaUri = UriCreator.GetBusinessInstantExperienceUri(dataStr);
+                if (string.IsNullOrEmpty(categoryId))
+                    return Result.Fail<InstaBusinessCategoryList>("Category id cannot be null or empty");
 
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
+                var instaUri = UriCreator.GetBusinessGraphQLUri();
 
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBusinessPartnersList>(response, json);
-
-                var obj = JsonConvert.DeserializeObject<InstaBusinessPartnerContainer>(json);
-                var partners = new InstaBusinessPartnersList();
-
-                foreach (var p in obj.Partners)
-                    partners.Add(p);
-
-                return Result.Success(partners);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaBusinessPartnersList>(exception);
-            }
-        }
-        /// <summary>
-        ///     Validate an uri for an button(instagram partner)
-        ///     <para>Note: Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!</para>
-        /// </summary>
-        /// <param name="desirePartner">Desire partner (Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
-        /// <param name="uri">Uri to check (Must be related to desire partner!)</param>
-        public async Task<IResult<bool>> ValidateUrlAsync(InstaBusinessPartner desirePartner, Uri uri)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                if(desirePartner?.AppId == null)
-                    return Result.Fail<bool>("Desire partner cannot be null");
-                if (uri == null)
-                    return Result.Fail<bool>("Uri cannot be null");
-
-                var instaUri = UriCreator.GetBusinessValidateUrlUri();
-
-                var data = new JObject
+                var queryParams = new JObject
                 {
-                    {"app_id", desirePartner.AppId},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"url", uri.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                    {"0", categoryId}
+                };
+                var data = new Dictionary<string, string>
+                {
+                    {"query_id", "425892567746558"},
+                    {"locale", InstaApiConstants.ACCEPT_LANGUAGE.Replace("-", "_")},
+                    {"vc_policy", "ads_viewer_context_policy"},
+                    {"signed_body", $"{_httpHelper._apiVersion.SignatureKey}."},
+                    {InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION},
+                    {"strip_nulls", "true"},
+                    {"strip_defaults", "true"},
+                    {"query_params", queryParams.ToString(Formatting.None)},
                 };
                 var request =
-                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                var obj = JsonConvert.DeserializeObject<InstaBusinessValidateUrl>(json);
-                return obj.IsValid ? Result.Success(true) : Result.Fail<bool>(obj.ErrorMessage);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
-            }
-        }
-        /// <summary>
-        ///     Remove button from your business account
-        /// </summary>
-        public async Task<IResult<InstaBusinessUser>> RemoveBusinessButtonAsync()
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetUpdateBusinessInfoUri();
-
-                var data = new JObject
-                {
-                    {"is_call_to_action_enabled","0"},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
-                };
-
-                var request =
-                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
+                    return Result.UnExpectedResponse<InstaBusinessCategoryList>(response, json);
 
-                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
-
-                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
+                var obj = JsonConvert.DeserializeObject<InstaBusinessCategoryList>(json, new InstaBusinessCategoryDataConverter());
+                return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBusinessUser>(exception);
+                return Result.Fail<InstaBusinessCategoryList>(exception);
             }
         }
-        /// <summary>
-        ///     Add button to your business account
-        /// </summary>
-        /// <param name="businessPartner">Desire partner button (Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
-        /// <param name="uri">Uri (related to Business partner button)</param>
-        public async Task<IResult<InstaBusinessUser>> AddOrChangeBusinessButtonAsync(InstaBusinessPartner businessPartner, Uri uri)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                if (businessPartner == null)
-                    return Result.Fail<InstaBusinessUser>("Business partner cannot be null");
-                if (uri == null)
-                    return Result.Fail<InstaBusinessUser>("Uri related to business partner cannot be null");
 
-                var validateUri = await ValidateUrlAsync(businessPartner, uri);
-                if (!validateUri.Succeeded)
-                    return Result.Fail<InstaBusinessUser>(validateUri.Info.Message);
-
-                var instaUri = UriCreator.GetUpdateBusinessInfoUri();
-               
-                var data = new JObject
-                {
-                    {"ix_url", uri.ToString()},
-                    {"ix_app_id", businessPartner.AppId},
-                    {"is_call_to_action_enabled","1"},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
-                };
-
-                var request =
-                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
-
-                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
-
-                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaBusinessUser>(exception);
-            }
-        }
         /// <summary>
         ///     Get suggested categories 
         /// </summary>
@@ -461,92 +527,51 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaBusinessSugesstedCategoryList>(exception);
             }
         }
+
         /// <summary>
-        ///     Get all categories 
+        ///     Remove button from your business account
         /// </summary>
-        public async Task<IResult<InstaBusinessCategoryList>> GetCategoriesAsync()
+        public async Task<IResult<InstaBusinessUser>> RemoveBusinessButtonAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetBusinessGraphQLUri();
+                var instaUri = UriCreator.GetUpdateBusinessInfoUri();
 
-                var queryParams = new JObject
+                var data = new JObject
                 {
-                    {"0", "-1"}
+                    {"is_call_to_action_enabled","0"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
-                var data = new Dictionary<string, string>
-                {
-                    {"query_id", "425892567746558"},
-                    {"locale", InstaApiConstants.ACCEPT_LANGUAGE.Replace("-", "_")},
-                    {"vc_policy", "ads_viewer_context_policy"},
-                    {"signed_body", $"{_httpHelper._apiVersion.SignatureKey}."},
-                    {InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION},
-                    {"strip_nulls", "true"},
-                    {"strip_defaults", "true"},
-                    {"query_params", queryParams.ToString(Formatting.None)},
-                };
+
                 var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBusinessCategoryList>(response, json);
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
 
-                var obj = JsonConvert.DeserializeObject<InstaBusinessCategoryList>(json, new InstaBusinessCategoryDataConverter());
-                return Result.Success(obj);
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBusinessCategoryList>(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
             }
         }
+
         /// <summary>
-        ///     Get sub categories of an category
+        ///     Remove business location
         /// </summary>
-        /// <param name="categoryId">Category id (Use <see cref="IBusinessProcessor.GetCategoriesAsync"/> to get category id)</param>
-        public async Task<IResult<InstaBusinessCategoryList>> GetSubCategoriesAsync(string categoryId)
+        public async Task<IResult<InstaBusinessUser>> RemoveBusinessLocationAsync()
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                if (string.IsNullOrEmpty(categoryId))
-                    return Result.Fail<InstaBusinessCategoryList>("Category id cannot be null or empty");
-
-                var instaUri = UriCreator.GetBusinessGraphQLUri();
-
-                var queryParams = new JObject
-                {
-                    {"0", categoryId}
-                };
-                var data = new Dictionary<string, string>
-                {
-                    {"query_id", "425892567746558"},
-                    {"locale", InstaApiConstants.ACCEPT_LANGUAGE.Replace("-", "_")},
-                    {"vc_policy", "ads_viewer_context_policy"},
-                    {"signed_body", $"{_httpHelper._apiVersion.SignatureKey}."},
-                    {InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION},
-                    {"strip_nulls", "true"},
-                    {"strip_defaults", "true"},
-                    {"query_params", queryParams.ToString(Formatting.None)},
-                };
-                var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBusinessCategoryList>(response, json);
-
-                var obj = JsonConvert.DeserializeObject<InstaBusinessCategoryList>(json, new InstaBusinessCategoryDataConverter());
-                return Result.Success(obj);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaBusinessCategoryList>(exception);
-            }
+            return await UpdateBusinessInfoAsync(null, null, null, null, null);
         }
+
         /// <summary>
         ///     Search city location for business account
         /// </summary>
@@ -592,45 +617,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaBusinessCityLocationList>(exception);
             }
         }
-        /// <summary>
-        ///     Change business category
-        ///     <para>Note: Get it from <see cref="IBusinessProcessor.GetSubCategoriesAsync(string)"/></para>
-        /// </summary>
-        /// <param name="subCategoryId">Sub category id (Get it from <see cref="IBusinessProcessor.GetSubCategoriesAsync(string)"/>)
-        /// </param>
-        public async Task<IResult<InstaBusinessUser>> ChangeBusinessCategoryAsync(string subCategoryId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                if (string.IsNullOrEmpty(subCategoryId))
-                    return Result.Fail<InstaBusinessUser>("Sub category id cannot be null or empty");
 
-                var instaUri = UriCreator.GetSetBusinessCategoryUri();
-                var data = new JObject
-                {
-                    {"_csrftoken", _user.CsrfToken},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"category_id", subCategoryId},
-                };
-                var request =
-                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
-
-                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
-
-                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaBusinessUser>(exception);
-            }
-        }
         /// <summary>
         ///     Update business information
         /// </summary>
@@ -640,7 +627,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="zipCode">Zip code</param>
         /// <param name="businessContactType">Phone contact type (<see cref="InstaUserInfo.BusinessContactMethod"/>) [set null if you don't want to change it]</param>
         public async Task<IResult<InstaBusinessUser>> UpdateBusinessInfoAsync(string phoneNumberWithCountryCode,
-            InstaBusinessCityLocation cityLocation, 
+            InstaBusinessCityLocation cityLocation,
             string streetAddress, string zipCode,
             InstaBusinessContactType? businessContactType)
         {
@@ -652,13 +639,13 @@ namespace InstagramApiSharp.API.Processors
                     return Result.Fail<InstaBusinessUser>("Cannot get current business information");
 
                 var user = info.Value;
-                if(!user.IsBusiness)
+                if (!user.IsBusiness)
                     return Result.Fail<InstaBusinessUser>($"'{user.Username}' is not a business account");
 
                 var instaUri = UriCreator.GetUpdateBusinessInfoUri();
 
 
-                if(phoneNumberWithCountryCode == null)
+                if (phoneNumberWithCountryCode == null)
                     phoneNumberWithCountryCode = $"{user.PublicPhoneCountryCode}{user.PublicPhoneNumber}";
 
                 if (businessContactType == null)
@@ -681,7 +668,7 @@ namespace InstagramApiSharp.API.Processors
                     {"city_id", cityId},
                     {"zip", zipCode ?? string.Empty},
                 };
-                
+
 
                 var data = new JObject
                 {
@@ -710,19 +697,45 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaBusinessUser>(exception);
             }
         }
+
         /// <summary>
-        ///     Remove business location
+        ///     Validate an uri for an button(instagram partner)
+        ///     <para>Note: Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!</para>
         /// </summary>
-        public async Task<IResult<InstaBusinessUser>> RemoveBusinessLocationAsync()
+        /// <param name="desirePartner">Desire partner (Use <see cref="IBusinessProcessor.GetBusinessPartnersButtonsAsync"/> to get business buttons(instagram partner) list!)</param>
+        /// <param name="uri">Uri to check (Must be related to desire partner!)</param>
+        public async Task<IResult<bool>> ValidateUrlAsync(InstaBusinessPartner desirePartner, Uri uri)
         {
-            return await UpdateBusinessInfoAsync(null, null, null, null, null);
-        }
-        /// <summary>
-        ///     Get logged in business account information
-        /// </summary>
-        public async Task<IResult<InstaUserInfo>> GetBusinessAccountInformationAsync()
-        {
-            return await _instaApi.UserProcessor.GetUserInfoByIdAsync(_user.LoggedInUser.Pk);
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if(desirePartner?.AppId == null)
+                    return Result.Fail<bool>("Desire partner cannot be null");
+                if (uri == null)
+                    return Result.Fail<bool>("Uri cannot be null");
+
+                var instaUri = UriCreator.GetBusinessValidateUrlUri();
+
+                var data = new JObject
+                {
+                    {"app_id", desirePartner.AppId},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"url", uri.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaBusinessValidateUrl>(json);
+                return obj.IsValid ? Result.Success(true) : Result.Fail<bool>(obj.ErrorMessage);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
         }
     }
 }

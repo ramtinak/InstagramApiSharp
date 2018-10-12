@@ -20,12 +20,12 @@ namespace InstagramApiSharp.API.Processors
     internal class UserProcessor : IUserProcessor
     {
         private readonly AndroidDevice _deviceInfo;
+        private readonly HttpHelper _httpHelper;
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly InstaApi _instaApi;
         private readonly IInstaLogger _logger;
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
-        private readonly HttpHelper _httpHelper;
         public UserProcessor(AndroidDevice deviceInfo, UserSessionData user, IHttpRequestProcessor httpRequestProcessor,
             IInstaLogger logger, UserAuthValidate userAuthValidate, InstaApi instaApi,
             HttpHelper httpHelper)
@@ -287,6 +287,80 @@ namespace InstagramApiSharp.API.Processors
         {
             var uri = UriCreator.GetRecentActivityUri();
             return await GetRecentActivityInternalAsync(uri, paginationParameters);
+        }
+
+        /// <summary>
+        ///     Get suggestion details
+        /// </summary>
+        /// <param name="userIds">List of user ids (pk)</param>
+        public async Task<IResult<InstaSuggestionItemList>> GetSuggestionDetailsAsync(params long[] userIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (userIds == null || userIds != null && !userIds.Any())
+                    throw new ArgumentException("At least one user id is require.");
+                var instaUri = UriCreator.GetDiscoverSuggestionDetailsUri(_user.LoggedInUser.Pk, userIds.ToList());
+
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaSuggestionItemList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaSuggestionItemListResponse>(json,
+                    new InstaSuggestionUserDetailDataConverter());
+                return Result.Success(ConvertersFabric.Instance.GetSuggestionItemListConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaSuggestionItemList>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Get suggestion users
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaSuggestions>> GetSuggestionUsersAsync(PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                InstaSuggestions Convert(InstaSuggestionUserContainerResponse suggestResponse)
+                {
+                    return ConvertersFabric.Instance.GetSuggestionsConverter(suggestResponse).Convert();
+                }
+                var suggestionsResponse = await GetSuggestionUsers(paginationParameters);
+                if (!suggestionsResponse.Succeeded)
+                    return Result.Fail(suggestionsResponse.Info, Convert(suggestionsResponse.Value));
+
+                paginationParameters.NextId = suggestionsResponse.Value.MaxId;
+
+                paginationParameters.PagesLoaded++;
+                while (suggestionsResponse.Value.MoreAvailable
+                     && !string.IsNullOrEmpty(paginationParameters.NextId)
+                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var moreSuggestions = await GetSuggestionUsers(paginationParameters);
+                    if (!moreSuggestions.Succeeded)
+                        return Result.Fail(moreSuggestions.Info, Convert(moreSuggestions.Value));
+
+                    suggestionsResponse.Value.NewSuggestedUsers.Suggestions.AddRange(moreSuggestions.Value.NewSuggestedUsers.Suggestions);
+                    suggestionsResponse.Value.SuggestedUsers.Suggestions.AddRange(moreSuggestions.Value.SuggestedUsers.Suggestions);
+                    suggestionsResponse.Value.MoreAvailable = moreSuggestions.Value.MoreAvailable;
+                    suggestionsResponse.Value.MaxId = paginationParameters.NextId = moreSuggestions.Value.MaxId;
+                }
+                return Result.Success(Convert(suggestionsResponse.Value));
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaSuggestions>(exception);
+            }
         }
 
         /// <summary>
@@ -565,78 +639,6 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         /// <summary>
-        ///     Get suggestion users
-        /// </summary>
-        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        public async Task<IResult<InstaSuggestions>> GetSuggestionUsersAsync(PaginationParameters paginationParameters)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                InstaSuggestions Convert(InstaSuggestionUserContainerResponse suggestResponse)
-                {
-                    return ConvertersFabric.Instance.GetSuggestionsConverter(suggestResponse).Convert();
-                }
-                var suggestionsResponse = await GetSuggestionUsers(paginationParameters);
-                if(!suggestionsResponse.Succeeded)
-                    return Result.Fail(suggestionsResponse.Info, Convert(suggestionsResponse.Value));
-
-                paginationParameters.NextId = suggestionsResponse.Value.MaxId;
-
-                paginationParameters.PagesLoaded++;
-                while (suggestionsResponse.Value.MoreAvailable
-                     && !string.IsNullOrEmpty(paginationParameters.NextId)
-                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
-                {
-                    var moreSuggestions = await GetSuggestionUsers(paginationParameters);
-                    if (!moreSuggestions.Succeeded)
-                        return Result.Fail(moreSuggestions.Info, Convert(moreSuggestions.Value));
-
-                    suggestionsResponse.Value.NewSuggestedUsers.Suggestions.AddRange(moreSuggestions.Value.NewSuggestedUsers.Suggestions);
-                    suggestionsResponse.Value.SuggestedUsers.Suggestions.AddRange(moreSuggestions.Value.SuggestedUsers.Suggestions);
-                    suggestionsResponse.Value.MoreAvailable = moreSuggestions.Value.MoreAvailable;
-                    suggestionsResponse.Value.MaxId = paginationParameters.NextId = moreSuggestions.Value.MaxId;
-                }
-                return Result.Success(Convert(suggestionsResponse.Value));
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaSuggestions>(exception);
-            }
-        }
-        /// <summary>
-        ///     Get suggestion details
-        /// </summary>
-        /// <param name="userIds">List of user ids (pk)</param>
-        public async Task<IResult<InstaSuggestionItemList>> GetSuggestionDetailsAsync(params long[] userIds)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                if (userIds == null || userIds != null && !userIds.Any())
-                    throw new ArgumentException("At least one user id is require.");
-                var instaUri = UriCreator.GetDiscoverSuggestionDetailsUri(_user.LoggedInUser.Pk, userIds.ToList());
-                
-                var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaSuggestionItemList>(response, json);
-
-                var obj = JsonConvert.DeserializeObject<InstaSuggestionItemListResponse>(json, 
-                    new InstaSuggestionUserDetailDataConverter());
-                return Result.Success(ConvertersFabric.Instance.GetSuggestionItemListConverter(obj).Convert());
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaSuggestionItemList>(exception);
-            }
-        }
-        /// <summary>
         ///     Ignore user friendship requst.
         /// </summary>
         /// <param name="userId">User id (pk)</param>
@@ -668,26 +670,6 @@ namespace InstagramApiSharp.API.Processors
             {
                 return Result.Fail<InstaFriendshipStatus>(ex.Message);
             }
-        }
-
-        /// <summary>
-        ///     Stop block user
-        /// </summary>
-        /// <param name="userId">User id</param>
-        public async Task<IResult<InstaFriendshipStatus>> UnBlockUserAsync(long userId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            return await BlockUnblockUserInternal(userId, UriCreator.GetUnBlockUserUri(userId));
-        }
-
-        /// <summary>
-        ///     Stop follow user
-        /// </summary>
-        /// <param name="userId">User id</param>
-        public async Task<IResult<InstaFriendshipStatus>> UnFollowUserAsync(long userId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            return await FollowUnfollowUserInternal(userId, UriCreator.GetUnFollowUserUri(userId));
         }
 
         /// <summary>
@@ -725,6 +707,25 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        /// <summary>
+        ///     Stop block user
+        /// </summary>
+        /// <param name="userId">User id</param>
+        public async Task<IResult<InstaFriendshipStatus>> UnBlockUserAsync(long userId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await BlockUnblockUserInternal(userId, UriCreator.GetUnBlockUserUri(userId));
+        }
+
+        /// <summary>
+        ///     Stop follow user
+        /// </summary>
+        /// <param name="userId">User id</param>
+        public async Task<IResult<InstaFriendshipStatus>> UnFollowUserAsync(long userId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await FollowUnfollowUserInternal(userId, UriCreator.GetUnFollowUserUri(userId));
+        }
         #endregion public parts
 
         #region private parts
@@ -837,6 +838,42 @@ namespace InstagramApiSharp.API.Processors
             return Result.Success(activityFeed);
         }
 
+        private async Task<IResult<InstaSuggestionUserContainerResponse>> GetSuggestionUsers(PaginationParameters paginationParameters)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetDiscoverPeopleUri();
+
+                var data = new Dictionary<string, string>
+                {
+                    {"phone_id", _deviceInfo.PhoneGuid.ToString()},
+                    {"module", "discover_people"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"paginate", "true"},
+                };
+
+                if (paginationParameters != null && !string.IsNullOrEmpty(paginationParameters.NextId))
+                    data.Add("max_id", paginationParameters.NextId);
+
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaSuggestionUserContainerResponse>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaSuggestionUserContainerResponse>(json);
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaSuggestionUserContainerResponse>(exception);
+            }
+        }
+
         private async Task<IResult<InstaUserInfo>> GetUserInfoAsync(Uri userUri)
         {
             try
@@ -911,42 +948,6 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail(exception, mediaList);
-            }
-        }
-
-        private async Task<IResult<InstaSuggestionUserContainerResponse>> GetSuggestionUsers(PaginationParameters paginationParameters)
-        {
-            try
-            {
-                var instaUri = UriCreator.GetDiscoverPeopleUri();
-
-                var data = new Dictionary<string, string>
-                {
-                    {"phone_id", _deviceInfo.PhoneGuid.ToString()},
-                    {"module", "discover_people"},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"paginate", "true"},
-                };
-
-                if (paginationParameters != null && !string.IsNullOrEmpty(paginationParameters.NextId))
-                    data.Add("max_id", paginationParameters.NextId);
-
-                var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaSuggestionUserContainerResponse>(response, json);
-
-                var obj = JsonConvert.DeserializeObject<InstaSuggestionUserContainerResponse>(json);
-                return Result.Success(obj);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaSuggestionUserContainerResponse>(exception);
             }
         }
         #endregion private parts
