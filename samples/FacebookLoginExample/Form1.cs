@@ -6,6 +6,7 @@
  * 
  * IRANIAN DEVELOPERS
  */
+using InstagramApiSharp;
 using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;

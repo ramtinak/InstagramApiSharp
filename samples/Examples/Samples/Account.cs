@@ -78,13 +78,13 @@ VerifySmsCodeAsync");
             if (result.Succeeded)
             {
                 Console.WriteLine("Profile changed");
-                Console.WriteLine("Username: " + result.Value.User.Username);
-                Console.WriteLine("FullName: " + result.Value.User.FullName);
-                Console.WriteLine("Biography: " + result.Value.User.Biography);
-                Console.WriteLine("Email: " + result.Value.User.Email);
-                Console.WriteLine("PhoneNumber: " + result.Value.User.PhoneNumber);
-                Console.WriteLine("Url: " + result.Value.User.ExternalUrl);
-                Console.WriteLine("Gender: " + result.Value.User.Gender);
+                Console.WriteLine("Username: " + result.Value.Username);
+                Console.WriteLine("FullName: " + result.Value.FullName);
+                Console.WriteLine("Biography: " + result.Value.Biography);
+                Console.WriteLine("Email: " + result.Value.Email);
+                Console.WriteLine("PhoneNumber: " + result.Value.PhoneNumber);
+                Console.WriteLine("Url: " + result.Value.ExternalUrl);
+                Console.WriteLine("Gender: " + result.Value.Gender);
                 Console.WriteLine();
             }
             else
@@ -101,7 +101,7 @@ VerifySmsCodeAsync");
             var result = await _instaApi.AccountProcessor.ChangeProfilePictureAsync(pictureBytes);
             if(result.Succeeded)
             {
-                Console.WriteLine("New profile picture: " + result.Value.User.ProfilePicUrl);
+                Console.WriteLine("New profile picture: " + result.Value.ProfilePicUrl);
             }
             else
                 Console.WriteLine("Error while changing profile picture: " + result.Info.Message);

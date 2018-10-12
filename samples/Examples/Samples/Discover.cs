@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using InstagramApiSharp.API;
 using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
+using InstagramApiSharp.Enums;
 /////////////////////////////////////////////////////////////////////
 ////////////////////// IMPORTANT NOTE ///////////////////////////////
 // Please check wiki pages for more information:
@@ -49,7 +50,7 @@ SearchPeopleAsync");
 
         public async void RecentSearches()
         {
-            var result = await _instaApi.DiscoverProcessor.GetRecentSearchsAsync();
+            var result = await _instaApi.DiscoverProcessor.GetRecentSearchesAsync();
             if (result.Succeeded)
             {
                 Console.WriteLine("Recent search count: " + result.Value.Recent?.Count);
@@ -73,7 +74,7 @@ SearchPeopleAsync");
 
         public async void SuggestedSearches()
         {
-            var result = await _instaApi.DiscoverProcessor.GetSuggestedSearchesAsync(DiscoverSearchType.Blended);
+            var result = await _instaApi.DiscoverProcessor.GetSuggestedSearchesAsync(InstaDiscoverSearchType.Blended);
             if (result.Succeeded)
             {
                 Console.WriteLine("Suggested search count: " + result.Value.Recent?.Count);
@@ -93,7 +94,7 @@ SearchPeopleAsync");
             {
                 Console.WriteLine("User search count: " + result.Value.Users?.Count);
                 if (result.Value.Users?.Count > 0)
-                    Console.WriteLine("First search user: " + result.Value.Users?.FirstOrDefault()?.Username);
+                    Console.WriteLine("First search user: " + result.Value.Users?.FirstOrDefault()?.UserName);
             }
             else
                 Console.WriteLine("Error while searching users: " + result.Info.Message);
