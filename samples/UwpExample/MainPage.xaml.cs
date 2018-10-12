@@ -137,7 +137,7 @@ namespace UwpExample
                 return;
             }
 
-            if (SelectedFiles.Count > 9)
+            if (SelectedFiles.Count > 10)
             {
                 "Only 9 files can select".ShowERR();
                 SelectedFiles = null;
@@ -244,15 +244,8 @@ namespace UwpExample
                 if (string.IsNullOrEmpty(json))
                     return;
 
-                var userSession = new UserSessionData
-                {
-                    // no need to set username password
-                    // but we have to set something in it
-                    UserName = "Username",
-                    Password = "Password"
-                };
                 InstaApi = InstaApiBuilder.CreateBuilder()
-                    .SetUser(userSession)
+                    .SetUser(UserSessionData.Empty)
                     .Build();
                 InstaApi.LoadStateDataFromString(json);
                 if (!InstaApi.IsUserAuthenticated)

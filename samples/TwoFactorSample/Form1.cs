@@ -60,21 +60,7 @@ namespace TwoFactorSample
                 .SetRequestDelay(RequestDelay.FromSeconds(0, 1))
                 .Build();
             Text = $"{AppName} Connecting";
-            try
-            {
-                if (File.Exists(StateFile))
-                {
-                    Debug.WriteLine("Loading state from file");
-                    using (var fs = File.OpenRead(StateFile))
-                    {
-                        InstaApi.LoadStateDataFromStream(fs);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
+            LoadSession();
 
             if (!InstaApi.IsUserAuthenticated)
             {
@@ -127,7 +113,24 @@ namespace TwoFactorSample
             }
         }
 
-
+        void LoadSession()
+        {
+            try
+            {
+                if (File.Exists(StateFile))
+                {
+                    Debug.WriteLine("Loading state from file");
+                    using (var fs = File.OpenRead(StateFile))
+                    {
+                        InstaApi.LoadStateDataFromStream(fs);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
         void SaveSession()
         {
             if (InstaApi == null)
