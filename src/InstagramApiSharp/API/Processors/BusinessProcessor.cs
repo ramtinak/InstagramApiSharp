@@ -28,6 +28,10 @@ using InstagramApiSharp.Classes.Models.Business;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Business api functions
+    ///     <para>Note: All functions of this interface only works with business accounts!</para>
+    /// </summary>
     internal class BusinessProcessor : IBusinessProcessor
     {
         #region Properties and constructor

@@ -18,6 +18,9 @@ using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Hashtag api functions.
+    /// </summary>
     internal class HashtagProcessor : IHashtagProcessor
     {
         private readonly AndroidDevice _deviceInfo;

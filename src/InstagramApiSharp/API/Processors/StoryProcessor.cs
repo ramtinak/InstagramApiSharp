@@ -18,6 +18,9 @@ using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Story api functions.
+    /// </summary>
     internal class StoryProcessor : IStoryProcessor
     {
         private readonly AndroidDevice _deviceInfo;

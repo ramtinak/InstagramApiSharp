@@ -26,6 +26,10 @@ using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Account api functions.
+    ///     <para>Note: this is for self account.</para>
+    /// </summary>
     internal class AccountProcessor : IAccountProcessor
     {
         #region Properties and constructor

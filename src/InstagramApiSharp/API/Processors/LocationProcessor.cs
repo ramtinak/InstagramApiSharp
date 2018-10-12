@@ -16,6 +16,9 @@ using Newtonsoft.Json;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Location api functions.
+    /// </summary>
     internal class LocationProcessor : ILocationProcessor
     {
         private readonly AndroidDevice _deviceInfo;

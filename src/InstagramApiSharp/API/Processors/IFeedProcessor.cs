@@ -4,6 +4,9 @@ using InstagramApiSharp.Classes.Models;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Feed api functions.
+    /// </summary>
     public interface IFeedProcessor
     {
         /// <summary>

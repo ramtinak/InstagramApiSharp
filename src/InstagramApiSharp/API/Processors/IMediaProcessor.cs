@@ -5,6 +5,9 @@ using InstagramApiSharp.Classes.Models;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Media api functions.
+    /// </summary>
     public interface IMediaProcessor
     {
         /// <summary>

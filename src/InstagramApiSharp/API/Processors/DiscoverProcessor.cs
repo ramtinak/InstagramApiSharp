@@ -25,6 +25,9 @@ using System.Threading.Tasks;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Discover api functions.
+    /// </summary>
     internal class DiscoverProcessor : IDiscoverProcessor
     {
         private readonly AndroidDevice _deviceInfo;

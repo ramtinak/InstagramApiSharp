@@ -17,6 +17,10 @@ using System.Threading.Tasks;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Business api functions
+    ///     <para>Note: All functions of this interface only works with business accounts!</para>
+    /// </summary>
     public interface IBusinessProcessor
     {
         /// <summary>

@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Discover api functions.
+    /// </summary>
     public interface IDiscoverProcessor
     {
         /// <summary>

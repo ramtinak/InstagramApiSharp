@@ -16,6 +16,9 @@ using InstaRecentActivityConverter = InstagramApiSharp.Converters.Json.InstaRece
 using System.Diagnostics;
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Feed api functions.
+    /// </summary>
     internal class FeedProcessor : IFeedProcessor
     {
         private readonly AndroidDevice _deviceInfo;
@@ -273,7 +276,7 @@ namespace InstagramApiSharp.API.Processors
             var response = await _httpRequestProcessor.SendAsync(request, HttpCompletionOption.ResponseContentRead);
             var activityFeed = new InstaActivityFeed();
             var json = await response.Content.ReadAsStringAsync();
-            Debug.WriteLine(json);
+            
             if (response.StatusCode != HttpStatusCode.OK)
                 return Result.UnExpectedResponse<InstaActivityFeed>(response, json);
             var feedPage = JsonConvert.DeserializeObject<InstaRecentActivityResponse>(json,

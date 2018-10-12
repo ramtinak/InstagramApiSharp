@@ -16,6 +16,10 @@ using System.Threading.Tasks;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Account api functions.
+    ///     <para>Note: this is for self account.</para>
+    /// </summary>
     public interface IAccountProcessor
     {
         #region Edit profile

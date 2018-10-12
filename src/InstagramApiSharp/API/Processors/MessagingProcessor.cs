@@ -27,6 +27,9 @@ using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Messaging (direct) api functions.
+    /// </summary>
     internal class MessagingProcessor : IMessagingProcessor
     {
         private readonly AndroidDevice _deviceInfo;

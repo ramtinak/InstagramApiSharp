@@ -24,6 +24,9 @@ using InstagramApiSharp.Classes.ResponseWrappers;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Live api functions.
+    /// </summary>
     internal class LiveProcessor : ILiveProcessor
     {
         private readonly AndroidDevice _deviceInfo;

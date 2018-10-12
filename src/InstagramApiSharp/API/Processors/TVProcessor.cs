@@ -13,6 +13,9 @@ using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Instagram TV api functions.
+    /// </summary>
     internal class TVProcessor : ITVProcessor
     {
         private readonly AndroidDevice _deviceInfo;

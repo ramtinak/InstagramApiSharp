@@ -4,6 +4,9 @@ using InstagramApiSharp.Classes.Models;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Comments api functions.
+    /// </summary>
     public interface ICommentProcessor
     {
         /// <summary>

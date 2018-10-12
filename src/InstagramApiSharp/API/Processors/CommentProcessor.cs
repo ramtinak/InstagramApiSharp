@@ -15,6 +15,9 @@ using Newtonsoft.Json;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Comments api functions.
+    /// </summary>
     internal class CommentProcessor : ICommentProcessor
     {
         private readonly AndroidDevice _deviceInfo;

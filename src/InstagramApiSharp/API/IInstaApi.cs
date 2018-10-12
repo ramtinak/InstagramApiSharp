@@ -1,4 +1,18 @@
-﻿using System.IO;
+﻿/*  
+ *  
+ *  
+ *  Base of everything! Access to any other classes via IInstaApi
+ *  
+ *  
+ *                      IRANIAN DEVELOPERS
+ *        
+ *        
+ *                            2018
+ *  
+ *  
+ */
+
+using System.IO;
 using System.Threading.Tasks;
 using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
@@ -8,6 +22,9 @@ using System;
 
 namespace InstagramApiSharp.API
 {
+    /// <summary>
+    ///     Base of everything that you want.
+    /// </summary>
     public interface IInstaApi
     {
         #region Properties
@@ -18,7 +35,7 @@ namespace InstagramApiSharp.API
         bool IsUserAuthenticated { get; }
 
         /// <summary>
-        ///     Live api functions
+        ///     Live api functions.
         /// </summary>
         ILiveProcessor LiveProcessor { get; }
         /// <summary>
@@ -66,7 +83,7 @@ namespace InstagramApiSharp.API
         /// </summary>
         IUserProcessor UserProcessor { get; }
         /// <summary>
-        ///     Instagram TV api functions
+        ///     Instagram TV api functions.
         /// </summary>
         ITVProcessor TVProcessor { get; }
         /// <summary>

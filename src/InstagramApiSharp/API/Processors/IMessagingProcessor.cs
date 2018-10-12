@@ -6,6 +6,9 @@ using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Messaging (direct) api functions.
+    /// </summary>
     public interface IMessagingProcessor
     {
         /// <summary>

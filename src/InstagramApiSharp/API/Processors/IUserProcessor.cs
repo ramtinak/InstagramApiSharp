@@ -5,6 +5,9 @@ using InstagramApiSharp.Classes.Models;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     User api functions.
+    /// </summary>
     public interface IUserProcessor
     {
         /// <summary>

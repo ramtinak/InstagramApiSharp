@@ -20,6 +20,9 @@ using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.API
 {
+    /// <summary>
+    ///     Base of everything that you want.
+    /// </summary>
     internal class InstaApi : IInstaApi
     {
         private IRequestDelay _delay = RequestDelay.Empty();

@@ -9,6 +9,7 @@
  *        
  *               2018
  *  
+ *  
  */
 
 using Newtonsoft.Json.Linq;
@@ -17,7 +18,7 @@ using System;
 namespace InstagramApiSharp.API
 {
     /// <summary>
-    ///     Place of every endpoints and headers and other constants.
+    ///     Place of every endpoints, headers and other constants and variables.
     /// </summary>
     internal static class InstaApiConstants
     {

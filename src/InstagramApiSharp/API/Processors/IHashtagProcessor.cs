@@ -6,6 +6,9 @@ using InstagramApiSharp.Classes.Models.Hashtags;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Hashtag api functions.
+    /// </summary>
     public interface IHashtagProcessor
     {
         /// <summary>

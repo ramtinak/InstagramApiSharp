@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Instagram TV api functions.
+    /// </summary>
     public interface ITVProcessor
     {
         /// <summary>

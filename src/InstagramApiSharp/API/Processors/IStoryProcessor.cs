@@ -6,6 +6,9 @@ using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Story api functions.
+    /// </summary>
     public interface IStoryProcessor
     {
         /// <summary>

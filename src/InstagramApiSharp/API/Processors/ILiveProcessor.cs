@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Live api functions.
+    /// </summary>
     public interface ILiveProcessor
     {
         /// <summary>

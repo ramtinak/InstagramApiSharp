@@ -19,6 +19,9 @@ using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Media api functions.
+    /// </summary>
     internal class MediaProcessor : IMediaProcessor
     {
         private readonly AndroidDevice _deviceInfo;

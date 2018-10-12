@@ -4,6 +4,9 @@ using InstagramApiSharp.Classes.Models;
 
 namespace InstagramApiSharp.API.Processors
 {
+    /// <summary>
+    ///     Collection api functions.
+    /// </summary>
     public interface ICollectionProcessor
     {
         /// <summary>
