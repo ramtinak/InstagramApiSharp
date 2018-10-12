@@ -45,6 +45,19 @@ namespace InstagramApiSharp.API
         private UserAuthValidate _userAuthValidate;
         bool IsCustomDeviceSet = false;
 
+        string _waterfallIdReg = "", _deviceIdReg = "", _phoneIdReg = "", _guidReg = "";
+        InstaAccountRegistrationPhoneNumber _signUpPhoneNumberInfo;
+
+        private bool _isUserAuthenticated;
+        /// <summary>
+        ///     Indicates whether user authenticated or not
+        /// </summary>
+        public bool IsUserAuthenticated
+        {
+            get { return _isUserAuthenticated; }
+            internal set { _isUserAuthenticated = value; _userAuthValidate.IsUserAuthenticated = value; }
+        }
+
         #endregion Variables and properties
 
         #region Processors
@@ -145,80 +158,8 @@ namespace InstagramApiSharp.API
         
         #endregion Constructor
 
-        /// <summary>
-        ///     Set instagram api version (for user agent version)
-        /// </summary>
-        /// <param name="apiVersion">Api version</param>
-        public void SetApiVersion(InstaApiVersionType apiVersion)
-        {
-            _apiVersionType = apiVersion;
-        }
-        /// <summary>
-        ///     Set custom android device.
-        ///     <para>Note 1: If you want to use this method, you should call it before you calling <seealso cref="IInstaApi.LoadStateDataFromStream(Stream)"/> or <seealso cref="IInstaApi.LoadStateDataFromString(string)"/></para>
-        ///     <para>Note 2: this is optional, if you didn't set this, InstagramApiSharp will choose random device.</para>
-        /// </summary>
-        /// <param name="device">Android device</param>
-        public void SetDevice(AndroidDevice device)
-        {
-            IsCustomDeviceSet = false;
-            if (device == null)
-                return;
-            _deviceInfo = device;
-            IsCustomDeviceSet = true;
-        }
-        /// <summary>
-        ///     Gets current device
-        /// </summary>
-        public AndroidDevice GetCurrentDevice()
-        {
-            return _deviceInfo;
-        }
-        /// <summary>
-        ///     Gets logged in user
-        /// </summary>
-        public UserSessionData GetLoggedUser()
-        {
-            return _user;
-        }
-        /// <summary>
-        ///     Get currently logged in user info asynchronously
-        /// </summary>
-        /// <returns>
-        ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCurrentUser" />
-        /// </returns>
-        public async Task<IResult<InstaCurrentUser>> GetCurrentUserAsync()
-        {
-            ValidateUser();
-            ValidateLoggedIn();
-            return await _userProcessor.GetCurrentUserAsync();
-        }
-
-        /// <summary>
-        ///     Set delay between requests. Useful when API supposed to be used for mass-bombing.
-        /// </summary>
-        /// <param name="delay">Timespan delay</param>
-        public void SetRequestDelay(IRequestDelay delay)
-        {
-            if (delay == null)
-                delay = RequestDelay.Empty();
-            _delay = delay;
-            _httpRequestProcessor.Delay = _delay;
-            
-        }
-        #region Authentication/State data
-        private bool _isUserAuthenticated;
-        /// <summary>
-        ///     Indicates whether user authenticated or not
-        /// </summary>
-        public bool IsUserAuthenticated
-        {
-            get { return _isUserAuthenticated; }
-            internal set { _isUserAuthenticated = value; _userAuthValidate.IsUserAuthenticated = value; }
-        }
         #region Register new account with Phone number and email
-        string _waterfallIdReg = "", _deviceIdReg = "", _phoneIdReg = "", _guidReg = "";
-        InstaAccountRegistrationPhoneNumber _signUpPhoneNumberInfo;
+
         /// <summary>
         ///     Check email availability
         /// </summary>
@@ -876,7 +817,10 @@ namespace InstagramApiSharp.API
                 return Result.Fail(ex, false);
             }
         }
-        #endregion
+        #endregion Register new account with Phone number and email
+
+        #region Authentication and challenge functions
+
         /// <summary>
         ///     Login using given credentials asynchronously
         /// </summary>
@@ -1069,6 +1013,34 @@ namespace InstagramApiSharp.API
                     : Result.Fail<InstaTwoFactorLoginInfo>("No Two Factor info available."));
         }
 
+        /// <summary>
+        ///     Logout from instagram asynchronously
+        /// </summary>
+        /// <returns>
+        ///     True if logged out without errors
+        /// </returns>
+        public async Task<IResult<bool>> LogoutAsync()
+        {
+            ValidateUser();
+            ValidateLoggedIn();
+            try
+            {
+                var instaUri = UriCreator.GetLogoutUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<bool>(response, json);
+                var logoutInfo = JsonConvert.DeserializeObject<BaseStatusResponse>(json);
+                if (logoutInfo.Status == "ok")
+                    IsUserAuthenticated = false;
+                return Result.Success(!IsUserAuthenticated);
+            }
+            catch (Exception exception)
+            {
+                LogException(exception);
+                return Result.Fail(exception, false);
+            }
+        }
 
         /// <summary>
         ///     Send recovery code by Username
@@ -1222,71 +1194,7 @@ namespace InstagramApiSharp.API
                 return Result.Fail<TwoFactorLoginSMS>(exception);
             }
         }
-
-        /// <summary>
-        ///     Set Accept Language
-        /// </summary>
-        /// <param name="languageCodeAndCountryCode">Language Code and Country Code. For example:
-        /// <para>en-US for united states</para>
-        /// <para>fa-IR for IRAN</para>
-        /// </param>
-        public bool SetAcceptLanguage(string languageCodeAndCountryCode)
-        {
-            try
-            {
-                InstaApiConstants.ACCEPT_LANGUAGE = languageCodeAndCountryCode;
-                return true;
-            }
-            catch (Exception exception)
-            {
-                return Result.Fail<bool>(exception).Value;
-            }
-        }
-
-        /// <summary>
-        ///     Get Accept Language
-        /// </summary>
-        public string GetAcceptLanguage()
-        {
-            try
-            {
-                return InstaApiConstants.ACCEPT_LANGUAGE;
-            }
-            catch (Exception exception)
-            {
-                return Result.Fail<string>(exception).Value;
-            }
-        }
-
-        /// <summary>
-        ///     Logout from instagram asynchronously
-        /// </summary>
-        /// <returns>
-        ///     True if logged out without errors
-        /// </returns>
-        public async Task<IResult<bool>> LogoutAsync()
-        {
-            ValidateUser();
-            ValidateLoggedIn();
-            try
-            {
-                var instaUri = UriCreator.GetLogoutUri();
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<bool>(response, json);
-                var logoutInfo = JsonConvert.DeserializeObject<BaseStatusResponse>(json);
-                if (logoutInfo.Status == "ok")
-                    IsUserAuthenticated = false;
-                return Result.Success(!IsUserAuthenticated);
-            }
-            catch (Exception exception)
-            {
-                LogException(exception);
-                return Result.Fail(exception, false);
-            }
-        }
-
+        
         #region Challenge part
         /// <summary>
         ///     Get challenge require (checkpoint required) options
@@ -1542,40 +1450,13 @@ namespace InstagramApiSharp.API
         }
         #endregion Challenge part
 
-        private void ValidateUserAsync(InstaUserShortResponse user, string csrfToken, bool validateExtra = true, string password = null)
-        {
-            try
-            {
-                var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
-                _user.LoggedInUser = converter.Convert();
-                if (password != null)
-                    _user.Password = password;
-                _user.UserName = _user.UserName; 
-                if (validateExtra)
-                {
-                    _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
-                    _user.CsrfToken = csrfToken;
-                    if (string.IsNullOrEmpty(_user.CsrfToken))
-                    {
-                        var cookies =
-                          _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
-                              .BaseAddress);
-                        _user.CsrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
-                    }
-                    IsUserAuthenticated = true;
-                    InvalidateProcessors();
-                }
-
-            }
-            catch { }
-        }
         /// <summary>
         ///     Set cookie and html document to verify login information.
         /// </summary>
         /// <param name="htmlDocument">Html document source</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        public async Task<IResult<bool>> SetCookiesAndHtmlForFacebookLoginAsync(string htmlDocument, string cookie, bool facebookLogin = false)
+        public async Task<IResult<bool>> SetCookiesAndHtmlForFacebookLoginAsync(string htmlDocument, string cookie, bool facebookLogin = true)
         {
             if (!string.IsNullOrEmpty(cookie) && !string.IsNullOrEmpty(htmlDocument))
             {
@@ -1603,7 +1484,7 @@ namespace InstagramApiSharp.API
         /// <param name="webBrowserResponse">Web browser response object</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        public async Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaWebBrowserResponse webBrowserResponse, string cookie, bool facebookLogin = false)
+        public async Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaWebBrowserResponse webBrowserResponse, string cookie, bool facebookLogin = true)
         {
             if(webBrowserResponse == null)
                 return Result.Fail("", false);
@@ -1678,7 +1559,106 @@ namespace InstagramApiSharp.API
             return Result.Fail("", false);
         }
 
+        #endregion Authentication and challenge functions
 
+        #region Other public functions
+
+        /// <summary>
+        ///     Gets current device
+        /// </summary>
+        public AndroidDevice GetCurrentDevice()
+        {
+            return _deviceInfo;
+        }
+        /// <summary>
+        ///     Gets logged in user
+        /// </summary>
+        public UserSessionData GetLoggedUser()
+        {
+            return _user;
+        }
+        /// <summary>
+        ///     Get currently logged in user info asynchronously
+        /// </summary>
+        /// <returns>
+        ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCurrentUser" />
+        /// </returns>
+        public async Task<IResult<InstaCurrentUser>> GetCurrentUserAsync()
+        {
+            ValidateUser();
+            ValidateLoggedIn();
+            return await _userProcessor.GetCurrentUserAsync();
+        }
+        /// <summary>
+        ///     Get Accept Language
+        /// </summary>
+        public string GetAcceptLanguage()
+        {
+            try
+            {
+                return InstaApiConstants.ACCEPT_LANGUAGE;
+            }
+            catch (Exception exception)
+            {
+                return Result.Fail<string>(exception).Value;
+            }
+        }
+        /// <summary>
+        ///     Set delay between requests. Useful when API supposed to be used for mass-bombing.
+        /// </summary>
+        /// <param name="delay">Timespan delay</param>
+        public void SetRequestDelay(IRequestDelay delay)
+        {
+            if (delay == null)
+                delay = RequestDelay.Empty();
+            _delay = delay;
+            _httpRequestProcessor.Delay = _delay;
+
+        }
+        /// <summary>
+        ///     Set instagram api version (for user agent version)
+        /// </summary>
+        /// <param name="apiVersion">Api version</param>
+        public void SetApiVersion(InstaApiVersionType apiVersion)
+        {
+            _apiVersionType = apiVersion;
+        }
+        /// <summary>
+        ///     Set custom android device.
+        ///     <para>Note 1: If you want to use this method, you should call it before you calling <seealso cref="IInstaApi.LoadStateDataFromStream(Stream)"/> or <seealso cref="IInstaApi.LoadStateDataFromString(string)"/></para>
+        ///     <para>Note 2: this is optional, if you didn't set this, InstagramApiSharp will choose random device.</para>
+        /// </summary>
+        /// <param name="device">Android device</param>
+        public void SetDevice(AndroidDevice device)
+        {
+            IsCustomDeviceSet = false;
+            if (device == null)
+                return;
+            _deviceInfo = device;
+            IsCustomDeviceSet = true;
+        }
+        /// <summary>
+        ///     Set Accept Language
+        /// </summary>
+        /// <param name="languageCodeAndCountryCode">Language Code and Country Code. For example:
+        /// <para>en-US for united states</para>
+        /// <para>fa-IR for IRAN</para>
+        /// </param>
+        public bool SetAcceptLanguage(string languageCodeAndCountryCode)
+        {
+            try
+            {
+                InstaApiConstants.ACCEPT_LANGUAGE = languageCodeAndCountryCode;
+                return true;
+            }
+            catch (Exception exception)
+            {
+                return Result.Fail<bool>(exception).Value;
+            }
+        }
+        #endregion Other public functions
+
+        #region State data
 
         /// <summary>
         ///     Get current state info as Memory stream
@@ -1853,8 +1833,8 @@ namespace InstagramApiSharp.API
                 Task.Delay(1000);
             });
         }
-        #endregion
 
+        #endregion State data
 
         #region private part
 
@@ -1879,6 +1859,35 @@ namespace InstagramApiSharp.API
 
 
         }
+
+        private void ValidateUserAsync(InstaUserShortResponse user, string csrfToken, bool validateExtra = true, string password = null)
+        {
+            try
+            {
+                var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
+                _user.LoggedInUser = converter.Convert();
+                if (password != null)
+                    _user.Password = password;
+                _user.UserName = _user.UserName;
+                if (validateExtra)
+                {
+                    _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
+                    _user.CsrfToken = csrfToken;
+                    if (string.IsNullOrEmpty(_user.CsrfToken))
+                    {
+                        var cookies =
+                          _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                              .BaseAddress);
+                        _user.CsrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
+                    }
+                    IsUserAuthenticated = true;
+                    InvalidateProcessors();
+                }
+
+            }
+            catch { }
+        }
+
         private void ValidateUser()
         {
             if (string.IsNullOrEmpty(_user.UserName) || string.IsNullOrEmpty(_user.Password))
@@ -1902,6 +1911,6 @@ namespace InstagramApiSharp.API
             _logger?.LogException(exception);
         }
 
-#endregion
+        #endregion
     }
 }

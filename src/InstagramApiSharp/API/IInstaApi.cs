@@ -93,26 +93,8 @@ namespace InstagramApiSharp.API
         IBusinessProcessor BusinessProcessor { get; }
         #endregion
 
-        /// <summary>
-        ///     Set instagram api version (for user agent version)
-        /// </summary>
-        /// <param name="apiVersion">Api version</param>
-        void SetApiVersion(InstaApiVersionType apiVersion);
-        /// <summary>
-        ///     Set custom android device.
-        ///     <para>Note 1: If you want to use this method, you should call it before you calling <seealso cref="IInstaApi.LoadStateDataFromStream(Stream)"/> or <seealso cref="IInstaApi.LoadStateDataFromString(string)"/></para>
-        ///     <para>Note 2: this is optional, if you didn't set this, <seealso cref="InstagramApiSharp"/> will choose random device.</para>
-        /// </summary>
-        /// <param name="device">Android device</param>
-        void SetDevice(AndroidDevice device);
-        /// <summary>
-        ///     Gets current device
-        /// </summary>
-        AndroidDevice GetCurrentDevice();
-        /// <summary>
-        ///     Gets logged in user
-        /// </summary>
-        UserSessionData GetLoggedUser();
+        #region State data
+
         /// <summary>
         ///     Get current state info as Memory stream
         /// </summary>
@@ -151,15 +133,18 @@ namespace InstagramApiSharp.API
         ///     Set state data from provided json string asynchronously
         /// </summary>
         Task LoadStateDataFromStringAsync(string json);
-        /// <summary>
-        ///     Set Accept Language
-        /// </summary>
-        /// <param name="languageCodeAndCountryCode">Language Code and Country Code. For example:
-        /// <para>en-US for united states</para>
-        /// <para>fa-IR for IRAN</para>
-        /// </param>
-        bool SetAcceptLanguage(string languageCodeAndCountryCode);
 
+        #endregion State data
+
+        #region Other public functions
+        /// <summary>
+        ///     Gets current device
+        /// </summary>
+        AndroidDevice GetCurrentDevice();
+        /// <summary>
+        ///     Gets logged in user
+        /// </summary>
+        UserSessionData GetLoggedUser();
         /// <summary>
         ///     Get Accept Language
         /// </summary>
@@ -169,8 +154,30 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="delay">Timespan delay</param>
         void SetRequestDelay(IRequestDelay delay);
+        /// <summary>
+        ///     Set instagram api version (for user agent version)
+        /// </summary>
+        /// <param name="apiVersion">Api version</param>
+        void SetApiVersion(InstaApiVersionType apiVersion);
+        /// <summary>
+        ///     Set custom android device.
+        ///     <para>Note 1: If you want to use this method, you should call it before you calling <seealso cref="IInstaApi.LoadStateDataFromStream(Stream)"/> or <seealso cref="IInstaApi.LoadStateDataFromString(string)"/></para>
+        ///     <para>Note 2: this is optional, if you didn't set this, <seealso cref="InstagramApiSharp"/> will choose random device.</para>
+        /// </summary>
+        /// <param name="device">Android device</param>
+        void SetDevice(AndroidDevice device);
+        /// <summary>
+        ///     Set Accept Language
+        /// </summary>
+        /// <param name="languageCodeAndCountryCode">Language Code and Country Code. For example:
+        /// <para>en-US for united states</para>
+        /// <para>fa-IR for IRAN</para>
+        /// </param>
+        bool SetAcceptLanguage(string languageCodeAndCountryCode);
+        
+        #endregion Other public functions
 
-        #region Async Members
+        #region Authentication, challenge functions
 
         #region Challenge part
         /// <summary>
@@ -210,14 +217,14 @@ namespace InstagramApiSharp.API
         /// <param name="htmlDocument">Html document source</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        Task<IResult<bool>> SetCookiesAndHtmlForFacebookLoginAsync(string htmlDocument, string cookies ,bool validate = false);
+        Task<IResult<bool>> SetCookiesAndHtmlForFacebookLoginAsync(string htmlDocument, string cookies,bool validate = true);
         /// <summary>
         ///     Set cookie and web browser response object to verify login information.
         /// </summary>
         /// <param name="webBrowserResponse">Web browser response object</param>
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
-        Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaWebBrowserResponse webBrowserResponse, string cookies, bool validate = false);
+        Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaWebBrowserResponse webBrowserResponse, string cookies, bool validate = true);
         
         /// <summary>
         ///     Check email availability
@@ -333,6 +340,7 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaCurrentUser" />
         /// </returns>
         Task<IResult<InstaCurrentUser>> GetCurrentUserAsync();
-        #endregion
+        
+        #endregion Authentication, challenge functions
     }
 }
