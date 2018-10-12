@@ -25,17 +25,33 @@ namespace InstagramApiSharp.API
     /// </summary>
     internal class InstaApi : IInstaApi
     {
+        #region Variables and properties
+
         private IRequestDelay _delay = RequestDelay.Empty();
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
         private InstaApiVersionType _apiVersionType;
         private InstaApiVersion _apiVersion;
         private HttpHelper _httpHelper;
+        private AndroidDevice _deviceInfo;
+        private InstaTwoFactorLoginInfo _twoFactorInfo;
+        private InstaChallengeLoginInfo _challengeinfo;
+        private UserSessionData _userSession;
+        private UserSessionData _user
+        {
+            get { return _userSession; }
+            set { _userSession = value; _userAuthValidate.User = value; }
+        }
+        private UserAuthValidate _userAuthValidate;
+        bool IsCustomDeviceSet = false;
+
+        #endregion Variables and properties
+
+        #region Processors
+
         private ICollectionProcessor _collectionProcessor;
         private ICommentProcessor _commentProcessor;
-        private AndroidDevice _deviceInfo;
         private IFeedProcessor _feedProcessor;
-
         private IHashtagProcessor _hashtagProcessor;
         private ILocationProcessor _locationProcessor;
         private IMediaProcessor _mediaProcessor;
@@ -48,17 +64,6 @@ namespace InstagramApiSharp.API
         ITVProcessor _tvProcessor;
         HelperProcessor _helperProcessor;
         IBusinessProcessor _businessProcessor;
-
-        private InstaTwoFactorLoginInfo _twoFactorInfo;
-        private InstaChallengeLoginInfo _challengeinfo;
-        private UserSessionData _userSession;
-        private UserSessionData _user
-        {
-            get { return _userSession; }
-            set { _userSession = value; _userAuthValidate.User = value; }
-        }
-        private UserAuthValidate _userAuthValidate;
-
         /// <summary>
         ///     Live api functions.
         /// </summary>
@@ -121,6 +126,10 @@ namespace InstagramApiSharp.API
         /// </summary>
         public IBusinessProcessor BusinessProcessor => _businessProcessor;
 
+        #endregion Processors
+
+        #region Constructor
+
         public InstaApi(UserSessionData user, IInstaLogger logger, AndroidDevice deviceInfo,
             IHttpRequestProcessor httpRequestProcessor, InstaApiVersionType apiVersionType)
         {
@@ -133,8 +142,17 @@ namespace InstagramApiSharp.API
             _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(apiVersionType);
             _httpHelper = new HttpHelper(_apiVersion);
         }
+        
+        #endregion Constructor
 
-        bool IsCustomDeviceSet = false;
+        /// <summary>
+        ///     Set instagram api version (for user agent version)
+        /// </summary>
+        /// <param name="apiVersion">Api version</param>
+        public void SetApiVersion(InstaApiVersionType apiVersion)
+        {
+            _apiVersionType = apiVersion;
+        }
         /// <summary>
         ///     Set custom android device.
         ///     <para>Note 1: If you want to use this method, you should call it before you calling <seealso cref="IInstaApi.LoadStateDataFromStream(Stream)"/> or <seealso cref="IInstaApi.LoadStateDataFromString(string)"/></para>

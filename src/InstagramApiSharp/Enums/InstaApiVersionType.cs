@@ -13,7 +13,6 @@ using System.Text;
 
 namespace InstagramApiSharp.Enums
 {
-    //[Serializable]
     public enum InstaApiVersionType
     {
         /// <summary>

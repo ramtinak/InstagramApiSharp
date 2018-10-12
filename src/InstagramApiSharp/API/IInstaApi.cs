@@ -18,7 +18,7 @@ using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
-using System;
+using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.API
 {
@@ -93,7 +93,11 @@ namespace InstagramApiSharp.API
         IBusinessProcessor BusinessProcessor { get; }
         #endregion
 
-
+        /// <summary>
+        ///     Set instagram api version (for user agent version)
+        /// </summary>
+        /// <param name="apiVersion">Api version</param>
+        void SetApiVersion(InstaApiVersionType apiVersion);
         /// <summary>
         ///     Set custom android device.
         ///     <para>Note 1: If you want to use this method, you should call it before you calling <seealso cref="IInstaApi.LoadStateDataFromStream(Stream)"/> or <seealso cref="IInstaApi.LoadStateDataFromString(string)"/></para>

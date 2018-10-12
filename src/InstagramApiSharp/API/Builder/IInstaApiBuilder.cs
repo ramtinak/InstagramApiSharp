@@ -61,11 +61,12 @@ namespace InstagramApiSharp.API.Builder
         [Obsolete("Deprecated. Please use IInstaApi.SetDevice instead.")]
         /// <summary>
         ///     Set custom android device.
-        ///     <para>Note: this is optional, if you didn't set this, InstagramApiSharp will choose random device.</para>
+        ///     <para>Note: this is optional, if you didn't set this, <see cref="InstagramApiSharp"/> will choose random device.</para>
         /// </summary>
         /// <param name="androidDevice">Android device</param>
         /// <returns>API Builder</returns>
         IInstaApiBuilder SetDevice(AndroidDevice androidDevice);
+        [Obsolete("Deprecated. Please use IInstaApi.SetApiVersion instead.")]
         /// <summary>
         ///     Set instagram api version (for user agent version)
         /// </summary>
