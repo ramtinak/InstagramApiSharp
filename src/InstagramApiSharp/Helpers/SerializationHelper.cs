@@ -26,7 +26,6 @@ namespace InstagramApiSharp.Helpers
 
         public static T DeserializeFromStream<T>(Stream stream)
         {
-
 #if NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NETSTANDARD1_0 || NETSTANDARD1_1 || NETSTANDARD1_2 || NETSTANDARD1_3 || NETSTANDARD1_4 || NETSTANDARD1_5 || NETSTANDARD1_6 || NETSTANDARD2_0 || NETSTANDARD2_1 || NETSTANDARD2_2 || NETSTANDARD2_3
 
             IFormatter formatter = new BinaryFormatter();
@@ -34,7 +33,7 @@ namespace InstagramApiSharp.Helpers
             return (T)formatter.Deserialize(stream);
 #else
             var json = new StreamReader(stream).ReadToEnd();
-            return JsonConvert.DeserializeObject<T>(json);
+            return DeserializeFromString<T>(json);
 #endif
         }
         public static string SerializeToString(object o)
