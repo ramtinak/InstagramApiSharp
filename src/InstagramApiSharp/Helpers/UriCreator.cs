@@ -122,7 +122,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetUserFollowersUri(long userPk, string rankToken, string searchQuery, string maxId = "")
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_USER_FOLLOWERS, userPk, rankToken),
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_USER_FOLLOWERS, userPk, rankToken),
                 out var instaUri))
                 throw new Exception("Cant create URI for user followers");
             return instaUri
@@ -132,7 +132,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetUserFollowingUri(long userPk, string rankToken, string searchQuery, string maxId = "")
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_USER_FOLLOWING, userPk, rankToken),
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_USER_FOLLOWING, userPk, rankToken),
                 out var instaUri))
                 throw new Exception("Cant create URI for user following");
             return instaUri
@@ -158,7 +158,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetExploreUri(string maxId = null)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.EXPLORE, out var instaUri))
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DISCOVER_EXPLORE, out var instaUri))
                 throw new Exception("Cant create URI for explore posts");
             var query = $"is_prefetch=true&supported_capabilities_new={JsonConvert.SerializeObject(InstaApiConstants.SupportedCapabalities)}";
             if (!string.IsNullOrEmpty(maxId)) query += $"&max_id={maxId}";
@@ -352,7 +352,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetFollowUserUri(long userId)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FOLLOW_USER, userId),
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_FOLLOW_USER, userId),
                 out var instaUri))
                 throw new Exception("Cant create URI for getting media likers");
             return instaUri;
@@ -360,7 +360,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetUnFollowUserUri(long userId)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.UNFOLLOW_USER, userId),
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_UNFOLLOW_USER, userId),
                 out var instaUri))
                 throw new Exception("Cant create URI for getting media likers");
             return instaUri;
@@ -369,7 +369,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetBlockUserUri(long userId)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.BLOCK_USER, userId),
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_BLOCK_USER, userId),
                 out var instaUri))
                 throw new Exception("Cant create URI for getting media likers");
             return instaUri;
@@ -377,7 +377,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetUnBlockUserUri(long userId)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.UNBLOCK_USER, userId),
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_UNBLOCK_USER, userId),
                 out var instaUri))
                 throw new Exception("Cant create URI for getting media likers");
             return instaUri;
@@ -450,14 +450,14 @@ namespace InstagramApiSharp.Helpers
         public static Uri GetUploadVideoUri()
         {
             if (
-                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.UPLOAD_VIDEO, out var instaUri))
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.UPLOAD_VIDEO_OLD, out var instaUri))
                 throw new Exception("Cant create URI for upload video");
             return instaUri;
         }
         public static Uri GetUploadPhotoUri()
         {
             if (
-                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.UPLOAD_PHOTO, out var instaUri))
+                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.UPLOAD_PHOTO_OLD, out var instaUri))
                 throw new Exception("Cant create URI for upload photo");
             return instaUri;
         }
@@ -1064,13 +1064,13 @@ namespace InstagramApiSharp.Helpers
         }
         public static Uri GetStoryUploadVideoUri(string uploadId, int fileHashCode)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.STORY_UPLOAD_VIDEO, uploadId, fileHashCode), out var instaUri))
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.UPLOAD_VIDEO, uploadId, fileHashCode), out var instaUri))
                 throw new Exception("Cant create URI for story upload video");
             return instaUri;
         }
         public static Uri GetStoryUploadPhotoUri(string uploadId, int fileHashCode)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.STORY_UPLOAD_PHOTO, uploadId, fileHashCode), out var instaUri))
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.UPLOAD_PHOTO, uploadId, fileHashCode), out var instaUri))
                 throw new Exception("Cant create URI for story upload photo");
             return instaUri;
         }
