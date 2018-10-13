@@ -1653,5 +1653,11 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Can't create URI for configuring story media");
             return instaUri;
         }
+        public static Uri GetAddUserToDirectThreadUri(string threadId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_THREAD_ADD_USER, threadId), out var instaUri))
+                throw new Exception("Cant create URI for add users to direct thread");
+            return instaUri;
+        }
     }
 }

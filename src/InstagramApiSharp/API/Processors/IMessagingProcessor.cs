@@ -12,6 +12,12 @@ namespace InstagramApiSharp.API.Processors
     public interface IMessagingProcessor
     {
         /// <summary>
+        ///     Add users to group thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="userIds">User ids (pk)</param>
+        Task<IResult<InstaDirectInboxThread>> AddUserToGroupThreadAsync(string threadId, params long[] userIds);
+        /// <summary>
         ///     Approve direct pending request
         /// </summary>
         /// <param name="threadId">Thread ids</param>

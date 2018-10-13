@@ -53,6 +53,51 @@ namespace InstagramApiSharp.API.Processors
             _httpHelper = httpHelper;
         }
         /// <summary>
+        ///     Add users to group thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        /// <param name="userIds">User ids (pk)</param>
+        public async Task<IResult<InstaDirectInboxThread>> AddUserToGroupThreadAsync(string threadId, params long[] userIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (userIds == null || userIds != null && !userIds.Any())
+                    throw new ArgumentException("UserIds cannot be null or empty.\nAt least one user id require.");
+
+                var instaUri = UriCreator.GetAddUserToDirectThreadUri(threadId);
+
+                var data = new Dictionary<string, string>
+                {
+                    {"use_unified_inbox", "true"},
+                    {"user_ids", $"[{userIds.EncodeList()}]"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaDirectInboxThread>(response, json);
+                var threadResponse = JsonConvert.DeserializeObject<InstaDirectInboxThreadResponse>(json,
+                             new InstaThreadDataConverter());
+
+                //Reverse for Chat Order
+                threadResponse.Items.Reverse();
+                var converter = ConvertersFabric.Instance.GetDirectThreadConverter(threadResponse);
+
+
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaDirectInboxThread>(exception.Message);
+            }
+        }
+
+        /// <summary>
         ///     Approve direct pending request
         /// </summary>
         /// <param name="threadIds">Thread id</param>

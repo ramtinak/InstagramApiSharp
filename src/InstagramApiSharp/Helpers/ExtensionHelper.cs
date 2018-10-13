@@ -43,9 +43,22 @@ namespace InstagramApiSharp
               $"{deviceInfo.AndroidBoardName}{deviceInfo.DeviceModel}");
         }
 
+        public static string EncodeList(this long[] listOfValues, bool appendQuotation = true)
+        {
+            return EncodeList(listOfValues.ToList(), appendQuotation);
+        }
         public static string EncodeList(this string[] listOfValues, bool appendQuotation = true)
         {
             return EncodeList(listOfValues.ToList(), appendQuotation);
+        }
+        public static string EncodeList(this List<long> listOfValues, bool appendQuotation = true)
+        {
+            if (!appendQuotation)
+                return string.Join(",", listOfValues);
+            var list = new List<string>();
+            foreach (var item in listOfValues)
+                list.Add(item.Encode());
+            return string.Join(",", list);
         }
         public static string EncodeList(this List<string> listOfValues, bool appendQuotation = true)
         {
@@ -55,6 +68,10 @@ namespace InstagramApiSharp
             foreach (var item in listOfValues)
                 list.Add(item.Encode());
             return string.Join(",", list);
+        }
+        public static string Encode(this long content)
+        {
+            return content.Encode();
         }
         public static string Encode(this string content)
         {
