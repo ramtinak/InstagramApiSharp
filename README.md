@@ -88,6 +88,7 @@ v1.1.3.0
 - [Add] Get suggestion details
 - [Add] Get highlights archive
 - [Add] Get highlights archive medias
+- [Business wiki page added](https://github.com/ramtinak/InstagramApiSharp/wiki/Business-account)
 
 v1.1.2.8
 - [Bugfix] for uploading album (photos)
