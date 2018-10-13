@@ -531,6 +531,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaBusinessSuggestedCategoryList>(exception);
             }
         }
+
         /// <summary>
         ///     Get branded content approval settings
         ///     <para>Note: Only approved partners can tag you in branded content when you require approvals.</para>
@@ -559,6 +560,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaBrandedContent>(exception);
             }
         }
+
         /// <summary>
         ///     Remove button from your business account
         /// </summary>
@@ -646,6 +648,39 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaBusinessCityLocationList>(exception);
+            }
+        }
+        
+        /// <summary>
+        ///     Search branded users for adding to your branded whitelist
+        /// </summary>
+        /// <param name="query">Query(name, username or...) to search</param>
+        /// <param name="count">Count</param>
+        public async Task<IResult<InstaDiscoverSearchResult>> SearchBrandedUsersAsync(string query, int count = 85)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (count < 10)
+                    count = 10;
+
+                var instaUri = UriCreator.GetBusinessBrandedSearchUserUri(query, count);
+
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaDiscoverSearchResult>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaDiscoverSearchResultResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetDiscoverSearchResultConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaDiscoverSearchResult>(exception);
             }
         }
 

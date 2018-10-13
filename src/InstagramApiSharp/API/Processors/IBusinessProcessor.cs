@@ -108,6 +108,13 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaBusinessCityLocationList>> SearchCityLocationAsync(string cityOrTown);
 
         /// <summary>
+        ///     Search branded users for adding to your branded whitelist
+        /// </summary>
+        /// <param name="query">Query(name, username or...) to search</param>
+        /// <param name="count">Count</param>
+        Task<IResult<InstaDiscoverSearchResult>> SearchBrandedUsersAsync(string query, int count = 85);
+
+        /// <summary>
         ///     Star direct thread
         /// </summary>
         /// <param name="threadId">Thread id</param>

@@ -162,6 +162,7 @@ namespace InstagramApiSharp.API
         public const string BUSINESS_SET_CATEGORY = API_SUFFIX + "/business/account/set_business_category/";
         public const string BUSINESS_VALIDATE_URL = API_SUFFIX + "/business/instant_experience/ix_validate_url/";
         public const string BUSINESS_BRANDED_CONTENT_GET_SETTINGS = API_SUFFIX + "/business/branded_content/get_whitelist_settings/";
+        public const string BUSINESS_BRANDED_USER_SEARCH = API_SUFFIX + "/users/search/?q={0}&count={1}&branded_content_creator_only=true";
 
         #endregion Business endpoints constants
 
