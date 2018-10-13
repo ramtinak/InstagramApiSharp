@@ -488,7 +488,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get suggested categories 
         /// </summary>
-        public async Task<IResult<InstaBusinessSugesstedCategoryList>> GetSuggestedCategoriesAsync()
+        public async Task<IResult<InstaBusinessSuggestedCategoryList>> GetSuggestedCategoriesAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -520,18 +520,45 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBusinessSugesstedCategoryList>(response, json);
+                    return Result.UnExpectedResponse<InstaBusinessSuggestedCategoryList>(response, json);
 
-                var obj = JsonConvert.DeserializeObject<InstaBusinessSugesstedCategoryList>(json, new InstaBusinessSuggestedCategoryDataConverter());
+                var obj = JsonConvert.DeserializeObject<InstaBusinessSuggestedCategoryList>(json, new InstaBusinessSuggestedCategoryDataConverter());
                 return Result.Success(obj);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBusinessSugesstedCategoryList>(exception);
+                return Result.Fail<InstaBusinessSuggestedCategoryList>(exception);
             }
         }
+        /// <summary>
+        ///     Get branded content approval settings
+        ///     <para>Note: Only approved partners can tag you in branded content when you require approvals.</para>
+        /// </summary>
+        public async Task<IResult<InstaBrandedContent>> GetBrandedContentApprovalAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetBusinessBrandedSettingsUri();
 
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBrandedContent>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBrandedContentResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetBrandedContentConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBrandedContent>(exception);
+            }
+        }
         /// <summary>
         ///     Remove button from your business account
         /// </summary>

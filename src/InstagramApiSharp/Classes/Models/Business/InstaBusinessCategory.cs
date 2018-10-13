@@ -25,14 +25,14 @@ namespace InstagramApiSharp.Classes.Models.Business
     public class InstaBusinessCategoryList : List<InstaBusinessCategory> { }
 
   
-    public class InstaBusinessSugesstedCategory : InstaBusinessCategory
+    public class InstaBusinessSuggestedCategory : InstaBusinessCategory
     {
         [JsonProperty("super_cat_name")]
         public string SuperCatName { get; set; }
         [JsonProperty("super_cat_id")]
         public string SuperCatIid { get; set; }
     }
-    public class InstaBusinessSugesstedCategoryList : List<InstaBusinessSugesstedCategory> { }
+    public class InstaBusinessSuggestedCategoryList : List<InstaBusinessSuggestedCategory> { }
 
 
     internal class InstaBusinessCategoryContainer

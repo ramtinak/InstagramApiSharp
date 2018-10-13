@@ -35,7 +35,7 @@ namespace InstagramApiSharp.Logger
         public void LogResponse(HttpResponseMessage response)
         {
             if (_logLevel < LogLevel.Response) return;
-            Write($"Response: {response.RequestMessage.Method} {response.RequestMessage.RequestUri}");
+            Write($"Response: {response.RequestMessage.Method} {response.RequestMessage.RequestUri} [{response.StatusCode}]");
             WriteContent(response.Content, Formatting.None, 0);
         }
 

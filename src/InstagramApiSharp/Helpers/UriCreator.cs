@@ -1659,5 +1659,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for add users to direct thread");
             return instaUri;
         }
+
+        public static Uri GetBusinessBrandedSettingsUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.BUSINESS_BRANDED_CONTENT_GET_SETTINGS, out var instaUri))
+                throw new Exception("Cant create URI for business branded settings");
+            return instaUri;
+        }
     }
 }

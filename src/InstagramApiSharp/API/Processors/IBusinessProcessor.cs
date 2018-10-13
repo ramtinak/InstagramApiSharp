@@ -83,7 +83,13 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get suggested categories
         /// </summary>
-        Task<IResult<InstaBusinessSugesstedCategoryList>> GetSuggestedCategoriesAsync();
+        Task<IResult<InstaBusinessSuggestedCategoryList>> GetSuggestedCategoriesAsync();
+        
+        /// <summary>
+        ///     Get branded content approval settings
+        ///     <para>Note: Only approved partners can tag you in branded content when you require approvals.</para>
+        /// </summary>
+        Task<IResult<InstaBrandedContent>> GetBrandedContentApprovalAsync();
 
         /// <summary>
         ///     Remove button from your business account

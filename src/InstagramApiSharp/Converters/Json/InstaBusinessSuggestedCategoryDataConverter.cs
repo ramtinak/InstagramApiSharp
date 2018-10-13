@@ -11,7 +11,7 @@ namespace InstagramApiSharp.Converters.Json
     {
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(InstaBusinessSugesstedCategoryList);
+            return objectType == typeof(InstaBusinessSuggestedCategoryList);
         }
 
         public override object ReadJson(JsonReader reader,
@@ -22,7 +22,7 @@ namespace InstagramApiSharp.Converters.Json
             var token = JToken.Load(reader);
             var container = token.ToObject<InstaBusinessCategoryContainer>();
             var items = container.Extras.FirstOrDefault().Value["categories"];
-            var categories = items.ToObject<InstaBusinessSugesstedCategoryList>();
+            var categories = items.ToObject<InstaBusinessSuggestedCategoryList>();
             return categories;
         }
 

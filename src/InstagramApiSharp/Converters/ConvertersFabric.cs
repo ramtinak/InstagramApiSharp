@@ -451,5 +451,11 @@ InstaHighlightReelResponse response)
         {
             return new InstaHighlightShortListConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaBrandedContent, InstaBrandedContentResponse> GetBrandedContentConverter(
+            InstaBrandedContentResponse response)
+        {
+            return new InstaBrandedContentConverter { SourceObject = response };
+        }
     }
 }
