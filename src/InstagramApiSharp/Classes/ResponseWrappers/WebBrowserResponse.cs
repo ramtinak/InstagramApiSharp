@@ -45,4 +45,33 @@ namespace InstagramApiSharp.Classes
     }
 
 
+
+    public class InstaFacebookAccountInfo
+    {
+        [JsonProperty("USER_ID")]
+        public string UserId { get; set; }
+        [JsonProperty("ACCOUNT_ID")]
+        public string AccountId { get; set; }
+        [JsonProperty("NAME")]
+        public string Name { get; set; }
+        [JsonProperty("SHORT_NAME")]
+        public string ShortName { get; set; }
+        [JsonProperty("IS_MESSENGER_ONLY_USER")]
+        public bool IsMessengerOnlyUser { get; set; }
+        [JsonProperty("IS_DEACTIVATED_ALLOWED_ON_MESSENGER")]
+        public bool IsDeactivatedAllowedOnMessenger { get; set; }
+        [JsonIgnore()]
+        public string Token { get; set; }
+    }
+
+    internal class InstaFacebookAccountToken
+    {
+        [JsonProperty("token")]
+        public string Token { get; set; }
+        //[JsonProperty("valid_for")]
+        //public int ValidFor { get; set; }
+        //[JsonProperty("expire")]
+        //public int Expire { get; set; }
+    }
+
 }

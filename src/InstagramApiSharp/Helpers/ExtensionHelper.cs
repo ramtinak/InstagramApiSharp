@@ -33,6 +33,16 @@ namespace InstagramApiSharp
                 apiVersion.AppVersion, deviceInfo.AndroidVer.APILevel,
                 deviceInfo.AndroidVer.VersionNumber, apiVersion.AppApiVersionCode);
         }
+        public static string GenerateFacebookUserAgent()
+        {
+            var deviceInfo = AndroidDeviceGenerator.GetRandomAndroidDevice();
+            //Mozilla/5.0 (Linux; Android 7.0; PRA-LA1 Build/HONORPRA-LA1; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/69.0.3497.100 Mobile Safari/537.36
+
+            return string.Format(InstaApiConstants.FACEBOOK_USER_AGENT,
+              deviceInfo.AndroidVer.VersionNumber,deviceInfo.DeviceModelIdentifier,
+              $"{deviceInfo.AndroidBoardName}{deviceInfo.DeviceModel}");
+        }
+
         public static string EncodeList(this string[] listOfValues, bool appendQuotation = true)
         {
             return EncodeList(listOfValues.ToList(), appendQuotation);

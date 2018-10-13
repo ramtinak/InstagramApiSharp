@@ -80,6 +80,18 @@ namespace InstagramApiSharp.Helpers
             }
         }
 
+        public static long ToUnixTimeMiliSeconds(this DateTime date)
+        {
+            try
+            {
+                return Convert.ToInt64((date - UnixEpoch).TotalMilliseconds);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
         public static long GetUnixTimestampSeconds()
         {
             var timeSpan = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0);
