@@ -31,6 +31,22 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaBusinessUser>> AddOrChangeBusinessButtonAsync(InstaBusinessPartner businessPartner, Uri uri);
 
         /// <summary>
+        ///     Add users to approval branded whitelist
+        /// </summary>
+        /// <param name="userIdsToAdd">User ids (pk) to add</param>
+        Task<IResult<InstaBrandedContent>> AddUserToBrandedWhiteListAsync(params long[] userIdsToAdd);
+
+        /// <summary>
+        ///     Disable branded content approval
+        /// </summary>
+        Task<IResult<InstaBrandedContent>> DisbaleBrandedContentApprovalAsync();
+
+        /// <summary>
+        ///     Enable branded content approval
+        /// </summary>
+        Task<IResult<InstaBrandedContent>> EnableBrandedContentApprovalAsync();
+
+        /// <summary>
         ///     Change business category
         ///     <para>Note: Get it from <see cref="IBusinessProcessor.GetSubCategoriesAsync(string)"/></para>
         /// </summary>
@@ -119,11 +135,19 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="threadId">Thread id</param>
         Task<IResult<bool>> StarDirectThreadAsync(string threadId);
+        
         /// <summary>
         ///     Unstar direct thread
         /// </summary>
         /// <param name="threadId">Thread id</param>
         Task<IResult<bool>> UnStarDirectThreadAsync(string threadId);
+
+        /// <summary>
+        ///     Remove users from approval branded whitelist
+        /// </summary>
+        /// <param name="userIdsToRemove">User ids (pk) to remove</param>
+        Task<IResult<InstaBrandedContent>> RemoveUserFromBrandedWhiteListAsync(params long[] userIdsToRemove);
+
         /// <summary>
         ///     Update business information
         /// </summary>

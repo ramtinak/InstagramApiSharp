@@ -1662,7 +1662,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetBusinessBrandedSettingsUri()
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.BUSINESS_BRANDED_CONTENT_GET_SETTINGS, out var instaUri))
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.BUSINESS_BRANDED_GET_SETTINGS, out var instaUri))
                 throw new Exception("Cant create URI for business branded settings");
             return instaUri;
         }
@@ -1672,6 +1672,13 @@ namespace InstagramApiSharp.Helpers
             if (!Uri.TryCreate(BaseInstagramUri, 
                 string.Format(InstaApiConstants.BUSINESS_BRANDED_USER_SEARCH, query, count), out var instaUri))
                 throw new Exception("Cant create URI for business branded user search");
+            return instaUri;
+        }
+
+        public static Uri GetBusinessBrandedUpdateSettingsUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.BUSINESS_BRANDED_UPDATE_SETTINGS, out var instaUri))
+                throw new Exception("Cant create URI for business branded update settings");
             return instaUri;
         }
     }

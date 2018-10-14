@@ -71,7 +71,7 @@ namespace InstagramApiSharp
         }
         public static string Encode(this long content)
         {
-            return content.Encode();
+            return content.ToString().Encode();
         }
         public static string Encode(this string content)
         {
