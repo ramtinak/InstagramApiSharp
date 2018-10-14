@@ -8,9 +8,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstagramApiSharp", "src\InstagramApiSharp\InstagramApiSharp.csproj", "{2A588963-CEBE-47EC-BFBB-2F3D405E4C80}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{5E33EE0C-BF45-4CC7-A1A0-2C70CACBD2D0}"
-	ProjectSection(SolutionItems) = preProject
-		samples\FacebookLoginWpfExample\FacebookLoginWpfExample.csproj = samples\FacebookLoginWpfExample\FacebookLoginWpfExample.csproj
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChallengeRequireExample", "samples\ChallengeRequireExample\ChallengeRequireExample.csproj", "{B7B5F041-E5C4-4E80-9D54-48C70FF6215B}"
 EndProject
