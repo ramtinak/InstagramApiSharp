@@ -571,6 +571,7 @@ namespace InstagramApiSharp.API
         public const string ADDRESSBOOK_LINK = API_SUFFIX + "/address_book/link/?include=extra_display_name,thumbnails";
         public const string ARCHIVE_REEL_DAY_SHELLS = API_SUFFIX + "/archive/reel/day_shells/?include_cover=0";
         public const string DYI_REQUEST_DOWNLOAD_DATA = API_SUFFIX + "/dyi/request_download_data/";
+        public const string DYI_CHECK_DATA_STATE = API_SUFFIX + "/dyi/check_data_state/";
         public const string DYNAMIC_ONBOARDING_GET_STEPS = API_SUFFIX + "/dynamic_onboarding/get_steps/";
         public const string GET_MEDIAID = API_SUFFIX + "/oembed/?url={0}";
         public const string MEGAPHONE_LOG = API_SUFFIX + "/megaphone/log/";

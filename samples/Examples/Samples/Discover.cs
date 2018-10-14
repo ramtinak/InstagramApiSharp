@@ -55,7 +55,7 @@ SearchPeopleAsync");
             {
                 Console.WriteLine("Recent search count: " + result.Value.Recent?.Count);
                 if (result.Value.Recent?.Count > 0)
-                    Console.WriteLine("First recent search: " + result.Value.Recent?.FirstOrDefault()?.User?.Username);
+                    Console.WriteLine("First recent search: " + result.Value.Recent?.FirstOrDefault()?.User?.UserName);
             }
             else
                 Console.WriteLine("Error while getting recent search: " + result.Info.Message);
@@ -77,9 +77,9 @@ SearchPeopleAsync");
             var result = await _instaApi.DiscoverProcessor.GetSuggestedSearchesAsync(InstaDiscoverSearchType.Blended);
             if (result.Succeeded)
             {
-                Console.WriteLine("Suggested search count: " + result.Value.Recent?.Count);
-                if (result.Value.Recent?.Count > 0)
-                    Console.WriteLine("First suggested search: " + result.Value.Recent?.FirstOrDefault()?.User?.Username);
+                Console.WriteLine("Suggested search count: " + result.Value.Suggested?.Count);
+                if (result.Value.Suggested?.Count > 0)
+                    Console.WriteLine("First suggested search: " + result.Value.Suggested?.FirstOrDefault()?.User?.UserName);
             }
             else
                 Console.WriteLine("Error while getting suggested searchs: " + result.Info.Message);
