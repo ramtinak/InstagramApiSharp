@@ -162,7 +162,7 @@ namespace UwpExample
                 return;
             }
             var caption = CaptionText.Text;
-            if (SelectedFiles.Count == 0)
+            if (SelectedFiles.Count == 1)
             {
                 var file = SelectedFiles.FirstOrDefault();
                 var fileBytes = (await FileIO.ReadBufferAsync(file)).ToArray();

@@ -105,11 +105,15 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             var uploadId = (long) timeSpan.TotalSeconds;
             return uploadId.ToString();
         }
+        //internal static string GenerateRandomUploadIdOLD()
+        //{
+        //    var total = GenerateUploadId();
+        //    var uploadId = total + rnd.Next(11111, 99999).ToString("D5");
+        //    return uploadId;
+        //}
         internal static string GenerateRandomUploadId()
         {
-            var total = GenerateUploadId();
-            var uploadId = total + rnd.Next(11111, 99999).ToString("D5");
-            return uploadId;
+            return DateTime.UtcNow.ToUnixTimeMiliSeconds().ToString();
         }
         public static ApiRequestMessage FromDevice(AndroidDevice device)
         {

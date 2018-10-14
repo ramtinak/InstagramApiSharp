@@ -1036,14 +1036,14 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 var imageContent = new ByteArrayContent(fileBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
+                requestContent.Add(imageContent, "photo",
+                    $"direct_temp_photo_{ApiRequestMessage.GenerateUploadId()}.jpg");
+                var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
                 {
                     UploaderProgress = upProgress
                 };
-                requestContent.Add(progressContent, "photo",
-                    $"direct_temp_photo_{ApiRequestMessage.GenerateUploadId()}.jpg");
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = requestContent;
+                request.Content = progressContent;
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)

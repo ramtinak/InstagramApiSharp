@@ -469,50 +469,45 @@ namespace InstagramApiSharp.API.Processors
                     {"upload_id", uploadId},
                     {"image_compression", "{\"lib_name\":\"moz\",\"lib_version\":\"3.1.m\",\"quality\":\"95\"}"},
                 };
-                //if (isDirectPhoto)
-                //{
-                //}
-                //else
+                var uploadParamsObj = new JObject
                 {
-                    var uploadParamsObj = new JObject
-                    {
-                        {"_csrftoken", _user.CsrfToken},
-                        {"_uid", _user.LoggedInUser.Pk},
-                        {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                        {"media_info", new JObject
-                            {
-                                    {"capture_mode", "normal"},
-                                    {"media_type", 1},
-                                    {"caption", caption ?? string.Empty},
-                                    {"mentions", new JArray()},
-                                    {"hashtags", new JArray()},
-                                    {"locations", new JArray()},
-                                    {"stickers", new JArray()},
-                            }
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"media_info", new JObject
+                        {
+                                {"capture_mode", "normal"},
+                                {"media_type", 1},
+                                {"caption", caption ?? string.Empty},
+                                {"mentions", new JArray()},
+                                {"hashtags", new JArray()},
+                                {"locations", new JArray()},
+                                {"stickers", new JArray()},
                         }
-                    };
-                    request = _httpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetStoryMediaInfoUploadUri(), _deviceInfo, uploadParamsObj);
-                    response = await _httpRequestProcessor.SendAsync(request);
-                    json = await response.Content.ReadAsStringAsync();
-
-
-
-                    var uploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
-                    request = _httpHelper.GetDefaultRequest(HttpMethod.Get, photoUri, _deviceInfo);
-                    request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
-                    request.Headers.Add("X-Instagram-Rupload-Params", uploadParams);
-                    response = await _httpRequestProcessor.SendAsync(request);
-                    json = await response.Content.ReadAsStringAsync();
-
-
-
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        upProgress.UploadState = InstaUploadState.Error;
-                        progress?.Invoke(upProgress);
-                        return Result.UnExpectedResponse<bool>(response, json);
                     }
+                };
+                request = _httpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetStoryMediaInfoUploadUri(), _deviceInfo, uploadParamsObj);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+
+
+
+                var uploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Get, photoUri, _deviceInfo);
+                request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
+                request.Headers.Add("X-Instagram-Rupload-Params", uploadParams);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+
+
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
+                    return Result.UnExpectedResponse<bool>(response, json);
                 }
+
                 upProgress.UploadState = InstaUploadState.UploadingThumbnail;
                 progress?.Invoke(upProgress);
                 var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
@@ -545,7 +540,6 @@ namespace InstagramApiSharp.API.Processors
             {
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
-                //Debug.WriteLine(exception.Message);
                 _logger?.LogException(exception);
                 return Result.Fail<bool>(exception);
             }
@@ -702,6 +696,7 @@ namespace InstagramApiSharp.API.Processors
             };
             try
             {
+              
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
                 var photoHashCode = Path.GetFileName(image.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
                 var photoEntityName = $"{uploadId}_0_{photoHashCode}";
@@ -790,10 +785,13 @@ namespace InstagramApiSharp.API.Processors
                 var rnd = new Random();
                 var data = new JObject
                 {
+                    {"date_time_digitalized", DateTime.UtcNow.ToString("yyyy:MM:dd+hh:mm:ss")},
+                    {"date_time_original", DateTime.UtcNow.ToString("yyyy:MM:dd+hh:mm:ss")},
+                    {"is_suggested_venue", "false"},
                     {"timezone_offset", InstaApiConstants.TIMEZONE_OFFSET.ToString()},
                     {"_csrftoken", _user.CsrfToken},
                     {"media_folder", "Camera"},
-                    {"source_type", "4"},
+                    {"source_type", "3"},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"caption", caption ?? string.Empty},

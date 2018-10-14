@@ -384,15 +384,16 @@ namespace InstagramApiSharp.API.Processors
                         var imageContent = new ByteArrayContent(fileBytes);
                         imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                         imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                        var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
+                        requestContent.Add(imageContent, "photo",
+                            $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
+
+                        var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
                         {
                             UploaderProgress = upProgress
                         };
-                        requestContent.Add(progressContent, "photo",
-                            $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
 
                         var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                        request.Content = requestContent;
+                        request.Content = progressContent;
                         var response = await _httpRequestProcessor.SendAsync(request);
                         var json = await response.Content.ReadAsStringAsync();
                         if (response.IsSuccessStatusCode)
@@ -468,13 +469,13 @@ namespace InstagramApiSharp.API.Processors
                         videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
                         videoContent.Headers.Add("Content-Type", "application/octet-stream");
                         videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4")}\"");
-                        var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
+                        requestContent.Add(videoContent);
+                        var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
                         {
                             UploaderProgress = upProgress
                         };
-                        requestContent.Add(progressContent);
                         request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                        request.Content = requestContent;
+                        request.Content = progressContent;
                         request.Headers.Host = "upload.instagram.com";
                         request.Headers.Add("Cookie2", "$Version=1");
                         request.Headers.Add("Session-ID", uploadId);
@@ -636,13 +637,15 @@ namespace InstagramApiSharp.API.Processors
                 videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 videoContent.Headers.Add("Content-Type", "application/octet-stream");
                 videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4")}\"");
-                var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
+                requestContent.Add(videoContent);
+
+                var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
                 {
                     UploaderProgress = upProgress
                 };
-                requestContent.Add(progressContent);
+                
                 request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = requestContent;
+                request.Content = progressContent;
                 request.Headers.Host = "upload.instagram.com";
                 request.Headers.Add("Cookie2", "$Version=1");
                 request.Headers.Add("Session-ID", uploadId);
@@ -847,17 +850,18 @@ namespace InstagramApiSharp.API.Processors
                 }
                 upProgress.UploadState = InstaUploadState.Configured;
                 progress?.Invoke(upProgress);
-                var success = await ExposeVideoAsync(uploadId, caption, location);
-                if (success.Succeeded)
-                {
-                    upProgress.UploadState = InstaUploadState.Completed;
-                    progress?.Invoke(upProgress);
-                    return success;
-                }
 
-                upProgress.UploadState = InstaUploadState.Error;
-                progress?.Invoke(upProgress);
-                return Result.Fail<InstaMedia>("Cannot expose media");
+                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaItemResponse>(json,
+                                    new InstaMediaDataConverter());
+                var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
+                var obj = converter.Convert();
+                if (obj.Caption == null && !string.IsNullOrEmpty(caption))
+                {
+                    var editedMedia = await _instaApi.MediaProcessor.EditMediaAsync(obj.InstaIdentifier, caption, location);
+                    if (editedMedia.Succeeded)
+                        return Result.Success(editedMedia.Value);
+                }
+                return Result.Success(obj);
             }
             catch (Exception exception)
             {
@@ -867,7 +871,13 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
-
+        /// <summary>
+        ///     Deprecated
+        /// </summary>
+        /// <param name="uploadId"></param>
+        /// <param name="caption"></param>
+        /// <param name="location"></param>
+        /// <returns></returns>
         private async Task<IResult<InstaMedia>> ExposeVideoAsync(string uploadId, string caption, InstaLocationShort location)
         {
             try

@@ -62,15 +62,15 @@ namespace InstagramApiSharp.Helpers
                 {
                     while (true)
                     {
-                        var length = inputStream.Read(buffer, 0, buffer.Length);
+                        var length = await inputStream.ReadAsync(buffer, 0, buffer.Length);
                         if (length <= 0) break;
                         uploadedBytes += length;
                         Invoke(uploadedBytes, size);
-                        stream.Write(buffer, 0, length);
-                        stream.Flush();
+                        await stream.WriteAsync(buffer, 0, length);
+                        await stream.FlushAsync();
                     }
                 }
-                stream.Flush();
+                await stream.FlushAsync();
             });
         }
         void Invoke(long bytes, long size)
