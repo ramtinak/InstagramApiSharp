@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.3.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.3.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -71,9 +71,17 @@ Task<IResult<object>>
 ```
 
 ## Wiki
-Check [Wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
+Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.3.1
+- [Add] Get branded content approval to BusinessProcessor
+- [Add] Search branded users to BusinessProcessor
+- [Add] Enable/disable branded approval to BusinessProcessor
+- [Add] Remove/add users to branded whitelist to BusinessProcessor
+- [Add] Add users to group threads
+- [Bugfix] For uploading photo/video/album
+
 v1.1.3.0
 - [Add] Suggested users
 - [Add] Follow/Unfollow hashtags
