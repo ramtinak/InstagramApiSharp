@@ -286,6 +286,7 @@ namespace InstagramApiSharp.API
 
         #region Feed endpoints constants
 
+        public const string FEED_ONLY_ME_FEED = API_SUFFIX + "/feed/only_me_feed/";
         /// <summary>
         /// {0} = rank token <<<<< this endpoint is deprecated
         /// </summary>
@@ -467,7 +468,7 @@ namespace InstagramApiSharp.API
         ///  <para>include_inactive_reel=true</para>
         /// </summary>
         public const string MEDIA_INFOS = API_SUFFIX + "/media/infos/";
-
+        public const string MEDIA_CONFIGURE_NAMETAG = API_SUFFIX + "/media/configure_to_nametag/";
         public const string MEDIA_INLINE_COMMENTS = API_SUFFIX + "/media/{0}/comments/{1}/inline_child_comments/";
         public const string MEDIA_LIKERS = API_SUFFIX + "/media/{0}/likers/";
         public const string MEDIA_REPORT = API_SUFFIX + "/media/{0}/flag_media/";
@@ -554,7 +555,8 @@ namespace InstagramApiSharp.API
         public const string USERS_SET_REEL_SETTINGS = API_SUFFIX + "/users/set_reel_settings/";
         public const string USERS_FOLLOWING_TAG_INFO = API_SUFFIX + "/users/{0}/following_tags_info/";
         public const string USERS_FULL_DETAIL_INFO = API_SUFFIX + "/users/{0}/full_detail_info/";
-        
+        public const string USERS_NAMETAG_LOOKUP = API_SUFFIX + "/users/nametag_lookup/";
+
         #endregion Users endpoints constants
 
         #region Upload endpoints constants

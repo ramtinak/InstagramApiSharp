@@ -104,6 +104,12 @@ namespace InstagramApiSharp.API.Processors
         ///     <see cref="InstaUser" />
         /// </returns>
         Task<IResult<InstaUser>> GetUserAsync(string username);
+       
+        /// <summary>
+        ///     Get user from a nametag image
+        /// </summary>
+        /// <param name="nametagImage">Nametag image</param>
+        Task<IResult<InstaUser>> GetUserFromNametagAsync(InstaImage nametagImage);
 
         /// <summary>
         ///     Get followers list by username asynchronously

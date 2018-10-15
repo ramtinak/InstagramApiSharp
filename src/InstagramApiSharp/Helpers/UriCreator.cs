@@ -1681,5 +1681,26 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for business branded update settings");
             return instaUri;
         }
+
+        public static Uri GetMediaNametagConfigureUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.MEDIA_CONFIGURE_NAMETAG, out var instaUri))
+                throw new Exception("Cant create URI for media nametag configure");
+            return instaUri;
+        }
+
+        public static Uri GetUsersNametagLookupUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USERS_NAMETAG_LOOKUP, out var instaUri))
+                throw new Exception("Cant create URI for users nametag lookup");
+            return instaUri;
+        }
+
+        public static Uri GetUsersNametagConfigUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USERS_NAMETAG_CONFIG, out var instaUri))
+                throw new Exception("Cant create URI for users nametag config");
+            return instaUri;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -411,6 +412,62 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        /// <summary>
+        ///     Get user from a nametag image
+        /// </summary>
+        /// <param name="nametagImage">Nametag image</param>
+        public async Task<IResult<InstaUser>> GetUserFromNametagAsync(InstaImage nametagImage)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetUsersNametagLookupUri();
+                var uploadId = ApiRequestMessage.GenerateUploadId();
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"gallery", "true"},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"waterfall_id", Guid.NewGuid().ToString()},
+                };
+                var signedBody = _httpHelper.GetSignature(data);
+
+                var requestContent = new MultipartFormDataContent(uploadId)
+                {
+                    {new StringContent(InstaApiConstants.IG_SIGNATURE_KEY_VERSION), InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION},
+                    {new StringContent(signedBody), "signed_body"},
+                };
+                byte[] fileBytes;
+                if (nametagImage.ImageBytes == null)
+                    fileBytes = File.ReadAllBytes(nametagImage.Uri);
+                else
+                    fileBytes = nametagImage.ImageBytes;
+
+                var imageContent = new ByteArrayContent(fileBytes);
+                imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+                imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                requestContent.Add(imageContent, "photo_0", "photo_0");
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
+                request.Content = requestContent;
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.Fail<InstaUser>("User not found.");
+                //{"message": "No user found for 3", "username": "3", "failure_code": 602, "failure_reason": "user_not_found_for_username", "status": "fail"}
+                //{"message": "Scan was below 95, got 90.0779664516449", "confidence": 90.0779664516449, "username": "9", "failure_code": 601, "failure_reason": "confidence_below_threshold", "status": "fail"}
+
+                var obj = JsonConvert.DeserializeObject<InstaUserContainerResponse>(json);
+
+                var converter = ConvertersFabric.Instance.GetUserConverter(obj.User);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUser>(exception.Message);
+            }
+        }
         /// <summary>
         ///     Get followers list by username asynchronously
         /// </summary>
