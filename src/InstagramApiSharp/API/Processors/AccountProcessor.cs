@@ -492,6 +492,15 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaRequestDownloadData>(exception);
             }
         }
+        /// <summary>
+        ///     Upload nametag image
+        /// </summary>
+        /// <param name="nametagImage">Nametag image</param>
+        public async Task<IResult<InstaMedia>> UploadNametagAsync(InstaImage nametagImage)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(null, nametagImage, null, null, true);
+        }
         #endregion Profile edit
 
         #region Story settings

@@ -687,7 +687,8 @@ namespace InstagramApiSharp.API.Processors
         }
 
 
-        public async Task<IResult<InstaMedia>> SendMediaPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption, InstaLocationShort location)
+        public async Task<IResult<InstaMedia>> SendMediaPhotoAsync(Action<InstaUploaderProgress> progress,
+            InstaImage image, string caption, InstaLocationShort location, bool configureAsNameTag = false)
         {
             var upProgress = new InstaUploaderProgress
             {
@@ -757,6 +758,8 @@ namespace InstagramApiSharp.API.Processors
                     upProgress = progressContent.UploaderProgress;
                     upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
                     progress?.Invoke(upProgress);
+                    if (configureAsNameTag)
+                        return await ConfigureMediaPhotoAsNametagAsync(progress, upProgress, uploadId);
                     return await ConfigureMediaPhotoAsync(progress, upProgress, uploadId, caption, location);
                 }
     
@@ -773,7 +776,8 @@ namespace InstagramApiSharp.API.Processors
             }
 
         }
-        private async Task<IResult<InstaMedia>> ConfigureMediaPhotoAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, string uploadId, string caption, InstaLocationShort location)
+        private async Task<IResult<InstaMedia>> ConfigureMediaPhotoAsync(Action<InstaUploaderProgress> progress,
+            InstaUploaderProgress upProgress, string uploadId, string caption, InstaLocationShort location)
         {
             try
             {
@@ -781,7 +785,6 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 var instaUri = UriCreator.GetMediaConfigureUri();
                 var retryContext = GetRetryContext();
-                var clientContext = Guid.NewGuid().ToString();
                 var rnd = new Random();
                 var data = new JObject
                 {
@@ -816,7 +819,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     data.Add("location", location.GetJson());
                 }
-                data.ToString(Formatting.Indented).PrintInDebug();
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Add("retry_context", retryContext);
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -854,6 +856,55 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        private async Task<IResult<InstaMedia>> ConfigureMediaPhotoAsNametagAsync(Action<InstaUploaderProgress> progress,
+            InstaUploaderProgress upProgress, string uploadId)
+        {
+            try
+            {
+                upProgress.UploadState = InstaUploadState.Configuring;
+                progress?.Invoke(upProgress);
+                var instaUri = UriCreator.GetMediaNametagConfigureUri();
+                var retryContext = GetRetryContext();
+                var data = new JObject
+                {
+                    {"upload_id", uploadId},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Add("retry_context", retryContext);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                var mediaResponse =
+                     JsonConvert.DeserializeObject<InstaMediaItemResponse>(json, new InstaMediaDataConverter());
+                var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
+                var obj = converter.Convert();
+                //{
+                //	"_csrftoken": "5zpWUcNSwJQuYlua9fKDWWXzUhUofqul",
+                //	"selfie_sticker": "1",
+                //	"_uid": "7405924766",
+                //	"mode": "2",
+                //	"gradient": "0",
+                //	"_uuid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
+                //	"emoji": "😀"
+                //} 
+                upProgress.UploadState = InstaUploadState.Configured;
+                progress?.Invoke(upProgress);
+
+                upProgress.UploadState = InstaUploadState.Completed;
+                progress?.Invoke(upProgress);
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMedia>(exception);
+            }
+        }
 
 
 

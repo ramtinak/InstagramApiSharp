@@ -101,6 +101,12 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="name">Name</param>
         /// <param name="phoneNumber">Phone number</param>        
         Task<IResult<bool>> SetNameAndPhoneNumberAsync(string name, string phoneNumber = "");
+        /// <summary>
+        ///     Upload nametag image
+        /// </summary>
+        /// <param name="nametagImage">Nametag image</param>
+        Task<IResult<InstaMedia>> UploadNametagAsync(InstaImage nametagImage);
+
         #endregion Edit profile
 
         #region Story settings
