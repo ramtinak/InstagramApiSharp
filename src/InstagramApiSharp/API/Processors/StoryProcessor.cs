@@ -356,7 +356,7 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetSeenMediaStoryUri();
+                var instaUri = new Uri("https://i.instagram.com/api/v2/media/seen/?reel=1&live_vod=0")/*UriCreator.GetSeenMediaStoryUri()*/;
                 var storyId = $"{storyMediaId}_{storyMediaId.Split('_')[1]}";
                 var dateTimeUnix = DateTime.UtcNow.ToUnixTime();
                 var reel = new JObject
