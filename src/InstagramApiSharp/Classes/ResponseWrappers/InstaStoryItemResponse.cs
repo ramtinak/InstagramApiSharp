@@ -5,6 +5,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaStoryItemResponse
     {
+        [JsonProperty("show_one_tap_fb_share_tooltip")] public bool ShowOneTapTooltip { get; set; }
+
         [JsonProperty("has_liked")] public bool HasLiked { get; set; }
 
         [JsonProperty("code")] public string Code { get; set; }
@@ -83,7 +85,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("story_hashtags")] public List<InstaReelMentionResponse> StoryHashtags { get; set; }
 
-        [JsonProperty("story_feed_media")] public List<object> StoryFeedMedia { get; set; }
+        [JsonProperty("story_feed_media")] public List<InstaStoryFeedMediaResponse> StoryFeedMedia { get; set; }
 
         [JsonProperty("story_locations")] public List<InstaLocationResponse> StoryLocations { get; set; }
 

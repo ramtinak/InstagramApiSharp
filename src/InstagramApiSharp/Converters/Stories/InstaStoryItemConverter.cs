@@ -37,7 +37,9 @@ namespace InstagramApiSharp.Converters
                 VideoDuration = SourceObject.VideoDuration ?? 0,
                 AdAction = SourceObject.AdAction,
                 SupportsReelReactions = SourceObject.SupportsReelReactions,
-                StoryCTA = SourceObject.StoryCTA
+                StoryCTA = SourceObject.StoryCTA,
+                ShowOneTapTooltip = SourceObject.ShowOneTapTooltip,
+                StoryFeedMedia = SourceObject.StoryFeedMedia
             };
 
             if (SourceObject.User != null)

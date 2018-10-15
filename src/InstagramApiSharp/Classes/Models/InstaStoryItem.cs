@@ -6,6 +6,8 @@ namespace InstagramApiSharp.Classes.Models
 {
     public class InstaStoryItem
     {
+        public bool ShowOneTapTooltip { get; set; }
+
         public bool HasLiked { get; set; }
 
         public string Code { get; set; }
@@ -77,6 +79,8 @@ namespace InstagramApiSharp.Classes.Models
         public bool SupportsReelReactions { get; set; }
 
         public List<StoryCTA> StoryCTA { get; set; }
+
+        public List<InstaStoryFeedMediaResponse> StoryFeedMedia { get; set; }
 
         public InstaUserShort User { get; set; }
 
