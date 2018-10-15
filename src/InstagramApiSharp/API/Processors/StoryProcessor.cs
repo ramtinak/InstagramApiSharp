@@ -368,6 +368,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"container_module", "feed_timeline"},
                     {"live_vods_skipped", new JObject()},
                     {"nuxes_skipped", new JObject()},
                     {"nuxes", new JObject()},
