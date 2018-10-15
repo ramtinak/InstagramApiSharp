@@ -544,17 +544,17 @@ namespace InstagramApiSharp.API
         public const string GET_USER_INFO_BY_ID = API_SUFFIX + "/users/{0}/info/";
         public const string GET_USER_INFO_BY_USERNAME = API_SUFFIX + "/users/{0}/usernameinfo/";
         public const string SEARCH_USERS = API_SUFFIX + "/users/search";
-        public const string USER_CHECK_EMAIL = API_SUFFIX + "/users/check_email/";
-        public const string USER_CHECK_USERNAME = API_SUFFIX + "/users/check_username/";
-        public const string USER_LOOKUP = API_SUFFIX + "/users/lookup/";
-        public const string USER_NAMETAG_CONFIG = API_SUFFIX + "/users/nametag_config/";
-        public const string USER_REEL_SETTINGS = API_SUFFIX + "/users/reel_settings/";
-        public const string USER_REPORT = API_SUFFIX + "/users/{0}/flag_user/";
-        public const string USER_SEARCH = API_SUFFIX + "/users/search/?timezone_offset={0}&q={1}&count={2}";
-        public const string USER_SET_REEL_SETTINGS = API_SUFFIX + "/users/set_reel_settings/";
+        public const string USERS_CHECK_EMAIL = API_SUFFIX + "/users/check_email/";
+        public const string USERS_CHECK_USERNAME = API_SUFFIX + "/users/check_username/";
+        public const string USERS_LOOKUP = API_SUFFIX + "/users/lookup/";
+        public const string USERS_NAMETAG_CONFIG = API_SUFFIX + "/users/nametag_config/";
+        public const string USERS_REEL_SETTINGS = API_SUFFIX + "/users/reel_settings/";
+        public const string USERS_REPORT = API_SUFFIX + "/users/{0}/flag_user/";
+        public const string USERS_SEARCH = API_SUFFIX + "/users/search/?timezone_offset={0}&q={1}&count={2}";
+        public const string USERS_SET_REEL_SETTINGS = API_SUFFIX + "/users/set_reel_settings/";
         public const string USERS_FOLLOWING_TAG_INFO = API_SUFFIX + "/users/{0}/following_tags_info/";
         public const string USERS_FULL_DETAIL_INFO = API_SUFFIX + "/users/{0}/full_detail_info/";
-
+        
         #endregion Users endpoints constants
 
         #region Upload endpoints constants

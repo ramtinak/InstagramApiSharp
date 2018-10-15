@@ -288,7 +288,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetCheckEmailUri()
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USER_CHECK_EMAIL, out var instaUri))
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USERS_CHECK_EMAIL, out var instaUri))
                 throw new Exception("Cant create URI for check email");
             return instaUri;
         }
@@ -302,7 +302,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetCheckUsernameUri()
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USER_CHECK_USERNAME, out var instaUri))
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USERS_CHECK_USERNAME, out var instaUri))
                 throw new Exception("Cant create URI for check username");
             return instaUri;
         }
@@ -1161,7 +1161,7 @@ namespace InstagramApiSharp.Helpers
         public static Uri GetReportUserUri(long userId)
         {
             if (
-                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USER_REPORT, userId),
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USERS_REPORT, userId),
                     out var instaUri))
                 throw new Exception("Cant create URI for report user");
             return instaUri;
@@ -1204,7 +1204,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetSearchUserUri(string text, int count = 30)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USER_SEARCH,
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USERS_SEARCH,
                 TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalSeconds, text, count), out var instaUri))
                 throw new Exception("Cant create URI for search user");
             return instaUri;
@@ -1270,7 +1270,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetSetReelSettingsUri()
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USER_SET_REEL_SETTINGS, out var instaUri))
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USERS_SET_REEL_SETTINGS, out var instaUri))
                 throw new Exception("Cant create URI for set reel settings");
             return instaUri;
         }
@@ -1329,7 +1329,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetStorySettingsUri()
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USER_REEL_SETTINGS, out var instaUri))
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USERS_REEL_SETTINGS, out var instaUri))
                 throw new Exception("Cant create URI for story settings");
             return instaUri;
         }
