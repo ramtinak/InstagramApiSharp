@@ -357,7 +357,8 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetSeenMediaStoryUri();
-                var storyId = $"{storyMediaId}_{_user.LoggedInUser.Pk}";
+                //var storyId = $"{storyMediaId}_{_user.LoggedInUser.Pk}";
+                var storyId = storyMediaId;
                 var dateTimeUnix = ApiRequestMessage.GenerateUploadId();
                 var reel = new JObject
                 {
