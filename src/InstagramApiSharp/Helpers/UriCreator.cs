@@ -1585,6 +1585,15 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
+        public static Uri GetSelfMediaFeedsListUri(string nextId = "")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FEED_ONLY_ME_FEED, out var instaUri))
+                throw new Exception("Cant create URI for self media feeds");
+            return !string.IsNullOrEmpty(nextId)
+                ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
+                : instaUri;
+        }
+
         public static Uri GetUsernameSuggestionsUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_USERNAME_SUGGESTIONS, out var instaUri))
