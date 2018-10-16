@@ -459,8 +459,8 @@ namespace InstagramApiSharp.Helpers
                 !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_DIRECT_THREAD, threadId),
                     out var instaUri)) throw new Exception("Cant create URI for get inbox thread by id");
             return !string.IsNullOrEmpty(NextId)
-                ? new UriBuilder(instaUri) { Query = $"cursor={NextId}" }.Uri
-                : instaUri;
+                ? new UriBuilder(instaUri) { Query = $"use_unified_inbox=true&cursor={NextId}&direction=older" }.Uri
+                : new UriBuilder(instaUri) { Query = $"use_unified_inbox=true" }.Uri;
         }
 
         public static Uri GetDirectInboxUri(string NextId = "")
@@ -468,8 +468,8 @@ namespace InstagramApiSharp.Helpers
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_DIRECT_INBOX, out var instaUri))
                 throw new Exception("Cant create URI for get inbox");
             return !string.IsNullOrEmpty(NextId)
-                ? new UriBuilder(instaUri) { Query = $"visual_message_return_type=unseen&persistentBadging=true&use_unified_inbox=true&cursor={NextId}" }.Uri
-                 : new UriBuilder(instaUri) { Query = "visual_message_return_type=unseen&persistentBadging=true&use_unified_inbox=true" }.Uri;
+                ? new UriBuilder(instaUri) { Query = $"persistentBadging=true&use_unified_inbox=true&cursor={NextId}&direction=older" }.Uri
+                 : new UriBuilder(instaUri) { Query = "persistentBadging=true&use_unified_inbox=true" }.Uri;
             //: instaUri;
             //        return instaUri
             ////GET /api/v1/direct_v2/inbox/?visual_message_return_type=unseen&persistentBadging=true&use_unified_inbox=true

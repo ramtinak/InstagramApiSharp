@@ -175,6 +175,7 @@ namespace InstagramApiSharp.API.Processors
                 if (!inbox.Succeeded)
                     return Result.Fail<InstaDirectInboxContainer>(inbox.Info.Message);
                 var inboxResponse = inbox.Value;
+                paginationParameters.NextId = inboxResponse.Inbox.OldestCursor;
                 var pagesLoaded = 1;
                 while (inboxResponse.Inbox.HasOlder
                       && !string.IsNullOrEmpty(inboxResponse.Inbox.OldestCursor)
@@ -227,6 +228,7 @@ namespace InstagramApiSharp.API.Processors
                 }
 
                 var threadResponse = thread.Value;
+                paginationParameters.NextId = threadResponse.OldestCursor;
                 var pagesLoaded = 1;
 
                 while (threadResponse.HasOlder
@@ -302,6 +304,7 @@ namespace InstagramApiSharp.API.Processors
                 if (!inbox.Succeeded)
                     return Result.Fail<InstaDirectInboxContainer>(inbox.Info.Message);
                 var inboxResponse = inbox.Value;
+                paginationParameters.NextId = inboxResponse.Inbox.OldestCursor;
                 var pagesLoaded = 1;
                 while (inboxResponse.Inbox.HasOlder
                       && !string.IsNullOrEmpty(inboxResponse.Inbox.OldestCursor)

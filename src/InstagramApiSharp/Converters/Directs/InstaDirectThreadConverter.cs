@@ -33,9 +33,9 @@ namespace InstagramApiSharp.Converters
                 ReshareReceiveCount = SourceObject.ReshareReceiveCount,
                 ReshareSendCount = SourceObject.ReshareSendCount,
                 ExpiringMediaReceiveCount = SourceObject.ExpiringMediaReceiveCount,
-                ExpiringMediaSendCount = SourceObject.ExpiringMediaSendCount
+                ExpiringMediaSendCount = SourceObject.ExpiringMediaSendCount,
+                NewestCursor = SourceObject.NewestCursor
             };
-            //thread.OldestCursor = thread.OldestCursor;
             thread.ThreadType = SourceObject.ThreadType;
             thread.Title = SourceObject.Title;
             if (SourceObject.Inviter != null)
@@ -61,6 +61,16 @@ namespace InstagramApiSharp.Converters
                 {
                     var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
                     thread.Users.Add(converter.Convert());
+                }
+            }
+
+            if (SourceObject.LeftUsers != null && SourceObject.LeftUsers.Count > 0)
+            {
+                thread.LeftUsers = new InstaUserShortList();
+                foreach (var user in SourceObject.LeftUsers)
+                {
+                    var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
+                    thread.LeftUsers.Add(converter.Convert());
                 }
             }
 

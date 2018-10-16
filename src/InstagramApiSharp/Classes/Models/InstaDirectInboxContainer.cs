@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace InstagramApiSharp.Classes.Models
 {
@@ -13,5 +14,7 @@ namespace InstagramApiSharp.Classes.Models
         public InstaDirectInbox Inbox { get; set; } = new InstaDirectInbox();
 
         public List<InstaUserShort> PendingUsers { get; set; } = new List<InstaUserShort>();
+
+        public DateTime SnapshotAt { get; set; }
     }
 }

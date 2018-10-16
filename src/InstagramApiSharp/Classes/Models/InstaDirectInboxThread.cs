@@ -7,7 +7,7 @@ namespace InstagramApiSharp.Classes.Models
     {
         public bool Muted { get; set; }
 
-        public List<InstaUserShort> Users { get; set; }
+        public List<InstaUserShort> Users { get; set; } = new List<InstaUserShort>();
 
         public string Title { get; set; }
 
@@ -16,28 +16,27 @@ namespace InstagramApiSharp.Classes.Models
         public DateTime LastActivity { get; set; }
 
         public string VieweId { get; set; }
+
         public string ThreadId { get; set; }
+
         public bool HasOlder { get; set; }
 
         public InstaUserShort Inviter { get; set; }
+
         public bool Named { get; set; }
+
         public bool Pending { get; set; }
 
         public bool Canonical { get; set; }
 
         public bool HasNewer { get; set; }
 
-
         public bool IsSpam { get; set; }
-
 
         public InstaDirectThreadType ThreadType { get; set; }
 
-
         public List<InstaDirectInboxItem> Items { get; set; }
-
-
-
+        
         public bool IsPin { get; set; }
 
         public bool ValuedRequest { get; set; }
@@ -57,5 +56,9 @@ namespace InstagramApiSharp.Classes.Models
         public int ExpiringMediaReceiveCount { get; set; }
 
         public List<InstaLastSeen> LastSeenAt { get; set; }
+
+        public List<InstaUserShort> LeftUsers { get; set; } = new List<InstaUserShort>();
+
+        public string NewestCursor { get; set; }
     }
 }

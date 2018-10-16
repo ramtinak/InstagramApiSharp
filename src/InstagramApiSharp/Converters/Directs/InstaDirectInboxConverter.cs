@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
+using InstagramApiSharp.Helpers;
 
 namespace InstagramApiSharp.Converters
 {
@@ -14,7 +15,8 @@ namespace InstagramApiSharp.Converters
             var inbox = new InstaDirectInboxContainer
             {
                 PendingRequestsCount = SourceObject.PendingRequestsCount,
-                SeqId = SourceObject.SeqId
+                SeqId = SourceObject.SeqId,
+                SnapshotAt = DateTimeHelper.FromUnixTimeSeconds(SourceObject.SnapshotAtMs ?? 0)
             };
             if (SourceObject.Subscription != null)
             {

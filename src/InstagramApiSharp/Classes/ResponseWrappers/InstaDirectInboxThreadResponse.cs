@@ -60,6 +60,10 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("expiring_media_receive_count")] public int ExpiringMediaReceiveCount { get; set; }
 
+        [JsonProperty("left_users")] public List<InstaUserShortResponse> LeftUsers { get; set; }
+
+        [JsonProperty("newest_cursor")] public string NewestCursor { get; set; }
+
 
         [JsonProperty("last_seen_at")] public object LastSeenAt { get; set; }
 
