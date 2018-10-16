@@ -37,10 +37,11 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get direct inbox threads for current user asynchronously
         /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaDirectInboxContainer" />
         /// </returns>
-        Task<IResult<InstaDirectInboxContainer>> GetDirectInboxAsync(string nextOrCursorId = "");
+        Task<IResult<InstaDirectInboxContainer>> GetDirectInboxAsync(PaginationParameters paginationParameters);
         /// <summary>
         ///     Get direct inbox thread by its id asynchronously
         /// </summary>

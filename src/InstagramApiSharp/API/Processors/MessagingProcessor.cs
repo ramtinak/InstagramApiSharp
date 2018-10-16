@@ -154,22 +154,43 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get direct inbox threads for current user asynchronously
         /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaDirectInboxContainer" />
         /// </returns>
-        public async Task<IResult<InstaDirectInboxContainer>> GetDirectInboxAsync(string nextOrCursorId = "")
+        public async Task<IResult<InstaDirectInboxContainer>> GetDirectInboxAsync(PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var directInboxUri = UriCreator.GetDirectInboxUri(nextOrCursorId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                //Debug.WriteLine(json);
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaDirectInboxContainer>(response, json);
-                var inboxResponse = JsonConvert.DeserializeObject<InstaDirectInboxContainerResponse>(json);
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                InstaDirectInboxContainer Convert(InstaDirectInboxContainerResponse inboxContainerResponse)
+                {
+                    return ConvertersFabric.Instance.GetDirectInboxConverter(inboxContainerResponse).Convert();
+                }
+
+                var inbox = await GetDirectInbox(paginationParameters.NextId);
+                if (!inbox.Succeeded)
+                    return Result.Fail<InstaDirectInboxContainer>(inbox.Info.Message);
+                var inboxResponse = inbox.Value;
+                var pagesLoaded = 1;
+                while (inboxResponse.Inbox.HasOlder
+                      && !string.IsNullOrEmpty(inboxResponse.Inbox.OldestCursor)
+                      && pagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var nextInbox = await GetDirectInbox(inboxResponse.Inbox.OldestCursor);
+
+                    if (!nextInbox.Succeeded)
+                        return Result.Fail(nextInbox.Info, Convert(nextInbox.Value));
+
+                    inboxResponse.Inbox.OldestCursor = paginationParameters.NextId = nextInbox.Value.Inbox.OldestCursor;
+                    inboxResponse.Inbox.HasOlder = nextInbox.Value.Inbox.HasOlder;
+                    inboxResponse.Inbox.Threads.AddRange(nextInbox.Value.Inbox.Threads);
+                    pagesLoaded++;
+                }
+
                 return Result.Success(ConvertersFabric.Instance.GetDirectInboxConverter(inboxResponse).Convert());
             }
             catch (Exception exception)
@@ -1073,5 +1094,28 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 return Result.Fail<bool>(exception);
             }
         }
+        private async Task<IResult<InstaDirectInboxContainerResponse>> GetDirectInbox(string maxId = null)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var directInboxUri = UriCreator.GetDirectInboxUri(maxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaDirectInboxContainerResponse>(response, json);
+                var inboxResponse = JsonConvert.DeserializeObject<InstaDirectInboxContainerResponse>(json);
+                return Result.Success(inboxResponse);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaDirectInboxContainerResponse>(exception.Message);
+            }
+        }
+
+
     }
 }
