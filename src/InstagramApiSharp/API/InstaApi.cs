@@ -1427,7 +1427,7 @@ namespace InstagramApiSharp.API
                     {
                         ValidateUserAsync(obj.LoggedInUser, csrftoken);
                         await Task.Delay(3000);
-                        await _messagingProcessor.GetDirectInboxAsync();
+                        await _messagingProcessor.GetDirectInboxAsync(PaginationParameters.MaxPagesToLoad(1));
                         await _feedProcessor.GetRecentActivityFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
                         return Result.Success(InstaLoginResult.Success);

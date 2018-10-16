@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.3.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.3.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -74,6 +74,14 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.3.2
+- [Add] StoryFeedMedia and ShowOneTapTooltip to InstaStoryItem
+- [Add] Get user from nametag image
+- [Add] Upload nametag image
+- [Add] PaginationParameters to GetDirectInboxAsync
+- [Add] PaginationParameters to GetDirectInboxThreadAsync
+- [Add] PaginationParameters to GetPendingDirectAsync
+
 v1.1.3.1
 - [Add] Get branded content approval to BusinessProcessor
 - [Add] Search branded users to BusinessProcessor
@@ -100,51 +108,6 @@ v1.1.3.0
 
 v1.1.2.8
 - [Bugfix] for uploading album (photos)
-
-v1.1.2.7
-- [Support] DebugLogger for uwp
-
-v1.1.2.6
-- [Add] SetRequestDelay to IInstaApi
-- [Wiki update] for [FAQ page](https://github.com/ramtinak/InstagramApiSharp/wiki/FAQ)
-
-v1.1.2.5
-- [Bugfix] for uploading video album (thx to [@rasaradin](https://github.com/rasaradin) for report)
-
-v1.1.2.4
-- [Add] ValidateUrlAsync to BusinessProcessor
-- [Add] GetBusinessPartnersButtonsAsync to BusinessProcessor
-- [Add] AddOrChangeBusinessButtonAsync to BusinessProcessor
-- [Add] RemoveBusinessButtonAsync to BusinessProcessor
-- [Add] GetSuggestedCategoriesAsync to BusinessProcessor
-- [Add] GetCategoriesAsync to BusinessProcessor
-- [Add] GetSubCategoriesAsync to BusinessProcessor
-- [Add] SearchCityLocationAsync to BusinessProcessor
-- [Add] ChangeBusinessCategoryAsync to BusinessProcessor
-- [Add] GetBusinessAccountInformationAsync to BusinessProcessor
-- [Add] RemoveBusinessLocationAsync to BusinessProcessor
-- [Add] UpdateBusinessInfoAsync to BusinessProcessor
-
-v1.1.2.3
-- [Bugfix] for [#58](https://github.com/ramtinak/InstagramApiSharp/issues/58) (thx to [@mstrifonov](https://github.com/mstrifonov) and [@murdock477](https://github.com/murdock477) for report and tests)
-
-v1.1.2.2
-- [Change] minimun target platform to 10240(uwp)
-
-v1.1.2.1
-- [Update] edit media function (location support)
-- [Bugfix] for caption in upload photo [large photo]
-- [Bugfix] for caption in upload video [large video]
-- [Bugfix] for caption in upload album [large album]
-
-v1.1.2.0
-- [Bugfix] for [#55](https://github.com/ramtinak/InstagramApiSharp/issues/55) and add some properties to InstaFeed
-- [Bugfix] for [#53](https://github.com/ramtinak/InstagramApiSharp/issues/53) and add some properties to InstaRecentActivityFeed
-- [Add] Set accept language to InstaApi (thx to [@Lorymi](https://github.com/Lorymi) )
-- [Cleanup] and code refactoring some classes
-- [Add] Report media to MediaProcessor
-- [Add] Report user to UserProcessor
-- [Add] Business support to IInstaApi.BusinessProcessor
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
