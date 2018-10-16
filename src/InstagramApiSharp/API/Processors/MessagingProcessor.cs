@@ -203,24 +203,43 @@ namespace InstagramApiSharp.API.Processors
         ///     Get direct inbox thread by its id asynchronously
         /// </summary>
         /// <param name="threadId">Thread id</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <returns>
         ///     <see cref="InstaDirectInboxThread" />
         /// </returns>
-        public async Task<IResult<InstaDirectInboxThread>> GetDirectInboxThreadAsync(string threadId, string nextOrCursorId = "")
+        public async Task<IResult<InstaDirectInboxThread>> GetDirectInboxThreadAsync(string threadId, PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var directInboxUri = UriCreator.GetDirectInboxThreadUri(threadId, nextOrCursorId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
+                var thread = await GetDirectInboxThread(threadId, paginationParameters.NextId);
+                if (!thread.Succeeded)
+                    return Result.Fail<InstaDirectInboxThread>(thread.Info.Message);
+                InstaDirectInboxThread Convert(InstaDirectInboxThreadResponse inboxThreadResponse)
+                {
+                    return ConvertersFabric.Instance.GetDirectThreadConverter(inboxThreadResponse).Convert();
+                }
 
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaDirectInboxThread>(response, json);
-                var threadResponse = JsonConvert.DeserializeObject<InstaDirectInboxThreadResponse>(json,
-                    new InstaThreadDataConverter());
+                var threadResponse = thread.Value;
+                var pagesLoaded = 1;
+
+                while (threadResponse.HasOlder
+                      && !string.IsNullOrEmpty(threadResponse.OldestCursor)
+                      && pagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var nextThread = await GetDirectInboxThread(threadResponse.OldestCursor);
+
+                    if (!nextThread.Succeeded)
+                        return Result.Fail(nextThread.Info, Convert(nextThread.Value));
+
+                    threadResponse.OldestCursor = paginationParameters.NextId = nextThread.Value.OldestCursor;
+                    threadResponse.HasOlder = nextThread.Value.HasOlder;
+                    threadResponse.Items.AddRange(nextThread.Value.Items);
+                    pagesLoaded++;
+                }
 
                 //Reverse for Chat Order
                 threadResponse.Items.Reverse();
@@ -1115,7 +1134,28 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 return Result.Fail<InstaDirectInboxContainerResponse>(exception.Message);
             }
         }
+        private async Task<IResult<InstaDirectInboxThreadResponse>> GetDirectInboxThread(string threadId, string maxId = null)
+        {
+            try
+            {
+                var directInboxUri = UriCreator.GetDirectInboxThreadUri(threadId, maxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaDirectInboxThreadResponse>(response, json);
+                var threadResponse = JsonConvert.DeserializeObject<InstaDirectInboxThreadResponse>(json,
+                    new InstaThreadDataConverter());
 
+                return Result.Success(threadResponse);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaDirectInboxThreadResponse>(exception.Message);
+            }
+        }
 
     }
 }

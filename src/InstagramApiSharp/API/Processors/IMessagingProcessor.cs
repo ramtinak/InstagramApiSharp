@@ -46,10 +46,11 @@ namespace InstagramApiSharp.API.Processors
         ///     Get direct inbox thread by its id asynchronously
         /// </summary>
         /// <param name="threadId">Thread id</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <returns>
         ///     <see cref="InstaDirectInboxThread" />
         /// </returns>
-        Task<IResult<InstaDirectInboxThread>> GetDirectInboxThreadAsync(string threadId, string nextOrCursorId = "");
+        Task<IResult<InstaDirectInboxThread>> GetDirectInboxThreadAsync(string threadId, PaginationParameters paginationParameters);
         /// <summary>
         ///     Get direct pending inbox threads for current user asynchronously
         /// </summary>
