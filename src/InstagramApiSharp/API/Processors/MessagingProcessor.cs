@@ -187,6 +187,9 @@ namespace InstagramApiSharp.API.Processors
 
                     inboxResponse.Inbox.OldestCursor = paginationParameters.NextId = nextInbox.Value.Inbox.OldestCursor;
                     inboxResponse.Inbox.HasOlder = nextInbox.Value.Inbox.HasOlder;
+                    inboxResponse.Inbox.BlendedInboxEnabled = nextInbox.Value.Inbox.BlendedInboxEnabled;
+                    inboxResponse.Inbox.UnseenCount = nextInbox.Value.Inbox.UnseenCount;
+                    inboxResponse.Inbox.UnseenCountTs = nextInbox.Value.Inbox.UnseenCountTs;
                     inboxResponse.Inbox.Threads.AddRange(nextInbox.Value.Inbox.Threads);
                     pagesLoaded++;
                 }
@@ -237,6 +240,26 @@ namespace InstagramApiSharp.API.Processors
 
                     threadResponse.OldestCursor = paginationParameters.NextId = nextThread.Value.OldestCursor;
                     threadResponse.HasOlder = nextThread.Value.HasOlder;
+                    threadResponse.Canonical = nextThread.Value.Canonical;
+                    threadResponse.ExpiringMediaReceiveCount = nextThread.Value.ExpiringMediaReceiveCount;
+                    threadResponse.ExpiringMediaSendCount = nextThread.Value.ExpiringMediaSendCount;
+                    threadResponse.HasNewer = nextThread.Value.HasNewer;
+                    threadResponse.LastActivity = nextThread.Value.LastActivity;
+                    threadResponse.LastSeenAt = nextThread.Value.LastSeenAt;
+                    threadResponse.ReshareReceiveCount = nextThread.Value.ReshareReceiveCount;
+                    threadResponse.ReshareSendCount = nextThread.Value.ReshareSendCount;
+                    threadResponse.Status = nextThread.Value.Status;
+                    threadResponse.Title = nextThread.Value.Title;
+                    threadResponse.IsGroup = nextThread.Value.IsGroup;
+                    threadResponse.IsSpam = nextThread.Value.IsSpam;
+                    threadResponse.IsPin = nextThread.Value.IsPin;
+                    threadResponse.Muted = nextThread.Value.Muted;
+                    threadResponse.PendingScore = nextThread.Value.PendingScore;
+                    threadResponse.Pending = nextThread.Value.Pending;
+                    threadResponse.Users = nextThread.Value.Users;
+                    threadResponse.ValuedRequest = nextThread.Value.ValuedRequest;
+                    threadResponse.VCMuted = nextThread.Value.VCMuted;
+                    threadResponse.VieweId = nextThread.Value.VieweId;
                     threadResponse.Items.AddRange(nextThread.Value.Items);
                     pagesLoaded++;
                 }
@@ -258,22 +281,45 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get direct pending inbox threads for current user asynchronously
         /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaDirectInboxContainer" />
         /// </returns>
-        public async Task<IResult<InstaDirectInboxContainer>> GetPendingDirectAsync(string nextOrCursorId = "")
+        public async Task<IResult<InstaDirectInboxContainer>> GetPendingDirectAsync(PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var directInboxUri = UriCreator.GetDirectPendingInboxUri(nextOrCursorId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaDirectInboxContainer>(response, json);
-                var inboxResponse = JsonConvert.DeserializeObject<InstaDirectInboxContainerResponse>(json);
+                InstaDirectInboxContainer Convert(InstaDirectInboxContainerResponse inboxContainerResponse)
+                {
+                    return ConvertersFabric.Instance.GetDirectInboxConverter(inboxContainerResponse).Convert();
+                }
+
+                var inbox = await GetPendingDirect(paginationParameters.NextId);
+                if (!inbox.Succeeded)
+                    return Result.Fail<InstaDirectInboxContainer>(inbox.Info.Message);
+                var inboxResponse = inbox.Value;
+                var pagesLoaded = 1;
+                while (inboxResponse.Inbox.HasOlder
+                      && !string.IsNullOrEmpty(inboxResponse.Inbox.OldestCursor)
+                      && pagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var nextInbox = await GetPendingDirect(inboxResponse.Inbox.OldestCursor);
+
+                    if (!nextInbox.Succeeded)
+                        return Result.Fail(nextInbox.Info, Convert(nextInbox.Value));
+
+                    inboxResponse.Inbox.OldestCursor = paginationParameters.NextId = nextInbox.Value.Inbox.OldestCursor;
+                    inboxResponse.Inbox.HasOlder = nextInbox.Value.Inbox.HasOlder;
+                    inboxResponse.Inbox.Threads.AddRange(nextInbox.Value.Inbox.Threads);
+                    inboxResponse.Inbox.BlendedInboxEnabled = nextInbox.Value.Inbox.BlendedInboxEnabled;
+                    inboxResponse.Inbox.UnseenCount = nextInbox.Value.Inbox.UnseenCount;
+                    inboxResponse.Inbox.UnseenCountTs = nextInbox.Value.Inbox.UnseenCountTs;
+                    pagesLoaded++;
+                }
                 return Result.Success(ConvertersFabric.Instance.GetDirectInboxConverter(inboxResponse).Convert());
             }
             catch (Exception exception)
@@ -1115,7 +1161,6 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         }
         private async Task<IResult<InstaDirectInboxContainerResponse>> GetDirectInbox(string maxId = null)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var directInboxUri = UriCreator.GetDirectInboxUri(maxId);
@@ -1156,6 +1201,25 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 return Result.Fail<InstaDirectInboxThreadResponse>(exception.Message);
             }
         }
+        private async Task<IResult<InstaDirectInboxContainerResponse>> GetPendingDirect(string maxId = null)
+        {
+            try
+            {
+                var directInboxUri = UriCreator.GetDirectPendingInboxUri(maxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
 
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaDirectInboxContainerResponse>(response, json);
+                var inboxResponse = JsonConvert.DeserializeObject<InstaDirectInboxContainerResponse>(json);
+                return Result.Success(inboxResponse);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaDirectInboxContainerResponse>(exception.Message);
+            }
+        }
     }
 }
