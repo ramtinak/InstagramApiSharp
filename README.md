@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.3.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.3.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -74,6 +74,9 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.3.4
+- [Update] Microsoft.NETCore.UniversalWindowsPlatform (uwp)
+
 v1.1.3.3
 - [Bugfix] For direct inbox/thread/pending
 
