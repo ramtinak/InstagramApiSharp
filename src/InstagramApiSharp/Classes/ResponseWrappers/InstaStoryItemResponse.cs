@@ -27,13 +27,11 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("device_timestamp")] public long DeviceTimestamp { get; set; }
 
-        [JsonProperty("comment_likes_enabled")]
-        public bool CommentLikesEnabled { get; set; }
+        [JsonProperty("comment_likes_enabled")] public bool CommentLikesEnabled { get; set; }
 
         [JsonProperty("comment_count")] public long CommentCount { get; set; }
 
-        [JsonProperty("comment_threading_enabled")]
-        public bool CommentThreadingEnabled { get; set; }
+        [JsonProperty("comment_threading_enabled")] public bool CommentThreadingEnabled { get; set; }
 
         [JsonProperty("filter_type")] public long FilterType { get; set; }
 
@@ -59,13 +57,11 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("likers")] public List<object> Likers { get; set; }
 
-        [JsonProperty("organic_tracking_token")]
-        public string OrganicTrackingToken { get; set; }
+        [JsonProperty("organic_tracking_token")] public string OrganicTrackingToken { get; set; }
 
         [JsonProperty("media_type")] public long MediaType { get; set; }
 
-        [JsonProperty("max_num_visible_preview_comments")]
-        public long MaxNumVisiblePreviewComments { get; set; }
+        [JsonProperty("max_num_visible_preview_comments")] public long MaxNumVisiblePreviewComments { get; set; }
 
         [JsonProperty("number_of_qualities")] public long? NumberOfQualities { get; set; }
 
@@ -93,8 +89,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("video_dash_manifest")] public string VideoDashManifest { get; set; }
 
-        [JsonProperty("supports_reel_reactions")]
-        public bool SupportsReelReactions { get; set; }
+        [JsonProperty("supports_reel_reactions")] public bool SupportsReelReactions { get; set; }
 
         [JsonProperty("user")] public InstaUserShortResponse User { get; set; }
 
@@ -102,24 +97,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("video_versions")] public List<InstaVideoResponse> VideoVersions { get; set; }
 
-        [JsonProperty("story_cta")] public List<StoryCTA> StoryCTA { get; set; }
-    }
-
-    public class StoryCTA
-    {
-        [JsonProperty("links")] public Link[] Links { get; set; }
-    }
-
-    public class Link
-    {
-        [JsonProperty("linkType")] public int LinkType { get; set; }
-        [JsonProperty("webUri")] public string WebUri { get; set; }
-        [JsonProperty("androidClass")] public string AndroidClass { get; set; }
-        [JsonProperty("package")] public string Package { get; set; }
-        [JsonProperty("deeplinkUri")] public string DeeplinkUri { get; set; }
-        [JsonProperty("callToActionTitle")] public string CallToActionTitle { get; set; }
-        [JsonProperty("redirectUri")] public object RedirectUri { get; set; }
-        [JsonProperty("leadGenFormId")] public string LeadGenFormId { get; set; }
-        [JsonProperty("igUserId")] public string IgUserId { get; set; }
+        [JsonProperty("story_cta")] public List<InstaStoryCTAContainerResponse> StoryCTA { get; set; }
     }
 }

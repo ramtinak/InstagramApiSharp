@@ -78,7 +78,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public bool SupportsReelReactions { get; set; }
 
-        public List<StoryCTA> StoryCTA { get; set; }
+        public List<InstaStoryCTA> StoryCTA { get; set; } = new List<InstaStoryCTA>();
 
         public List<InstaStoryFeedMedia> StoryFeedMedia { get; set; } = new List<InstaStoryFeedMedia>();
 

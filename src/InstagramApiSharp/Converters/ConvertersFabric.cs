@@ -175,6 +175,12 @@ namespace InstagramApiSharp.Converters
             return new InstaStoryMediaConverter {SourceObject = storyMedia};
         }
 
+        public IObjectConverter<InstaStoryCTA, InstaStoryCTAResponse> GetStoryCtaConverter(
+            InstaStoryCTAResponse storyCta)
+        {
+            return new InstaStoryCTAConverter { SourceObject = storyCta };
+        }
+
         public IObjectConverter<InstaImage, ImageResponse> GetImageConverter(ImageResponse imageResponse)
         {
             return new InstaMediaImageConverter {SourceObject = imageResponse};

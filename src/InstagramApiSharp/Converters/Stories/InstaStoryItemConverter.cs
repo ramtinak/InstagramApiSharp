@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Helpers;
@@ -37,7 +38,6 @@ namespace InstagramApiSharp.Converters
                 VideoDuration = SourceObject.VideoDuration ?? 0,
                 AdAction = SourceObject.AdAction,
                 SupportsReelReactions = SourceObject.SupportsReelReactions,
-                StoryCTA = SourceObject.StoryCTA,
                 ShowOneTapTooltip = SourceObject.ShowOneTapTooltip
             };
 
@@ -71,6 +71,12 @@ namespace InstagramApiSharp.Converters
             if (SourceObject.StoryFeedMedia != null)
                 foreach (var storyFeed in SourceObject.StoryFeedMedia)
                     instaStory.StoryFeedMedia.Add(ConvertersFabric.Instance.GetStoryFeedMediaConverter(storyFeed).Convert());
+
+            if (SourceObject.StoryCTA != null && SourceObject.StoryCTA.Any())
+                foreach (var cta in SourceObject.StoryCTA)
+                    if (cta.Links != null && cta.Links.Any())
+                        foreach (var link in cta.Links)
+                            instaStory.StoryCTA.Add(ConvertersFabric.Instance.GetStoryCtaConverter(link).Convert());
 
             return instaStory;
         }
