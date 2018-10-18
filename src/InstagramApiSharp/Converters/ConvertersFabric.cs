@@ -41,7 +41,7 @@ namespace InstagramApiSharp.Converters
             return new InstaMediaConverter {SourceObject = responseMedia};
         }
         public IObjectConverter<InstaMedia, InstaMediaAlbumResponse> GetSingleMediaFromAlbumConverter(
-    InstaMediaAlbumResponse responseMedia)
+            InstaMediaAlbumResponse responseMedia)
         {
             return new InstaMediaAlbumConverter { SourceObject = responseMedia };
         }
@@ -240,12 +240,12 @@ namespace InstagramApiSharp.Converters
             return new InstaStoryFeedConverter {SourceObject = response};
         }
         public IObjectConverter<InstaHighlightFeeds, InstaHighlightFeedsResponse> GetHighlightFeedsConverter(
-    InstaHighlightFeedsResponse response)
+            InstaHighlightFeedsResponse response)
         {
             return new InstaHighlightConverter { SourceObject = response };
         }
         public IObjectConverter<InstaHighlightSingleFeed, InstaHighlightReelResponse> GetHighlightReelConverter(
-InstaHighlightReelResponse response)
+            InstaHighlightReelResponse response)
         {
             return new InstaHighlightReelConverter { SourceObject = response };
         }
