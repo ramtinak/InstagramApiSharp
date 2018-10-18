@@ -23,7 +23,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public InstaStoryShare StoryShare { get; set; }
 
-        public InstaMedia/*InstaRavenMedia*/ RavenMedia { get; set; }
+        public InstaMedia RavenMedia { get; set; }
 
         // raven media properties
         public string RavenViewMode { get; set; }
@@ -50,5 +50,6 @@ namespace InstagramApiSharp.Classes.Models
 
         public InstaMedia FelixShareMedia { get; set; }
 
+        public InstaReelShare ReelShareMedia { get; set; }
     }
 }

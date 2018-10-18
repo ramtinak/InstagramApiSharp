@@ -28,7 +28,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("story_share")] public InstaStoryShareResponse StoryShare { get; set; }
 
-        [JsonProperty("raven_media")] public InstaMediaItemResponse/*InstaRavenMediaResponse*/ RavenMedia { get; set; }
+        [JsonProperty("raven_media")] public InstaMediaItemResponse RavenMedia { get; set; }
         // raven media properties
         [JsonProperty("view_mode")] public string RavenViewMode { get; set; }
 
@@ -51,6 +51,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("location")] public InstaLocationResponse LocationMedia { get; set; }
 
         [JsonProperty("felix_share")] public InstaFelixShareResponse FelixShareMedia { get; set; }
+
+        [JsonProperty("reel_share")] public InstaReelShareResponse ReelShareMedia { get; set; }
 
     }
 }

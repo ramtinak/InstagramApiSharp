@@ -16,7 +16,7 @@ namespace InstagramApiSharp.Converters
             {
                 PendingRequestsCount = SourceObject.PendingRequestsCount,
                 SeqId = SourceObject.SeqId,
-                SnapshotAt = DateTimeHelper.FromUnixTimeSeconds(SourceObject.SnapshotAtMs ?? 0)
+                SnapshotAt = DateTimeHelper.FromUnixTimeMiliSeconds(SourceObject.SnapshotAtMs ?? 0)
             };
             if (SourceObject.Subscription != null)
             {

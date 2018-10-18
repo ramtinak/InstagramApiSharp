@@ -210,6 +210,12 @@ namespace InstagramApiSharp.Converters
             return new InstaReelFeedConverter {SourceObject = response};
         }
 
+        public IObjectConverter<InstaReelShare, InstaReelShareResponse> GetReelShareConverter(
+            InstaReelShareResponse response)
+        {
+            return new InstaReelShareConverter { SourceObject = response };
+        }
+
         public IObjectConverter<InstaReelMention, InstaReelMentionResponse> GetMentionConverter(
             InstaReelMentionResponse response)
         {
