@@ -1,4 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿/*
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * 
+ * Github source: https://github.com/ramtinak/InstagramApiSharp
+ * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
+ * 
+ * IRANIAN DEVELOPERS
+ */
+
+using Newtonsoft.Json;
 
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
@@ -10,7 +19,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("height")] public double Height { get; set; }
 
-        [JsonProperty("media_id")] public long MediaID { get; set; }
+        [JsonProperty("media_id")] public long MediaId { get; set; }
 
         [JsonProperty("product_type")] public string ProductType { get; set; }
 

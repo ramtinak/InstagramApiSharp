@@ -80,7 +80,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public List<StoryCTA> StoryCTA { get; set; }
 
-        public List<InstaStoryFeedMediaResponse> StoryFeedMedia { get; set; }
+        public List<InstaStoryFeedMedia> StoryFeedMedia { get; set; } = new List<InstaStoryFeedMedia>();
 
         public InstaUserShort User { get; set; }
 

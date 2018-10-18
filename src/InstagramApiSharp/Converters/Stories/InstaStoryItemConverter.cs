@@ -38,8 +38,7 @@ namespace InstagramApiSharp.Converters
                 AdAction = SourceObject.AdAction,
                 SupportsReelReactions = SourceObject.SupportsReelReactions,
                 StoryCTA = SourceObject.StoryCTA,
-                ShowOneTapTooltip = SourceObject.ShowOneTapTooltip,
-                StoryFeedMedia = SourceObject.StoryFeedMedia
+                ShowOneTapTooltip = SourceObject.ShowOneTapTooltip
             };
 
             if (SourceObject.User != null)
@@ -68,6 +67,10 @@ namespace InstagramApiSharp.Converters
             if (SourceObject.StoryLocations != null)
                 foreach (var location in SourceObject.StoryLocations)
                     instaStory.StoryLocations.Add(ConvertersFabric.Instance.GetLocationConverter(location).Convert());
+
+            if (SourceObject.StoryFeedMedia != null)
+                foreach (var storyFeed in SourceObject.StoryFeedMedia)
+                    instaStory.StoryFeedMedia.Add(ConvertersFabric.Instance.GetStoryFeedMediaConverter(storyFeed).Convert());
 
             return instaStory;
         }
