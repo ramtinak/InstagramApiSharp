@@ -201,5 +201,11 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User id</param>
         Task<IResult<InstaFriendshipStatus>> UnFollowUserAsync(long userId);
+
+        /// <summary>
+        ///     Remove an follower from your followers
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<InstaFriendshipStatus>> RemoveFollowerAsync(long userId);
     }
 }

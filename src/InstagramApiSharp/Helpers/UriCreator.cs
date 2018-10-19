@@ -1711,5 +1711,13 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for users nametag config");
             return instaUri;
         }
+
+        public static Uri GetRemoveFollowerUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, 
+                string.Format(InstaApiConstants.FRIENDSHIPS_REMOVE_FOLLOWER, userId), out var instaUri))
+                throw new Exception("Cant create URI for remove follower");
+            return instaUri;
+        }
     }
 }

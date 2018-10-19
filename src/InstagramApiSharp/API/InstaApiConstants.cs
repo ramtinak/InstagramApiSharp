@@ -338,7 +338,7 @@ namespace InstagramApiSharp.API
         public const string FRIENDSHIPS_MUTE_FRIEND_REEL = API_SUFFIX + "/friendships/mute_friend_reel/{0}/";
 
         public const string FRIENDSHIPS_PENDING_REQUESTS = API_SUFFIX + "/friendships/pending/?rank_mutual=0&rank_token={0}";
-        public const string FRIENDSHIPS_REMOVE_FOLLOWER = API_SUFFIX + "/friendships/remove_follower/";
+        public const string FRIENDSHIPS_REMOVE_FOLLOWER = API_SUFFIX + "/friendships/remove_follower/{0}/";
         /// <summary>
         /// hide your stories from specific users
         /// </summary>

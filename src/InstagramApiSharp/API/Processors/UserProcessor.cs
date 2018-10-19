@@ -786,6 +786,43 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             return await FollowUnfollowUserInternal(userId, UriCreator.GetUnFollowUserUri(userId));
         }
+        
+        /// <summary>
+        ///     Remove an follower from your followers
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<InstaFriendshipStatus>> RemoveFollowerAsync(long userId)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetRemoveFollowerUri(userId);
+
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"user_id", userId.ToString()},
+                    {"radio_type", "wifi-none"},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(json))
+                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, json);
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
+                    new InstaFriendShipDataConverter());
+                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, (InstaFriendshipStatus)null);
+            }
+        }
         #endregion public parts
 
         #region private parts
