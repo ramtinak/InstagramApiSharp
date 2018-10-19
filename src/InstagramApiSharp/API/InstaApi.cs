@@ -1724,6 +1724,8 @@ namespace InstagramApiSharp.API
         public void SetApiVersion(InstaApiVersionType apiVersion)
         {
             _apiVersionType = apiVersion;
+            _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(apiVersion);
+            _httpHelper._apiVersion = _apiVersion;
         }
         /// <summary>
         ///     Set custom android device.

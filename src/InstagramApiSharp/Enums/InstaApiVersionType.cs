@@ -26,6 +26,10 @@ namespace InstagramApiSharp.Enums
         /// <summary>
         ///     Api version 61.0.0.19.86 => Has consent required for unverified accounts.
         /// </summary>
-        Version61 = 2
+        Version61 = 2,
+        /// <summary>
+        ///     Api version 64.0.0.14.96
+        /// </summary>
+        Version64 = 3
     }
 }

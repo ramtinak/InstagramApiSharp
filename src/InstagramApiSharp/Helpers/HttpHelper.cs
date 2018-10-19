@@ -11,7 +11,7 @@ namespace InstagramApiSharp.Helpers
 {
     internal class HttpHelper
     {
-        public readonly InstaApiVersion _apiVersion;
+        public /*readonly*/ InstaApiVersion _apiVersion;
         public HttpHelper(InstaApiVersion apiVersionType)
         {
             _apiVersion = apiVersionType;
