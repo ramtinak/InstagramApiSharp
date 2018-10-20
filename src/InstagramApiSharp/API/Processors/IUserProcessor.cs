@@ -207,5 +207,11 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User id (pk)</param>
         Task<IResult<InstaFriendshipStatus>> RemoveFollowerAsync(long userId);
+
+        /// <summary>
+        ///     Translate biography of someone
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<string>> TranslateBiographyAsync(long userId);
     }
 }

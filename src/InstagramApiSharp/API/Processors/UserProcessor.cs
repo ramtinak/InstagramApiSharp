@@ -823,6 +823,33 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception.Message, (InstaFriendshipStatus)null);
             }
         }
+
+        /// <summary>
+        ///     Translate biography of someone
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<string>> TranslateBiographyAsync(long userId)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetTranslateBiographyUri(userId);
+                
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(json))
+                    return Result.UnExpectedResponse<string>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaTranslateBioResponse>(json);
+
+                return obj.Status.ToLower() == "ok" ? Result.Success(obj.Translation) : Result.Fail<string>(obj.Message);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, (string)null);
+            }
+        }
         #endregion public parts
 
         #region private parts

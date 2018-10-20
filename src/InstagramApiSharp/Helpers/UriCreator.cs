@@ -1719,5 +1719,13 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for remove follower");
             return instaUri;
         }
+
+        public static Uri GetTranslateBiographyUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.LANGUAGE_TRANSLATE, userId), out var instaUri))
+                throw new Exception("Cant create URI for translate bio");
+            return instaUri;
+        }
     }
 }
