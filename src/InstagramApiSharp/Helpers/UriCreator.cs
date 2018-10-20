@@ -1727,5 +1727,13 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for translate bio");
             return instaUri;
         }
+
+        public static Uri GetTranslateCommentsUri(string commendIds)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.LANGUAGE_TRANSLATE_COMMENT, commendIds), out var instaUri))
+                throw new Exception("Cant create URI for translate comments");
+            return instaUri;
+        }
     }
 }

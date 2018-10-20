@@ -475,5 +475,17 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaBrandedContentConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaTranslate, InstaTranslateResponse> GetSingleTranslateConverter(
+            InstaTranslateResponse response)
+        {
+            return new InstaTranslateConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaTranslateList, InstaTranslateContainerResponse> GetTranslateContainerConverter(
+            InstaTranslateContainerResponse response)
+        {
+            return new InstaTranslateContainerConverter { SourceObject = response };
+        }
     }
 }

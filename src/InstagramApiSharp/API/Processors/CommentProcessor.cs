@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -486,6 +487,38 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail(exception.Message, false);
+            }
+        }
+
+        /// <summary>
+        ///     Translate comment or captions
+        ///     <para>Note: use this function to translate captions too! (i.e: <see cref="InstaCaption.Pk"/>)</para>
+        /// </summary>
+        /// <param name="commentIds">Comment id(s) (Array of <see cref="InstaComment.Pk"/>)</param>
+        public async Task<IResult<InstaTranslateList>> TranslateCommentAsync(params long[] commentIds)
+        {
+            try
+            {
+                if (commentIds == null || commentIds != null && !commentIds.Any())
+                    throw new ArgumentException("At least one comment id require");
+
+                var instaUri = UriCreator.GetTranslateCommentsUri(string.Join(",", commentIds));
+
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(json))
+                    return Result.UnExpectedResponse<InstaTranslateList>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaTranslateContainerResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetTranslateContainerConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception.Message, (InstaTranslateList)null);
             }
         }
 

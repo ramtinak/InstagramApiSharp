@@ -394,7 +394,7 @@ namespace InstagramApiSharp.API
         #region Language endpoints constants
 
         public const string LANGUAGE_TRANSLATE = API_SUFFIX + "/language/translate/?id={0}&type=3";
-        public const string LANGUAGE_TRANSLATE_MULTIPLE = API_SUFFIX + "/language/bulk_translate/?comment_ids={0}";
+        public const string LANGUAGE_TRANSLATE_COMMENT = API_SUFFIX + "/language/bulk_translate/?comment_ids={0}";
 
         #endregion Language endpoints constants
 

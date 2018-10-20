@@ -87,5 +87,11 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="commentId">Comment id</param>
         Task<IResult<bool>> UnlikeCommentAsync(string commentId);
+        /// <summary>
+        ///     Translate comment or captions
+        ///     <para>Note: use this function to translate captions too! (i.e: <see cref="InstaCaption.Pk"/>)</para>
+        /// </summary>
+        /// <param name="commentIds">Comment id(s) (Array of <see cref="InstaComment.Pk"/>)</param>
+        Task<IResult<InstaTranslateList>> TranslateCommentAsync(params long[] commentIds);
     }
 }
