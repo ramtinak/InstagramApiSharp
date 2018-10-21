@@ -1735,5 +1735,21 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for translate comments");
             return instaUri;
         }
+
+        public static Uri GetSearchPlacesUri(int timezoneOffset, double lat, double lng, string query, string rankToken)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FBSEARCH_PLACES, out var instaUri))
+                throw new Exception("Cant create URI for search places");
+
+            var parameters = $"timezone_offset={timezoneOffset}&lat={lat}&lng={lng}";
+
+            if (!string.IsNullOrEmpty(query))
+                parameters += $"&query={query}";
+
+            if (!string.IsNullOrEmpty(rankToken))
+                parameters += $"&&rank_token={rankToken}";
+
+            return new UriBuilder(instaUri) { Query = parameters }.Uri;
+        }
     }
 }

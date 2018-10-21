@@ -181,6 +181,34 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaUserSearchLocation>(exception);
             }
         }
+        
+        /// <summary>
+        ///     NOT COMPLETED
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        public async Task<IResult<object>> SearchPlacesAsync(double latitude, double longitude, string query)
+        {
+            try
+            {
+                // json test: search nearby.json
 
+                var instaUri = UriCreator.GetSearchPlacesUri(InstaApiConstants.TIMEZONE_OFFSET, latitude, longitude, query);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<object>(response, json);
+
+                //var obj = JsonConvert.DeserializeObject<InstaUserChainingContainerResponse>(json);
+                return Result.Success("");
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<object>(exception);
+            }
+        }
     }
 }

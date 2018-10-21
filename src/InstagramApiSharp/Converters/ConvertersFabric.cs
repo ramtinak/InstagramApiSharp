@@ -487,5 +487,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaTranslateContainerConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaPlace, InstaPlaceResponse> GetPlaceConverter(
+            InstaPlaceResponse response)
+        {
+            return new InstaPlaceConverter { SourceObject = response };
+        }
     }
 }

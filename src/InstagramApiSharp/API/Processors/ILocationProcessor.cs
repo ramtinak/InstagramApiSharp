@@ -37,5 +37,8 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="desireUsername">Desire username</param>
         /// <param name="count">Maximum user count</param>
         Task<IResult<InstaUserSearchLocation>> SearchUserByLocationAsync(double latitude, double longitude, string desireUsername, int count = 50);
+
+        Task<IResult<object>> SearchPlacesAsync(double latitude, double longitude, string query);
+
     }
 }
