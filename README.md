@@ -55,19 +55,19 @@ Some of features:
 #### Use builder to get Insta API instance:
 ```c#
 var api = InstaApiBuilder.CreateBuilder()
-    // required
-    .SetUser(new UserSessionData(...Your user...))
-    // optional
-    .UseLogger(new SomeLogger())
-    // optional
-    .UseHttpClient(new SomeHttpClient())
-    // optional
-    .UseHttpClientHandler(httpHandlerWithSomeProxy)
-    // optional
-    .SetRequestDelay(new SomeRequestDelay())
-    // optional
-    .SetApiVersion(SomeApiVersion)
-    .Build();
+                // required
+                .SetUser(new UserSessionData(...Your user...))
+                // optional
+                .UseLogger(new SomeLogger())
+                // optional
+                .UseHttpClient(new SomeHttpClient())
+                // optional
+                .UseHttpClientHandler(httpHandlerWithSomeProxy)
+                // optional
+                .SetRequestDelay(new SomeRequestDelay())
+                // optional
+                .SetApiVersion(SomeApiVersion)
+                .Build();
 ```
 ##### Note: every API method has synchronous implementation as well.
 
