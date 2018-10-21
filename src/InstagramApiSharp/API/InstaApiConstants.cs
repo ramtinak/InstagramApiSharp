@@ -262,12 +262,7 @@ namespace InstagramApiSharp.API
         /// get nearby places
         /// </summary>
         public const string FBSEARCH_PLACES = API_SUFFIX + "/fbsearch/places/";
-
-        /// <summary>
-        /// get search places /fbsearch/places/?timezone_offset={0}&lat={1}&lng={2}&query={3}&rank_token={4}
-        /// </summary>
-        public const string FBSEARCH_PLACES_QUERY = API_SUFFIX + "/fbsearch/places/?timezone_offset={0}&lat={1}&lng={2}&query={3}";
-
+        
         public const string FBSEARCH_PROFILE_SEARCH = API_SUFFIX + "/fbsearch/profile_link_search/?q={0}&count={1}";
         public const string FBSEARCH_RECENT_SEARCHES = API_SUFFIX + "/fbsearch/recent_searches/";
         public const string FBSEARCH_SUGGESTED_SEARCHS = API_SUFFIX + "/fbsearch/suggested_searches/?type={0}";

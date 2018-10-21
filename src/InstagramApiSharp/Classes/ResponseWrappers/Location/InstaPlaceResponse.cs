@@ -13,22 +13,15 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaPlaceResponse
     {
-        [JsonProperty("pk")] public long Pk { get; set; }
+        [JsonProperty("location")] public InstaPlaceShortResponse Location { get; set; }
 
-        [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("title")] public string Title { get; set; }
 
-        [JsonProperty("address")] public string Address { get; set; }
+        [JsonProperty("subtitle")] public string Subtitle { get; set; }
 
-        [JsonProperty("city")] public string City { get; set; }
-
-        [JsonProperty("short_name")] public string ShortName { get; set; }
-
-        [JsonProperty("lng")] public double Lng { get; set; }
-
-        [JsonProperty("lat")] public double Lat { get; set; }
-
-        [JsonProperty("external_source")] public string ExternalSource { get; set; }
-
-        [JsonProperty("facebook_places_id")] public long FacebookPlacesId { get; set; }
+        // always empty
+        //[JsonProperty("media_bundles")] public object MediaBundles { get; set; }
+        // always empty
+        //[JsonProperty("header_media")] public object HeaderMedia { get; set; }
     }
 }

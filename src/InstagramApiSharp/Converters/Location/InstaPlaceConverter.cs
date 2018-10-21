@@ -23,15 +23,9 @@ namespace InstagramApiSharp.Converters
 
             var place = new InstaPlace
             {
-                Address = SourceObject.Address,
-                City = SourceObject.City,
-                ExternalSource = SourceObject.ExternalSource,
-                FacebookPlacesId = SourceObject.FacebookPlacesId,
-                Lat = SourceObject.Lat,
-                Lng = SourceObject.Lng,
-                Name = SourceObject.Name,
-                Pk = SourceObject.Pk,
-                ShortName = SourceObject.ShortName
+                Location = ConvertersFabric.Instance.GetPlaceShortConverter(SourceObject.Location).Convert(),
+                Title = SourceObject.Title,
+                Subtitle = SourceObject.Subtitle
             };
             return place;
         }

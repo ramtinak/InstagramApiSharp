@@ -7,18 +7,18 @@
  * IRANIAN DEVELOPERS
  */
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaPlace
+    public class InstaPlaceList
     {
-        public InstaPlaceShort Location { get; set; }
+        public List<InstaPlace> Items { get; set; } = new List<InstaPlace>();
 
-        public string Title { get; set; }
+        public bool HasMore { get; set; }
 
-        public string Subtitle { get; set; }
+        public string RankToken { get; set; }
+
+        internal string Status { get; set; }
     }
 }

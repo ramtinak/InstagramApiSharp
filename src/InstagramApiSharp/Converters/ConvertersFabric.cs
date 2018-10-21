@@ -488,10 +488,22 @@ namespace InstagramApiSharp.Converters
             return new InstaTranslateContainerConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaPlaceShort, InstaPlaceShortResponse> GetPlaceShortConverter(
+            InstaPlaceShortResponse response)
+        {
+            return new InstaPlaceShortConverter { SourceObject = response };
+        }
+
         public IObjectConverter<InstaPlace, InstaPlaceResponse> GetPlaceConverter(
             InstaPlaceResponse response)
         {
             return new InstaPlaceConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaPlaceList, InstaPlaceListResponse> GetPlaceListConverter(
+            InstaPlaceListResponse response)
+        {
+            return new InstaPlaceListConverter { SourceObject = response };
         }
     }
 }

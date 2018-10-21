@@ -181,33 +181,103 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaUserSearchLocation>(exception);
             }
         }
-        
+
         /// <summary>
-        ///     NOT COMPLETED
+        ///     Search places in facebook
+        ///     <para>Note: This works for non-facebook accounts too!</para>
         /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        public async Task<IResult<object>> SearchPlacesAsync(double latitude, double longitude, string query)
+        /// <param name="latitude">Latitude</param>
+        /// <param name="longitude">Longitude</param>
+        /// <returns>
+        ///     <see cref="InstaPlaceList" />
+        /// </returns>
+        public async Task<IResult<InstaPlaceList>> SearchPlacesAsync(double latitude, double longitude)
         {
+            return await SearchPlacesAsync(latitude, longitude, null);
+        }
+
+        /// <summary>
+        ///     Search places in facebook
+        ///     <para>Note: This works for non-facebook accounts too!</para>
+        /// </summary>
+        /// <param name="latitude">Latitude</param>
+        /// <param name="longitude">Longitude</param>
+        /// <param name="query">Query to search (city, country or ...)</param>
+        /// <returns>
+        ///     <see cref="InstaPlaceList" />
+        /// </returns>
+        public async Task<IResult<InstaPlaceList>> SearchPlacesAsync(double latitude, double longitude, string query)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                // json test: search nearby.json
+                // pagination is not working!
+                var paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                var instaUri = UriCreator.GetSearchPlacesUri(InstaApiConstants.TIMEZONE_OFFSET, latitude, longitude, query);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
+                InstaPlaceList Convert(InstaPlaceListResponse placelistResponse)
+                {
+                    return ConvertersFabric.Instance.GetPlaceListConverter(placelistResponse).Convert();
+                }
+                var places = await SearchPlaces(latitude, longitude, query, paginationParameters);
+                if (!places.Succeeded)
+                    return Result.Fail<InstaPlaceList>(places.Info.Message);
 
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<object>(response, json);
+                var placesResponse = places.Value;
+                paginationParameters.NextId = placesResponse.RankToken;
+                var pagesLoaded = 1;
+                while (placesResponse.HasMore != null 
+                      && placesResponse.HasMore.Value
+                      && !string.IsNullOrEmpty(placesResponse.RankToken)
+                      && pagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var nextPlaces = await SearchPlaces(latitude, longitude, query, paginationParameters);
 
-                //var obj = JsonConvert.DeserializeObject<InstaUserChainingContainerResponse>(json);
-                return Result.Success("");
+                    if (!nextPlaces.Succeeded)
+                        return Result.Fail(nextPlaces.Info, Convert(nextPlaces.Value));
+
+                    placesResponse.RankToken = paginationParameters.NextId = nextPlaces.Value.RankToken;
+                    placesResponse.HasMore = nextPlaces.Value.HasMore;
+                    placesResponse.Items.AddRange(nextPlaces.Value.Items);
+                    placesResponse.Status = nextPlaces.Value.Status;
+                    pagesLoaded++;
+                }
+
+                return Result.Success(ConvertersFabric.Instance.GetPlaceListConverter(placesResponse).Convert());
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<object>(exception);
+                return Result.Fail<InstaPlaceList>(exception.Message);
+            }
+        }
+
+        private async Task<IResult<InstaPlaceListResponse>> SearchPlaces(double latitude, 
+            double longitude, 
+            string query,
+            PaginationParameters paginationParameters)
+        {
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                var instaUri = UriCreator.GetSearchPlacesUri(InstaApiConstants.TIMEZONE_OFFSET,
+                    latitude, longitude, query, paginationParameters.NextId);
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaPlaceListResponse>(json);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.Fail<InstaPlaceListResponse>(obj.Message);
+
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaPlaceListResponse>(exception);
             }
         }
     }
