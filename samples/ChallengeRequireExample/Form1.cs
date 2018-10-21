@@ -315,10 +315,15 @@ namespace ChallengeRequireExample
         private async void GetFeedButton_Click(object sender, EventArgs e)
         {
             if (InstaApi == null)
+            {
                 MessageBox.Show("Login first.");
+                return;
+            }
             if (!InstaApi.IsUserAuthenticated)
+            {
                 MessageBox.Show("Login first.");
-
+                return;
+            }
             var x = await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
             if (x.Succeeded)
