@@ -10,8 +10,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.BaseResponse
 
         [JsonProperty("total_count")] public int TotalCount { get; set; }
 
-        [JsonProperty("auto_load_more_enabled")]
-        public bool AutoLoadMoreEnabled { get; set; }
+        [JsonProperty("auto_load_more_enabled")] public bool AutoLoadMoreEnabled { get; set; }
 
         [JsonProperty("next_max_id")] public string NextMaxId { get; set; }
 

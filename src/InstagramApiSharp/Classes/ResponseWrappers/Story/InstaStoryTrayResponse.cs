@@ -11,6 +11,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("is_portrait")] public bool IsPortrait { get; set; }
 
-        [JsonProperty("tray")] public List<InstaStoryResponse> Tray { get; set; }
+        [JsonProperty("tray")] public List<InstaStoryResponse> Tray { get; set; } = new List<InstaStoryResponse>();
     }
 }

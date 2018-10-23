@@ -610,12 +610,12 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetExploreUri(string maxId = null)
+        public static Uri GetExploreUri(string maxId = null, string rankToken = null)
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DISCOVER_EXPLORE, out var instaUri))
                 throw new Exception("Cant create URI for explore posts");
-            var query = $"is_prefetch=false&is_from_promote=true&timezone_offset={DateTime.UtcNow.ToUnixTime()}&supported_capabilities_new={JsonConvert.SerializeObject(InstaApiConstants.SupportedCapabalities)}";
-            if (!string.IsNullOrEmpty(maxId)) query += $"&max_id={maxId}";
+            var query = $"is_prefetch=false&is_from_promote=true&timezone_offset={InstaApiConstants.TIMEZONE_OFFSET}&supported_capabilities_new={JsonConvert.SerializeObject(InstaApiConstants.SupportedCapabalities)}";
+            if (!string.IsNullOrEmpty(maxId)) query += $"&max_id={maxId}&session_id={rankToken}";
             var uriBuilder = new UriBuilder(instaUri) { Query = query };
             return uriBuilder.Uri;
         }

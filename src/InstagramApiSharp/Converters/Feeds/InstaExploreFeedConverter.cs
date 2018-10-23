@@ -32,7 +32,12 @@ namespace InstagramApiSharp.Converters
 
             var feed = new InstaExploreFeed
             {
-                NextMaxId = SourceObject.NextMaxId
+                NextMaxId = SourceObject.NextMaxId,
+                AutoLoadMoreEnabled = SourceObject.AutoLoadMoreEnabled,
+                ResultsCount = SourceObject.ResultsCount,
+                MoreAvailable = SourceObject.MoreAvailable,
+                MaxId = SourceObject.MaxId,
+                RankToken = SourceObject.RankToken
             };
             if (SourceObject.Items?.StoryTray != null)
                 feed.StoryTray = ConvertersFabric.Instance.GetStoryTrayConverter(SourceObject.Items.StoryTray)

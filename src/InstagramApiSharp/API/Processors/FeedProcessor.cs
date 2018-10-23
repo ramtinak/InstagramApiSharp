@@ -50,36 +50,55 @@ namespace InstagramApiSharp.API.Processors
             var exploreFeed = new InstaExploreFeed();
             try
             {
-                var exploreUri = UriCreator.GetExploreUri(paginationParameters.NextId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, exploreUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
+                InstaExploreFeed Convert(InstaExploreFeedResponse exploreFeedResponse)
+                {
+                    return ConvertersFabric.Instance.GetExploreFeedConverter(exploreFeedResponse).Convert();
+                }
+                var feeds = await GetExploreFeed(paginationParameters);
+                if (!feeds.Succeeded)
+                    return Result.Fail(feeds.Info, Convert(feeds.Value));
+                var feedResponse = feeds.Value;
+                paginationParameters.NextId = feedResponse.MaxId;
+                paginationParameters.RankToken = feedResponse.RankToken;
 
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaExploreFeed>(response, json);
-                var feedResponse = JsonConvert.DeserializeObject<InstaExploreFeedResponse>(json,
-                    new InstaExploreFeedDataConverter());
-                exploreFeed = ConvertersFabric.Instance.GetExploreFeedConverter(feedResponse).Convert();
-                var nextId = feedResponse.Items.Medias.LastOrDefault(media => !string.IsNullOrEmpty(media.NextMaxId))
-                    ?.NextMaxId;
-                exploreFeed.Medias.PageSize = feedResponse.ResultsCount;
-                paginationParameters.NextId = nextId;
-                exploreFeed.NextMaxId = nextId;
                 while (feedResponse.MoreAvailable
                        && !string.IsNullOrEmpty(paginationParameters.NextId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var nextFeed = await GetExploreFeedAsync(paginationParameters);
+                    var nextFeed = await GetExploreFeed(paginationParameters);
                     if (!nextFeed.Succeeded)
-                        return Result.Fail(nextFeed.Info, exploreFeed);
-                    nextId = feedResponse.Items.Medias.LastOrDefault(media => !string.IsNullOrEmpty(media.NextMaxId))
-                        ?.NextMaxId;
-                    exploreFeed.NextMaxId = paginationParameters.NextId = nextId;
-                    paginationParameters.PagesLoaded++;
-                    exploreFeed.Medias.AddRange(nextFeed.Value.Medias);
-                }
+                        return Result.Fail(nextFeed.Info, Convert(feeds.Value));
 
+                    feedResponse.NextMaxId = paginationParameters.NextId = nextFeed.Value.MaxId;
+                    feedResponse.RankToken = paginationParameters.RankToken = nextFeed.Value.RankToken;
+                    feedResponse.MoreAvailable = nextFeed.Value.MoreAvailable;
+                    feedResponse.AutoLoadMoreEnabled = nextFeed.Value.AutoLoadMoreEnabled;
+                    feedResponse.NextMaxId = nextFeed.Value.NextMaxId;
+                    feedResponse.ResultsCount = nextFeed.Value.ResultsCount;
+                    feedResponse.Items.Channel = nextFeed.Value.Items.Channel;
+                    feedResponse.Items.Medias.AddRange(nextFeed.Value.Items.Medias);
+                    if (nextFeed.Value.Items.StoryTray == null)
+                        feedResponse.Items.StoryTray = nextFeed.Value.Items.StoryTray;
+                    else
+                    {
+                        feedResponse.Items.StoryTray.Id = nextFeed.Value.Items.StoryTray.Id;
+                        feedResponse.Items.StoryTray.IsPortrait = nextFeed.Value.Items.StoryTray.IsPortrait;
+
+                        feedResponse.Items.StoryTray.Tray.AddRange(nextFeed.Value.Items.StoryTray.Tray);
+                        if (nextFeed.Value.Items.StoryTray.TopLive == null)
+                            feedResponse.Items.StoryTray.TopLive = nextFeed.Value.Items.StoryTray.TopLive;
+                        else
+                        {
+                            feedResponse.Items.StoryTray.TopLive.RankedPosition = nextFeed.Value.Items.StoryTray.TopLive.RankedPosition;
+                            feedResponse.Items.StoryTray.TopLive.BroadcastOwners.AddRange(nextFeed.Value.Items.StoryTray.TopLive.BroadcastOwners);
+                        }
+                    }
+
+                    paginationParameters.PagesLoaded++;
+                }
+                exploreFeed = Convert(feedResponse);
                 exploreFeed.Medias.Pages = paginationParameters.PagesLoaded;
+                exploreFeed.Medias.PageSize = feedResponse.ResultsCount;
                 return Result.Success(exploreFeed);
             }
             catch (Exception exception)
@@ -303,6 +322,28 @@ namespace InstagramApiSharp.API.Processors
             }
 
             return Result.Success(activityFeed);
+        }
+
+        private async Task<IResult<InstaExploreFeedResponse>> GetExploreFeed(PaginationParameters paginationParameters)
+        {
+            try
+            {
+                var exploreUri = UriCreator.GetExploreUri(paginationParameters.NextId, paginationParameters.RankToken);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, exploreUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaExploreFeedResponse>(response, json);
+                var feedResponse = JsonConvert.DeserializeObject<InstaExploreFeedResponse>(json,
+                    new InstaExploreFeedDataConverter());
+                return Result.Success(feedResponse);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaExploreFeedResponse>(exception);
+            }
         }
     }
 }
