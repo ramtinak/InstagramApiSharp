@@ -20,7 +20,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("reel_owner_id")]
         public long ReelOwnerId { get; set; }
         [JsonProperty("is_reel_persisted")]
-        public bool IsReelPersisted { get; set; }
+        public bool? IsReelPersisted { get; set; }
         [JsonProperty("reel_type")]
         public string ReelType { get; set; }
         [JsonProperty("media")]

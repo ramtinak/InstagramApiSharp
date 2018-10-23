@@ -23,7 +23,7 @@ namespace InstagramApiSharp.Converters
 
             var reelShare = new InstaReelShare
             {
-                IsReelPersisted = SourceObject.IsReelPersisted,
+                IsReelPersisted = SourceObject.IsReelPersisted ?? false,
                 ReelOwnerId = SourceObject.ReelOwnerId,
                 ReelType = SourceObject.ReelType,
                 Text = SourceObject.Text,
