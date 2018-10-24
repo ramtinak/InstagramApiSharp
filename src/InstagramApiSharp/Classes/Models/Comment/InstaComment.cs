@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaComment
+    public class InstaComment : INotifyPropertyChanged
     {
         public int Type { get; set; }
 
@@ -26,7 +27,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public bool DidReportAsSpam { get; set; }
 
-        public bool HasLikedComment { get; set; }
+        private bool _haslikedcm;
+        public bool HasLikedComment { get => _haslikedcm; set { _haslikedcm = value; Update("HasLikedComment"); } }
 
         public int ChildCommentCount { get; set; }
 
@@ -40,6 +42,10 @@ namespace InstagramApiSharp.Classes.Models
         public List<InstaCommentShort> PreviewChildComments { get; set; } = new List<InstaCommentShort>();
 
         public List<InstaUserShort> OtherPreviewUsers { get; set; } = new List<InstaUserShort>();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void Update(string PName) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PName)); }
+
         public bool Equals(InstaComment comment)
         {
             return Pk == comment?.Pk;

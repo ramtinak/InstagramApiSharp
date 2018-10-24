@@ -66,7 +66,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Like media comment
         /// </summary>
-        /// <param name="commentId">Comment id</param>
+        /// <param name="commentId">pass Pk.Tostring() for commentId</param>
         Task<IResult<bool>> LikeCommentAsync(string commentId);
 
         /// <summary>
