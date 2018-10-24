@@ -69,6 +69,16 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaRecipients>> GetRankedRecipientsAsync();
 
         /// <summary>
+        ///     Get ranked recipients (threads and users) asynchronously
+        ///     <para>Note: Some recipient has User, some recipient has Thread</para>
+        /// </summary>
+        /// <param name="username">Username to search</param>
+        /// <returns>
+        ///     <see cref="InstaRecipients" />
+        /// </returns>
+        Task<IResult<InstaRecipients>> GetRankedRecipientsByUsernameAsync(string username);
+
+        /// <summary>
         ///     Get recent recipients (threads and users) asynchronously
         /// </summary>
         /// <returns>
@@ -251,9 +261,19 @@ namespace InstagramApiSharp.API.Processors
         ///     Share media to direct thread
         /// </summary>
         /// <param name="mediaId">Media id</param>
-        /// <param name="mediaType">Media id</param>
+        /// <param name="mediaType">Media type</param>
+        /// <param name="text">Text to send</param>
         /// <param name="threadIds">Thread ids</param>
-        Task<IResult<bool>> ShareMediaToThreadAsync(string mediaId, InstaMediaType mediaType, params string[] threadIds);
+        Task<IResult<bool>> ShareMediaToThreadAsync(string mediaId, InstaMediaType mediaType, string text, params string[] threadIds);
+
+        /// <summary>
+        ///     Share media to user id
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="mediaType">Media type</param>
+        /// <param name="text">Text to send</param>
+        /// <param name="userIds">User ids (pk)</param>
+        Task<IResult<bool>> ShareMediaToUserAsync(string mediaId, InstaMediaType mediaType, string text, params long[] userIds);
 
         [Obsolete("ShareUserAsync is deprecated. Use SendDirectProfileAsync instead.")]
         /// <summary>

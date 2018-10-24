@@ -78,6 +78,17 @@ namespace InstagramApiSharp
             return "\"" + content + "\"";
         }
 
+        public static string EncodeRecipients(this long[] recipients)
+        {
+            return EncodeRecipients(recipients.ToList());
+        }
+        public static string EncodeRecipients(this List<long> recipients)
+        {
+            var list = new List<string>();
+            foreach (var item in recipients)
+                list.Add($"[{item}]");
+            return string.Join(",", list);
+        }
         public static string GetJson(this InstaLocationShort location)
         {
             if (location == null)

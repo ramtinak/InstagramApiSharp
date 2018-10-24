@@ -331,7 +331,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaDirectInboxContainer>(exception.Message);
             }
         }
-
+        
         /// <summary>
         ///     Get ranked recipients (threads and users) asynchronously
         /// </summary>
@@ -340,11 +340,29 @@ namespace InstagramApiSharp.API.Processors
         /// </returns>
         public async Task<IResult<InstaRecipients>> GetRankedRecipientsAsync()
         {
+            return await GetRankedRecipientsByUsernameAsync(null);
+        }
+
+        /// <summary>
+        ///     Get ranked recipients (threads and users) asynchronously
+        ///     <para>Note: Some recipient has User, some recipient has Thread</para>
+        /// </summary>
+        /// <param name="username">Username to search</param>
+        /// <returns>
+        ///     <see cref="InstaRecipients" />
+        /// </returns>
+        public async Task<IResult<InstaRecipients>> GetRankedRecipientsByUsernameAsync(string username)
+        {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var userUri = UriCreator.GetRankedRecipientsUri();
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+                Uri instaUri;
+                if (string.IsNullOrEmpty(username))
+                    instaUri = UriCreator.GetRankedRecipientsUri();
+                else
+                    instaUri = UriCreator.GetRankRecipientsByUserUri(username);
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -870,9 +888,49 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         ///     Share media to direct thread
         /// </summary>
         /// <param name="mediaId">Media id</param>
-        /// <param name="mediaType">Media id</param>
+        /// <param name="mediaType">Media type</param>
+        /// <param name="text">Text to send</param>
         /// <param name="threadIds">Thread ids</param>
-        public async Task<IResult<bool>> ShareMediaToThreadAsync(string mediaId, InstaMediaType mediaType, params string[] threadIds)
+        public async Task<IResult<bool>> ShareMediaToThreadAsync(string mediaId, InstaMediaType mediaType, string text, params string[] threadIds)
+        {
+            try
+            {
+                if (threadIds == null || threadIds != null && !threadIds.Any())
+                    throw new ArgumentException("At least one thread id required");
+
+                return await ShareMedia(mediaId, mediaType, text, threadIds, null);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Share media to user id
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        /// <param name="mediaType">Media type</param>
+        /// <param name="text">Text to send</param>
+        /// <param name="userIds">User ids (pk)</param>
+        public async Task<IResult<bool>> ShareMediaToUserAsync(string mediaId, InstaMediaType mediaType, string text, params long[] userIds)
+        {
+            try
+            {
+                if (userIds == null || userIds != null && !userIds.Any())
+                    throw new ArgumentException("At least one user id required");
+
+                return await ShareMedia(mediaId, mediaType, text, null, userIds);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        private async Task<IResult<bool>> ShareMedia(string mediaId, InstaMediaType mediaType, string text, string[] threadIds, long[] userIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -882,18 +940,22 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 var data = new Dictionary<string, string>
                 {
                     {"action", "send_item"},
-                    {"thread_ids", $"[{threadIds.EncodeList(false)}]"},
                     {"client_context", clientContext},
                     {"media_id", mediaId},
                     {"_csrftoken", _user.CsrfToken},
                     {"unified_broadcast_format", "1"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"text", text ?? string.Empty}
                 };
+                if (threadIds != null)
+                    data.Add("thread_ids", $"[{threadIds.EncodeList(false)}]");
+                else
+                    data.Add("recipient_users", $"[{userIds.EncodeRecipients()}]");
+
                 var request =
                     _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                //Debug.WriteLine(json);
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
