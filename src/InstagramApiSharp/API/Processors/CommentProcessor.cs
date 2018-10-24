@@ -213,7 +213,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Get media comments likers
         /// </summary>
         /// <param name="mediaId">Media id</param>
-        public async Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId)
+        public async Task<IResult<InstaLikersList>> GetMediaCommentLikersAsync(string mediaId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -223,15 +223,21 @@ namespace InstagramApiSharp.API.Processors
                     _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaLikersList>(response, json);
 
-                return response.StatusCode == HttpStatusCode.OK
-                    ? Result.Success(true)
-                    : Result.UnExpectedResponse<bool>(response, json);
+                var likers = new InstaLikersList();
+                var likersResponse = JsonConvert.DeserializeObject<InstaMediaLikersResponse>(json);
+                likers.UsersCount = likersResponse.UsersCount;
+                likers.AddRange(
+                    likersResponse.Users.Select(ConvertersFabric.Instance.GetUserShortConverter)
+                        .Select(converter => converter.Convert()));
+                return Result.Success(likers);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
+                return Result.Fail<InstaLikersList>(exception.Message);
             }
         }
 

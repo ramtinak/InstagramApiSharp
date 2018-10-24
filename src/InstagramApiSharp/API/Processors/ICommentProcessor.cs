@@ -46,7 +46,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Get media comments likers
         /// </summary>
         /// <param name="mediaId">Media id</param>
-        Task<IResult<bool>> GetMediaCommentLikersAsync(string mediaId);
+        Task<IResult<InstaLikersList>> GetMediaCommentLikersAsync(string mediaId);
 
         /// <summary>
         ///     Get media comments
