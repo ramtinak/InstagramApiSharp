@@ -2,6 +2,7 @@
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers.BaseResponse;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
@@ -16,7 +17,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("sticker_version")] public int StickerVersion { get; set; }
 
-        [JsonProperty("tray")] public List<InstaReelFeedResponse> Tray { get; set; }
+        [JsonProperty("tray")] public List</*InstaReelFeedResponse*/JToken> Tray { get; set; }
 
         [JsonProperty("broadcasts")] public List<InstaBroadcast> Broadcasts { get; set; }
     }

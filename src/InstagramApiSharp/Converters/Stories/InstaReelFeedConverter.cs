@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Helpers;
@@ -29,9 +30,13 @@ namespace InstagramApiSharp.Converters
                     reelFeed.CanReshare = bool.Parse(SourceObject.CanReshare);
             }
             catch { }
-            if (SourceObject.Items != null)
+            if (SourceObject.Items != null && SourceObject.Items.Any())
                 foreach (var item in SourceObject.Items)
-                    reelFeed.Items.Add(ConvertersFabric.Instance.GetStoryItemConverter(item).Convert());
+                    try
+                    {
+                        reelFeed.Items.Add(ConvertersFabric.Instance.GetStoryItemConverter(item).Convert());
+                    }
+                    catch { }
             return reelFeed;
         }
     }

@@ -380,8 +380,8 @@ namespace InstagramApiSharp.Converters
             return new InstaHashtagOwnerConverter { SourceObject = response };
         }
 
-        public IObjectConverter<InstaHashtagStory, InstaHashtagStoryContainerResponse> GetHashtagStoryConverter(
-            InstaHashtagStoryContainerResponse response)
+        public IObjectConverter<InstaHashtagStory, InstaHashtagStoryResponse> GetHashtagStoryConverter(
+            InstaHashtagStoryResponse response)
         {
             return new InstaHashtagStoryConverter { SourceObject = response };
         }

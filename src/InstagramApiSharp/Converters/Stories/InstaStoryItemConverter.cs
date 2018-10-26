@@ -52,23 +52,23 @@ namespace InstagramApiSharp.Converters
                     instaStory.ImageList.Add(new InstaImage(image.Url, int.Parse(image.Width),
                         int.Parse(image.Height)));
 
-            if (SourceObject.VideoVersions != null)
+            if (SourceObject.VideoVersions != null && SourceObject.VideoVersions.Any())
                 foreach (var video in SourceObject.VideoVersions)
                     instaStory.VideoList.Add(new InstaVideo(video.Url, int.Parse(video.Width), int.Parse(video.Height),
                         video.Type));
 
-            if (SourceObject.ReelMentions != null)
+            if (SourceObject.ReelMentions != null && SourceObject.ReelMentions.Any())
                 foreach (var mention in SourceObject.ReelMentions)
                     instaStory.ReelMentions.Add(ConvertersFabric.Instance.GetMentionConverter(mention).Convert());
-            if (SourceObject.StoryHashtags != null)
+            if (SourceObject.StoryHashtags != null && SourceObject.StoryHashtags.Any())
                 foreach (var hashtag in SourceObject.StoryHashtags)
                     instaStory.StoryHashtags.Add(ConvertersFabric.Instance.GetMentionConverter(hashtag).Convert());
 
-            if (SourceObject.StoryLocations != null)
+            if (SourceObject.StoryLocations != null && SourceObject.StoryLocations.Any())
                 foreach (var location in SourceObject.StoryLocations)
                     instaStory.StoryLocations.Add(ConvertersFabric.Instance.GetLocationConverter(location).Convert());
 
-            if (SourceObject.StoryFeedMedia != null)
+            if (SourceObject.StoryFeedMedia != null && SourceObject.StoryFeedMedia.Any())
                 foreach (var storyFeed in SourceObject.StoryFeedMedia)
                     instaStory.StoryFeedMedia.Add(ConvertersFabric.Instance.GetStoryFeedMediaConverter(storyFeed).Convert());
 

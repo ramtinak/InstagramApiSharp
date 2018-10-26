@@ -15,30 +15,29 @@ using InstagramApiSharp.Helpers;
 
 namespace InstagramApiSharp.Converters.Hashtags
 {
-    class InstaHashtagStoryConverter : IObjectConverter<InstaHashtagStory, InstaHashtagStoryContainerResponse>
+    internal class InstaHashtagStoryConverter : IObjectConverter<InstaHashtagStory, InstaHashtagStoryResponse>
     {
-        public InstaHashtagStoryContainerResponse SourceObject { get; set; }
+        public InstaHashtagStoryResponse SourceObject { get; set; }
 
         public InstaHashtagStory Convert()
         {
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
-            var source = SourceObject.Story;
             var hashtagStory = new InstaHashtagStory
             {
-                CanReply = source.CanReply,
-                 CanReshare = source.CanReshare,
-                 ExpiringAt = source.ExpiringAt.FromUnixTimeSeconds(),
-                 Id = source.Id,
-                 LatestReelMedia = source.LatestReelMedia,
-                 Muted = source.Muted,
-                 PrefetchCount = source.PrefetchCount,
-                 ReelType = source.ReelType,
-                 UniqueIntegerReelId = source.UniqueIntegerReelId,
-                 Owner = ConvertersFabric.Instance.GetHashtagOwnerConverter(source.Owner).Convert()
+                CanReply = SourceObject.CanReply,
+                CanReshare = SourceObject.CanReshare,
+                ExpiringAt = SourceObject.ExpiringAt.FromUnixTimeSeconds(),
+                Id = SourceObject.Id,
+                LatestReelMedia = SourceObject.LatestReelMedia,
+                Muted = SourceObject.Muted,
+                PrefetchCount = SourceObject.PrefetchCount,
+                ReelType = SourceObject.ReelType,
+                UniqueIntegerReelId = SourceObject.UniqueIntegerReelId,
+                Owner = ConvertersFabric.Instance.GetHashtagOwnerConverter(SourceObject.Owner).Convert()
             };
             try
             {
-                foreach (var story in source.Items)
+                foreach (var story in SourceObject.Items)
                 {
                     try
                     {

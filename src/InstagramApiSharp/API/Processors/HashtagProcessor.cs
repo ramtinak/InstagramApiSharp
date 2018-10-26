@@ -159,7 +159,7 @@ namespace InstagramApiSharp.API.Processors
 
                 var obj = JsonConvert.DeserializeObject<InstaHashtagStoryContainerResponse>(json);
 
-                return Result.Success(ConvertersFabric.Instance.GetHashtagStoryConverter(obj).Convert());
+                return Result.Success(ConvertersFabric.Instance.GetHashtagStoryConverter(obj.Story).Convert());
             }
             catch (Exception exception)
             {

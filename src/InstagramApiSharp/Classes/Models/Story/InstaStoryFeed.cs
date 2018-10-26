@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using InstagramApiSharp.Classes.Models.Hashtags;
+using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models
 {
@@ -15,5 +16,7 @@ namespace InstagramApiSharp.Classes.Models
         public List<InstaReelFeed> Items { get; set; } = new List<InstaReelFeed>();
 
         public List<InstaBroadcast> Broadcasts { get; set; } = new List<InstaBroadcast>();
+
+        public List<InstaHashtagStory> HashtagStories { get; set; } = new List<InstaHashtagStory>();
     }
 }
