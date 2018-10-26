@@ -225,8 +225,7 @@ namespace InstagramApiSharp.API
         /// <param name="cookies">Cookies from webview or webbrowser control</param>
         /// <returns>True if logged in, False if not</returns>
         Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaWebBrowserResponse webBrowserResponse, string cookies, bool validate = true);
-
-        /*Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaFacebookAccountInfo facebookAccount, string cookies);*/
+        
         /// <summary>
         ///     Check email availability
         /// </summary>

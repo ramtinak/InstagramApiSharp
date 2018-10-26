@@ -11,14 +11,8 @@ using Newtonsoft.Json;
 
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    public class InstaHashtagResponse
+    public class InstaUserShortFriendshipResponse : InstaUserShortResponse
     {
-        [JsonProperty("id")] public long Id { get; set; }
-
-        [JsonProperty("name")] public string Name { get; set; }
-
-        [JsonProperty("media_count")] public long MediaCount { get; set; }
-
-        [JsonProperty("profile_pic_url")] public string ProfilePicUrl { get; set; }
+        [JsonProperty("friendship_status")] public InstaFriendshipShortStatusResponse FriendshipStatus { get; set; }
     }
 }

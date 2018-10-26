@@ -128,15 +128,18 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="InstagramApiSharp">
-      <Version>1.1.3.5</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.9</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="UwpExample_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\InstagramApiSharp\InstagramApiSharp.csproj">
+      <Project>{2a588963-cebe-47ec-bfbb-2f3d405e4c80}</Project>
+      <Name>InstagramApiSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

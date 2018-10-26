@@ -156,7 +156,7 @@ namespace InstagramApiSharp.API.Processors
                     count = 30;
                 var fields = new Dictionary<string, string>
                 {
-                    {"timezone_offset", "16200"},
+                    {"timezone_offset", InstaApiConstants.TIMEZONE_OFFSET.ToString()},
                     {"lat", latitude.ToString(CultureInfo.InvariantCulture)},
                     {"lng", longitude.ToString(CultureInfo.InvariantCulture)},
                     {"count", count.ToString()},

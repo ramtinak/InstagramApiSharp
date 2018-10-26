@@ -505,5 +505,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaPlaceListConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaUserShortFriendship, InstaUserShortFriendshipResponse> GetUserShortFriendshipConverter(
+            InstaUserShortFriendshipResponse response)
+        {
+            return new InstaUserShortFriendshipConverter { SourceObject = response };
+        }
     }
 }
