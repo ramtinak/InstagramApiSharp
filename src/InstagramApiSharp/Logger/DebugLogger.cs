@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -24,6 +25,8 @@ namespace InstagramApiSharp.Logger
             Write($"Request: {request.Method} {request.RequestUri}");
             WriteHeaders(request.Headers);
             WriteProperties(request.Properties);
+            if (request.Method == HttpMethod.Post)
+                WriteRequestContent(request.Content);
         }
 
         public void LogRequest(Uri uri)
@@ -82,6 +85,14 @@ namespace InstagramApiSharp.Logger
             if ((raw.Length > maxLength) & (maxLength != 0))
                 raw = raw.Substring(0, maxLength);
             Write(raw);
+        }
+        private async void WriteRequestContent(HttpContent content,int maxLength = 0)
+        {
+            Write("Content:");
+            var raw = await content.ReadAsStringAsync();
+            if ((raw.Length > maxLength) & (maxLength != 0))
+                raw = raw.Substring(0, maxLength);
+            Write(WebUtility.UrlDecode(raw));
         }
 
         private void WriteSeprator()

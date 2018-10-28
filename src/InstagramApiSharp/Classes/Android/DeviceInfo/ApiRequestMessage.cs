@@ -12,21 +12,25 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
     }
     public class ApiRequestMessage
     {
-        static Random rnd = new Random();
+        static readonly Random Rnd = new Random();
         [JsonProperty("phone_id")]
         public string PhoneId { get; set; }
         [JsonProperty("username")]
         public string Username { get; set; }
+        [JsonProperty("adid")]
+        public string AdId { get; set; }
         [JsonProperty("guid")]
         public Guid Guid { get; set; }
         [JsonProperty("device_id")]
         public string DeviceId { get; set; }
+        [JsonProperty("_uuid")]
+        public string Uuid => Guid.ToString();
+        [JsonProperty("google_tokens")]
+        public string GoogleTokens { get; set; } = "[]";
         [JsonProperty("password")]
         public string Password { get; set; }
         [JsonProperty("login_attempt_count")]
-        public string LoginAttemptCount { get; set; } = "0";
-        [JsonProperty("adid")]
-        public string AdId { get; set; }
+        public string LoginAttemptCount { get; set; } = "1";
         public static ApiRequestMessage CurrentDevice { get; private set; }
         internal string GetMessageString()
         {

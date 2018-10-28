@@ -24,5 +24,9 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("challenge")] public InstaChallengeLoginInfo Challenge { get; set; }
 
         #endregion
+
+        [JsonProperty("lock")] public bool? Lock { get; set; }
+
+        [JsonProperty("checkpoint_url")] public string CheckpointUrl { get; set; }
     }
 }
