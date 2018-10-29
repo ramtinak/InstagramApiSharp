@@ -1,3 +1,4 @@
+using InstagramApiSharp.Classes.ResponseWrappers;
 using System;
 
 namespace InstagramApiSharp.Classes
@@ -24,14 +25,18 @@ namespace InstagramApiSharp.Classes
             Message = errorMessage;
             HandleMessages(errorMessage);
         }
+        public ResultInfo(ResponseType responseType, BadStatusResponse status)
+        {
+            Message = status?.Message;
+            ResponseType = responseType;
+            HandleMessages(Message);
+        }
         public void HandleMessages(string errorMessage)
         {
             if (errorMessage.Contains("task was canceled"))
                 Timeout = true;
             if (errorMessage.ToLower().Contains("challenge"))
                 NeedsChallenge = true;
-            if (errorMessage.ToLower().Contains("wait a few minutes before you try again"))
-                ActionBlocked = true;
         }
         public Exception Exception { get; }
 
@@ -42,8 +47,6 @@ namespace InstagramApiSharp.Classes
         public bool Timeout { get; internal set; }
 
         public bool NeedsChallenge { get; internal set; }
-
-        public bool ActionBlocked { get; internal set; }
 
         public override string ToString()
         {

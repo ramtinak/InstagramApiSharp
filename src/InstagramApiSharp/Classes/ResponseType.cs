@@ -11,7 +11,7 @@ namespace InstagramApiSharp.Classes
         /// </summary>
         LoginRequired = 1,
         /// <summary>
-        ///     When happens that
+        ///     Unknown behavior:|
         /// </summary>
         CheckPointRequired = 2,
         /// <summary>
@@ -53,6 +53,10 @@ namespace InstagramApiSharp.Classes
         /// <summary>
         ///     When happens that you didn't accept consent age in GDPR countries
         /// </summary>
-        ConsentRequired = 12
+        ConsentRequired = 12,
+        /// <summary>
+        ///     When happens that you are doing massive follow and unfollow, comment and...
+        /// </summary>
+        ActionBlocked = 13
     }
 }

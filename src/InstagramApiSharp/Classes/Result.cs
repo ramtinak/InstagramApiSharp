@@ -140,6 +140,8 @@ namespace InstagramApiSharp.Classes
             if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("consent_required"))
                 responseType = ResponseType.ConsentRequired;
 
+            if (!string.IsNullOrEmpty(status.FeedbackTitle) && status.FeedbackTitle.Contains("action blocked"))
+                responseType = ResponseType.ActionBlocked;
             //if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("challenge_required"))
             //    responseType = ResponseType.ChallengeRequired;
             return responseType;
