@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.3.6</Version>
-    <AssemblyVersion>1.1.3.6</AssemblyVersion>
-    <FileVersion>1.1.3.6</FileVersion>
+    <Version>1.1.3.7</Version>
+    <AssemblyVersion>1.1.3.7</AssemblyVersion>
+    <FileVersion>1.1.3.7</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -37,7 +37,14 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.3.6
+    <PackageReleaseNotes>v1.1.3.7
+- [Update] SearchUserByLocationAsync
+- [Bugfix] for GetStoryFeedAsync (thx to @iancona for report)
+- [Update] LoginAsync
+- [Add] ActionBlocked to ResponseType
+- Some minor improvements
+
+v1.1.3.6
 - [Bugfix] For GetExploreFeedAsync pagination
 - [Bugfix] For direct reel share
 - [Bugfix] For GetMediaCommentLikersAsync
