@@ -511,5 +511,41 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaUserShortFriendshipConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaTVUser, InstaTVUserResponse> GetTVUserConverter(
+            InstaTVUserResponse response)
+        {
+            return new InstaTVUserConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaTVChannel, InstaTVChannelResponse> GetTVChannelConverter(
+            InstaTVChannelResponse response)
+        {
+            return new InstaTVChannelConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaTVSelfChannel, InstaTVSelfChannelResponse> GetTVSelfChannelConverter(
+            InstaTVSelfChannelResponse response)
+        {
+            return new InstaTVSelfChannelConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaTV, InstaTVResponse> GetTVConverter(
+            InstaTVResponse response)
+        {
+            return new InstaTVConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaTVSearchResult, InstaTVSearchResultResponse> GetTVSearchResultConverter(
+            InstaTVSearchResultResponse response)
+        {
+            return new InstaTVSearchResultConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaTVSearch, InstaTVSearchResponse> GetTVSearchConverter(
+            InstaTVSearchResponse response)
+        {
+            return new InstaTVSearchConverter { SourceObject = response };
+        }
     }
 }

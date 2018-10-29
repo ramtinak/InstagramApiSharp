@@ -15,23 +15,21 @@ namespace InstagramApiSharp.Classes.Models
 {
     public class InstaTVSearch
     {
-        [JsonProperty("results")]
-        public List<InstaTVSearchResult> Results { get; set; }
-        [JsonProperty("num_results")]
+        public List<InstaTVSearchResult> Results { get; set; } = new List<InstaTVSearchResult>();
+
         public int NumResults { get; set; }
-        [JsonProperty("rank_token")]
-        public string Rank_token { get; set; }
-        [JsonProperty("status")]
+
+        public string RankToken { get; set; }
+
         internal string Status { get; set; }
     }
 
     public class InstaTVSearchResult
     {
-        [JsonProperty("type")]
-        internal string Type { get; set; }
-        [JsonProperty("user")]
-        public InstaUserResponse User { get; set; }
-        [JsonProperty("channel")]
+        public string Type { get; set; }
+
+        public InstaUser User { get; set; }
+
         public InstaTVChannel Channel { get; set; }
     }
 

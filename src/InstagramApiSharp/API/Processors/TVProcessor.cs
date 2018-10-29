@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.ResponseWrappers;
+using InstagramApiSharp.Converters;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
@@ -74,8 +76,9 @@ namespace InstagramApiSharp.API.Processors
 
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaTVSearch>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaTVSearch>(json);
-                return Result.Success(obj);
+                var obj = JsonConvert.DeserializeObject<InstaTVSearchResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetTVSearchConverter(obj).Convert());
             }
             catch (Exception exception)
             {
@@ -99,8 +102,9 @@ namespace InstagramApiSharp.API.Processors
                 
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaTV>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaTV>(json);
-                return Result.Success(obj);
+                var obj = JsonConvert.DeserializeObject<InstaTVResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetTVConverter(obj).Convert());
             }
             catch (Exception exception)
             {
@@ -124,8 +128,9 @@ namespace InstagramApiSharp.API.Processors
 
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaTVSearch>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaTVSearch>(json);
-                return Result.Success(obj);
+                var obj = JsonConvert.DeserializeObject<InstaTVSearchResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetTVSearchConverter(obj).Convert());
             }
             catch (Exception exception)
             {
@@ -181,8 +186,9 @@ namespace InstagramApiSharp.API.Processors
                 
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaTVChannel>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaTVChannel>(json);
-                return Result.Success(obj);
+                var obj = JsonConvert.DeserializeObject<InstaTVChannelResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetTVChannelConverter(obj).Convert());
             }
             catch (Exception exception)
             {
