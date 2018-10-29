@@ -23,14 +23,14 @@ namespace InstagramApiSharp.API.Processors
         ///     Get channel by user id (pk) => channel owner
         /// </summary>
         /// <param name="userId">User id (pk) => channel owner</param>
-        /// <param name="paginationParameters">Pagination parameters</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         Task<IResult<InstaTVChannel>> GetChannelByIdAsync(long userId, PaginationParameters paginationParameters);
 
         /// <summary>
         ///     Get channel by <seealso cref="InstaTVChannelType"/>
         /// </summary>
         /// <param name="channelType">Channel type</param>
-        /// <param name="paginationParameters">Pagination parameters</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         Task<IResult<InstaTVChannel>> GetChannelByTypeAsync(InstaTVChannelType channelType, PaginationParameters paginationParameters);
 
         /// <summary>
