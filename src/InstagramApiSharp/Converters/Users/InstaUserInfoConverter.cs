@@ -101,6 +101,23 @@ namespace InstagramApiSharp.Converters
                 }
                 catch { }
             }
+            if (SourceObject.User.ProfileContextIds != null && SourceObject.User.ProfileContextIds.Any())
+            {
+                foreach (var prof in SourceObject.User.ProfileContextIds)
+                {
+                    try
+                    {
+                        var context = new InstaUserContext
+                        {
+                            End = prof.End,
+                            Start = prof.Start,
+                            Username = prof.Username
+                        };
+                        userInfo.ProfileContextIds.Add(context);
+                    }
+                    catch { }
+                }
+            }
             return userInfo;
         }
     }

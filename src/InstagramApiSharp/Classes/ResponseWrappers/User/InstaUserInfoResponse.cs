@@ -63,7 +63,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("is_favorite_for_stories")] public bool IsFavoriteForStories { get; set; }
 
-
+        [JsonProperty("profile_context_links_with_user_ids")] public List<InstaUserContextResponse> ProfileContextIds { get; set; }
 
         // Business accounts
 
