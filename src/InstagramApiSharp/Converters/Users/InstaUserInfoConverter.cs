@@ -118,6 +118,14 @@ namespace InstagramApiSharp.Converters
                     catch { }
                 }
             }
+            if (SourceObject.User.FriendshipStatus != null)
+            {
+                try
+                {
+                    userInfo.FriendshipStatus = ConvertersFabric.Instance.GetFriendShipStatusConverter(SourceObject.User.FriendshipStatus).Convert();
+                }
+                catch { }
+            }
             return userInfo;
         }
     }

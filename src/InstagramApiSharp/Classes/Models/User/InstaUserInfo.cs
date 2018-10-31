@@ -62,6 +62,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public List<InstaUserContext> ProfileContextIds { get; set; } = new List<InstaUserContext>();
 
+        public InstaFriendshipStatus FriendshipStatus { get; set; }
+
         // Business accounts
 
         /// <summary>
