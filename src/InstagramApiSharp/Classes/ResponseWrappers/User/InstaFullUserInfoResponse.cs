@@ -66,7 +66,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("expiring_at")]
         public long ExpiringAt { get; set; }
         [JsonProperty("seen")]
-        public long Seen { get; set; }
+        public long? Seen { get; set; }
         [JsonProperty("can_reply")]
         public bool CanReply { get; set; }
         [JsonProperty("can_reshare")]

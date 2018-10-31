@@ -71,7 +71,7 @@ namespace InstagramApiSharp.Converters
                         LatestReelMedia = SourceObject.ReelFeed.LatestReelMedia,
                         PrefetchCount = SourceObject.ReelFeed.PrefetchCount,
                         ReelType = SourceObject.ReelFeed.ReelType,
-                        Seen = SourceObject.ReelFeed.Seen
+                        Seen = SourceObject.ReelFeed.Seen ?? 0
                     };
                     if (SourceObject.ReelFeed.User != null)
                         fullUserInfo.ReelFeed.User = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.ReelFeed.User).Convert();
@@ -116,7 +116,7 @@ namespace InstagramApiSharp.Converters
                         LatestReelMedia = SourceObject.UserStory.Reel.LatestReelMedia,
                         PrefetchCount = SourceObject.UserStory.Reel.PrefetchCount,
                         ReelType = SourceObject.UserStory.Reel.ReelType,
-                        Seen = SourceObject.UserStory.Reel.Seen
+                        Seen = SourceObject.UserStory.Reel.Seen ?? 0
                     };
                     if (SourceObject.UserStory.Reel.User != null)
                         fullUserInfo.UserStory.Reel.User = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.UserStory.Reel.User).Convert();
