@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.3.7 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.3.8 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -82,6 +82,12 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.3.8
+- [Bugfix] For checkpoint issue thx to [@hermaphros](https://github.com/hermaphros) for solution
+- [Bugfix] For GetFullUserInfoAsync
+- [Add] FriendshipStatus to InstaUserInfo
+- [Add] ProfileContextIds to InstaUserInfo
+
 v1.1.3.7
 - [Update] SearchUserByLocationAsync
 - [Bugfix] for GetStoryFeedAsync (thx to [@iancona](https://github.com/iancona) for report)
