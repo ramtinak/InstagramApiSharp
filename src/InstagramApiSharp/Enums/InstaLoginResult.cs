@@ -10,6 +10,6 @@
         ChallengeRequired,
         LimitError,
         InactiveUser,
-
+        CheckpointLoggedOut
     }
 }

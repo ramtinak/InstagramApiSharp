@@ -838,6 +838,8 @@ namespace InstagramApiSharp.API
             ValidateRequestMessage();
             try
             {
+                bool needsRelogin = false;
+                ReloginLabel:
                 if (isNewLogin)
                 {
                     var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
@@ -900,7 +902,12 @@ namespace InstagramApiSharp.API
                     }
                     if (loginFailReason.ErrorType == "checkpoint_logged_out")
                     {
-                        return Result.Fail($"{loginFailReason.ErrorType} {loginFailReason.CheckpointUrl}", InstaLoginResult.Exception);
+                        if (!needsRelogin)
+                        {
+                            needsRelogin = true;
+                            goto ReloginLabel;
+                        }
+                        return Result.Fail($"{loginFailReason.ErrorType} {loginFailReason.CheckpointUrl}", InstaLoginResult.CheckpointLoggedOut);
                     }
                     return Result.UnExpectedResponse<InstaLoginResult>(response, json);
                 }
