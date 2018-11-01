@@ -27,7 +27,9 @@ namespace InstagramApiSharp.API
         public const string ACCEPT_ENCODING = "gzip, deflate, sdch";
         public const string API = "/api";
         public const string API_SUFFIX = API + API_VERSION;
+        public const string API_SUFFIX_V2 = API + API_VERSION_V2;
         public const string API_VERSION = "/v1";
+        public const string API_VERSION_V2 = "/v2";
         public const string BASE_INSTAGRAM_API_URL = INSTAGRAM_URL + API_SUFFIX + "/";
         public const string COMMENT_BREADCRUMB_KEY = "iN4$aGr0m";
         public const string CSRFTOKEN = "csrftoken";
@@ -485,7 +487,7 @@ namespace InstagramApiSharp.API
         public const string MEDIA_VALIDATE_REEL_URL = API_SUFFIX + "/media/validate_reel_url/";
         public const string POST_COMMENT = API_SUFFIX + "/media/{0}/comment/";
         public const string SEEN_MEDIA = API_SUFFIX + "/media/seen/";
-        public const string SEEN_MEDIA_STORY = SEEN_MEDIA + "?reel=1&live_vod=0";
+        public const string SEEN_MEDIA_STORY = API_SUFFIX_V2 + "/media/seen/?reel=1&live_vod=0";
         public const string STORY_CONFIGURE = API_SUFFIX + "/media/configure_to_reel/";
         public const string STORY_CONFIGURE_VIDEO = API_SUFFIX + "/media/configure_to_story/?video=1";
         public const string STORY_CONFIGURE_VIDEO2 = API_SUFFIX + "/media/configure_to_story/";
