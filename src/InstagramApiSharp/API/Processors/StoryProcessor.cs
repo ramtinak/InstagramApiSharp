@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -522,6 +523,48 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaSharing>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Reply to story
+        ///     <para>Note: Get story media id from <see cref="InstaMedia.InstaIdentifier"/></para>
+        /// </summary>
+        /// <param name="storyMediaId">Media id (get it from <see cref="InstaMedia.InstaIdentifier"/>)</param>
+        /// <param name="userId">Story owner user pk (get it from <see cref="InstaMedia.User.Pk"/>)</param>
+        /// <param name="text">Text to send</param>
+        public async Task<IResult<bool>> ReplyToStoryAsync(string storyMediaId, long userId, string text)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetBroadcastReelShareUri();
+                var clientContext = Guid.NewGuid().ToString();
+                var data = new Dictionary<string, string>
+                {
+                    {"recipient_users", $"[[{userId}]]"},
+                    {"action", "send_item"},
+                    {"client_context", clientContext},
+                    {"media_id", storyMediaId},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"text", text ?? string.Empty},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
             }
         }
 

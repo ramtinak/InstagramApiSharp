@@ -1751,5 +1751,12 @@ namespace InstagramApiSharp.Helpers
 
             return new UriBuilder(instaUri) { Query = parameters }.Uri;
         }
+
+        public static Uri GetBroadcastReelShareUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_REEL_SHARE, out var instaUri))
+                throw new Exception("Cant create URI for direct broadcast reel share");
+            return instaUri;
+        }
     }
 }

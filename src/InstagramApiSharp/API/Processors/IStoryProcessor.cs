@@ -107,6 +107,15 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaSharing>> ShareStoryAsync(string reelId, string storyMediaId, string threadId, string text, InstaSharingType sharingType = InstaSharingType.Video);
 
         /// <summary>
+        ///     Reply to story
+        ///     <para>Note: Get story media id from <see cref="InstaMedia.InstaIdentifier"/></para>
+        /// </summary>
+        /// <param name="storyMediaId">Media id (get it from <see cref="InstaMedia.InstaIdentifier"/>)</param>
+        /// <param name="userId">Story owner user pk (get it from <see cref="InstaMedia.User.Pk"/>)</param>
+        /// <param name="text">Text to send</param>
+        Task<IResult<bool>> ReplyToStoryAsync(string storyMediaId, long userId, string text);
+
+        /// <summary>
         ///     Upload story photo
         /// </summary>
         /// <param name="image">Photo to upload</param>
