@@ -82,6 +82,15 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> MarkStoryAsSeenAsync(string storyMediaId, long takenAtUnix);
 
         /// <summary>
+        ///     Seen highlight
+        ///     <para>Get media id from <see cref="InstaHighlightFeed.CoverMedia.MediaId"/></para>
+        /// </summary>
+        /// <param name="mediaId">Media identifier (get it from <see cref="InstaHighlightFeed.CoverMedia.MediaId"/>)</param>
+        /// <param name="highlightId">Highlight id</param>
+        /// <param name="takenAtUnix">Taken at unix</param>
+        Task<IResult<bool>> MarkHighlightAsSeenAsync(string mediaId, string highlightId, long takenAtUnix);
+
+        /// <summary>
         ///     Share story to someone
         /// </summary>
         /// <param name="reelId">Reel id</param>
