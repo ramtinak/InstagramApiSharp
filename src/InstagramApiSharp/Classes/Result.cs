@@ -111,28 +111,29 @@ namespace InstagramApiSharp.Classes
         static ResponseType GetResponseType(BadStatusResponse status)
         {
             var responseType = ResponseType.UnExpectedResponse;
-            switch (status.ErrorType)
-            {
-                case "checkpoint_logged_out":
-                    responseType = ResponseType.CheckPointRequired;
-                    break;
-                case "login_required":
-                    responseType = ResponseType.LoginRequired;
-                    break;
-                case "Sorry, too many requests.Please try again later":
-                    responseType = ResponseType.RequestsLimit;
-                    break;
-                case "sentry_block":
-                    responseType = ResponseType.SentryBlock;
-                    break;
-                case "inactive user":
-                case "inactive_user":
-                    responseType = ResponseType.InactiveUser;
-                    break;
-                case "checkpoint_challenge_required":
-                    responseType = ResponseType.ChallengeRequired;
-                    break;
-            }
+            if(!string.IsNullOrWhiteSpace(status.ErrorType))
+                switch (status.ErrorType)
+                {
+                    case "checkpoint_logged_out":
+                        responseType = ResponseType.CheckPointRequired;
+                        break;
+                    case "login_required":
+                        responseType = ResponseType.LoginRequired;
+                        break;
+                    case "Sorry, too many requests.Please try again later":
+                        responseType = ResponseType.RequestsLimit;
+                        break;
+                    case "sentry_block":
+                        responseType = ResponseType.SentryBlock;
+                        break;
+                    case "inactive user":
+                    case "inactive_user":
+                        responseType = ResponseType.InactiveUser;
+                        break;
+                    case "checkpoint_challenge_required":
+                        responseType = ResponseType.ChallengeRequired;
+                        break;
+                }
 
             if (!status.IsOk() && status.Message.Contains("wait a few minutes"))
                 responseType = ResponseType.RequestsLimit;
