@@ -53,6 +53,13 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaHighlightSingleFeed>> GetHighlightsArchiveMediasAsync(string highlightId);
 
         /// <summary>
+        ///     Get single highlight medias
+        ///     <para>Note: get highlight id from <see cref="IStoryProcessor.GetHighlightFeedsAsync(long)"/></para>
+        /// </summary>
+        /// <param name="highlightId">Highlight id (Get it from <see cref="IStoryProcessor.GetHighlightFeedsAsync(long)"/>)</param>
+        Task<IResult<InstaHighlightSingleFeed>> GetHighlightMediasAsync(string highlightId);
+
+        /// <summary>
         ///     Get user story feed (stories from users followed by current user).
         /// </summary>
         Task<IResult<InstaStoryFeed>> GetStoryFeedAsync();

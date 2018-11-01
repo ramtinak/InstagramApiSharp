@@ -219,7 +219,48 @@ namespace InstagramApiSharp.API.Processors
                     {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"user_ids", $"[\"{highlightId}\"]"},
+                    {"user_ids", new JArray(highlightId)}
+                };
+
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaHighlightSingleFeed>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaHighlightReelResponse>(json,
+                    new InstaHighlightReelsListDataConverter());
+
+                return Result.Success(ConvertersFabric.Instance.GetHighlightReelConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaHighlightSingleFeed>(exception.Message);
+            }
+        }
+
+        /// <summary>
+        ///     Get single highlight medias
+        ///     <para>Note: get highlight id from <see cref="IStoryProcessor.GetHighlightFeedsAsync(long)"/></para>
+        /// </summary>
+        /// <param name="highlightId">Highlight id (Get it from <see cref="IStoryProcessor.GetHighlightFeedsAsync(long)"/>)</param>
+        public async Task<IResult<InstaHighlightSingleFeed>> GetHighlightMediasAsync(string highlightId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (string.IsNullOrEmpty(highlightId))
+                    throw new ArgumentNullException("highlightId cannot be null or empty");
+
+                var instaUri = UriCreator.GetReelMediaUri();
+                var data = new JObject
+                {
+                    {InstaApiConstants.SUPPORTED_CAPABALITIES_HEADER, InstaApiConstants.SupportedCapabalities.ToString(Formatting.None)},
+                    {"source", "profile"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"user_ids", new JArray(highlightId)}
                 };
 
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
