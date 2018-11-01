@@ -103,6 +103,8 @@ namespace ChallengeRequireExample
 
             if (!InstaApi.IsUserAuthenticated)
             {
+                bool flag = false;
+                Lbl:
                 var logInResult = await InstaApi.LoginAsync();
                 Debug.WriteLine(logInResult.Value);
                 if (logInResult.Succeeded)
@@ -153,6 +155,14 @@ namespace ChallengeRequireExample
                     {
                         TwoFactorGroupBox.Visible = true;
                         Size = ChallengeSize;
+                    }
+                    else if(logInResult.Value == InstaLoginResult.CheckpointLoggedOut)
+                    {
+                        if (!flag)
+                        {
+                            flag = true;
+                            goto Lbl;
+                        }
                     }
                 }
             }

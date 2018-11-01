@@ -34,7 +34,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("seen_user_ids")] public List<long> RavenSeenUserIds { get; set; }
 
-        [JsonProperty("reply_chain_count")] public int RavenReplayChainCount { get; set; }
+        [JsonProperty("reply_chain_count")] public int? RavenReplayChainCount { get; set; }
 
         [JsonProperty("seen_count")] public int RavenSeenCount { get; set; }
 

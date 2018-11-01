@@ -100,7 +100,7 @@ namespace InstagramApiSharp.Converters
                 threadItem.RavenMedia = converter.Convert();
                 threadItem.RavenSeenUserIds = SourceObject.RavenSeenUserIds;
                 threadItem.RavenViewMode = SourceObject.RavenViewMode;
-                threadItem.RavenReplayChainCount = SourceObject.RavenReplayChainCount;
+                threadItem.RavenReplayChainCount = SourceObject.RavenReplayChainCount ?? 0;
                 threadItem.RavenSeenCount = SourceObject.RavenSeenCount;
                 if (SourceObject.RavenExpiringMediaActionSummary != null)
                 {
