@@ -392,7 +392,7 @@ namespace InstagramApiSharp.API.Processors
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaUser>(response, json);
                 var userInfo = JsonConvert.DeserializeObject<InstaSearchUserResponse>(json);
-                var user = userInfo.Users?.FirstOrDefault(u => u.UserName == username);
+                var user = userInfo.Users?.FirstOrDefault(u => u.UserName.ToLower() == username.ToLower());
                 if (user == null)
                 {
                     var errorMessage = $"Can't find this user: {username}";
