@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.3.8 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.4.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 
 ## Note
@@ -82,6 +82,20 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.4.2
+- [Bugfix] Unique guid for devices (now instagram won't suspicious to you, relogin required)
+
+v1.1.4.1 
+- [Minor bugfix] for GetUserAsync in UserProcessor
+
+v1.1.4.0
+- [Bugfix] for RavenReplayChainCount in direct thread item
+- [Update] tiny update for story seen uri
+- [Add] MarkStoryAsSeenAsync to StoryProcessor
+- [Add] GetHighlightMediasAsync to StoryProcessor
+- [Add] ReplyToStoryAsync to StoryProcessor
+- [Bugfix] for Result.GetResponseType
+
 v1.1.3.8
 - [Bugfix] For checkpoint issue thx to [@hermaphros](https://github.com/hermaphros) for solution
 - [Bugfix] For GetFullUserInfoAsync
