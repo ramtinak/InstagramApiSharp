@@ -26,6 +26,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public string MaxId { get; set; }
         //public Seen_State1 seen_state { get; set; }
+
+        public InstaTVUser UserDetail { get; set; }
     }
     public class InstaTVSelfChannel : InstaTVChannel
     {

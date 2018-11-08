@@ -31,6 +31,9 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("max_id")]
         public string MaxId { get; set; }
         //public Seen_State1 seen_state { get; set; }
+
+        [JsonProperty("user_dict")]
+        public InstaTVUserResponse UserDetail { get; set; }
     }
     public class InstaTVSelfChannelResponse : InstaTVChannelResponse
     {

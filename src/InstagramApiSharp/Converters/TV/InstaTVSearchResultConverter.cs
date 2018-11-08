@@ -44,7 +44,7 @@ namespace InstagramApiSharp.Converters
             {
                 try
                 {
-                    search.User = ConvertersFabric.Instance.GetUserConverter(SourceObject.User).Convert();
+                    search.User = ConvertersFabric.Instance.GetUserShortFriendshipConverter(SourceObject.User).Convert();
                 }
                 catch { }
             }

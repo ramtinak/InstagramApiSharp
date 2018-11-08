@@ -40,8 +40,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("user")] public InstaUserResponse User { get; set; }
 
-        [JsonProperty("organic_tracking_token")]
-        public string TrackingToken { get; set; }
+        [JsonProperty("organic_tracking_token")] public string TrackingToken { get; set; }
 
         [JsonProperty("like_count")] public int LikesCount { get; set; }
 
@@ -91,6 +90,16 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("can_viewer_save")] public bool CanViewerSave { get; set; }
 
+
+        [JsonProperty("title")] public string Title { get; set; }
+
+        [JsonProperty("product_type")] public string ProductType { get; set; }
+
+        [JsonProperty("nearly_complete_copyright_match")] public bool? NearlyCompleteCopyrightMatch { get; set; }
+
+        [JsonProperty("number_of_qualities")] public int? NumberOfQualities { get; set; }
+
+        [JsonProperty("video_duration")] public double? VideoDuration { get; set; }
 
 
     }

@@ -83,5 +83,16 @@ namespace InstagramApiSharp.Classes.Models
         public bool CaptionIsEdited { get; set; }
 
         public bool CanViewerSave { get; set; }
+
+
+        public string Title { get; set; }
+
+        public string ProductType { get; set; }
+
+        public bool NearlyCompleteCopyrightMatch { get; set; }
+
+        public int NumberOfQualities { get; set; }
+
+        public double VideoDuration { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("type")]
         public string Type { get; set; }
         [JsonProperty("user")]
-        public InstaUserResponse User { get; set; }
+        public InstaUserShortFriendshipResponse User { get; set; }
         [JsonProperty("channel")]
         public InstaTVChannelResponse Channel { get; set; }
     }

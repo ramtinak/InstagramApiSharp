@@ -55,6 +55,11 @@ namespace InstagramApiSharp.Converters
                 TotalIGTVVideosCount = SourceObject.TotalIGTVVideosCount,
                 Username = SourceObject.Username
             };
+            try
+            {
+                user.FriendshipStatus = ConvertersFabric.Instance.GetFriendShipStatusConverter(SourceObject.FriendshipStatus).Convert();
+            }
+            catch { }
             return user;
         }
     }

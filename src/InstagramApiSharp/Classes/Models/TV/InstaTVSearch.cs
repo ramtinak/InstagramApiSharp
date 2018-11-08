@@ -28,7 +28,7 @@ namespace InstagramApiSharp.Classes.Models
     {
         public string Type { get; set; }
 
-        public InstaUser User { get; set; }
+        public InstaUserShortFriendship User { get; set; }
 
         public InstaTVChannel Channel { get; set; }
     }

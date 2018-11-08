@@ -62,5 +62,7 @@ namespace InstagramApiSharp.Classes.Models
         public string ExternalUrl { get; set; }
 
         public int TotalIGTVVideosCount { get; set; }
+
+        public InstaFriendshipStatus FriendshipStatus { get; set; }
     }
 }

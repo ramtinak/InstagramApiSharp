@@ -69,5 +69,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public string ExternalUrl { get; set; }
         [JsonProperty("total_igtv_videos")]
         public int TotalIGTVVideosCount { get; set; }
+        [JsonProperty("friendship_status")]
+        public InstaFriendshipStatusResponse FriendshipStatus { get; set; }
     }
 }
