@@ -252,7 +252,13 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
                 var commentsUri = UriCreator.GetMediaCommentsUri(mediaId, paginationParameters.NextMaxId);
+                if (!string.IsNullOrEmpty(paginationParameters.NextMinId))
+                    commentsUri = UriCreator.GetMediaCommentsMinIdUri(mediaId, paginationParameters.NextMinId);
+
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -286,9 +292,12 @@ namespace InstagramApiSharp.API.Processors
                     commentListResponse.MoreCommentsAvailable = nextComments.Value.MoreCommentsAvailable;
                     commentListResponse.MoreHeadLoadAvailable = nextComments.Value.MoreHeadLoadAvailable;
                     commentListResponse.Comments.AddRange(nextComments.Value.Comments);
+                    paginationParameters.NextMaxId = nextComments.Value.NextMaxId;
+                    paginationParameters.NextMinId = nextComments.Value.NextMinId;
                     pagesLoaded++;
                 }
-
+                paginationParameters.NextMaxId = commentListResponse.NextMaxId;
+                paginationParameters.NextMinId = commentListResponse.NextMinId;
                 var converter = ConvertersFabric.Instance.GetCommentListConverter(commentListResponse);
                 return Result.Success(converter.Convert());
             }
@@ -310,8 +319,14 @@ namespace InstagramApiSharp.API.Processors
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
-            { 
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
                 var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommentId, paginationParameters.NextMaxId);
+                if (!string.IsNullOrEmpty(paginationParameters.NextMinId))
+                    commentsUri = UriCreator.GetMediaInlineCommentsWithMinIdUri(mediaId, targetCommentId, paginationParameters.NextMinId);
+
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -344,8 +359,12 @@ namespace InstagramApiSharp.API.Processors
                     commentListResponse.HasMoreHeadChildComments = nextComments.Value.HasMoreHeadChildComments;
                     commentListResponse.HasMoreTailChildComments = nextComments.Value.HasMoreTailChildComments;
                     commentListResponse.ChildComments.AddRange(nextComments.Value.ChildComments);
+                    paginationParameters.NextMaxId = nextComments.Value.NextMaxId;
+                    paginationParameters.NextMinId = nextComments.Value.NextMinId;
                     pagesLoaded++;
                 }
+                paginationParameters.NextMaxId = commentListResponse.NextMaxId;
+                paginationParameters.NextMinId = commentListResponse.NextMinId;
                 var comments = ConvertersFabric.Instance.GetInlineCommentsConverter(commentListResponse).Convert();
                 return Result.Success(comments);
             }
