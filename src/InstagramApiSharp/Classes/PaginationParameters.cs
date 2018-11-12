@@ -16,7 +16,7 @@ namespace InstagramApiSharp
         /// <summary>
         ///     Only works for Comments!
         /// </summary>
-        public string NextMinId { get; set; }
+        public string NextMinId { get; set; } = string.Empty;
         public int MaximumPagesToLoad { get; private set; }
         public int PagesLoaded { get; set; } = 1;
 
