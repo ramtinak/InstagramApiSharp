@@ -171,11 +171,11 @@ namespace InstagramApiSharp.API.Processors
                     return ConvertersFabric.Instance.GetDirectInboxConverter(inboxContainerResponse).Convert();
                 }
 
-                var inbox = await GetDirectInbox(paginationParameters.NextId);
+                var inbox = await GetDirectInbox(paginationParameters.NextMaxId);
                 if (!inbox.Succeeded)
                     return Result.Fail<InstaDirectInboxContainer>(inbox.Info.Message);
                 var inboxResponse = inbox.Value;
-                paginationParameters.NextId = inboxResponse.Inbox.OldestCursor;
+                paginationParameters.NextMaxId = inboxResponse.Inbox.OldestCursor;
                 var pagesLoaded = 1;
                 while (inboxResponse.Inbox.HasOlder
                       && !string.IsNullOrEmpty(inboxResponse.Inbox.OldestCursor)
@@ -186,7 +186,7 @@ namespace InstagramApiSharp.API.Processors
                     if (!nextInbox.Succeeded)
                         return Result.Fail(nextInbox.Info, Convert(nextInbox.Value));
 
-                    inboxResponse.Inbox.OldestCursor = paginationParameters.NextId = nextInbox.Value.Inbox.OldestCursor;
+                    inboxResponse.Inbox.OldestCursor = paginationParameters.NextMaxId = nextInbox.Value.Inbox.OldestCursor;
                     inboxResponse.Inbox.HasOlder = nextInbox.Value.Inbox.HasOlder;
                     inboxResponse.Inbox.BlendedInboxEnabled = nextInbox.Value.Inbox.BlendedInboxEnabled;
                     inboxResponse.Inbox.UnseenCount = nextInbox.Value.Inbox.UnseenCount;
@@ -219,7 +219,7 @@ namespace InstagramApiSharp.API.Processors
                 if (paginationParameters == null)
                     paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                var thread = await GetDirectInboxThread(threadId, paginationParameters.NextId);
+                var thread = await GetDirectInboxThread(threadId, paginationParameters.NextMaxId);
                 if (!thread.Succeeded)
                     return Result.Fail<InstaDirectInboxThread>(thread.Info.Message);
                 InstaDirectInboxThread Convert(InstaDirectInboxThreadResponse inboxThreadResponse)
@@ -228,7 +228,7 @@ namespace InstagramApiSharp.API.Processors
                 }
 
                 var threadResponse = thread.Value;
-                paginationParameters.NextId = threadResponse.OldestCursor;
+                paginationParameters.NextMaxId = threadResponse.OldestCursor;
                 var pagesLoaded = 1;
 
                 while (threadResponse.HasOlder
@@ -240,7 +240,7 @@ namespace InstagramApiSharp.API.Processors
                     if (!nextThread.Succeeded)
                         return Result.Fail(nextThread.Info, Convert(nextThread.Value));
 
-                    threadResponse.OldestCursor = paginationParameters.NextId = nextThread.Value.OldestCursor;
+                    threadResponse.OldestCursor = paginationParameters.NextMaxId = nextThread.Value.OldestCursor;
                     threadResponse.HasOlder = nextThread.Value.HasOlder;
                     threadResponse.Canonical = nextThread.Value.Canonical;
                     threadResponse.ExpiringMediaReceiveCount = nextThread.Value.ExpiringMediaReceiveCount;
@@ -300,11 +300,11 @@ namespace InstagramApiSharp.API.Processors
                     return ConvertersFabric.Instance.GetDirectInboxConverter(inboxContainerResponse).Convert();
                 }
 
-                var inbox = await GetPendingDirect(paginationParameters.NextId);
+                var inbox = await GetPendingDirect(paginationParameters.NextMaxId);
                 if (!inbox.Succeeded)
                     return Result.Fail<InstaDirectInboxContainer>(inbox.Info.Message);
                 var inboxResponse = inbox.Value;
-                paginationParameters.NextId = inboxResponse.Inbox.OldestCursor;
+                paginationParameters.NextMaxId = inboxResponse.Inbox.OldestCursor;
                 var pagesLoaded = 1;
                 while (inboxResponse.Inbox.HasOlder
                       && !string.IsNullOrEmpty(inboxResponse.Inbox.OldestCursor)
@@ -315,7 +315,7 @@ namespace InstagramApiSharp.API.Processors
                     if (!nextInbox.Succeeded)
                         return Result.Fail(nextInbox.Info, Convert(nextInbox.Value));
 
-                    inboxResponse.Inbox.OldestCursor = paginationParameters.NextId = nextInbox.Value.Inbox.OldestCursor;
+                    inboxResponse.Inbox.OldestCursor = paginationParameters.NextMaxId = nextInbox.Value.Inbox.OldestCursor;
                     inboxResponse.Inbox.HasOlder = nextInbox.Value.Inbox.HasOlder;
                     inboxResponse.Inbox.Threads.AddRange(nextInbox.Value.Inbox.Threads);
                     inboxResponse.Inbox.BlendedInboxEnabled = nextInbox.Value.Inbox.BlendedInboxEnabled;

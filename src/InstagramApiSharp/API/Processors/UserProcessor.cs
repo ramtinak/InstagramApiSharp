@@ -342,11 +342,11 @@ namespace InstagramApiSharp.API.Processors
                 if (!suggestionsResponse.Succeeded)
                     return Result.Fail(suggestionsResponse.Info, Convert(suggestionsResponse.Value));
 
-                paginationParameters.NextId = suggestionsResponse.Value.MaxId;
+                paginationParameters.NextMaxId = suggestionsResponse.Value.MaxId;
 
                 paginationParameters.PagesLoaded++;
                 while (suggestionsResponse.Value.MoreAvailable
-                     && !string.IsNullOrEmpty(paginationParameters.NextId)
+                     && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                      && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
                     var moreSuggestions = await GetSuggestionUsers(paginationParameters);
@@ -356,7 +356,7 @@ namespace InstagramApiSharp.API.Processors
                     suggestionsResponse.Value.NewSuggestedUsers.Suggestions.AddRange(moreSuggestions.Value.NewSuggestedUsers.Suggestions);
                     suggestionsResponse.Value.SuggestedUsers.Suggestions.AddRange(moreSuggestions.Value.SuggestedUsers.Suggestions);
                     suggestionsResponse.Value.MoreAvailable = moreSuggestions.Value.MoreAvailable;
-                    suggestionsResponse.Value.MaxId = paginationParameters.NextId = moreSuggestions.Value.MaxId;
+                    suggestionsResponse.Value.MaxId = paginationParameters.NextMaxId = moreSuggestions.Value.MaxId;
                 }
                 return Result.Success(Convert(suggestionsResponse.Value));
             }
@@ -487,7 +487,7 @@ namespace InstagramApiSharp.API.Processors
                 var user = await GetUserAsync(username);
                 var userFollowersUri =
                     UriCreator.GetUserFollowersUri(user.Value.Pk, _user.RankToken, searchQuery,
-                        paginationParameters.NextId);
+                        paginationParameters.NextMaxId);
                 var followersResponse = await GetUserListByUriAsync(userFollowersUri);
                 if (!followersResponse.Succeeded)
                     return Result.Fail(followersResponse.Info, (InstaUserShortList)null);
@@ -540,7 +540,7 @@ namespace InstagramApiSharp.API.Processors
             {
                 var user = await GetUserAsync(username);
                 var uri = UriCreator.GetUserFollowingUri(user.Value.Pk, _user.RankToken, searchQuery,
-                    paginationParameters.NextId);
+                    paginationParameters.NextMaxId);
                 var userListResponse = await GetUserListByUriAsync(uri);
                 if (!userListResponse.Succeeded)
                     return Result.Fail(userListResponse.Info, (InstaUserShortList)null);
@@ -665,7 +665,7 @@ namespace InstagramApiSharp.API.Processors
             var userTags = new InstaMediaList();
             try
             {
-                var uri = UriCreator.GetUserTagsUri(userId, _user.RankToken, paginationParameters.NextId);
+                var uri = UriCreator.GetUserTagsUri(userId, _user.RankToken, paginationParameters.NextMaxId);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -675,11 +675,11 @@ namespace InstagramApiSharp.API.Processors
                 userTags.AddRange(
                     mediaResponse.Medias.Select(ConvertersFabric.Instance.GetSingleMediaConverter)
                         .Select(converter => converter.Convert()));
-                userTags.NextMaxId = paginationParameters.NextId = mediaResponse.NextMaxId;
+                userTags.NextMaxId = paginationParameters.NextMaxId = mediaResponse.NextMaxId;
                 paginationParameters.PagesLoaded++;
 
                 while (mediaResponse.MoreAvailable
-                       && !string.IsNullOrEmpty(paginationParameters.NextId)
+                       && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
                     var nextMedia = await GetUserTagsAsync(userId, paginationParameters);
@@ -687,7 +687,7 @@ namespace InstagramApiSharp.API.Processors
                         return nextMedia;
 
                     userTags.AddRange(nextMedia.Value);
-                    userTags.NextMaxId = paginationParameters.NextId = nextMedia.Value.NextMaxId;
+                    userTags.NextMaxId = paginationParameters.NextMaxId = nextMedia.Value.NextMaxId;
                 }
 
                 return Result.Success(userTags);
@@ -944,7 +944,7 @@ namespace InstagramApiSharp.API.Processors
                 feedPage.Stories.Select(ConvertersFabric.Instance.GetSingleRecentActivityConverter)
                     .Select(converter => converter.Convert()));
             paginationParameters.PagesLoaded++;
-            activityFeed.NextMaxId = paginationParameters.NextId = feedPage.NextMaxId;
+            activityFeed.NextMaxId = paginationParameters.NextMaxId = feedPage.NextMaxId;
             while (!string.IsNullOrEmpty(nextId)
                    && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
             {
@@ -956,7 +956,7 @@ namespace InstagramApiSharp.API.Processors
                     feedPage.Stories.Select(ConvertersFabric.Instance.GetSingleRecentActivityConverter)
                         .Select(converter => converter.Convert()));
                 paginationParameters.PagesLoaded++;
-                activityFeed.NextMaxId = paginationParameters.NextId = nextId;
+                activityFeed.NextMaxId = paginationParameters.NextMaxId = nextId;
             }
 
             return Result.Success(activityFeed);
@@ -977,8 +977,8 @@ namespace InstagramApiSharp.API.Processors
                     {"paginate", "true"},
                 };
 
-                if (paginationParameters != null && !string.IsNullOrEmpty(paginationParameters.NextId))
-                    data.Add("max_id", paginationParameters.NextId);
+                if (paginationParameters != null && !string.IsNullOrEmpty(paginationParameters.NextMaxId))
+                    data.Add("max_id", paginationParameters.NextMaxId);
 
                 var request =
                     _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -1039,7 +1039,7 @@ namespace InstagramApiSharp.API.Processors
             var mediaList = new InstaMediaList();
             try
             {
-                var instaUri = UriCreator.GetUserMediaListUri(userId, paginationParameters.NextId);
+                var instaUri = UriCreator.GetUserMediaListUri(userId, paginationParameters.NextMaxId);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -1050,17 +1050,17 @@ namespace InstagramApiSharp.API.Processors
                     new InstaMediaListDataConverter());
 
                 mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();
-                mediaList.NextMaxId = paginationParameters.NextId = mediaResponse.NextMaxId;
+                mediaList.NextMaxId = paginationParameters.NextMaxId = mediaResponse.NextMaxId;
                 paginationParameters.PagesLoaded++;
 
                 while (mediaResponse.MoreAvailable
-                       && !string.IsNullOrEmpty(paginationParameters.NextId)
+                       && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
                     var nextMedia = await GetUserMediaAsync(userId, paginationParameters);
                     if (!nextMedia.Succeeded)
                         return Result.Fail(nextMedia.Info, mediaList);
-                    mediaList.NextMaxId = paginationParameters.NextId = nextMedia.Value.NextMaxId;
+                    mediaList.NextMaxId = paginationParameters.NextMaxId = nextMedia.Value.NextMaxId;
                     mediaList.AddRange(nextMedia.Value);
                 }
 

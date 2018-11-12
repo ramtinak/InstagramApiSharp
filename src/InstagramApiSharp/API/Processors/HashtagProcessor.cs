@@ -185,23 +185,23 @@ namespace InstagramApiSharp.API.Processors
                 }
                 var mediaResponse = await GetHashtagRecentMedia(tagname,
                     _user.RankToken ?? Guid.NewGuid().ToString(),
-                    paginationParameters.NextId);
+                    paginationParameters.NextMaxId);
                 if (!mediaResponse.Succeeded)
                     Result.Fail(mediaResponse.Info, Convert(mediaResponse.Value));
 
-                paginationParameters.NextId = mediaResponse.Value.NextMaxId;
+                paginationParameters.NextMaxId = mediaResponse.Value.NextMaxId;
                 paginationParameters.PagesLoaded++;
                 while (mediaResponse.Value.MoreAvailable
-                    && !string.IsNullOrEmpty(paginationParameters.NextId)
+                    && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
                     var moreMedias = await GetHashtagRecentMedia(tagname, _user.RankToken ?? Guid.NewGuid().ToString(),
-                        paginationParameters.NextId, mediaResponse.Value.NextPage, mediaResponse.Value.NextMediaIds);
+                        paginationParameters.NextMaxId, mediaResponse.Value.NextPage, mediaResponse.Value.NextMediaIds);
                     if (!moreMedias.Succeeded)
                         return Result.Fail(moreMedias.Info, Convert(moreMedias.Value));
 
                     mediaResponse.Value.MoreAvailable = moreMedias.Value.MoreAvailable;
-                    mediaResponse.Value.NextMaxId = paginationParameters.NextId = moreMedias.Value.NextMaxId;
+                    mediaResponse.Value.NextMaxId = paginationParameters.NextMaxId = moreMedias.Value.NextMaxId;
                     mediaResponse.Value.AutoLoadMoreEnabled = moreMedias.Value.AutoLoadMoreEnabled;
                     mediaResponse.Value.NextMediaIds = moreMedias.Value.NextMediaIds;
                     mediaResponse.Value.NextPage = moreMedias.Value.NextPage;
@@ -266,24 +266,24 @@ namespace InstagramApiSharp.API.Processors
                 }
                 var mediaResponse = await GetHashtagTopMedia(tagname,
                     _user.RankToken ?? Guid.NewGuid().ToString(),
-                    paginationParameters.NextId);
+                    paginationParameters.NextMaxId);
 
                 if (!mediaResponse.Succeeded)
                     Result.Fail(mediaResponse.Info, Convert(mediaResponse.Value));
 
-                paginationParameters.NextId = mediaResponse.Value.NextMaxId;
+                paginationParameters.NextMaxId = mediaResponse.Value.NextMaxId;
                 paginationParameters.PagesLoaded++;
                 while (mediaResponse.Value.MoreAvailable
-                    && !string.IsNullOrEmpty(paginationParameters.NextId)
+                    && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
                     var moreMedias = await GetHashtagTopMedia(tagname, _user.RankToken ?? Guid.NewGuid().ToString(),
-                        paginationParameters.NextId, mediaResponse.Value.NextPage);
+                        paginationParameters.NextMaxId, mediaResponse.Value.NextPage);
                     if (!moreMedias.Succeeded)
                         return Result.Fail(moreMedias.Info, Convert(moreMedias.Value));
 
                     mediaResponse.Value.MoreAvailable = moreMedias.Value.MoreAvailable;
-                    mediaResponse.Value.NextMaxId = paginationParameters.NextId = moreMedias.Value.NextMaxId;
+                    mediaResponse.Value.NextMaxId = paginationParameters.NextMaxId = moreMedias.Value.NextMaxId;
                     mediaResponse.Value.AutoLoadMoreEnabled = moreMedias.Value.AutoLoadMoreEnabled;
                     mediaResponse.Value.NextMediaIds = moreMedias.Value.NextMediaIds;
                     mediaResponse.Value.NextPage = moreMedias.Value.NextPage;

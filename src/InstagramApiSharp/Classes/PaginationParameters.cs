@@ -1,5 +1,8 @@
 ﻿namespace InstagramApiSharp
 {
+    /// <summary>
+    ///     Pagination of everything! use NextMaxId instead of using old NextId
+    /// </summary>
     public class PaginationParameters
     {
         private PaginationParameters()
@@ -7,7 +10,11 @@
         }
 
         public string RankToken { get; set; } = string.Empty;
-        public string NextId { get; set; } = string.Empty;
+        public string NextMaxId { get; set; } = string.Empty;
+        /// <summary>
+        ///     Only works for Comments!
+        /// </summary>
+        public string NextMinId { get; set; }
         public int MaximumPagesToLoad { get; private set; }
         public int PagesLoaded { get; set; } = 1;
 
@@ -19,15 +26,23 @@
         }
 
 
-        public PaginationParameters StartFromId(string nextId)
+        public PaginationParameters StartFromId(string maxId)
         {
-            NextId = nextId;
+            NextMaxId = maxId;
+            NextMinId = null;
+            return this;
+        }
+
+        public PaginationParameters StartFromMinId(string minId)
+        {
+            NextMinId = minId;
+            NextMaxId = null;
             return this;
         }
 
         public PaginationParameters StartFromRankToken(string nextId, string rankToken)
         {
-            NextId = nextId;
+            NextMaxId = nextId;
             RankToken = rankToken;
             return this;
         }

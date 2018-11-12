@@ -317,7 +317,7 @@ namespace InstagramApiSharp.API.Processors
             {
                 if (paginationParameters.MaximumPagesToLoad > 1)
                     throw new Exception("Not supported");
-                var directInboxUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + $"media/{StoryMediaId}/list_reel_media_viewer/?max_id={paginationParameters.NextId}", UriKind.RelativeOrAbsolute);
+                var directInboxUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + $"media/{StoryMediaId}/list_reel_media_viewer/?max_id={paginationParameters.NextMaxId}", UriKind.RelativeOrAbsolute);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();

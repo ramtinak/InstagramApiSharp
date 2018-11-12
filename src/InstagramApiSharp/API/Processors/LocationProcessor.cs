@@ -56,7 +56,7 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var uri = _getFeedUriCreator.GetUri(locationId, paginationParameters.NextId);
+                var uri = _getFeedUriCreator.GetUri(locationId, paginationParameters.NextMaxId);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -66,10 +66,10 @@ namespace InstagramApiSharp.API.Processors
                 var feedResponse = JsonConvert.DeserializeObject<InstaLocationFeedResponse>(json);
                 var feed = ConvertersFabric.Instance.GetLocationFeedConverter(feedResponse).Convert();
                 paginationParameters.PagesLoaded++;
-                paginationParameters.NextId = feed.NextMaxId;
+                paginationParameters.NextMaxId = feed.NextMaxId;
 
                 while (feedResponse.MoreAvailable
-                       && !string.IsNullOrEmpty(paginationParameters.NextId)
+                       && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
                     var nextFeed = await GetLocationFeedAsync(locationId, paginationParameters);
@@ -223,7 +223,7 @@ namespace InstagramApiSharp.API.Processors
                     return Result.Fail<InstaPlaceList>(places.Info.Message);
 
                 var placesResponse = places.Value;
-                paginationParameters.NextId = placesResponse.RankToken;
+                paginationParameters.NextMaxId = placesResponse.RankToken;
                 var pagesLoaded = 1;
                 while (placesResponse.HasMore != null 
                       && placesResponse.HasMore.Value
@@ -235,7 +235,7 @@ namespace InstagramApiSharp.API.Processors
                     if (!nextPlaces.Succeeded)
                         return Result.Fail(nextPlaces.Info, Convert(nextPlaces.Value));
 
-                    placesResponse.RankToken = paginationParameters.NextId = nextPlaces.Value.RankToken;
+                    placesResponse.RankToken = paginationParameters.NextMaxId = nextPlaces.Value.RankToken;
                     placesResponse.HasMore = nextPlaces.Value.HasMore;
                     placesResponse.Items.AddRange(nextPlaces.Value.Items);
                     placesResponse.Status = nextPlaces.Value.Status;
@@ -262,7 +262,7 @@ namespace InstagramApiSharp.API.Processors
                     paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
                 var instaUri = UriCreator.GetSearchPlacesUri(InstaApiConstants.TIMEZONE_OFFSET,
-                    latitude, longitude, query, paginationParameters.NextId);
+                    latitude, longitude, query, paginationParameters.NextMaxId);
 
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
