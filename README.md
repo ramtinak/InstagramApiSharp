@@ -5,8 +5,10 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.4.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.4.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
+## IMPORTANT NOTE:
+`PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
 
 ## Note
 This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharper) with more functions and flexibility.
@@ -82,6 +84,12 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.4.3
+- [Update] PaginationParameters, change NextId to NextMaxId
+- [Add] NextMinId to PaginationParameters (for comments)
+- [Bugfix] for GetMediaCommentsAsync
+- [Bugfix] for GetMediaRepliesCommentsAsync
+
 v1.1.4.2
 - [Bugfix] Unique guid for devices (now instagram won't suspicious to you, relogin required)
 

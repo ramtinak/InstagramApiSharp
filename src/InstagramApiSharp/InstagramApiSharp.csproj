@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452;uap10.0</TargetFrameworks>
-    <VersionPrefix>1.1.3</VersionPrefix>
+    <VersionPrefix>1.1.4</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.4.2</Version>
-    <AssemblyVersion>1.1.4.2</AssemblyVersion>
-    <FileVersion>1.1.4.2</FileVersion>
+    <Version>1.1.4.3</Version>
+    <AssemblyVersion>1.1.4.3</AssemblyVersion>
+    <FileVersion>1.1.4.3</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -37,7 +37,13 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.4.2
+    <PackageReleaseNotes>v1.1.4.3
+- [Update] PaginationParameters, change NextId to NextMaxId
+- [Add] NextMinId to PaginationParameters (for comments)
+- [Bugfix] for GetMediaCommentsAsync
+- [Bugfix] for GetMediaRepliesCommentsAsync
+
+v1.1.4.2
 - [Bugfix] Unique guid for devices (now instagram won't suspicious, relogin required)
 
 v1.1.4.1 
