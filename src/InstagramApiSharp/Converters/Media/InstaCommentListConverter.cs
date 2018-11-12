@@ -26,6 +26,8 @@ namespace InstagramApiSharp.Converters
                 ThreadingEnabled = SourceObject.ThreadingEnabled,
                 LikesEnabled = SourceObject.LikesEnabled,
                 MoreHeadLoadAvailable = SourceObject.MoreHeadLoadAvailable, 
+                NextMaxId = SourceObject.NextMaxId,
+                NextMinId = SourceObject.NextMinId
             };
             if (SourceObject.Comments == null || !(SourceObject?.Comments?.Count > 0)) return commentList;
             foreach (var commentResponse in SourceObject.Comments)
@@ -33,24 +35,7 @@ namespace InstagramApiSharp.Converters
                 var converter = ConvertersFabric.Instance.GetCommentConverter(commentResponse);
                 commentList.Comments.Add(converter.Convert());
             }
-            if (!string.IsNullOrEmpty(SourceObject.NextMinId))
-            {
-                try
-                {
-                    var convertedNextId = JsonConvert.DeserializeObject<InstaInlineCommentNextIdResponse>(SourceObject.NextMinId);
-                    commentList.NextMinId = convertedNextId.BifilterToken;
-                }
-                catch { commentList.NextMinId = SourceObject.NextMinId; }
-            }
-            if (!string.IsNullOrEmpty(SourceObject.NextMaxId))
-            {
-                try
-                {
-                    var convertedNextId = JsonConvert.DeserializeObject<InstaInlineCommentNextIdResponse>(SourceObject.NextMaxId);
-                    commentList.NextMaxId = convertedNextId.ServerCursor;
-                }
-                catch { commentList.NextMaxId = SourceObject.NextMaxId; }
-            }
+
             if (SourceObject.PreviewComments != null && SourceObject.PreviewComments.Any())
             {
                 foreach (var cmt in SourceObject.PreviewComments)
