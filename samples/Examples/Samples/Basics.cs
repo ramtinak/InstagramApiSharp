@@ -37,7 +37,7 @@ namespace Examples.Samples
             // get followers of user 'elonmusk'
             var followers = await _instaApi.UserProcessor.GetUserFollowersAsync("elonmusk", 
                 PaginationParameters.MaxPagesToLoad(5)
-                .StartFromId("AQAC8w90POWyM7zMjHWmO9vsZNL_TuLp6FR506_C_y3fUAjlCclrIDI2RdSGvur5UjLrq4Cq7NJN8QUhHG-vpbT6pCLB5X9crDxBOHUEuNJ4fA"));
+                .StartFromMaxId("AQAC8w90POWyM7zMjHWmO9vsZNL_TuLp6FR506_C_y3fUAjlCclrIDI2RdSGvur5UjLrq4Cq7NJN8QUhHG-vpbT6pCLB5X9crDxBOHUEuNJ4fA"));
             Console.WriteLine($"Count of followers [elonmusk]:{followers.Value.Count}");
             Console.WriteLine($"Next id will be: '{followers.Value.NextMaxId}'");
 

@@ -1,4 +1,6 @@
-﻿namespace InstagramApiSharp
+﻿using System;
+
+namespace InstagramApiSharp
 {
     /// <summary>
     ///     Pagination of everything! use NextMaxId instead of using old NextId
@@ -25,8 +27,16 @@
             return new PaginationParameters {MaximumPagesToLoad = maxPagesToLoad};
         }
 
-
+        [Obsolete("StartFromId is deprecated. Please use PaginationParameters.StartFromMaxId instead.")]
         public PaginationParameters StartFromId(string maxId)
+        {
+            NextMaxId = maxId;
+            NextMinId = null;
+            return this;
+        }
+
+
+        public PaginationParameters StartFromMaxId(string maxId)
         {
             NextMaxId = maxId;
             NextMinId = null;

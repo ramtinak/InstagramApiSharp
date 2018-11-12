@@ -75,7 +75,7 @@ namespace InstagramApiSharp.API.Processors
                     var nextFeed = await GetLocationFeedAsync(locationId, paginationParameters);
                     if (!nextFeed.Succeeded)
                         return nextFeed;
-                    paginationParameters.StartFromId(nextFeed.Value.NextMaxId);
+                    paginationParameters.StartFromMaxId(nextFeed.Value.NextMaxId);
                     paginationParameters.PagesLoaded++;
                     feed.NextMaxId = nextFeed.Value.NextMaxId;
                     feed.Medias.AddRange(nextFeed.Value.Medias);
