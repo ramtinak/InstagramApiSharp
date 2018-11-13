@@ -912,7 +912,8 @@ namespace InstagramApiSharp.API
                     return Result.UnExpectedResponse<InstaLoginResult>(response, json);
                 }
                 var loginInfo = JsonConvert.DeserializeObject<InstaLoginResponse>(json);
-                IsUserAuthenticated = loginInfo.User?.UserName.ToLower() == _user.UserName.ToLower();
+                _user.UserName = loginInfo.User?.UserName;
+                IsUserAuthenticated = loginInfo.User != null;
                 var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
                 _user.LoggedInUser = converter.Convert();
                 _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
@@ -982,8 +983,8 @@ namespace InstagramApiSharp.API
                 {
                     var loginInfo =
                         JsonConvert.DeserializeObject<InstaLoginResponse>(json);
-                    IsUserAuthenticated = IsUserAuthenticated =
-                        loginInfo.User != null && loginInfo.User.UserName.ToLower() == _user.UserName.ToLower();
+                    _user.UserName = loginInfo.User?.UserName;
+                    IsUserAuthenticated = loginInfo.User != null;
                     var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
                     _user.LoggedInUser = converter.Convert();
                     _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";

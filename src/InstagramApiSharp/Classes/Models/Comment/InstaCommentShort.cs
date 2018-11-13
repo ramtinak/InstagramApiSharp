@@ -1,8 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaCommentShort
+    public class InstaCommentShort : INotifyPropertyChanged
     {
         public InstaContentType ContentType { get; set; } 
 
@@ -24,8 +25,15 @@ namespace InstagramApiSharp.Classes.Models
 
         public long ParentCommentId { get; set; }
 
-        public bool HasLikedComment { get; set; }
+        private bool _haslikedcm;
+        public bool HasLikedComment { get => _haslikedcm; set { _haslikedcm = value; Update("HasLikedComment"); } }
 
         public int CommentLikeCount { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void Update(string memberName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
+        }
     }
 }
