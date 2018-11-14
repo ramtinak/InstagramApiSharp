@@ -198,7 +198,12 @@ namespace InstagramApiSharp.API.Processors
                     var moreMedias = await GetHashtagRecentMedia(tagname, _user.RankToken ?? Guid.NewGuid().ToString(),
                         paginationParameters.NextMaxId, mediaResponse.Value.NextPage, mediaResponse.Value.NextMediaIds);
                     if (!moreMedias.Succeeded)
-                        return Result.Fail(moreMedias.Info, Convert(moreMedias.Value));
+                    {
+                        if (mediaResponse.Value.Sections != null && mediaResponse.Value.Sections.Any())
+                            return Result.Success(Convert(mediaResponse.Value));
+                        else
+                            return Result.Fail(moreMedias.Info, Convert(mediaResponse.Value));
+                    }
 
                     mediaResponse.Value.MoreAvailable = moreMedias.Value.MoreAvailable;
                     mediaResponse.Value.NextMaxId = paginationParameters.NextMaxId = moreMedias.Value.NextMaxId;

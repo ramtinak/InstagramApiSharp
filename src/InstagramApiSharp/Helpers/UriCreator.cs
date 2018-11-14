@@ -726,8 +726,6 @@ namespace InstagramApiSharp.Helpers
                 !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_RECENT, hashtag),
                     out var instaUri))
                 throw new Exception("Cant create URI for hashtag recent media");
-            if (!string.IsNullOrEmpty(rankToken))
-                instaUri = instaUri.AddQueryParameter("rank_token", rankToken);
             if (!string.IsNullOrEmpty(nextId))
             {
                 instaUri = instaUri
@@ -737,6 +735,13 @@ namespace InstagramApiSharp.Helpers
             {
                 instaUri = instaUri
                     .AddQueryParameter("page", page.ToString());
+            }
+            if (!string.IsNullOrEmpty(rankToken))
+            {
+                if (rankToken.Contains("_"))
+                    instaUri = instaUri.AddQueryParameter("rank_token", rankToken.Split('_')[1]);
+                else
+                    instaUri = instaUri.AddQueryParameter("rank_token", rankToken);
             }
             if (nextMediaIds != null && nextMediaIds.Any())
             {
