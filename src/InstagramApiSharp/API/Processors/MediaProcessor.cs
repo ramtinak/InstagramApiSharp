@@ -88,13 +88,16 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="mediaId">The media ID</param>
         /// <param name="caption">The new caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        /// <param name="userTags">User tags => Optional (ONLY FOR PHOTO POSTS!!!)</param>
         /// <returns>Return true if everything is ok</returns>
-        public async Task<IResult<InstaMedia>> EditMediaAsync(string mediaId, string caption, InstaLocationShort location = null)
+        public async Task<IResult<InstaMedia>> EditMediaAsync(string mediaId, string caption, InstaLocationShort location = null, InstaUserTagUpload[] userTags = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var editMediaUri = UriCreator.GetEditMediaUri(mediaId);
+
+                var currentMedia = await GetMediaByIdAsync(mediaId);
 
                 var data = new JObject
                 {
@@ -106,6 +109,75 @@ namespace InstagramApiSharp.API.Processors
                 if (location != null)
                 {
                     data.Add("location", location.GetJson());
+                }
+
+                var removeArr = new JArray();
+                if (currentMedia.Succeeded)
+                {
+                    if (currentMedia.Value?.Tags != null &&
+                        currentMedia.Value.Tags.Any())
+                    {
+                        foreach (var user in currentMedia.Value.Tags)
+                            removeArr.Add(user.User.Pk.ToString());
+                    }
+                }
+                if (userTags != null && userTags.Any())
+                {
+                    var currentDelay = _instaApi.GetRequestDelay();
+                    _instaApi.SetRequestDelay(RequestDelay.FromSeconds(1, 2));
+
+                    var tagArr = new JArray();
+
+                    foreach (var tag in userTags)
+                    {
+                        try
+                        {
+                            bool tried = false;
+                        TryLabel:
+                            var u = await _instaApi.UserProcessor.GetUserAsync(tag.Username);
+                            if (!u.Succeeded)
+                            {
+                                if (!tried)
+                                {
+                                    tried = true;
+                                    goto TryLabel;
+                                }
+                            }
+                            else
+                            {
+                                var position = new JArray(tag.X, tag.Y);
+                                var singleTag = new JObject
+                                {
+                                    {"user_id", u.Value.Pk},
+                                    {"position", position}
+                                };
+                                tagArr.Add(singleTag);
+                            }
+
+                        }
+                        catch { }
+                    }
+          
+                    _instaApi.SetRequestDelay(currentDelay);
+                    var root = new JObject
+                    {
+                        {"in",  tagArr}
+                    };
+                    if (removeArr.Any())
+                        root.Add("removed", removeArr);
+
+                    data.Add("usertags", root.ToString(Formatting.None));
+                }
+                else
+                {
+                    if (removeArr.Any())
+                    {
+                        var root = new JObject
+                        {
+                            {"removed", removeArr}
+                        };
+                        data.Add("usertags", root.ToString(Formatting.None));
+                    }
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, editMediaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);

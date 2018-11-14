@@ -24,8 +24,9 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="mediaId">The media ID</param>
         /// <param name="caption">The new caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        /// <param name="userTags">User tags => Optional (ONLY FOR PHOTO POSTS!!!)</param>
         /// <returns>Return true if everything is ok</returns>
-        Task<IResult<InstaMedia>> EditMediaAsync(string mediaId, string caption, InstaLocationShort location = null);
+        Task<IResult<InstaMedia>> EditMediaAsync(string mediaId, string caption, InstaLocationShort location = null, InstaUserTagUpload[] userTags = null);
 
         /// <summary>
         ///     Get media by its id asynchronously
