@@ -916,6 +916,8 @@ namespace InstagramApiSharp.API
                 var loginInfo = JsonConvert.DeserializeObject<InstaLoginResponse>(json);
                 _user.UserName = loginInfo.User?.UserName;
                 IsUserAuthenticated = loginInfo.User != null;
+                if (loginInfo.User != null)
+                    _httpRequestProcessor.RequestMessage.Username = loginInfo.User.UserName;
                 var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
                 _user.LoggedInUser = converter.Convert();
                 _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
