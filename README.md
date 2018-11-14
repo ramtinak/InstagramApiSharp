@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.4.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.4.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -84,6 +84,9 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.4.4
+- [Bugfix] for phone number/email login (now you can login with phone/email to as well) (spectial thanks to [@learn-itnow](https://github.com/learn-itnow) for his help)
+
 v1.1.4.3
 - [Update] PaginationParameters, change NextId to NextMaxId
 - [Add] NextMinId to PaginationParameters (for comments)
@@ -109,71 +112,6 @@ v1.1.3.8
 - [Bugfix] For GetFullUserInfoAsync
 - [Add] FriendshipStatus to InstaUserInfo
 - [Add] ProfileContextIds to InstaUserInfo
-
-v1.1.3.7
-- [Update] SearchUserByLocationAsync
-- [Bugfix] for GetStoryFeedAsync (thx to [@iancona](https://github.com/iancona) for report)
-- [Update] LoginAsync
-- [Add] ActionBlocked to ResponseType
-- Some minor improvements
-
-v1.1.3.6
-- [Bugfix] For GetExploreFeedAsync pagination
-- [Bugfix] For direct reel share
-- [Bugfix] For GetMediaCommentLikersAsync
-- [Update] InstaComment
-- [Update] ShareMediaToThreadAsync
-- [Add] GetRankedRecipientsByUsernameAsync to MessagingProcessor
-- [Add] ShareMediaToUser to MessagingProcessor
-
-v1.1.3.5
-- [Add] Support reel share in direct threads
-- [Add] Remove follower
-- [Add] Translate biography
-- [Add] Translate comments/captions
-- [Add] Search places (in facebook)
-- [Bugfix] For SetApiVersion
-
-v1.1.3.4
-- [Update] Microsoft.NETCore.UniversalWindowsPlatform (uwp)
-
-v1.1.3.3
-- [Bugfix] For direct inbox/thread/pending
-
-v1.1.3.2
-- [Add] StoryFeedMedia and ShowOneTapTooltip to InstaStoryItem
-- [Add] Get user from nametag image
-- [Add] Upload nametag image
-- [Add] PaginationParameters to GetDirectInboxAsync
-- [Add] PaginationParameters to GetDirectInboxThreadAsync
-- [Add] PaginationParameters to GetPendingDirectAsync
-
-v1.1.3.1
-- [Add] Get branded content approval to BusinessProcessor
-- [Add] Search branded users to BusinessProcessor
-- [Add] Enable/disable branded approval to BusinessProcessor
-- [Add] Remove/add users to branded whitelist to BusinessProcessor
-- [Add] Add users to group threads
-- [Bugfix] For uploading photo/video/album
-
-v1.1.3.0
-- [Add] Suggested users
-- [Add] Follow/Unfollow hashtags
-- [Add] Get stories of an hashtag
-- [Add] Get recent hashtag medias
-- [Add] Get ranked hashtag medias
-- [Add] Sync phone contact
-- [Add] Get direct users presence
-- [Add] Get friendship status for multiple ids
-- [Add] Get suggested hashtags
-- [Add] Get following hashtags information
-- [Add] Get suggestion details
-- [Add] Get highlights archive
-- [Add] Get highlights archive medias
-- [Business wiki page added](https://github.com/ramtinak/InstagramApiSharp/wiki/Business-account)
-
-v1.1.2.8
-- [Bugfix] for uploading album (photos)
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
