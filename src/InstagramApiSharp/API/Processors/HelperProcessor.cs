@@ -23,6 +23,7 @@ using System.Net;
 using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Enums;
 using System.IO;
+using System.Linq;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -688,7 +689,7 @@ namespace InstagramApiSharp.API.Processors
 
 
         public async Task<IResult<InstaMedia>> SendMediaPhotoAsync(Action<InstaUploaderProgress> progress,
-            InstaImage image, string caption, InstaLocationShort location, bool configureAsNameTag = false)
+            InstaImage image, string caption, InstaLocationShort location, bool configureAsNameTag = false, InstaUserTagUpload[] userTags = null)
         {
             var upProgress = new InstaUploaderProgress
             {
@@ -697,7 +698,34 @@ namespace InstagramApiSharp.API.Processors
             };
             try
             {
-              
+
+                if (userTags != null && userTags.Any())
+                {
+                    var currentDelay = _instaApi.GetRequestDelay();
+                    _instaApi.SetRequestDelay(RequestDelay.FromSeconds(1, 2));
+                    foreach (var t in userTags)
+                    {
+                        try
+                        {
+                            bool tried = false;
+                        TryLabel:
+                            var u = await _instaApi.UserProcessor.GetUserAsync(t.Username);
+                            if (!u.Succeeded)
+                            {
+                                if (!tried)
+                                {
+                                    tried = true;
+                                    goto TryLabel;
+                                }
+                            }
+                            else
+                                t.Pk = u.Value.Pk;
+                        }
+                        catch { }
+                    }
+                    _instaApi.SetRequestDelay(currentDelay);
+                }
+
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
                 var photoHashCode = Path.GetFileName(image.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
                 var photoEntityName = $"{uploadId}_0_{photoHashCode}";
@@ -760,7 +788,7 @@ namespace InstagramApiSharp.API.Processors
                     progress?.Invoke(upProgress);
                     if (configureAsNameTag)
                         return await ConfigureMediaPhotoAsNametagAsync(progress, upProgress, uploadId);
-                    return await ConfigureMediaPhotoAsync(progress, upProgress, uploadId, caption, location);
+                    return await ConfigureMediaPhotoAsync(progress, upProgress, uploadId, caption, location, userTags);
                 }
     
                 upProgress.UploadState = InstaUploadState.Error;
@@ -777,7 +805,7 @@ namespace InstagramApiSharp.API.Processors
 
         }
         private async Task<IResult<InstaMedia>> ConfigureMediaPhotoAsync(Action<InstaUploaderProgress> progress,
-            InstaUploaderProgress upProgress, string uploadId, string caption, InstaLocationShort location)
+            InstaUploaderProgress upProgress, string uploadId, string caption, InstaLocationShort location, InstaUserTagUpload[] userTags = null)
         {
             try
             {
@@ -818,6 +846,29 @@ namespace InstagramApiSharp.API.Processors
                 if (location != null)
                 {
                     data.Add("location", location.GetJson());
+                }
+                if (userTags != null && userTags.Any())
+                {
+                    var tagArr = new JArray();
+                    foreach (var tag in userTags)
+                    {
+                        if (tag.Pk != -1)
+                        {
+                            var position = new JArray(tag.X, tag.Y);
+                            var singleTag = new JObject
+                            {
+                                {"user_id", tag.Pk},
+                                {"position", position}
+                            };
+                            tagArr.Add(singleTag);
+                        }
+                    }
+
+                    var root = new JObject
+                    {
+                        {"in",  tagArr}
+                    };
+                    data.Add("usertags", root.ToString(Formatting.None));
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 request.Headers.Add("retry_context", retryContext);

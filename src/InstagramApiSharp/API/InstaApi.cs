@@ -1628,8 +1628,10 @@ namespace InstagramApiSharp.API
                 delay = RequestDelay.Empty();
             _delay = delay;
             _httpRequestProcessor.Delay = _delay;
-
         }
+
+        internal IRequestDelay GetRequestDelay() => _delay;
+
         /// <summary>
         ///     Set instagram api version (for user agent version)
         /// </summary>

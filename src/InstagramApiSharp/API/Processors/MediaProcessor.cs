@@ -539,10 +539,12 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        public async Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption, InstaLocationShort location = null)
+        /// <param name="userTags">User tags => Optional</param>
+        public async Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption, InstaLocationShort location = null,
+            InstaUserTagUpload[] userTags = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(null, image, caption, location);
+            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(null, image, caption, location, false, userTags);
         }
 
         /// <summary>
@@ -552,10 +554,12 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        public async Task<IResult<InstaMedia>> UploadPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption, InstaLocationShort location = null)
+        /// <param name="userTags">User tags => Optional</param>
+        public async Task<IResult<InstaMedia>> UploadPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption,
+            InstaLocationShort location = null, InstaUserTagUpload[] userTags = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(progress, image, caption, location);
+            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(progress, image, caption, location, false, userTags);
         }
 
         /// <summary>

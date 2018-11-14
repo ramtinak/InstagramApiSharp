@@ -98,7 +98,8 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption, InstaLocationShort location = null);
+        /// <param name="userTags">User tags => Optional</param>
+        Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption, InstaLocationShort location = null, InstaUserTagUpload[] userTags = null);
 
         /// <summary>
         ///     Upload photo with progress
@@ -107,7 +108,8 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        Task<IResult<InstaMedia>> UploadPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption, InstaLocationShort location = null);
+        /// <param name="userTags">User tags => Optional</param>
+        Task<IResult<InstaMedia>> UploadPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption, InstaLocationShort location = null, InstaUserTagUpload[] userTags = null);
 
         /// <summary>
         ///     Upload video
