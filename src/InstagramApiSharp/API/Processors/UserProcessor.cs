@@ -97,6 +97,15 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Favorite user stories (user must be in your following list)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<bool>> FavoriteUserStoriesAsync(long userId)
+        {
+            return await FavoriteUnfavoriteUser(UriCreator.GetFavoriteForUserStoriesUri(userId), userId);
+        }
+
+        /// <summary>
         ///     Follow user
         /// </summary>
         /// <param name="userId">User id</param>
@@ -843,6 +852,15 @@ namespace InstagramApiSharp.API.Processors
         public async Task<IResult<bool>> UnFavoriteUserAsync(long userId)
         {
             return await FavoriteUnfavoriteUser(UriCreator.GetUnFavoriteUserUri(userId), userId);
+        }
+        
+        /// <summary>
+        ///     Unfavorite user stories (user must be in your following list)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<bool>> UnFavoriteUserStoriesAsync(long userId)
+        {
+            return await FavoriteUnfavoriteUser(UriCreator.GetUnFavoriteForUserStoriesUri(userId), userId);
         }
 
         /// <summary>

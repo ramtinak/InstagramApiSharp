@@ -27,6 +27,12 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User id (pk)</param>
         Task<IResult<bool>> FavoriteUserAsync(long userId);
+        
+        /// <summary>
+        ///     Favorite user stories (user must be in your following list)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<bool>> FavoriteUserStoriesAsync(long userId);
 
         /// <summary>
         ///     Follow user
@@ -224,6 +230,12 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User id (pk)</param>
         Task<IResult<bool>> UnFavoriteUserAsync(long userId);
+
+        /// <summary>
+        ///     Unfavorite user stories (user must be in your following list)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<bool>> UnFavoriteUserStoriesAsync(long userId);
 
         /// <summary>
         ///     Stop follow user

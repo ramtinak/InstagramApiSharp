@@ -1801,5 +1801,19 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for unfavorite user");
             return instaUri;
         }
+
+        public static Uri GetFavoriteForUserStoriesUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_FAVORITE_FOR_STORIES, userId), out var instaUri))
+                throw new Exception("Cant create URI for favorite user stories");
+            return instaUri;
+        }
+
+        public static Uri GetUnFavoriteForUserStoriesUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_UNFAVORITE_FOR_STORIES, userId), out var instaUri))
+                throw new Exception("Cant create URI for unfavorite user stories");
+            return instaUri;
+        }
     }
 }
