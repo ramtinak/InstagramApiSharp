@@ -46,7 +46,7 @@ namespace InstagramApiSharp.Converters
                     media.Likers.Add(ConvertersFabric.Instance.GetUserShortConverter(liker).Convert());
             if (SourceObject.Media.UserTagList?.In != null && SourceObject.Media.UserTagList?.In?.Count > 0)
                 foreach (var tag in SourceObject.Media.UserTagList.In)
-                    media.Tags.Add(ConvertersFabric.Instance.GetUserTagConverter(tag).Convert());
+                    media.UserTags.Add(ConvertersFabric.Instance.GetUserTagConverter(tag).Convert());
             if (SourceObject.Media.PreviewComments != null)
                 foreach (var comment in SourceObject.Media.PreviewComments)
                     media.PreviewComments.Add(ConvertersFabric.Instance.GetCommentConverter(comment).Convert());

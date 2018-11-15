@@ -46,7 +46,7 @@ namespace InstagramApiSharp.Classes.Models
         private bool _hasliked { get; set; }
         public bool HasLiked { get { return _hasliked; } set { _hasliked = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("HasLiked")); } }
 
-        public List<InstaUserTag> Tags { get; set; } = new List<InstaUserTag>();
+        public List<InstaUserTag> UserTags { get; set; } = new List<InstaUserTag>();
 
         public InstaUserShortList Likers { get; set; } = new InstaUserShortList();
         public InstaCarousel Carousel { get; set; }
@@ -94,5 +94,7 @@ namespace InstagramApiSharp.Classes.Models
         public int NumberOfQualities { get; set; }
 
         public double VideoDuration { get; set; }
+
+        public List<InstaProductTag> ProductTags { get; set; } = new List<InstaProductTag>();
     }
 }

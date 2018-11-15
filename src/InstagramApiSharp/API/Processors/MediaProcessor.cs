@@ -114,10 +114,10 @@ namespace InstagramApiSharp.API.Processors
                 var removeArr = new JArray();
                 if (currentMedia.Succeeded)
                 {
-                    if (currentMedia.Value?.Tags != null &&
-                        currentMedia.Value.Tags.Any())
+                    if (currentMedia.Value?.UserTags != null &&
+                        currentMedia.Value.UserTags.Any())
                     {
-                        foreach (var user in currentMedia.Value.Tags)
+                        foreach (var user in currentMedia.Value.UserTags)
                             removeArr.Add(user.User.Pk.ToString());
                     }
                 }

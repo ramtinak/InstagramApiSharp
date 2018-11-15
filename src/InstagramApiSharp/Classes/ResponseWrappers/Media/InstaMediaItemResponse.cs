@@ -101,6 +101,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("video_duration")] public double? VideoDuration { get; set; }
 
+        [JsonProperty("product_tags")] public InstaProductTagsContainerResponse ProductTags { get; set; }
+
 
     }
 }

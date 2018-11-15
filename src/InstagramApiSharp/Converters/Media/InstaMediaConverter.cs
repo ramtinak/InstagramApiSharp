@@ -48,33 +48,51 @@ namespace InstagramApiSharp.Converters
             };
             if (!string.IsNullOrEmpty(SourceObject.TakenAtUnixLike))
                 media.TakenAt = DateTimeHelper.UnixTimestampToDateTime(SourceObject.TakenAtUnixLike);
+
             if (!string.IsNullOrEmpty(SourceObject.DeviceTimeStampUnixLike))
                 media.DeviceTimeStamp = DateTimeHelper.UnixTimestampToDateTime(SourceObject.DeviceTimeStampUnixLike);
+
             if (SourceObject.CarouselMedia != null)
                 media.Carousel = ConvertersFabric.Instance.GetCarouselConverter(SourceObject.CarouselMedia).Convert();
+
             if (SourceObject.User != null)
                 media.User = ConvertersFabric.Instance.GetUserConverter(SourceObject.User).Convert();
+
             if (SourceObject.Caption != null)
                 media.Caption = ConvertersFabric.Instance.GetCaptionConverter(SourceObject.Caption).Convert();
+
             if (SourceObject.NextMaxId != null) media.NextMaxId = SourceObject.NextMaxId;
+
             if (SourceObject.Likers != null && SourceObject.Likers?.Count > 0)
                 foreach (var liker in SourceObject.Likers)
                     media.Likers.Add(ConvertersFabric.Instance.GetUserShortConverter(liker).Convert());
+
             if (SourceObject.UserTagList?.In != null && SourceObject.UserTagList?.In?.Count > 0)
                 foreach (var tag in SourceObject.UserTagList.In)
-                    media.Tags.Add(ConvertersFabric.Instance.GetUserTagConverter(tag).Convert());
+                    media.UserTags.Add(ConvertersFabric.Instance.GetUserTagConverter(tag).Convert());
+
+            if (SourceObject.ProductTags?.In != null && SourceObject.ProductTags?.In?.Count > 0)
+                foreach (var tag in SourceObject.ProductTags.In)
+                    media.ProductTags.Add(ConvertersFabric.Instance.GetProductTagConverter(tag).Convert());
+
             if (SourceObject.PreviewComments != null)
                 foreach (var comment in SourceObject.PreviewComments)
                     media.PreviewComments.Add(ConvertersFabric.Instance.GetCommentConverter(comment).Convert());
+
             if (SourceObject.Location != null)
                 media.Location = ConvertersFabric.Instance.GetLocationConverter(SourceObject.Location).Convert();
+
             if (SourceObject.Images?.Candidates == null) return media;
+
             foreach (var image in SourceObject.Images.Candidates)
                 media.Images.Add(new InstaImage(image.Url, int.Parse(image.Width), int.Parse(image.Height)));
+
             if (SourceObject.Videos == null) return media;
+
             foreach (var video in SourceObject.Videos)
                 media.Videos.Add(new InstaVideo(video.Url, int.Parse(video.Width), int.Parse(video.Height),
                     video.Type));
+
             return media;
         }
     }
