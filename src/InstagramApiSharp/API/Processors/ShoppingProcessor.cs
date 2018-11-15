@@ -54,5 +54,65 @@ namespace InstagramApiSharp.API.Processors
         #endregion Properties and constructor
 
 
+        /// <summary>
+        ///     Get all user shoppable media by username
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        public async Task<IResult<InstaMediaList>> GetUserShoppableMediaAsync(string username,
+             PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var user = await _instaApi.UserProcessor.GetUserAsync(username);
+            if (!user.Succeeded)
+                return Result.Fail<InstaMediaList>("Unable to get user to load shoppable media");
+            return await GetUserShoppableMedia(user.Value.Pk, paginationParameters);
+        }
+
+        private async Task<IResult<InstaMediaList>> GetUserShoppableMedia(long userId,
+                                            PaginationParameters paginationParameters)
+        {
+            var mediaList = new InstaMediaList();
+            try
+            {
+                var instaUri = UriCreator.GetUserShoppableMediaListUri(userId, paginationParameters.NextMaxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaMediaList>(response, json);
+                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
+                    new InstaMediaListDataConverter());
+
+                mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();
+                mediaList.NextMaxId = paginationParameters.NextMaxId = mediaResponse.NextMaxId;
+                //paginationParameters.PagesLoaded++;
+
+                while (mediaResponse.MoreAvailable
+                       && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                       && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    paginationParameters.PagesLoaded++;
+                    var nextMedia = await GetUserShoppableMedia(userId, paginationParameters);
+                    if (!nextMedia.Succeeded)
+                        return Result.Fail(nextMedia.Info, mediaList);
+                    mediaList.NextMaxId = paginationParameters.NextMaxId = nextMedia.Value.NextMaxId;
+                    mediaList.AddRange(nextMedia.Value);
+                }
+
+                mediaList.Pages = paginationParameters.PagesLoaded;
+                mediaList.PageSize = mediaResponse.ResultsCount;
+                return Result.Success(mediaList);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, mediaList);
+            }
+        }
     }
 }

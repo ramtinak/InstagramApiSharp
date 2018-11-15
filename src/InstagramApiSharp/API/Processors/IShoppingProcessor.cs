@@ -31,5 +31,16 @@ namespace InstagramApiSharp.API.Processors
     /// </summary>
     public interface IShoppingProcessor
     {
+        /// <summary>
+        ///     Get all user shoppable media by username
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        Task<IResult<InstaMediaList>> GetUserShoppableMediaAsync(string username, PaginationParameters paginationParameters);
+
+
     }
 }

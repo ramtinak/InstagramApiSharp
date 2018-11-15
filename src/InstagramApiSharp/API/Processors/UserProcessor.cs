@@ -631,6 +631,21 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMediaList>("Unable to get user to load media");
            return await GetUserMediaAsync(user.Value.Pk, paginationParameters);
         }
+
+        /// <summary>
+        ///     Get all user shoppable media by username
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        public async Task<IResult<InstaMediaList>> GetUserShoppableMediaAsync(string username,
+            PaginationParameters paginationParameters)
+        {
+            return await _instaApi.ShoppingProcessor.GetUserShoppableMediaAsync(username, paginationParameters);
+        }
+
         /// <summary>
         ///     Get user tags by username asynchronously
         ///     <remarks>Returns media list containing tags</remarks>
@@ -1051,12 +1066,13 @@ namespace InstagramApiSharp.API.Processors
 
                 mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();
                 mediaList.NextMaxId = paginationParameters.NextMaxId = mediaResponse.NextMaxId;
-                paginationParameters.PagesLoaded++;
+                
 
                 while (mediaResponse.MoreAvailable
                        && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
+                    paginationParameters.PagesLoaded++;
                     var nextMedia = await GetUserMediaAsync(userId, paginationParameters);
                     if (!nextMedia.Succeeded)
                         return Result.Fail(nextMedia.Info, mediaList);

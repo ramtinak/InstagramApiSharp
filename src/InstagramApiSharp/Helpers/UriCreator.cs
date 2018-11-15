@@ -1763,5 +1763,14 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for direct broadcast reel share");
             return instaUri;
         }
+
+        public static Uri GetUserShoppableMediaListUri(long userPk, string nextId = "")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USER_SHOPPABLE_MEDIA, userPk), out var instaUri))
+                throw new Exception("Cant create URI for user shoppable media");
+            return !string.IsNullOrEmpty(nextId)
+                ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
+                : instaUri;
+        }
     }
 }

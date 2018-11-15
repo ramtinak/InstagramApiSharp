@@ -158,6 +158,17 @@ namespace InstagramApiSharp.API.Processors
         ///     <see cref="InstaMediaList" />
         /// </returns>
         Task<IResult<InstaMediaList>> GetUserMediaAsync(string username, PaginationParameters paginationParameters);
+        
+        /// <summary>
+        ///     Get all user shoppable media by username
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        Task<IResult<InstaMediaList>> GetUserShoppableMediaAsync(string username, PaginationParameters paginationParameters);
+
         /// <summary>
         ///     Get user tags by username asynchronously
         ///     <remarks>Returns media list containing tags</remarks>

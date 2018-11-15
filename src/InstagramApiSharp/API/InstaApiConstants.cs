@@ -516,6 +516,12 @@ namespace InstagramApiSharp.API
 
         #endregion Notification endpoints constants
 
+        #region Shopping endpoints constants
+
+        public const string USER_SHOPPABLE_MEDIA = API_SUFFIX + "/feed/user/{0}/shoppable_media/";
+
+        #endregion Shopping endpoints constants
+
         #region Tags endpoints constants
 
         public const string GET_TAG_INFO = API_SUFFIX + "/tags/{0}/info/";
