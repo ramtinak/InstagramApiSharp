@@ -19,5 +19,7 @@ namespace InstagramApiSharp.Classes.Models
         public string Pk { get; set; }
 
         public string CarouselParentId { get; set; }
+
+        public List<InstaUserTag> UserTags { get; set; } = new List<InstaUserTag>();
     }
 }

@@ -27,7 +27,9 @@ namespace InstagramApiSharp.Converters
                 foreach (var video in SourceObject.Videos)
                     carouselItem.Videos.Add(new InstaVideo(video.Url, int.Parse(video.Width), int.Parse(video.Height),
                         video.Type));
-
+            if (SourceObject.UserTagList?.In != null && SourceObject.UserTagList?.In?.Count > 0)
+                foreach (var tag in SourceObject.UserTagList.In)
+                    carouselItem.UserTags.Add(ConvertersFabric.Instance.GetUserTagConverter(tag).Convert());
             return carouselItem;
         }
     }

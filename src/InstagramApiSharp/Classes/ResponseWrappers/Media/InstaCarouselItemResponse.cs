@@ -21,5 +21,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("pk")] public string Pk { get; set; }
 
         [JsonProperty("carousel_parent_id")] public string CarouselParentId { get; set; }
+
+        [JsonProperty("usertags")] public InstaUserTagListResponse UserTagList { get; set; }
     }
 }
