@@ -748,6 +748,41 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Mark user as overage
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<bool>> MarkUserAsOverageAsync(long userId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetMarkUserOverageUri(userId);
+                
+                var data = new JObject
+                {
+                    {"user_id", userId.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, obj.Message, null);
+
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, obj.Message, null);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<bool>(ex.Message);
+            }
+        }
+
+        /// <summary>
         ///     Report user
         /// </summary>
         /// <param name="userId">User id (pk)</param>

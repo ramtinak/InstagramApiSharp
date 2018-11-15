@@ -357,6 +357,7 @@ namespace InstagramApiSharp.API
         public const string FRIENDSHIPS_USER_FOLLOWERS = API_SUFFIX + "/friendships/{0}/followers/?rank_token={1}";
         public const string FRIENDSHIPS_USER_FOLLOWING = API_SUFFIX + "/friendships/{0}/following/?rank_token={1}";
         public const string FRIENDSHIPSTATUS = API_SUFFIX + "/friendships/show/";
+        public const string FRIENDSHIPS_MARK_USER_OVERAGE = API_SUFFIX + "/friendships/mark_user_overage/{0}/feed/";
 
         #endregion Friendships endpoints constants
 

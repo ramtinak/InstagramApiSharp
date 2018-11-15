@@ -1780,5 +1780,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for product info");
             return instaUri;
         }
+
+        public static Uri GetMarkUserOverageUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_MARK_USER_OVERAGE, userId), out var instaUri))
+                throw new Exception("Cant create URI for mark user overage");
+            return instaUri;
+        }
     }
 }

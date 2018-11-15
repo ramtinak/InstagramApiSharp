@@ -196,6 +196,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaFriendshipStatus>> IgnoreFriendshipRequestAsync(long userId);
 
         /// <summary>
+        ///     Mark user as overage
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<bool>> MarkUserAsOverageAsync(long userId);
+
+        /// <summary>
         ///     Report user
         /// </summary>
         /// <param name="userId">User id (pk)</param>
