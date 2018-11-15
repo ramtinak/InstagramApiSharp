@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -214,6 +215,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> MarkUserAsOverageAsync(long userId);
 
         /// <summary>
+        ///     Mute user media (story, post or all)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<InstaFriendshipStatus>> MuteUserMediaAsync(long userId, InstaMuteOption muteOption);
+
+        /// <summary>
         ///     Report user
         /// </summary>
         /// <param name="userId">User id (pk)</param>
@@ -242,6 +249,12 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User id</param>
         Task<IResult<InstaFriendshipStatus>> UnFollowUserAsync(long userId);
+
+        /// <summary>
+        ///     Unmute user media (story, post or all)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<InstaFriendshipStatus>> UnMuteUserMediaAsync(long userId, InstaMuteOption unmuteOption);
 
         /// <summary>
         ///     Remove an follower from your followers

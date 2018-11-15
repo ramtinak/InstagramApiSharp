@@ -11,6 +11,7 @@ using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Converters;
 using InstagramApiSharp.Converters.Json;
+using InstagramApiSharp.Enums;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
@@ -799,7 +800,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(ex.Message);
             }
         }
-
+        /// <summary>
+        ///     Mute user media (story, post or all)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<InstaFriendshipStatus>> MuteUserMediaAsync(long userId, InstaMuteOption unmuteOption)
+        {
+            return await MuteUnMuteUserMedia(UriCreator.GetMuteUserMediaStoryUri(userId), userId, unmuteOption);
+        }
         /// <summary>
         ///     Report user
         /// </summary>
@@ -872,7 +880,16 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             return await FollowUnfollowUserInternal(userId, UriCreator.GetUnFollowUserUri(userId));
         }
-        
+
+        /// <summary>
+        ///     Unmute user media (story, post or all)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<InstaFriendshipStatus>> UnMuteUserMediaAsync(long userId, InstaMuteOption unmuteOption)
+        {
+            return await MuteUnMuteUserMedia(UriCreator.GetUnMuteUserMediaStoryUri(userId), userId, unmuteOption);
+        }
+
         /// <summary>
         ///     Remove an follower from your followers
         /// </summary>
@@ -1188,6 +1205,50 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception ex)
             {
                 return Result.Fail<bool>(ex.Message);
+            }
+        }
+
+        private async Task<IResult<InstaFriendshipStatus>> MuteUnMuteUserMedia(Uri instaUri, long userId, InstaMuteOption muteUnmuteOption)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var data = new JObject
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                };
+                switch(muteUnmuteOption)
+                {
+                    case InstaMuteOption.All:
+                        data.Add("target_reel_author_id", userId.ToString());
+                        data.Add("target_posts_author_id", userId.ToString());
+                        break;
+                    case InstaMuteOption.Post:
+                        data.Add("target_posts_author_id", userId.ToString());
+                        break;
+                    case InstaMuteOption.Story:
+                        data.Add("target_reel_author_id", userId.ToString());
+                        break;
+                }
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, obj.Message, null);
+
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
+                     new InstaFriendShipDataConverter());
+                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<InstaFriendshipStatus>(ex.Message);
             }
         }
         #endregion private parts

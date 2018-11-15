@@ -1815,5 +1815,19 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for unfavorite user stories");
             return instaUri;
         }
+
+        public static Uri GetMuteUserMediaStoryUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FRIENDSHIPS_MUTE_POST_STORY, out var instaUri))
+                throw new Exception("Cant create URI for mute user media or story");
+            return instaUri;
+        }
+
+        public static Uri GetUnMuteUserMediaStoryUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FRIENDSHIPS_UNMUTE_POST_STORY, out var instaUri))
+                throw new Exception("Cant create URI for unmute user media or story");
+            return instaUri;
+        }
     }
 }
