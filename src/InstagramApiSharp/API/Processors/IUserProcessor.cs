@@ -209,6 +209,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaFriendshipStatus>> IgnoreFriendshipRequestAsync(long userId);
 
         /// <summary>
+        ///     Hide my story from specific user
+        /// </summary>
+        /// <param name="userId">User id</param>
+        Task<IResult<InstaFriendshipStatus>> HideMyStoryFromUserAsync(long userId);
+
+        /// <summary>
         ///     Mark user as overage
         /// </summary>
         /// <param name="userId">User id (pk)</param>
@@ -218,6 +224,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Mute user media (story, post or all)
         /// </summary>
         /// <param name="userId">User id (pk)</param>
+        /// <param name="unmuteOption">Unmute option</param>
         Task<IResult<InstaFriendshipStatus>> MuteUserMediaAsync(long userId, InstaMuteOption muteOption);
 
         /// <summary>
@@ -249,11 +256,18 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User id</param>
         Task<IResult<InstaFriendshipStatus>> UnFollowUserAsync(long userId);
+        
+        /// <summary>
+        ///     Unhide my story from specific user
+        /// </summary>
+        /// <param name="userId">User id</param>
+        Task<IResult<InstaFriendshipStatus>> UnHideMyStoryFromUserAsync(long userId); 
 
         /// <summary>
         ///     Unmute user media (story, post or all)
         /// </summary>
         /// <param name="userId">User id (pk)</param>
+        /// <param name="unmuteOption">Unmute option</param>
         Task<IResult<InstaFriendshipStatus>> UnMuteUserMediaAsync(long userId, InstaMuteOption unmuteOption);
 
         /// <summary>

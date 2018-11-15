@@ -1829,5 +1829,21 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for unmute user media or story");
             return instaUri;
         }
+
+        public static Uri GetHideMyStoryFromUserUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_BLOCK_FRIEND_REEL, userId),
+                out var instaUri))
+                throw new Exception("Cant create URI for hide my story from specific user");
+            return instaUri;
+        }
+
+        public static Uri GetUnHideMyStoryFromUserUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_UNBLOCK_FRIEND_REEL, userId),
+                out var instaUri))
+                throw new Exception("Cant create URI for unhide my story from from specific user");
+            return instaUri;
+        }
     }
 }

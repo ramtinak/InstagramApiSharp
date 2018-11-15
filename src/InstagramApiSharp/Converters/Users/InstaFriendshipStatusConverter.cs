@@ -15,8 +15,8 @@ namespace InstagramApiSharp.Converters
                 Following = SourceObject.Following,
                 Blocking = SourceObject.Blocking,
                 FollowedBy = SourceObject.FollowedBy,
-                IncomingRequest = SourceObject.IncomingRequest,
-                OutgoingRequest = SourceObject.OutgoingRequest
+                OutgoingRequest = SourceObject.OutgoingRequest,
+                IsBlockingReel = SourceObject.IsBlockingReel ?? false,
             };
             friendShip.IncomingRequest = SourceObject.IncomingRequest;
             friendShip.IsPrivate = SourceObject.IsPrivate;

@@ -765,6 +765,15 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaFriendshipStatus>(ex.Message);
             }
         }
+        
+        /// <summary>
+        ///     Hide my story from specific user
+        /// </summary>
+        /// <param name="userId">User id</param>
+        public async Task<IResult<InstaFriendshipStatus>> HideMyStoryFromUserAsync(long userId)
+        {
+            return await HideUnhideMyStoryFromUser(UriCreator.GetHideMyStoryFromUserUri(userId));
+        }
 
         /// <summary>
         ///     Mark user as overage
@@ -804,6 +813,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Mute user media (story, post or all)
         /// </summary>
         /// <param name="userId">User id (pk)</param>
+        /// <param name="unmuteOption">Unmute option</param>
         public async Task<IResult<InstaFriendshipStatus>> MuteUserMediaAsync(long userId, InstaMuteOption unmuteOption)
         {
             return await MuteUnMuteUserMedia(UriCreator.GetMuteUserMediaStoryUri(userId), userId, unmuteOption);
@@ -882,9 +892,19 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Unhide my story from specific user
+        /// </summary>
+        /// <param name="userId">User id</param>
+        public async Task<IResult<InstaFriendshipStatus>> UnHideMyStoryFromUserAsync(long userId)
+        {
+            return await HideUnhideMyStoryFromUser(UriCreator.GetUnHideMyStoryFromUserUri(userId));
+        }
+
+        /// <summary>
         ///     Unmute user media (story, post or all)
         /// </summary>
         /// <param name="userId">User id (pk)</param>
+        /// <param name="unmuteOption">Unmute option</param>
         public async Task<IResult<InstaFriendshipStatus>> UnMuteUserMediaAsync(long userId, InstaMuteOption unmuteOption)
         {
             return await MuteUnMuteUserMedia(UriCreator.GetUnMuteUserMediaStoryUri(userId), userId, unmuteOption);
@@ -1244,6 +1264,39 @@ namespace InstagramApiSharp.API.Processors
                 var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
                      new InstaFriendShipDataConverter());
                 var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<InstaFriendshipStatus>(ex.Message);
+            }
+        }
+        private async Task<IResult<InstaFriendshipStatus>> HideUnhideMyStoryFromUser(Uri instaUri)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var data = new JObject
+                {
+                    {"source", "profile"},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, obj.Message, null);
+
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
+                     new InstaFriendShipDataConverter());
+                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+
                 return Result.Success(converter.Convert());
             }
             catch (Exception ex)
