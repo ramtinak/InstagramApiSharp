@@ -23,6 +23,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaFriendshipStatus>> BlockUserAsync(long userId);
 
         /// <summary>
+        ///     Favorite user (user must be in your following list)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<bool>> FavoriteUserAsync(long userId);
+
+        /// <summary>
         ///     Follow user
         /// </summary>
         /// <param name="userId">User id</param>
@@ -212,6 +218,12 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User id</param>
         Task<IResult<InstaFriendshipStatus>> UnBlockUserAsync(long userId);
+
+        /// <summary>
+        ///     Unfavorite user (user must be in your following list)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<bool>> UnFavoriteUserAsync(long userId);
 
         /// <summary>
         ///     Stop follow user

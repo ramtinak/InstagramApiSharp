@@ -1787,5 +1787,19 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for mark user overage");
             return instaUri;
         }
+
+        public static Uri GetFavoriteUserUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_FAVORITE, userId), out var instaUri))
+                throw new Exception("Cant create URI for favorite user");
+            return instaUri;
+        }
+
+        public static Uri GetUnFavoriteUserUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_UNFAVORITE, userId), out var instaUri))
+                throw new Exception("Cant create URI for unfavorite user");
+            return instaUri;
+        }
     }
 }

@@ -318,11 +318,7 @@ namespace InstagramApiSharp.API
         /// </summary>
         public const string FRIENDSHIPS_BLOCKED_REEL = API_VERSION + "/friendships/blocked_reels/";
 
-        /// <summary>
-        /// post method
-        /// </summary>
-        public const string FRIENDSHIPS_FAVORITE = API_SUFFIX + "/friendships/favorite/{0}/";
-
+  
         public const string FRIENDSHIPS_FOLLOW_USER = API_SUFFIX + "/friendships/create/{0}/";
         public const string FRIENDSHIPS_IGNORE = API_SUFFIX + "/friendships/ignore/{0}/";
         /// <summary>
@@ -348,9 +344,9 @@ namespace InstagramApiSharp.API
         public const string FRIENDSHIPS_UNBLOCK_FRIEND_REEL = API_SUFFIX + "/friendships/unblock_friend_reel/{0}";
 
         public const string FRIENDSHIPS_UNBLOCK_USER = API_SUFFIX + "/friendships/unblock/{0}/";
-        /// <summary>
-        /// post method
-        /// </summary>
+
+
+        public const string FRIENDSHIPS_FAVORITE = API_SUFFIX + "/friendships/favorite/{0}/";
         public const string FRIENDSHIPS_UNFAVORITE = API_SUFFIX + "/friendships/unfavorite/{0}/";
 
         public const string FRIENDSHIPS_UNFOLLOW_USER = API_SUFFIX + "/friendships/destroy/{0}/";

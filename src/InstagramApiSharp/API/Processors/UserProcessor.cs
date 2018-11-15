@@ -88,6 +88,15 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Favorite user (user must be in your following list)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<bool>> FavoriteUserAsync(long userId)
+        {
+            return await FavoriteUnfavoriteUser(UriCreator.GetFavoriteUserUri(userId), userId);
+        }
+
+        /// <summary>
         ///     Follow user
         /// </summary>
         /// <param name="userId">User id</param>
@@ -828,6 +837,15 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Unfavorite user (user must be in your following list)
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<bool>> UnFavoriteUserAsync(long userId)
+        {
+            return await FavoriteUnfavoriteUser(UriCreator.GetUnFavoriteUserUri(userId), userId);
+        }
+
+        /// <summary>
         ///     Stop follow user
         /// </summary>
         /// <param name="userId">User id</param>
@@ -1123,6 +1141,35 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail(exception, mediaList);
+            }
+        }
+
+        private async Task<IResult<bool>> FavoriteUnfavoriteUser(Uri instaUri, long userId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var data = new JObject
+                {
+                    {"user_id", userId.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, obj.Message, null);
+
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, obj.Message, null);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<bool>(ex.Message);
             }
         }
         #endregion private parts
