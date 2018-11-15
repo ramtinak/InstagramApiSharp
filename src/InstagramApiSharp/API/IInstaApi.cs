@@ -91,6 +91,10 @@ namespace InstagramApiSharp.API
         ///     <para>Note: All functions of this interface only works with business accounts!</para>
         /// </summary>
         IBusinessProcessor BusinessProcessor { get; }
+        /// <summary>
+        ///     Shopping and commerce api functions
+        /// </summary>
+        IShoppingProcessor ShoppingProcessor { get; }
         #endregion
 
         #region State data

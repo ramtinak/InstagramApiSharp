@@ -77,6 +77,7 @@ namespace InstagramApiSharp.API
         ITVProcessor _tvProcessor;
         HelperProcessor _helperProcessor;
         IBusinessProcessor _businessProcessor;
+        IShoppingProcessor _shoppingProcessor;
         /// <summary>
         ///     Live api functions.
         /// </summary>
@@ -138,6 +139,10 @@ namespace InstagramApiSharp.API
         ///     <para>Note: All functions of this interface only works with business accounts!</para>
         /// </summary>
         public IBusinessProcessor BusinessProcessor => _businessProcessor;
+        /// <summary>
+        ///     Shopping and commerce api functions
+        /// </summary>
+        public IShoppingProcessor ShoppingProcessor => _shoppingProcessor;
 
         #endregion Processors
 
@@ -1875,6 +1880,7 @@ namespace InstagramApiSharp.API
             _helperProcessor = new HelperProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
             _tvProcessor = new TVProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
             _businessProcessor = new BusinessProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
+            _shoppingProcessor = new ShoppingProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
 
 
         }
