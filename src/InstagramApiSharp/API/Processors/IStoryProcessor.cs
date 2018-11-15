@@ -33,6 +33,8 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>Return true if the story media is deleted</returns>
         Task<IResult<bool>> DeleteStoryAsync(string storyMediaId, InstaSharingType sharingType = InstaSharingType.Video);
 
+        Task<IResult<InstaUserShortList>> GetBlockedStorySharingUsersStory();
+
         /// <summary>
         ///     Get user highlight feeds by user id (pk)
         /// </summary>

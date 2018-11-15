@@ -313,11 +313,6 @@ namespace InstagramApiSharp.API
         public const string FRIENDSHIPS_APPROVE = API_SUFFIX + "/friendships/approve/{0}/";
         public const string FRIENDSHIPS_AUTOCOMPLETE_USER_LIST = API_SUFFIX + "/friendships/autocomplete_user_list/";
         public const string FRIENDSHIPS_BLOCK_USER = API_SUFFIX + "/friendships/block/{0}/";
-        /// <summary>
-        /// get blocked users from self stories
-        /// </summary>
-        public const string FRIENDSHIPS_BLOCKED_REEL = API_VERSION + "/friendships/blocked_reels/";
-
   
         public const string FRIENDSHIPS_FOLLOW_USER = API_SUFFIX + "/friendships/create/{0}/";
         public const string FRIENDSHIPS_IGNORE = API_SUFFIX + "/friendships/ignore/{0}/";
@@ -351,6 +346,7 @@ namespace InstagramApiSharp.API
         public const string FRIENDSHIPS_UNBLOCK_FRIEND_REEL = API_SUFFIX + "/friendships/unblock_friend_reel/{0}/";
         public const string FRIENDSHIPS_MUTE_FRIEND_REEL = API_SUFFIX + "/friendships/mute_friend_reel/{0}/";
         public const string FRIENDSHIPS_UNMUTE_FRIEND_REEL = API_SUFFIX + "/friendships/unmute_friend_reel/{0}/";
+        public const string FRIENDSHIPS_BLOCKED_REEL = API_SUFFIX + "/friendships/blocked_reels/";
 
         #endregion Friendships endpoints constants
 

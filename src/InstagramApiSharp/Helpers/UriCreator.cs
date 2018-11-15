@@ -1861,5 +1861,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for unmute friend story");
             return instaUri;
         }
+
+        public static Uri GetBlockedStoriesUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FRIENDSHIPS_BLOCKED_REEL, out var instaUri))
+                throw new Exception("Cant create URI for blocked stories ");
+            return instaUri;
+        }
     }
 }

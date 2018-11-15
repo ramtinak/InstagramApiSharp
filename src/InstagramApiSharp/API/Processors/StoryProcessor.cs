@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -143,6 +144,40 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<bool>(exception);
+            }
+        }
+
+        public async Task<IResult<InstaUserShortList>> GetBlockedStorySharingUsersStory()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var list = new InstaUserShortList();
+            try
+            {
+                var instaUri = UriCreator.GetBlockedStoriesUri();
+                var data = new JObject
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUserShortList>(response, obj.Message, null);
+
+                var usersResponse = JsonConvert.DeserializeObject<InstaUserListShortResponse>(json);
+                list.AddRange(
+                    usersResponse.Items.Select(ConvertersFabric.Instance.GetUserShortConverter)
+                        .Select(converter => converter.Convert()));
+                return Result.Success(list);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.Message, list);
             }
         }
 
