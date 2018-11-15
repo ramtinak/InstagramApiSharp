@@ -221,6 +221,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> MarkUserAsOverageAsync(long userId);
 
         /// <summary>
+        ///     Mute friend's stories, so you won't see their stories in latest stories tab
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<InstaFriendshipStatus>> MuteFriendStoryAsync(long userId);
+
+        /// <summary>
         ///     Mute user media (story, post or all)
         /// </summary>
         /// <param name="userId">User id (pk)</param>
@@ -261,7 +267,13 @@ namespace InstagramApiSharp.API.Processors
         ///     Unhide my story from specific user
         /// </summary>
         /// <param name="userId">User id</param>
-        Task<IResult<InstaFriendshipStatus>> UnHideMyStoryFromUserAsync(long userId); 
+        Task<IResult<InstaFriendshipStatus>> UnHideMyStoryFromUserAsync(long userId);
+
+        /// <summary>
+        ///     Unmute friend's stories, so you will be able to see their stories in latest stories tab once again
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        Task<IResult<InstaFriendshipStatus>> UnMuteFriendStoryAsync(long userId);
 
         /// <summary>
         ///     Unmute user media (story, post or all)

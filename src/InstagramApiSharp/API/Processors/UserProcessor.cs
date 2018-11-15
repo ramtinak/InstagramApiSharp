@@ -809,6 +809,16 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(ex.Message);
             }
         }
+
+        /// <summary>
+        ///     Mute friend's stories, so you won't see their stories in latest stories tab
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<InstaFriendshipStatus>> MuteFriendStoryAsync(long userId)
+        {
+            return await MuteUnMuteFriendStory(UriCreator.GetMuteFriendStoryUri(userId));
+        }
+
         /// <summary>
         ///     Mute user media (story, post or all)
         /// </summary>
@@ -898,6 +908,15 @@ namespace InstagramApiSharp.API.Processors
         public async Task<IResult<InstaFriendshipStatus>> UnHideMyStoryFromUserAsync(long userId)
         {
             return await HideUnhideMyStoryFromUser(UriCreator.GetUnHideMyStoryFromUserUri(userId));
+        }
+
+        /// <summary>
+        ///     Unmute friend's stories, so you will be able to see their stories in latest stories tab once again
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        public async Task<IResult<InstaFriendshipStatus>> UnMuteFriendStoryAsync(long userId)
+        {
+            return await MuteUnMuteFriendStory(UriCreator.GetUnMuteFriendStoryUri(userId));
         }
 
         /// <summary>
@@ -1280,6 +1299,38 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"source", "profile"},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, obj.Message, null);
+
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
+                     new InstaFriendShipDataConverter());
+                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<InstaFriendshipStatus>(ex.Message);
+            }
+        }
+
+        private async Task<IResult<InstaFriendshipStatus>> MuteUnMuteFriendStory(Uri instaUri)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var data = new JObject
+                {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_csrftoken", _user.CsrfToken},
