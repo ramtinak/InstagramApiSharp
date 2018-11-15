@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.4.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.5.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -84,6 +84,23 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.5.0
+- [Bugfix] for GetUserAsync
+- [Add] user tags support to UploadPhotoAsync
+- [Add] user tags edit to EditMediaAsync
+- [Add] Product tags to InstaMedia
+- [Add] user tag support to InstaCarouselItem
+- [Add] ShoppingProcessor
+- [Add] GetUserShoppableMediaAsync to ShoppingProcessor and UserProcessor
+- [Add] GetProductInfoAsync to ShoppingProcessor
+- [Add] MarkUserAsOverageAsync to UserProcessor
+- [Add] FavoriteUserAsync and UnFavoriteUserAsync to UserProcessor
+- [Add] FavoriteUserStoriesAsync and UnFavoriteUserStoriesAsync to UserProcessor
+- [Add] MuteUserMediaAsync and UnMuteUserMediaAsync to UserProcessor
+- [Add] HideMyStoryFromUserAsync and UnHideMyStoryFromUserAsync to UserProcessor
+- [Add] MuteFriendStoryAsync and UnMuteFriendStoryAsync to UserProcessor
+- [Add] GetBlockedStorySharingUsersStory to StoryProcessor
+
 v1.1.4.4
 - [Bugfix] for phone number/email login (now you can login with phone/email to as well) (spectial thanks to [@learn-itnow](https://github.com/learn-itnow) for his help)
 

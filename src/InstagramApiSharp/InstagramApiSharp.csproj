@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452;uap10.0</TargetFrameworks>
-    <VersionPrefix>1.1.4</VersionPrefix>
+    <VersionPrefix>1.1.5</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.4.5</Version>
-    <AssemblyVersion>1.1.4.5</AssemblyVersion>
-    <FileVersion>1.1.4.5</FileVersion>
+    <Version>1.1.5.0</Version>
+    <AssemblyVersion>1.1.5.0</AssemblyVersion>
+    <FileVersion>1.1.5.0</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -29,6 +29,7 @@ Support:
 - Search peoples.
 - IGTV functions.
 - Business functions.
+- Shopping functions.
 - Can pass challenge required and two factor authentication.
 - and many more.
 
@@ -37,7 +38,24 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.4.4
+    <PackageReleaseNotes>v1.1.5.0
+- [Bugfix] for GetUserAsync
+- [Add] user tags support to UploadPhotoAsync
+- [Add] user tags edit to EditMediaAsync
+- [Add] Product tags to InstaMedia
+- [Add] user tag support to InstaCarouselItem
+- [Add] ShoppingProcessor
+- [Add] GetUserShoppableMediaAsync to ShoppingProcessor and UserProcessor
+- [Add] GetProductInfoAsync to ShoppingProcessor
+- [Add] MarkUserAsOverageAsync to UserProcessor
+- [Add] FavoriteUserAsync and UnFavoriteUserAsync to UserProcessor
+- [Add] FavoriteUserStoriesAsync and UnFavoriteUserStoriesAsync to UserProcessor
+- [Add] MuteUserMediaAsync and UnMuteUserMediaAsync to UserProcessor
+- [Add] HideMyStoryFromUserAsync and UnHideMyStoryFromUserAsync to UserProcessor
+- [Add] MuteFriendStoryAsync and UnMuteFriendStoryAsync to UserProcessor
+- [Add] GetBlockedStorySharingUsersStory to StoryProcessor
+
+v1.1.4.4
 - [Bugfix] for phone number/email login (now you can login with phone/email to as well) (spectial thanks to @learn-itnow for his help)
 
 v1.1.4.3
