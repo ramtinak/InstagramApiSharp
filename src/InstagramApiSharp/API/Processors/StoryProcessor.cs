@@ -146,7 +146,10 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
-
+        
+        /// <summary>
+        ///     Get list of users that blocked from seeing your stories
+        /// </summary>
         public async Task<IResult<InstaUserShortList>> GetBlockedStorySharingUsersStory()
         {
             UserAuthValidator.Validate(_userAuthValidate);
