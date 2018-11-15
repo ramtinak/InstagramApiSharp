@@ -554,10 +554,28 @@ namespace InstagramApiSharp.Converters
             return new InstaMerchantConverter { SourceObject = response };
         }
 
-        public IObjectConverter<InstaProductTag, InstaProductContainerResponse> GetProductTagConverter(
+        public IObjectConverter<InstaProductTag, InstaProductContainerResponse> GetProductTagContainerConverter(
             InstaProductContainerResponse response)
         {
+            return new InstaProductContainerConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaProduct, InstaProductResponse> GetProductConverter(
+            InstaProductResponse response)
+        {
             return new InstaProductConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaProductMediaList, InstaProductMediaListResponse> GetProductMediaListConverter(
+            InstaProductMediaListResponse response)
+        {
+            return new InstaProductMediaListConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaProductInfo, InstaProductInfoResponse> GetProductInfoConverter(
+            InstaProductInfoResponse response)
+        {
+            return new InstaProductInfoConverter { SourceObject = response };
         }
     }
 }

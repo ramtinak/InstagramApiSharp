@@ -31,6 +31,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public List<InstaImage> ThumbnailImage { get; set; } = new List<InstaImage>();
 
+        public List<InstaImage> ProductImages { get; set; } = new List<InstaImage>();
+
         public string ReviewStatus { get; set; }
 
         public string ExternalUrl { get; set; }

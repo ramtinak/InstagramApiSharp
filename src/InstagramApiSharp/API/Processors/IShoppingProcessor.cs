@@ -42,5 +42,9 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaMediaList>> GetUserShoppableMediaAsync(string username, PaginationParameters paginationParameters);
 
 
+
+        Task<IResult<InstaProductInfo>> GetProductInfoAsync(long productId, string mediaPk, int deviceWidth = 720);
+
+
     }
 }

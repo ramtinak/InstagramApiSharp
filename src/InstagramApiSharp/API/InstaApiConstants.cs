@@ -520,6 +520,8 @@ namespace InstagramApiSharp.API
 
         public const string USER_SHOPPABLE_MEDIA = API_SUFFIX + "/feed/user/{0}/shoppable_media/";
 
+        public const string COMMERCE_PRODUCT_INFO = API_SUFFIX + "/commerce/products/{0}/?media_id={1}&device_width={2}";
+
         #endregion Shopping endpoints constants
 
         #region Tags endpoints constants

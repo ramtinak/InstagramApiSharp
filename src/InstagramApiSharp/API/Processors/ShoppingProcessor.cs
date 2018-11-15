@@ -72,6 +72,41 @@ namespace InstagramApiSharp.API.Processors
             return await GetUserShoppableMedia(user.Value.Pk, paginationParameters);
         }
 
+
+
+
+
+        public async Task<IResult<InstaProductInfo>> GetProductInfoAsync(long productId, string mediaPk, int deviceWidth = 720)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetProductInfoUri(productId, mediaPk, deviceWidth);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaProductInfo>(response, json);
+
+                var productInfoResponse = JsonConvert.DeserializeObject<InstaProductInfoResponse>(json);
+                var converted = ConvertersFabric.Instance.GetProductInfoConverter(productInfoResponse).Convert();
+
+                return Result.Success(converted);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaProductInfo>(exception);
+            }
+        }
+
+
+
+
+
+
+
+
         private async Task<IResult<InstaMediaList>> GetUserShoppableMedia(long userId,
                                             PaginationParameters paginationParameters)
         {
@@ -90,7 +125,6 @@ namespace InstagramApiSharp.API.Processors
 
                 mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();
                 mediaList.NextMaxId = paginationParameters.NextMaxId = mediaResponse.NextMaxId;
-                //paginationParameters.PagesLoaded++;
 
                 while (mediaResponse.MoreAvailable
                        && !string.IsNullOrEmpty(paginationParameters.NextMaxId)

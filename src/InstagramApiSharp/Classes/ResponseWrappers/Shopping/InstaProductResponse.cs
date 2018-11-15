@@ -53,6 +53,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public string CheckoutStyle { get; set; }
         [JsonProperty("merchant")]
         public InstaMerchantResponse Merchant { get; set; }
+        [JsonProperty("product_images")]
+        public List<InstaProductImageResponse> ProductImages { get; set; }
     }
 
     public class InstaProductImageResponse

@@ -1772,5 +1772,13 @@ namespace InstagramApiSharp.Helpers
                 ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
                 : instaUri;
         }
+
+        public static Uri GetProductInfoUri(long productId, string mediaPk, int deviceWidth)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.COMMERCE_PRODUCT_INFO,
+                productId, mediaPk, deviceWidth), out var instaUri))
+                throw new Exception("Cant create URI for product info");
+            return instaUri;
+        }
     }
 }

@@ -16,35 +16,30 @@ using InstagramApiSharp.Classes.ResponseWrappers;
 
 namespace InstagramApiSharp.Converters
 {
-    internal class InstaProductConverter : IObjectConverter<InstaProductTag, InstaProductContainerResponse>
+    internal class InstaProductConverter : IObjectConverter<InstaProduct, InstaProductResponse>
     {
-        public InstaProductContainerResponse SourceObject { get; set; }
+        public InstaProductResponse SourceObject { get; set; }
 
-        public InstaProductTag Convert()
+        public InstaProduct Convert()
         {
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
-            var productTag = new InstaProductTag
-            {
-                Position = new InstaPosition(SourceObject.Position[0], SourceObject.Position[1])
-            };
-            var source = SourceObject.Product;
             var product = new InstaProduct
             {
-                CheckoutStyle = source.CheckoutStyle,
-                CurrentPrice = source.CurrentPrice,
-                ExternalUrl = source.ExternalUrl,
-                FullPrice = source.FullPrice,
-                HasViewerSaved = source.HasViewerSaved,
-                Merchant = ConvertersFabric.Instance.GetMerchantConverter(source.Merchant).Convert(),
-                Name = source.Name,
-                Price = source.Price,
-                ProductId = source.ProductId,
-                ReviewStatus = source.ReviewStatus
+                CheckoutStyle = SourceObject.CheckoutStyle,
+                CurrentPrice = SourceObject.CurrentPrice,
+                ExternalUrl = SourceObject.ExternalUrl,
+                FullPrice = SourceObject.FullPrice,
+                HasViewerSaved = SourceObject.HasViewerSaved,
+                Merchant = ConvertersFabric.Instance.GetMerchantConverter(SourceObject.Merchant).Convert(),
+                Name = SourceObject.Name,
+                Price = SourceObject.Price,
+                ProductId = SourceObject.ProductId,
+                ReviewStatus = SourceObject.ReviewStatus
             };
-            if (source.MainImage != null && source.MainImage.Images != null
-                && source.MainImage.Images.Candidates.Any())
+            if (SourceObject.MainImage != null && SourceObject.MainImage.Images != null
+                && SourceObject.MainImage.Images.Candidates.Any())
             {
-                foreach (var image in source.MainImage.Images.Candidates)
+                foreach (var image in SourceObject.MainImage.Images.Candidates)
                 {
                     try
                     {
@@ -53,10 +48,10 @@ namespace InstagramApiSharp.Converters
                     catch { }
                 }
             }
-            if (source.ThumbnailImage != null && source.ThumbnailImage.Images != null
-                && source.ThumbnailImage.Images.Candidates.Any())
+            if (SourceObject.ThumbnailImage != null && SourceObject.ThumbnailImage.Images != null
+                && SourceObject.ThumbnailImage.Images.Candidates.Any())
             {
-                foreach (var image in source.ThumbnailImage.Images.Candidates)
+                foreach (var image in SourceObject.ThumbnailImage.Images.Candidates)
                 {
                     try
                     {
@@ -65,8 +60,24 @@ namespace InstagramApiSharp.Converters
                     catch { }
                 }
             }
-            productTag.Product = product;
-            return productTag;
+            if (SourceObject.ProductImages != null && SourceObject.ProductImages.Any())
+            {
+                foreach (var productImage in SourceObject.ProductImages)
+                {
+                    if (productImage.Images != null && productImage.Images?.Candidates != null)
+                    {
+                        foreach (var image in productImage.Images.Candidates)
+                        {
+                            try
+                            {
+                                product.ThumbnailImage.Add(new InstaImage(image.Url, int.Parse(image.Width), int.Parse(image.Height)));
+                            }
+                            catch { }
+                        }
+                    }
+                }
+            }
+            return product;
         }
     }
 }

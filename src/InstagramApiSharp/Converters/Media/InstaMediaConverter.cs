@@ -73,7 +73,7 @@ namespace InstagramApiSharp.Converters
 
             if (SourceObject.ProductTags?.In != null && SourceObject.ProductTags?.In?.Count > 0)
                 foreach (var tag in SourceObject.ProductTags.In)
-                    media.ProductTags.Add(ConvertersFabric.Instance.GetProductTagConverter(tag).Convert());
+                    media.ProductTags.Add(ConvertersFabric.Instance.GetProductTagContainerConverter(tag).Convert());
 
             if (SourceObject.PreviewComments != null)
                 foreach (var comment in SourceObject.PreviewComments)
