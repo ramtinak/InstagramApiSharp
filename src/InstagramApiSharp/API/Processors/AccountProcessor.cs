@@ -958,6 +958,42 @@ namespace InstagramApiSharp.API.Processors
             }
         }
         /// <summary>
+        ///     Verify email by verification url
+        /// </summary>
+        /// <param name="verificationUri">Verification url</param>
+        public async Task<IResult<bool>> VerifyEmailByVerificationUriAsync(Uri verificationUri)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (verificationUri == null) throw new ArgumentNullException("Verification uri cannot be null");
+
+                var instaUri = UriCreator.GetVerifyEmailUri(verificationUri);
+                var data = new JObject
+                {
+                    { "_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()}
+                };
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                var obj = JsonConvert.DeserializeObject<InstaAccountConfirmEmail>(json);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, obj.Body, null);
+
+                return obj.Title.ToLower() == "thanks" ? Result.Success(true) : Result.Fail(obj.Body, false);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Verify sms code.
         /// </summary>
         /// <param name="phoneNumber">Phone number (ex: +9891234...)</param>

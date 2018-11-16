@@ -183,6 +183,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaAccountSendSms>> SendSmsCodeAsync(string phoneNumber);
 
         /// <summary>
+        ///     Verify email by verification url
+        /// </summary>
+        /// <param name="verificationUri">Verification url</param>
+        Task<IResult<bool>> VerifyEmailByVerificationUriAsync(Uri verificationUri);
+
+        /// <summary>
         ///     Send two factor enable sms.
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>

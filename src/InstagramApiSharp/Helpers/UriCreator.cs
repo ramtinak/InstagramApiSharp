@@ -1865,7 +1865,20 @@ namespace InstagramApiSharp.Helpers
         public static Uri GetBlockedStoriesUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FRIENDSHIPS_BLOCKED_REEL, out var instaUri))
-                throw new Exception("Cant create URI for blocked stories ");
+                throw new Exception("Cant create URI for blocked stories");
+            return instaUri;
+        }
+
+
+        public static Uri GetVerifyEmailUri(Uri uri)
+        {
+            var u = uri.ToString();
+            if (u.Contains("?"))
+                u = u.Substring(0, u.IndexOf("?"));
+            u = u.Substring(u.IndexOf("/accounts/"));
+
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.API_SUFFIX + u, out var instaUri))
+                throw new Exception("Cant create URI for verify email");
             return instaUri;
         }
     }
