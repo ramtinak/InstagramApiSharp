@@ -41,6 +41,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> DeleteDirectThreadAsync(string threadId);
 
         /// <summary>
+        ///     Delete self message in direct
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        Task<IResult<bool>> DeleteSelfMessageAsync(string threadId, string itemId);
+
+        /// <summary>
         ///     Get direct inbox threads for current user asynchronously
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>

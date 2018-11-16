@@ -188,6 +188,38 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Delete self message in direct
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        public async Task<IResult<bool>> DeleteSelfMessageAsync(string threadId, string itemId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetDeleteDirectMessageUri(threadId, itemId);
+
+                var data = new Dictionary<string, string>
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Get direct inbox threads for current user asynchronously
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
