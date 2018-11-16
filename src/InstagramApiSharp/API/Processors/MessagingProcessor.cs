@@ -1189,12 +1189,14 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
                 requestContent.Add(imageContent, "photo",
                     $"direct_temp_photo_{ApiRequestMessage.GenerateUploadId()}.jpg");
-                var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
-                {
-                    UploaderProgress = upProgress
-                };
+                //var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
+                //{
+                //    UploaderProgress = upProgress
+                //};
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = progressContent;
+                request.Content = requestContent;
+                upProgress.UploadState = InstaUploadState.Uploading;
+                progress?.Invoke(upProgress);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -1203,7 +1205,8 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<bool>(response, json);
                 }
-
+                upProgress.UploadState = InstaUploadState.Uploaded;
+                progress?.Invoke(upProgress);
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
                 if (obj.Status.ToLower() == "ok")
                 {

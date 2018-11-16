@@ -419,22 +419,27 @@ namespace InstagramApiSharp.API.Processors
                 };
                 var imageContent = new ByteArrayContent(pictureBytes);
                 requestContent.Add(imageContent, "profile_pic", $"r{ApiRequestMessage.GenerateUploadId()}.jpg");
-                var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
-                {
-                    UploaderProgress = upProgress
-                };
+                //var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
+                //{
+                //    UploaderProgress = upProgress
+                //};
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = progressContent;
+                request.Content = requestContent;
+                upProgress.UploadState = InstaUploadState.Uploading;
+                progress?.Invoke(upProgress);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                if (progressContent.UploaderProgress != null)
-                    upProgress = progressContent.UploaderProgress;
+            
+                //if (progressContent.UploaderProgress != null)
+                //    upProgress = progressContent.UploaderProgress;
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     upProgress.UploadState = InstaUploadState.Error;
                     progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<InstaUserEdit>(response, json);
                 }
+                upProgress.UploadState = InstaUploadState.Uploaded;
+                progress?.Invoke(upProgress);
 
                 var obj = JsonConvert.DeserializeObject<InstaUserEditContainer>(json);
                 upProgress.UploadState = InstaUploadState.Completed;

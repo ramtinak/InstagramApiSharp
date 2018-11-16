@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace InstagramApiSharp.Helpers
 {
-    internal class ProgressableStreamContent : HttpContent
+    /*internal class ProgressableStreamContent : HttpContent
     {
         /// <summary>
         ///     100kb
@@ -97,5 +97,5 @@ namespace InstagramApiSharp.Helpers
             }
             base.Dispose(disposing);
         }
-    }
+    }*/
 }

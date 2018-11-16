@@ -459,18 +459,20 @@ namespace InstagramApiSharp.API.Processors
                         requestContent.Add(imageContent, "photo",
                             $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
 
-                        var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
-                        {
-                            UploaderProgress = upProgress
-                        };
+                        //var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
+                        //{
+                        //    UploaderProgress = upProgress
+                        //};
 
                         var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                        request.Content = progressContent;
+                        request.Content = requestContent;
+                        upProgress.UploadState = InstaUploadState.Uploading;
+                        progress?.Invoke(upProgress);
                         var response = await _httpRequestProcessor.SendAsync(request);
                         var json = await response.Content.ReadAsStringAsync();
                         if (response.IsSuccessStatusCode)
                         {
-                            upProgress = progressContent?.UploaderProgress;
+                            //upProgress = progressContent?.UploaderProgress;
                             upProgress.UploadState = InstaUploadState.Uploaded;
                             progress?.Invoke(upProgress);
                             imagesUploadIds[index++] = uploadId;
@@ -542,20 +544,23 @@ namespace InstagramApiSharp.API.Processors
                         videoContent.Headers.Add("Content-Type", "application/octet-stream");
                         videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4")}\"");
                         requestContent.Add(videoContent);
-                        var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
-                        {
-                            UploaderProgress = upProgress
-                        };
+                        //var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
+                        //{
+                        //    UploaderProgress = upProgress
+                        //};
                         request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                        request.Content = progressContent;
+                        request.Content = requestContent;
+                        upProgress.UploadState = InstaUploadState.Uploading;
+                        progress?.Invoke(upProgress);
                         request.Headers.Host = "upload.instagram.com";
                         request.Headers.Add("Cookie2", "$Version=1");
                         request.Headers.Add("Session-ID", uploadId);
                         request.Headers.Add("job", first.Job);
                         response = await _httpRequestProcessor.SendAsync(request);
                         json = await response.Content.ReadAsStringAsync();
-
-                        upProgress = progressContent?.UploaderProgress;
+                        upProgress.UploadState = InstaUploadState.Uploaded;
+                        progress?.Invoke(upProgress);
+                        //upProgress = progressContent?.UploaderProgress;
                         upProgress.UploadState = InstaUploadState.UploadingThumbnail;
                         progress?.Invoke(upProgress);
                         instaUri = UriCreator.GetUploadPhotoUri();
@@ -715,20 +720,24 @@ namespace InstagramApiSharp.API.Processors
                 videoContent.Headers.Add("Content-Disposition", $"attachment; filename=\"{Path.GetFileName(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4")}\"");
                 requestContent.Add(videoContent);
 
-                var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
-                {
-                    UploaderProgress = upProgress
-                };
+                //var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
+                //{
+                //    UploaderProgress = upProgress
+                //};
                 
                 request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = progressContent;
+                request.Content = requestContent;
+                upProgress.UploadState = InstaUploadState.Uploading;
+                progress?.Invoke(upProgress);
                 request.Headers.Host = "upload.instagram.com";
                 request.Headers.Add("Cookie2", "$Version=1");
                 request.Headers.Add("Session-ID", uploadId);
                 request.Headers.Add("job", first.Job);
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
-                upProgress = progressContent.UploaderProgress;
+                //upProgress = progressContent.UploaderProgress;
+                upProgress.UploadState = InstaUploadState.Uploaded;
+                progress?.Invoke(upProgress);
                 await UploadVideoThumbnailAsync(progress, upProgress, video.VideoThumbnail, uploadId);
 
                 return await ConfigureVideoAsync(progress, upProgress, video.Video, uploadId, caption, location);

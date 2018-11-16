@@ -678,11 +678,13 @@ namespace InstagramApiSharp.API.Processors
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
 
-                var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
-                {
-                    UploaderProgress = upProgress
-                };
-                requestContent.Add(progressContent, "photo", $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
+                //var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
+                //{
+                //    UploaderProgress = upProgress
+                //};
+                upProgress.UploadState = InstaUploadState.Uploading;
+                progress?.Invoke(upProgress);
+                requestContent.Add(imageContent, "photo", $"pending_media_{ApiRequestMessage.GenerateUploadId()}.jpg");
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
                 request.Content = requestContent;
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -690,7 +692,9 @@ namespace InstagramApiSharp.API.Processors
 
                 if (response.IsSuccessStatusCode)
                 {
-                    upProgress = progressContent?.UploaderProgress;
+                    upProgress.UploadState = InstaUploadState.Uploaded;
+                    progress?.Invoke(upProgress);
+                    //upProgress = progressContent?.UploaderProgress;
                     return await ConfigureStoryPhotoAsync(progress, upProgress, image, uploadId, caption, uri);
                 }
                 upProgress.UploadState = InstaUploadState.Error;
@@ -844,12 +848,14 @@ namespace InstagramApiSharp.API.Processors
                 var videoContent = new ByteArrayContent(videoBytes);
                 videoContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 videoContent.Headers.Add("Content-Type", "application/octet-stream");
-                var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
-                {
-                    UploaderProgress = upProgress
-                };
+                //var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
+                //{
+                //    UploaderProgress = upProgress
+                //};
                 request = _httpHelper.GetDefaultRequest(HttpMethod.Post, videoUri, _deviceInfo);
-                request.Content = progressContent;
+                request.Content = videoContent;
+                upProgress.UploadState = InstaUploadState.Uploading;
+                progress?.Invoke(upProgress);
                 var vidExt = Path.GetExtension(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4").Replace(".", "").ToLower();
                 if (vidExt == "mov")
                     request.Headers.Add("X-Entity-Type", "video/quicktime");
@@ -868,7 +874,8 @@ namespace InstagramApiSharp.API.Processors
                     progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<InstaStoryMedia>(response, json);
                 }
-
+                upProgress.UploadState = InstaUploadState.Uploaded;
+                progress?.Invoke(upProgress);
                 var photoUploadParamsObj = new JObject
                 {
                     {"retry_context", "{\"num_step_auto_retry\":0,\"num_reupload\":0,\"num_step_manual_retry\":0}"},
@@ -908,7 +915,7 @@ namespace InstagramApiSharp.API.Processors
 
                 if (response.IsSuccessStatusCode)
                 {
-                    upProgress = progressContent?.UploaderProgress;
+                    //upProgress = progressContent?.UploaderProgress;
                     upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
                     progress?.Invoke(upProgress);
                     return await ConfigureStoryVideoAsync(progress, upProgress, video, uploadId, caption, uri);

@@ -187,12 +187,14 @@ namespace InstagramApiSharp.API.Processors
                     videoBytes = video.Video.VideoBytes;
 
                 var videoContent = new ByteArrayContent(videoBytes);
-                var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
-                {
-                    UploaderProgress = upProgress
-                };
+                //var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
+                //{
+                //    UploaderProgress = upProgress
+                //};
                 request = _httpHelper.GetDefaultRequest(HttpMethod.Post, videoUri, _deviceInfo);
-                request.Content = progressContent;
+                request.Content = videoContent;
+                upProgress.UploadState = InstaUploadState.Uploading;
+                progress?.Invoke(upProgress);
                 var vidExt = Path.GetExtension(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4").Replace(".", "").ToLower();
                 if (vidExt == "mov")
                     request.Headers.Add("X-Entity-Type", "video/quicktime");
@@ -213,7 +215,9 @@ namespace InstagramApiSharp.API.Processors
                     progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<bool>(response, json);
                 }
-                upProgress = progressContent?.UploaderProgress;
+                upProgress.UploadState = InstaUploadState.Uploaded;
+                progress?.Invoke(upProgress);
+                //upProgress = progressContent?.UploaderProgress;
                 if (!isDirectVideo)
                 {
                     upProgress.UploadState = InstaUploadState.UploadingThumbnail;
@@ -509,7 +513,7 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<bool>(response, json);
                 }
 
-                upProgress.UploadState = InstaUploadState.UploadingThumbnail;
+                upProgress.UploadState = InstaUploadState.Uploading;
                 progress?.Invoke(upProgress);
                 var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
                 byte[] imageBytes;
@@ -517,12 +521,12 @@ namespace InstagramApiSharp.API.Processors
                 var imageContent = new ByteArrayContent(imageBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
-                {
-                    UploaderProgress = upProgress
-                };
+                //var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
+                //{
+                //    UploaderProgress = upProgress
+                //};
                 request = _httpHelper.GetDefaultRequest(HttpMethod.Post, photoUri, _deviceInfo);
-                request.Content = progressContent;
+                request.Content = imageContent;
                 request.Headers.Add("X-Entity-Type", "image/jpeg");
                 request.Headers.Add("Offset", "0");
                 request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
@@ -531,8 +535,8 @@ namespace InstagramApiSharp.API.Processors
                 request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
-                upProgress = progressContent?.UploaderProgress;
-                upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
+                //upProgress = progressContent?.UploaderProgress;
+                upProgress.UploadState = InstaUploadState.Uploaded;
                 progress?.Invoke(upProgress);
 
                 return await ConfigurePhoto(progress, upProgress, uploadId, isDirectPhoto, isDisappearingPhoto, caption, viewMode, storyType, recipients, threadId);
@@ -759,7 +763,7 @@ namespace InstagramApiSharp.API.Processors
                     progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<InstaMedia>(response, json);
                 }
-                upProgress.UploadState = InstaUploadState.UploadingThumbnail;
+                upProgress.UploadState = InstaUploadState.Uploading;
                 progress?.Invoke(upProgress);
                 var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
                 var imageBytes = image.ImageBytes ?? File.ReadAllBytes(image.Uri);
@@ -768,11 +772,11 @@ namespace InstagramApiSharp.API.Processors
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
                 request = _httpHelper.GetDefaultRequest(HttpMethod.Post, photoUri, _deviceInfo);
 
-                var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
-                {
-                    UploaderProgress = upProgress
-                };
-                request.Content = progressContent;
+                //var progressContent = new ProgressableStreamContent(imageContent, 4096, progress)
+                //{
+                //    UploaderProgress = upProgress
+                //};
+                request.Content = imageContent;
                 request.Headers.Add("X-Entity-Type", "image/jpeg");
                 request.Headers.Add("Offset", "0");
                 request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
@@ -783,8 +787,8 @@ namespace InstagramApiSharp.API.Processors
                 json = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode)
                 {
-                    upProgress = progressContent.UploaderProgress;
-                    upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
+                    //upProgress = progressContent.UploaderProgress;
+                    upProgress.UploadState = InstaUploadState.Uploaded;
                     progress?.Invoke(upProgress);
                     if (configureAsNameTag)
                         return await ConfigureMediaPhotoAsNametagAsync(progress, upProgress, uploadId);
@@ -1040,12 +1044,14 @@ namespace InstagramApiSharp.API.Processors
                 var videoBytes = video.Video.VideoBytes ?? File.ReadAllBytes(video.Video.Uri);
 
                 var videoContent = new ByteArrayContent(videoBytes);
-                var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
-                {
-                    UploaderProgress = upProgress
-                };
+                //var progressContent = new ProgressableStreamContent(videoContent, 4096, progress)
+                //{
+                //    UploaderProgress = upProgress
+                //};
                 request = _httpHelper.GetDefaultRequest(HttpMethod.Post, videoUri, _deviceInfo);
-                request.Content = progressContent;
+                request.Content = videoContent;
+                upProgress.UploadState = InstaUploadState.Uploading;
+                progress?.Invoke(upProgress);
                 var vidExt = Path.GetExtension(video.Video.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4").Replace(".", "").ToLower();
                 if (vidExt == "mov")
                     request.Headers.Add("X-Entity-Type", "video/quicktime");
@@ -1067,7 +1073,8 @@ namespace InstagramApiSharp.API.Processors
                     progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<InstaMedia>(response, json);
                 }
-
+                upProgress.UploadState = InstaUploadState.Uploaded;
+                progress?.Invoke(upProgress);
                 var photoHashCode = Path.GetFileName(video.VideoThumbnail.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
                 var photoEntityName = $"{uploadId}_0_{photoHashCode}";
                 var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
@@ -1098,7 +1105,7 @@ namespace InstagramApiSharp.API.Processors
 
                 if (response.IsSuccessStatusCode)
                 {
-                    upProgress = progressContent?.UploaderProgress;
+                    //upProgress = progressContent?.UploaderProgress;
                     upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
                     progress?.Invoke(upProgress);
                     return await ConfigureIGTVVideo(progress, upProgress, uploadId, title, caption);
