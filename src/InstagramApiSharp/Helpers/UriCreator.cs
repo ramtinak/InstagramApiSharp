@@ -1881,5 +1881,20 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for verify email");
             return instaUri;
         }
+
+        public static Uri GetHideDirectThreadUri(string threadId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_THREAD_HIDE, threadId),
+                out var instaUri))
+                throw new Exception("Cant create URI for hide direct thread");
+            return instaUri;
+        }
+        public static Uri GetDeleteDirectMessageUri(string threadId, string itemId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_THREAD_HIDE, threadId, itemId),
+                out var instaUri))
+                throw new Exception("Cant create URI for delete direct message");
+            return instaUri;
+        }
     }
 }

@@ -207,10 +207,6 @@ namespace InstagramApiSharp.API
         public const string DIRECT_PRESENCE = API_SUFFIX + "/direct_v2/get_presence/";
         public const string DIRECT_SHARE = API_SUFFIX + "/direct_share/inbox/";
         public const string DIRECT_STAR = API_SUFFIX + "/direct_v2/threads/{0}/label/";
-        /// <summary>
-        /// post data: _uid ro post nakon
-        /// <para>use_unified_inbox=true</para>
-        /// </summary>
         public const string DIRECT_THREAD_HIDE = API_SUFFIX + "/direct_v2/threads/{0}/hide/";
         public const string DIRECT_THREAD_ADD_USER = API_SUFFIX + "/direct_v2/threads/{0}/add_user/";
 
@@ -235,6 +231,7 @@ namespace InstagramApiSharp.API
         public const string GET_RANKED_RECIPIENTS = API_SUFFIX + "/direct_v2/ranked_recipients";
         public const string GET_RECENT_RECIPIENTS = API_SUFFIX + "/direct_share/recent_recipients/";
         public const string STORY_SHARE = API_SUFFIX + "/direct_v2/threads/broadcast/story_share/?media_type={0}";
+        public const string DIRECT_THREAD_DELETE_MESSAGE = API_SUFFIX + "/direct_v2/threads/{0}/items/{1}/delete/"; 
 
         #endregion Direct endpoints constants
 

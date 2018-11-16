@@ -35,6 +35,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> DeclineDirectPendingRequestsAsync(params string[] threadIds);
 
         /// <summary>
+        ///     Delete direct thread
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        Task<IResult<bool>> DeleteDirectThreadAsync(string threadId);
+
+        /// <summary>
         ///     Get direct inbox threads for current user asynchronously
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
