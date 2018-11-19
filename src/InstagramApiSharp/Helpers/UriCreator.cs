@@ -272,6 +272,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetChallengeReplayUri(string apiPath)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.API_SUFFIX + apiPath.Replace("challenge/", "challenge/replay/"), out var instaUri))
+                throw new Exception("Cant create URI for challenge require url");
+            return instaUri;
+        }
+
         public static Uri GetChangePasswordUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CHANGE_PASSWORD, out var instaUri))

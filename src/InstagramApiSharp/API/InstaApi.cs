@@ -1292,9 +1292,10 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///     Request verification code sms for challenge require (checkpoint required)
         /// </summary>
-        public async Task<IResult<InstaChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync()
+        /// <param name="replayChallenge">true if Instagram should resend verification code to you</param>
+        public async Task<IResult<InstaChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync(bool replayChallenge)
         {
-            return await RequestVerifyCodeToSMSForChallengeRequire();
+            return await RequestVerifyCodeToSMSForChallengeRequire(replayChallenge);
         }
         /// <summary>
         ///     Submit phone number for challenge require (checkpoint required)
@@ -1303,19 +1304,28 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaChallengeRequireVerifyMethod.SubmitPhoneRequired"/> property is true.</para>
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        public async Task<IResult<InstaChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync(string phoneNumber)
+        public async Task<IResult<InstaChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync(string phoneNumber, bool replayChallenge)
         {
-            return await RequestVerifyCodeToSMSForChallengeRequire(phoneNumber);
+            return await RequestVerifyCodeToSMSForChallengeRequire(replayChallenge, phoneNumber);
         }
 
-        private async Task<IResult<InstaChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequire(string phoneNumber = null)
+        private async Task<IResult<InstaChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequire(bool replayChallenge, string phoneNumber = null)
         {
             if (_challengeinfo == null)
                 return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (InstaChallengeRequireSMSVerify)null);
 
             try
             {
-                var instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
+                Uri instaUri;
+
+                if (replayChallenge)
+                {
+                    instaUri = UriCreator.GetChallengeReplayUri(_challengeinfo.ApiPath);
+                }
+                else
+                {
+                    instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
+                }
 
                 var data = new JObject
                 {
@@ -1355,14 +1365,24 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///     Request verification code email for challenge require (checkpoint required)
         /// </summary>
-        public async Task<IResult<InstaChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync()
+        /// <param name="replayChallenge">true if Instagram should resend verification code to you</param>
+        public async Task<IResult<InstaChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync(bool replayChallenge)
         {
             if (_challengeinfo == null)
                 return Result.Fail("challenge require info is empty.\r\ntry to call LoginAsync function first.", (InstaChallengeRequireEmailVerify)null);
 
             try
             {
-                var instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
+                Uri instaUri;
+
+                if (replayChallenge)
+                {
+                    instaUri = UriCreator.GetChallengeReplayUri(_challengeinfo.ApiPath);
+                }
+                else
+                {
+                    instaUri = UriCreator.GetChallengeRequireUri(_challengeinfo.ApiPath);
+                }
 
                 var data = new JObject
                 {

@@ -195,7 +195,8 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///     Request verification code sms for challenge require (checkpoint required)
         /// </summary>
-        Task<IResult<InstaChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
+        /// <param name="replayChallenge">true if Instagram should resend verification code to you</param>
+        Task<IResult<InstaChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync(bool replayChallenge = false);
         /// <summary>
         ///     Submit phone number for challenge require (checkpoint required)
         ///     <para>Note: This only needs , when you calling <see cref="IInstaApi.GetChallengeRequireVerifyMethodAsync"/> or
@@ -203,11 +204,12 @@ namespace InstagramApiSharp.API
         ///     <see cref="InstaChallengeRequireVerifyMethod.SubmitPhoneRequired"/> property is true.</para>
         /// </summary>
         /// <param name="phoneNumber">Phone number</param>
-        Task<IResult<InstaChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync(string phoneNumber);
+        Task<IResult<InstaChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync(string phoneNumber, bool replayChallenge = false);
         /// <summary>
         ///     Request verification code email for challenge require (checkpoint required)
         /// </summary>
-        Task<IResult<InstaChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync();
+        /// <param name="replayChallenge">true if Instagram should resend verification code to you</param>
+        Task<IResult<InstaChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync(bool replayChallenge = false);
         /// <summary>
         ///     Verify verification code for challenge require (checkpoint required)
         /// </summary>
