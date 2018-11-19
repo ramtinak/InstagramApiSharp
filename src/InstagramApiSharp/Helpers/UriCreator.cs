@@ -1903,5 +1903,13 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for delete direct message");
             return instaUri;
         }
+
+        public static Uri GetLocationInfoUri(string externalId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LOCATIONS_INFO, externalId),
+                out var instaUri))
+                throw new Exception("Cant create URI for location info");
+            return instaUri;
+        }
     }
 }

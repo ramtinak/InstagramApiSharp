@@ -42,6 +42,7 @@ namespace InstagramApiSharp.API.Processors
         /// </returns>
         Task<IResult<InstaCollectionItem>> GetSingleCollectionAsync(long collectionId,
             PaginationParameters paginationParameters);
+
         /// <summary>
         ///     Get your collections
         /// </summary>

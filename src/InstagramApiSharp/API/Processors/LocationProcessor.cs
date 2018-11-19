@@ -92,6 +92,40 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get location(place) information by external id or facebook places id
+        ///     <para>Get external id from this function: <see cref="ILocationProcessor.SearchLocationAsync(double, double, string)"/></para>
+        ///     <para>Get facebook places id from this function: <see cref="ILocationProcessor.SearchPlacesAsync(double, double, string)(double, double, string)"/></para>
+        /// </summary>
+        /// <param name="externalIdOrFacebookPlacesId">
+        ///     External id or facebook places id of an location/place
+        ///     <para>Get external id from this function: <see cref="ILocationProcessor.SearchLocationAsync(double, double, string)"/></para>
+        ///     <para>Get facebook places id from this function: <see cref="ILocationProcessor.SearchPlacesAsync(double, double, string)(double, double, string)"/></para>
+        /// </param>
+        public async Task<IResult<InstaPlaceShort>> GetLocationInfo(string externalIdOrFacebookPlacesId)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetLocationInfoUri(externalIdOrFacebookPlacesId);
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaPlaceShort>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaPlaceResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetPlaceShortConverter(obj.Location).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaPlaceShort>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Searches for specific location by provided geo-data or search query.
         /// </summary>
         /// <param name="latitude">Latitude</param>

@@ -413,9 +413,7 @@ namespace InstagramApiSharp.API
         #region Location endpoints constants
 
         public const string LOCATION_SEARCH = API_SUFFIX + "/location_search/";
-        /// <summary>
-        /// {0} => external id
-        /// </summary>
+
         public const string LOCATIONS_INFO = API_SUFFIX + "/locations/{0}/info/";
         /// <summary>
         /// {0} => external id
