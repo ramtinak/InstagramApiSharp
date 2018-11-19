@@ -33,6 +33,17 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> DeleteCollectionAsync(long collectionId);
 
         /// <summary>
+        ///     Edit a collection
+        /// </summary>
+        /// <param name="collectionId">Collection ID to edit</param>
+        /// <param name="name">New name for giving collection (set null if you don't want to change it)</param>
+        /// <param name="photoCoverMediaId">
+        ///     New photo cover media Id (get it from <see cref="InstaMedia.InstaIdentifier"/>) => Optional
+        ///     <para>Important note: media id must be exists in giving collection!</para>
+        /// </param>
+        Task<IResult<InstaCollectionItem>> EditCollectionAsync(long collectionId, string name, string photoCoverMediaId = null);
+
+        /// <summary>
         ///     Get your collection for given collection id
         /// </summary>
         /// <param name="collectionId">Collection ID</param>

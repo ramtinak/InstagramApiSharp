@@ -161,6 +161,53 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Edit a collection
+        /// </summary>
+        /// <param name="collectionId">Collection ID to edit</param>
+        /// <param name="name">New name for giving collection (set null if you don't want to change it)</param>
+        /// <param name="photoCoverMediaId">
+        ///     New photo cover media Id (get it from <see cref="InstaMedia.InstaIdentifier"/>) => Optional
+        ///     <para>Important note: media id must be exists in giving collection!</para>
+        /// </param>
+        public async Task<IResult<InstaCollectionItem>> EditCollectionAsync(long collectionId, string name, string photoCoverMediaId = null)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var collection = await GetSingleCollection(collectionId, PaginationParameters.MaxPagesToLoad(1));
+                if (collection.Succeeded && string.IsNullOrEmpty(name))
+                    name = collection.Value.CollectionName;
+
+                var editCollectionUri = UriCreator.GetEditCollectionUri(collectionId);
+
+                var data = new JObject
+                {
+                    {"name", name ?? string.Empty},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                if (!string.IsNullOrEmpty(photoCoverMediaId))
+                    data.Add("cover_media_id", photoCoverMediaId);
+
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Get, editCollectionUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaCollectionItem>(response, json);
+                var newCollectionResponse = JsonConvert.DeserializeObject<InstaCollectionItemResponse>(json);
+                var converter = ConvertersFabric.Instance.GetCollectionConverter(newCollectionResponse);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaCollectionItem>(exception.Message);
+            }
+        }
+
+        /// <summary>
         ///     Get your collection for given collection id
         /// </summary>
         /// <param name="collectionId">Collection ID</param>
