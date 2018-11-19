@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.5.0</Version>
-    <AssemblyVersion>1.1.5.0</AssemblyVersion>
-    <FileVersion>1.1.5.0</FileVersion>
+    <Version>1.1.5.1</Version>
+    <AssemblyVersion>1.1.5.1</AssemblyVersion>
+    <FileVersion>1.1.5.1</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,12 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.5.0
+    <PackageReleaseNotes>v1.1.5.1
+- [Add] to VerifyEmailByVerificationUriAsync to AccountProcessor
+- [Add] DeleteDirectThreadAsync to MessagingProcessor
+- [Add] DeleteSelfMessageAsync to MessagingProcessor
+
+v1.1.5.0
 - [Bugfix] for GetUserAsync
 - [Add] user tags support to UploadPhotoAsync
 - [Add] user tags edit to EditMediaAsync
