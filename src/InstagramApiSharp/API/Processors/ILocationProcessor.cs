@@ -29,7 +29,7 @@ namespace InstagramApiSharp.API.Processors
         ///     <para>Get external id from this function: <see cref="ILocationProcessor.SearchLocationAsync(double, double, string)"/></para>
         ///     <para>Get facebook places id from this function: <see cref="ILocationProcessor.SearchPlacesAsync(double, double, string)(double, double, string)"/></para>
         /// </param>
-        Task<IResult<InstaPlaceShort>> GetLocationInfo(string externalIdOrFacebookPlacesId);
+        Task<IResult<InstaPlaceShort>> GetLocationInfoAsync(string externalIdOrFacebookPlacesId);
 
         /// <summary>
         ///     Searches for specific location by provided geo-data or search query.
