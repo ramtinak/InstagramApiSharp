@@ -231,9 +231,43 @@ namespace ChallengeRequireExample
 
         }
 
-        private void ResendButton_Click(object sender, EventArgs e)
+        private async void ResendButton_Click(object sender, EventArgs e)
         {
-            SendCodeButton_Click(null, null);
+            bool isEmail = false;
+            if (RadioVerifyWithEmail.Checked)
+                isEmail = true;
+
+            try
+            {
+                // Note: every request to this endpoint is limited to 60 seconds                 
+                if (isEmail)
+                {
+                    // send verification code to email
+                    var email = await InstaApi.RequestVerifyCodeToEmailForChallengeRequireAsync(replayChallenge: true);
+                    if (email.Succeeded)
+                    {
+                        LblForSmsEmail.Text = $"We sent verification code one more time\r\nto this email:\n{email.Value.StepData.ContactPoint}";
+                        VerifyCodeGroupBox.Visible = true;
+                        SelectMethodGroupBox.Visible = false;
+                    }
+                    else
+                        MessageBox.Show(email.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    // send verification code to phone number
+                    var phoneNumber = await InstaApi.RequestVerifyCodeToSMSForChallengeRequireAsync(replayChallenge: true);
+                    if (phoneNumber.Succeeded)
+                    {
+                        LblForSmsEmail.Text = $"We sent verification code one more time\r\nto this phone number(it's end with this):{phoneNumber.Value.StepData.ContactPoint}";
+                        VerifyCodeGroupBox.Visible = true;
+                        SelectMethodGroupBox.Visible = false;
+                    }
+                    else
+                        MessageBox.Show(phoneNumber.Info.Message, "ERR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "EX", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         private async void VerifyButton_Click(object sender, EventArgs e)
