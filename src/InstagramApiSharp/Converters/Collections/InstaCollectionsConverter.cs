@@ -18,7 +18,8 @@ namespace InstagramApiSharp.Converters
             return new InstaCollections
             {
                 Items = instaCollectionList,
-                MoreCollectionsAvailable = SourceObject.MoreAvailable
+                MoreCollectionsAvailable = SourceObject.MoreAvailable,
+                NextMaxId = SourceObject.NextMaxId
             };
         }
     }

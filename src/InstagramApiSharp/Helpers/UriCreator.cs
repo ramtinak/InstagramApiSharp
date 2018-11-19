@@ -321,12 +321,12 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetCollectionsUri()
+        public static Uri GetCollectionsUri(string nextMaxId)
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.GET_LIST_COLLECTIONS,
                 out var instaUri))
                 throw new Exception("Can't create URI for getting collections");
-            return instaUri;
+            return !string.IsNullOrEmpty(nextMaxId) ? new UriBuilder(instaUri) { Query = $"max_id={nextMaxId}" }.Uri : instaUri;
         }
 
         public static Uri GetCollectionUri(long collectionId)

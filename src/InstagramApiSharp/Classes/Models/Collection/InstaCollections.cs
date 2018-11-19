@@ -9,5 +9,7 @@ namespace InstagramApiSharp.Classes.Models
         public int Pages { get; set; } = 0;
 
         public List<InstaCollectionItem> Items { get; set; }
+
+        public string NextMaxId { get; set; }
     }
 }
