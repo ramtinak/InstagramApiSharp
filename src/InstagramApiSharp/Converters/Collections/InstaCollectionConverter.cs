@@ -25,7 +25,8 @@ namespace InstagramApiSharp.Converters
                 Media = instaMediaList,
                 CoverMedia = SourceObject.CoverMedia != null
                     ? ConvertersFabric.Instance.GetCoverMediaConverter(SourceObject.CoverMedia).Convert()
-                    : null
+                    : null,
+                NextMaxId = SourceObject.NextMaxId
             };
         }
     }

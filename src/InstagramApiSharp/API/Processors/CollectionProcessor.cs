@@ -164,24 +164,50 @@ namespace InstagramApiSharp.API.Processors
         ///     Get your collection for given collection id
         /// </summary>
         /// <param name="collectionId">Collection ID</param>
+        /// <param name="paginationParameters">Pagination parameters: next max id and max amount of pages to load</param>
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCollectionItem" />
         /// </returns>
-        public async Task<IResult<InstaCollectionItem>> GetSingleCollectionAsync(long collectionId)
+        public async Task<IResult<InstaCollectionItem>> GetSingleCollectionAsync(long collectionId,
+            PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var collectionUri = UriCreator.GetCollectionUri(collectionId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaCollectionItem>(response, json);
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                var collectionsListResponse =
-                    JsonConvert.DeserializeObject<InstaCollectionItemResponse>(json,
-                        new InstaCollectionDataConverter());
+                InstaCollectionItem Convert(InstaCollectionItemResponse instaCollectionItemResponse)
+                {
+                    return ConvertersFabric.Instance.GetCollectionConverter(instaCollectionItemResponse).Convert();
+                }
+
+                var collectionList = await GetSingleCollection(collectionId, paginationParameters);
+                if (!collectionList.Succeeded)
+                    return Result.Fail<InstaCollectionItem>(collectionList.Info.Message);
+                
+                var collectionsListResponse = collectionList.Value;
+                paginationParameters.NextMaxId = collectionsListResponse.NextMaxId;
+                var pagesLoaded = 1;
+
+                while (collectionsListResponse.MoreAvailable
+                    && !string.IsNullOrEmpty(collectionsListResponse.NextMaxId)
+                    && pagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var nextCollectionList = await GetSingleCollection(collectionId, paginationParameters);
+
+                    if (!nextCollectionList.Succeeded)
+                        return Result.Fail(nextCollectionList.Info, Convert(nextCollectionList.Value));
+
+                    collectionsListResponse.NextMaxId = paginationParameters.NextMaxId = nextCollectionList.Value.NextMaxId;
+                    collectionsListResponse.MoreAvailable = nextCollectionList.Value.MoreAvailable;
+                    collectionsListResponse.AutoLoadMoreEnabled = nextCollectionList.Value.AutoLoadMoreEnabled;
+                    collectionsListResponse.Status = nextCollectionList.Value.Status;
+                    collectionsListResponse.Media.Medias.AddRange(nextCollectionList.Value.Media.Medias);
+                    pagesLoaded++;
+                }
+
+
                 var converter = ConvertersFabric.Instance.GetCollectionConverter(collectionsListResponse);
                 return Result.Success(converter.Convert());
             }
@@ -248,6 +274,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+
         private async Task<IResult<InstaCollectionsResponse>> GetCollections(PaginationParameters paginationParameters)
         {
             try
@@ -267,6 +294,31 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaCollectionsResponse>(exception.Message);
+            }
+        }
+
+        private async Task<IResult<InstaCollectionItemResponse>> GetSingleCollection(long collectionId,
+            PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var collectionUri = UriCreator.GetCollectionUri(collectionId, paginationParameters?.NextMaxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaCollectionItemResponse>(response, json);
+
+                var collectionsListResponse =
+                    JsonConvert.DeserializeObject<InstaCollectionItemResponse>(json,
+                        new InstaCollectionDataConverter());
+                return Result.Success(collectionsListResponse);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaCollectionItemResponse>(exception.Message);
             }
         }
     }

@@ -36,10 +36,12 @@ namespace InstagramApiSharp.API.Processors
         ///     Get your collection for given collection id
         /// </summary>
         /// <param name="collectionId">Collection ID</param>
+        /// <param name="paginationParameters">Pagination parameters: next max id and max amount of pages to load</param>
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCollectionItem" />
         /// </returns>
-        Task<IResult<InstaCollectionItem>> GetSingleCollectionAsync(long collectionId);
+        Task<IResult<InstaCollectionItem>> GetSingleCollectionAsync(long collectionId,
+            PaginationParameters paginationParameters);
         /// <summary>
         ///     Get your collections
         /// </summary>

@@ -329,12 +329,12 @@ namespace InstagramApiSharp.Helpers
             return !string.IsNullOrEmpty(nextMaxId) ? new UriBuilder(instaUri) { Query = $"max_id={nextMaxId}" }.Uri : instaUri;
         }
 
-        public static Uri GetCollectionUri(long collectionId)
+        public static Uri GetCollectionUri(long collectionId, string nextMaxId)
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_COLLECTION, collectionId),
                 out var instaUri))
                 throw new Exception("Can't create URI for getting collection");
-            return instaUri;
+            return !string.IsNullOrEmpty(nextMaxId) ? new UriBuilder(instaUri) { Query = $"max_id={nextMaxId}" }.Uri : instaUri;
         }
 
         public static Uri GetConsentNewUserFlowBeginsUri()

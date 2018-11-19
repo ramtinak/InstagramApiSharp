@@ -11,5 +11,7 @@
         public InstaMediaList Media { get; set; }
 
         public InstaCoverMedia CoverMedia { get; set; }
+
+        public string NextMaxId { get; set; }
     }
 }
