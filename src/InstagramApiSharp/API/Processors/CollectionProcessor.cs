@@ -167,7 +167,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCollectionItem" />
         /// </returns>
-        public async Task<IResult<InstaCollectionItem>> GetCollectionAsync(long collectionId)
+        public async Task<IResult<InstaCollectionItem>> GetSingleCollectionAsync(long collectionId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try

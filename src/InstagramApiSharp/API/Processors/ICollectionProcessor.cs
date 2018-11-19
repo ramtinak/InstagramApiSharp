@@ -39,7 +39,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="T:InstagramApiSharp.Classes.Models.InstaCollectionItem" />
         /// </returns>
-        Task<IResult<InstaCollectionItem>> GetCollectionAsync(long collectionId);
+        Task<IResult<InstaCollectionItem>> GetSingleCollectionAsync(long collectionId);
         /// <summary>
         ///     Get your collections
         /// </summary>
