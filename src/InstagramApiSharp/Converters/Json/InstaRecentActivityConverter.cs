@@ -27,8 +27,16 @@ namespace InstagramApiSharp.Converters.Json
             }
             else
             {
-                var oldStories = token.SelectToken("old_stories")?.ToObject<List<InstaRecentActivityFeedResponse>>();
-                recentActivity.Stories.AddRange(oldStories ?? throw new InvalidOperationException());
+                if (token.SelectToken("new_stories") != null)
+                {
+                    var newStories = token.SelectToken("new_stories")?.ToObject<List<InstaRecentActivityFeedResponse>>();
+                    recentActivity.Stories.AddRange(newStories ?? throw new InvalidOperationException());
+                }
+                if (token.SelectToken("old_stories") != null)
+                {
+                    var oldStories = token.SelectToken("old_stories")?.ToObject<List<InstaRecentActivityFeedResponse>>();
+                    recentActivity.Stories.AddRange(oldStories ?? throw new InvalidOperationException());
+                }
                 recentActivity.IsOwnActivity = true;
             }
 
