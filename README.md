@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.5.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.5.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -27,6 +27,7 @@ Note: this library uses [Json.NET v10.0.3 and above](https://www.nuget.org/packa
 | Platform | Supported Version |
 | ------ | ------ |
 | .NET Framework | 4.5.2 |
+| .NET Standard | 1.3 |
 | .NET Standard | 2.0 |
 | .NET Core(UWP) | 10.0.10240 |
 
@@ -84,6 +85,16 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.5.2
+- [Add] ability to request verification code again (thx to [@sh2ezo](https://github.com/sh2ezo) for PR)
+- [Support] NetStandard 1.3
+- [Update] InstaRecentActivityConverter
+- [Add] PaginationParameters support to GetCollectionsAsync
+- [Rename] GetCollectionAsync to GetSingleCollectionAsync
+- [Add] PaginationParameters support to GetSingleCollectionAsync
+- [Add] GetLocationInfoAdd GetLocationInfo to LocationProcessor to LocationProcessor
+- [Add] EditCollectionAsync to CollectionProcessor
+
 v1.1.5.1
 - [Add] to VerifyEmailByVerificationUriAsync to AccountProcessor
 - [Add] DeleteDirectThreadAsync to MessagingProcessor

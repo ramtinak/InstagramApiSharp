@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.5.1</Version>
-    <AssemblyVersion>1.1.5.1</AssemblyVersion>
-    <FileVersion>1.1.5.1</FileVersion>
+    <Version>1.1.5.2</Version>
+    <AssemblyVersion>1.1.5.2</AssemblyVersion>
+    <FileVersion>1.1.5.2</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,17 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.5.1
+    <PackageReleaseNotes>v1.1.5.2
+- [Add] ability to request verification code again (thx to @sh2ezo for PR)
+- [Support] NetStandard 1.3
+- [Update] InstaRecentActivityConverter
+- [Add] PaginationParameters support to GetCollectionsAsync
+- [Rename] GetCollectionAsync to GetSingleCollectionAsync
+- [Add] PaginationParameters support to GetSingleCollectionAsync
+- [Add] GetLocationInfoAdd GetLocationInfo to LocationProcessor to LocationProcessor
+- [Add] EditCollectionAsync to CollectionProcessor
+
+v1.1.5.1
 - [Add] to VerifyEmailByVerificationUriAsync to AccountProcessor
 - [Add] DeleteDirectThreadAsync to MessagingProcessor
 - [Add] DeleteSelfMessageAsync to MessagingProcessor
@@ -148,54 +158,7 @@ v1.1.3.0
 - [Add] Get following hashtags information
 - [Add] Get suggestion details
 - [Add] Get highlights archive
-- [Add] Get highlights archive medias
-
-v1.1.2.8
-- [Bugfix] for uploading album (photos)
-
-v1.1.2.7
-- [Support] DebugLogger for uwp
-
-v1.1.2.6
-- [Add] SetRequestDelay to IInstaApi
-
-v1.1.2.5
-- [Bugfix] for uploading video album (thx to rohollah saberi for report)
-
-v1.1.2.4
-- [Add] ValidateUrlAsync to BusinessProcessor
-- [Add] GetBusinessPartnersButtonsAsync to BusinessProcessor
-- [Add] AddOrChangeBusinessButtonAsync to BusinessProcessor
-- [Add] RemoveBusinessButtonAsync to BusinessProcessor
-- [Add] GetSuggestedCategoriesAsync to BusinessProcessor
-- [Add] GetCategoriesAsync to BusinessProcessor
-- [Add] GetSubCategoriesAsync to BusinessProcessor
-- [Add] SearchCityLocationAsync to BusinessProcessor
-- [Add] ChangeBusinessCategoryAsync to BusinessProcessor
-- [Add] GetBusinessAccountInformationAsync to BusinessProcessor
-- [Add] RemoveBusinessLocationAsync to BusinessProcessor
-- [Add] UpdateBusinessInfoAsync to BusinessProcessor
-
-v1.1.2.3
-- [Bugfix] for #58 (thx to @mstrifonov and @murdock477 for report and tests)
-
-v1.1.2.2
-- [Change] minimun target platform to 10240(uwp)
-
-v1.1.2.1
-- [Update] edit media function (location support)
-- [Bugfix] for caption in upload photo [large photo]
-- [Bugfix] for caption in upload video [large video]
-- [Bugfix] for caption in upload album [large album]
-
-v1.1.2.0
-- [Bugfix] for #55 and add some properties to InstaFeed
-- [Bugfix] for #53 and add some properties to InstaRecentActivityFeed
-- [Add] Set accept language to InstaApi (thx to @Lorymi )
-- [Cleanup] and code refactoring some classes
-- [Add] Report media to MediaProcessor
-- [Add] Report user to UserProcessor
-- [Add] Business support to IInstaApi.BusinessProcessor</PackageReleaseNotes>
+- [Add] Get highlights archive medias</PackageReleaseNotes>
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo, igtv</PackageTags>
