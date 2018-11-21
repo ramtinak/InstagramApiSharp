@@ -77,7 +77,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaCollectionItem>(exception.Message);
+                return Result.Fail<InstaCollectionItem>(exception);
             }
         }
 
@@ -119,7 +119,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaCollectionItem>(exception.Message);
+                return Result.Fail<InstaCollectionItem>(exception);
             }
         }
 
@@ -203,7 +203,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaCollectionItem>(exception.Message);
+                return Result.Fail<InstaCollectionItem>(exception);
             }
         }
 
@@ -261,7 +261,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaCollectionItem>(exception.Message);
+                return Result.Fail<InstaCollectionItem>(exception);
             }
         }
         /// <summary>
@@ -317,7 +317,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaCollections>(exception.Message);
+                return Result.Fail<InstaCollections>(exception);
             }
         }
 
@@ -340,7 +340,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaCollectionsResponse>(exception.Message);
+                return Result.Fail<InstaCollectionsResponse>(exception);
             }
         }
 
@@ -365,7 +365,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaCollectionItemResponse>(exception.Message);
+                return Result.Fail<InstaCollectionItemResponse>(exception);
             }
         }
     }

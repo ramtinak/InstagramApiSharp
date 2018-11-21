@@ -281,7 +281,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaPlaceList>(exception.Message);
+                return Result.Fail<InstaPlaceList>(exception);
             }
         }
 

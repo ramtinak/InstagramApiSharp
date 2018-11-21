@@ -93,7 +93,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDirectInboxThread>(exception.Message);
+                return Result.Fail<InstaDirectInboxThread>(exception);
             }
         }
 
@@ -134,7 +134,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<bool>(exception.Message);
+                return Result.Fail<bool>(exception);
             }
         }
 
@@ -268,7 +268,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDirectInboxContainer>(exception.Message);
+                return Result.Fail<InstaDirectInboxContainer>(exception);
             }
         }
         /// <summary>
@@ -344,7 +344,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDirectInboxThread>(exception.Message);
+                return Result.Fail<InstaDirectInboxThread>(exception);
             }
         }
 
@@ -396,7 +396,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDirectInboxContainer>(exception.Message);
+                return Result.Fail<InstaDirectInboxContainer>(exception);
             }
         }
         
@@ -443,7 +443,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaRecipients>(exception.Message);
+                return Result.Fail<InstaRecipients>(exception);
             }
         }
 
@@ -472,7 +472,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaRecipients>(exception.Message);
+                return Result.Fail<InstaRecipients>(exception);
             }
         }
 
@@ -1219,7 +1219,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<bool>(exception.Message);
+                return Result.Fail<bool>(exception);
             }
         }
         private async Task<IResult<bool>> SendDirectPhoto(Action<InstaUploaderProgress> progress, string recipients, string threadId, InstaImage image)
@@ -1312,7 +1312,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDirectInboxContainerResponse>(exception.Message);
+                return Result.Fail<InstaDirectInboxContainerResponse>(exception);
             }
         }
         private async Task<IResult<InstaDirectInboxThreadResponse>> GetDirectInboxThread(string threadId, string maxId = null)
@@ -1334,7 +1334,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDirectInboxThreadResponse>(exception.Message);
+                return Result.Fail<InstaDirectInboxThreadResponse>(exception);
             }
         }
         private async Task<IResult<InstaDirectInboxContainerResponse>> GetPendingDirect(string maxId = null)
@@ -1354,7 +1354,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDirectInboxContainerResponse>(exception.Message);
+                return Result.Fail<InstaDirectInboxContainerResponse>(exception);
             }
         }
     }
