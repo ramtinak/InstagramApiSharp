@@ -348,7 +348,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="storyMediaId">Story media id</param>
         /// <param name="paginationParameters">Pagination parameters</param>
-        public async Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewers(string storyMediaId, PaginationParameters paginationParameters)
+        public async Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewersAsync(string storyMediaId, PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try

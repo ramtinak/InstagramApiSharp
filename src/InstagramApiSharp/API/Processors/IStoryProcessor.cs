@@ -73,7 +73,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="storyMediaId">Story media id</param>
         /// <param name="paginationParameters">Pagination parameters</param>
-        Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewers(string storyMediaId, PaginationParameters paginationParameters);
+        Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewersAsync(string storyMediaId, PaginationParameters paginationParameters);
 
         /// <summary>
         ///     Get the story by userId
