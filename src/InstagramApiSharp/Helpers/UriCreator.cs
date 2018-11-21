@@ -1911,5 +1911,15 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for location info");
             return instaUri;
         }
+
+        public static Uri GetStoryMediaViewersUri(string storyMediaId, string nextId = "")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_STORY_VIEWERS, storyMediaId), out var instaUri))
+                throw new Exception("Cant create URI for story media viewers");
+            return !string.IsNullOrEmpty(nextId)
+                ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
+                : instaUri;
+        }
+
     }
 }

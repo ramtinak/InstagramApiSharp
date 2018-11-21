@@ -346,16 +346,16 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get story media viewers
         /// </summary>
-        /// <param name="StoryMediaId">Story media id</param>
+        /// <param name="storyMediaId">Story media id</param>
         /// <param name="paginationParameters">Pagination parameters</param>
-        public async Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewers(string StoryMediaId, PaginationParameters paginationParameters)
+        public async Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewers(string storyMediaId, PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 if (paginationParameters.MaximumPagesToLoad > 1)
                     throw new Exception("Not supported");
-                var directInboxUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + $"media/{StoryMediaId}/list_reel_media_viewer/?max_id={paginationParameters.NextMaxId}", UriKind.RelativeOrAbsolute);
+                var directInboxUri = UriCreator.GetStoryMediaViewersUri(storyMediaId, paginationParameters?.NextMaxId);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
