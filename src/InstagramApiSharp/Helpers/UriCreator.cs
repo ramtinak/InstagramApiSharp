@@ -1538,12 +1538,19 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetUserFollowersUri(long userPk, string rankToken, string searchQuery, bool mutualsfirst = false, string maxId = "")
         {
-            string muf = "";
-            if (mutualsfirst == true) muf = "rank_mutual=1";
-            else muf = "rank_mutual=0";
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_USER_FOLLOWERS, userPk, rankToken, muf),
-                out var instaUri))
-                throw new Exception("Cant create URI for user followers");
+            Uri instaUri = null;
+            if (!mutualsfirst)
+            {
+                if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_USER_FOLLOWERS, userPk, rankToken),
+                    out instaUri))
+                    throw new Exception("Cant create URI for user followers");
+            }
+            else
+            {
+                if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_USER_FOLLOWERS_MUTUALFIRST, userPk, rankToken, "1"),
+                  out instaUri))
+                    throw new Exception("Cant create URI for user followers");
+            }
             return instaUri
                 .AddQueryParameterIfNotEmpty("max_id", maxId)
                 .AddQueryParameterIfNotEmpty("query", searchQuery);
@@ -1693,7 +1700,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetBusinessBrandedSearchUserUri(string query, int count)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, 
+            if (!Uri.TryCreate(BaseInstagramUri,
                 string.Format(InstaApiConstants.BUSINESS_BRANDED_USER_SEARCH, query, count), out var instaUri))
                 throw new Exception("Cant create URI for business branded user search");
             return instaUri;
@@ -1729,7 +1736,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetRemoveFollowerUri(long userId)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, 
+            if (!Uri.TryCreate(BaseInstagramUri,
                 string.Format(InstaApiConstants.FRIENDSHIPS_REMOVE_FOLLOWER, userId), out var instaUri))
                 throw new Exception("Cant create URI for remove follower");
             return instaUri;
