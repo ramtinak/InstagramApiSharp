@@ -1165,7 +1165,7 @@ namespace InstagramApiSharp.API
                 {
                     var error = JsonConvert.DeserializeObject<BadStatusErrorsResponseRecovery>(result);
                     var errors = "";
-                    error.Phone_number.Errors.ForEach(errorContent => errors += errorContent + "\n");
+                    error.PhoneNumber.Errors.ForEach(errorContent => errors += errorContent + "\n");
 
                     return Result.Fail<InstaRecovery>(errors);
                 }

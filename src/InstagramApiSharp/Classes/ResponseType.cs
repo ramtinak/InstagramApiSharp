@@ -57,6 +57,30 @@ namespace InstagramApiSharp.Classes
         /// <summary>
         ///     When happens that you are doing massive follow and unfollow, comment and...
         /// </summary>
-        ActionBlocked = 13
+        ActionBlocked = 13,
+        /// <summary>
+        ///     When happens that you are spamming instagram!
+        /// </summary>
+        Spam = 14,
+        /// <summary>
+        ///     When happens that media is not found or unavailable
+        /// </summary>
+        MediaNotFound = 15,
+        /// <summary>
+        ///     When happens that commenting is turn off for an post
+        /// </summary>
+        CommentingIsDisabled = 16,
+        /// <summary>
+        ///     When happens that you've already liked an media or comment
+        /// </summary>
+        AlreadyLiked = 17,
+        /// <summary>
+        ///     When happens that an post is deleted
+        /// </summary>
+        DeletedPost = 18,
+        /// <summary>
+        ///     When happens that you aren't be able to like media or comment
+        /// </summary>
+        CantLike = 19
     }
 }

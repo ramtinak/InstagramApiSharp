@@ -77,7 +77,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, (InstaComment)null);
+                return Result.Fail<InstaComment>(exception);
             }
         }
 
@@ -109,7 +109,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
+                return Result.Fail(exception, false);
             }
         }
 
@@ -142,7 +142,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
+                return Result.Fail(exception, false);
             }
         }
 
@@ -174,7 +174,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
+                return Result.Fail(exception, false);
             }
         }
 
@@ -205,7 +205,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
+                return Result.Fail(exception, false);
             }
         }
 
@@ -237,7 +237,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaLikersList>(exception.Message);
+                return Result.Fail<InstaLikersList>(exception);
             }
         }
 
@@ -402,7 +402,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
+                return Result.Fail(exception, false);
             }
         }
 
@@ -445,7 +445,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, (InstaComment)null);
+                return Result.Fail<InstaComment>(exception);
             }
         }
         /// <summary>
@@ -479,7 +479,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
+                return Result.Fail(exception, false);
             }
         }
 
@@ -511,7 +511,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
+                return Result.Fail(exception, false);
             }
         }
 
@@ -543,7 +543,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, (InstaTranslateList)null);
+                return Result.Fail<InstaTranslateList>(exception);
             }
         }
 

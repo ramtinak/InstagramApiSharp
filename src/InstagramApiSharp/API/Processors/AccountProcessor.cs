@@ -93,7 +93,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, (InstaUserShort)null);
+                return Result.Fail<InstaUserShort>(exception);
             }
         }
         /// <summary>
@@ -137,7 +137,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, (InstaUserShort)null);
+                return Result.Fail<InstaUserShort>(exception);
             }
         }
         /// <summary>
@@ -181,7 +181,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception exception)
             {
-                return Result.Fail(exception.Message, false);
+                return Result.Fail(exception, false);
             }
         }
         /// <summary>

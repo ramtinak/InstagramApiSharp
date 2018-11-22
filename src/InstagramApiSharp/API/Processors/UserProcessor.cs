@@ -74,7 +74,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception ex)
             {
-                return Result.Fail<InstaFriendshipStatus>(ex.Message);
+                return Result.Fail<InstaFriendshipStatus>(ex);
             }
         }
 
@@ -152,7 +152,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaCurrentUser>(exception.Message);
+                return Result.Fail<InstaCurrentUser>(exception);
             }
         }
 
@@ -201,7 +201,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaFriendshipStatus>(exception.Message);
+                return Result.Fail<InstaFriendshipStatus>(exception);
             }
         }
         /// <summary>
@@ -243,7 +243,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaFriendshipShortStatusList>(exception.Message);
+                return Result.Fail<InstaFriendshipShortStatusList>(exception);
             }
         }
 
@@ -268,7 +268,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaFullUserInfo>(exception.Message);
+                return Result.Fail<InstaFullUserInfo>(exception);
             }
         }
 
@@ -301,7 +301,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception ex)
             {
-                return Result.Fail<InstaPendingRequest>(ex.Message);
+                return Result.Fail<InstaPendingRequest>(ex);
             }
         }
 
@@ -427,7 +427,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaUser>(exception.Message);
+                return Result.Fail<InstaUser>(exception);
             }
         }
 
@@ -484,7 +484,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaUser>(exception.Message);
+                return Result.Fail<InstaUser>(exception);
             }
         }
         /// <summary>
@@ -609,7 +609,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaUserInfo>(exception.Message);
+                return Result.Fail<InstaUserInfo>(exception);
             }
         }
 
@@ -629,7 +629,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaUserInfo>(exception.Message);
+                return Result.Fail<InstaUserInfo>(exception);
             }
         }
 
@@ -762,7 +762,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception ex)
             {
-                return Result.Fail<InstaFriendshipStatus>(ex.Message);
+                return Result.Fail<InstaFriendshipStatus>(ex);
             }
         }
 
@@ -806,7 +806,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception ex)
             {
-                return Result.Fail<bool>(ex.Message);
+                return Result.Fail<bool>(ex);
             }
         }
 
@@ -859,7 +859,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
+                return Result.Fail(exception, false);
             }
         }
 
@@ -962,7 +962,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, (InstaFriendshipStatus)null);
+                return Result.Fail<InstaFriendshipStatus>(exception);
             }
         }
 
@@ -989,7 +989,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, (string)null);
+                return Result.Fail<string>(exception);
             }
         }
         #endregion public parts
@@ -1021,7 +1021,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, (InstaFriendshipStatus)null);
+                return Result.Fail<InstaFriendshipStatus>(exception);
             }
         }
 
@@ -1051,7 +1051,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, (InstaFriendshipStatus)null);
+                return Result.Fail<InstaFriendshipStatus>(exception);
             }
         }
 
@@ -1157,7 +1157,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaUserInfo>(exception.Message);
+                return Result.Fail<InstaUserInfo>(exception);
             }
         }
 
@@ -1243,7 +1243,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception ex)
             {
-                return Result.Fail<bool>(ex.Message);
+                return Result.Fail<bool>(ex);
             }
         }
 
@@ -1288,7 +1288,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception ex)
             {
-                return Result.Fail<InstaFriendshipStatus>(ex.Message);
+                return Result.Fail<InstaFriendshipStatus>(ex);
             }
         }
         private async Task<IResult<InstaFriendshipStatus>> HideUnhideMyStoryFromUser(Uri instaUri)
@@ -1320,7 +1320,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception ex)
             {
-                return Result.Fail<InstaFriendshipStatus>(ex.Message);
+                return Result.Fail<InstaFriendshipStatus>(ex);
             }
         }
 
@@ -1352,7 +1352,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception ex)
             {
-                return Result.Fail<InstaFriendshipStatus>(ex.Message);
+                return Result.Fail<InstaFriendshipStatus>(ex);
             }
         }
         #endregion private parts

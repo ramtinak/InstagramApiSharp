@@ -141,8 +141,34 @@ namespace InstagramApiSharp.Classes
             if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("consent_required"))
                 responseType = ResponseType.ConsentRequired;
 
-            if (!string.IsNullOrEmpty(status.FeedbackTitle) && status.FeedbackTitle.Contains("action blocked"))
+            if (!string.IsNullOrEmpty(status.FeedbackTitle) && status.FeedbackTitle.ToLower().Contains("action blocked"))
                 responseType = ResponseType.ActionBlocked;
+
+            if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("login_required"))
+                responseType = ResponseType.LoginRequired;
+
+            if (!string.IsNullOrEmpty(status.Message) && status.Message.ToLower().Contains("media not found or unavailable"))
+                responseType = ResponseType.MediaNotFound;
+
+            if (!string.IsNullOrEmpty(status.FeedbackTitle) && status.FeedbackTitle.ToLower().Contains("commenting is Off"))
+                responseType = ResponseType.CommentingIsDisabled;
+
+            if (!string.IsNullOrEmpty(status.Message) && status.Message.ToLower().Contains("already liked"))
+                responseType = ResponseType.AlreadyLiked;
+
+            if (!string.IsNullOrEmpty(status.FeedbackMessage) && status.FeedbackMessage.ToLower().Contains("post you were viewing has been deleted"))
+                responseType = ResponseType.DeletedPost;
+
+            if (!string.IsNullOrEmpty(status.Message) && status.Message.ToLower().Contains("you cannot like this"))
+                responseType = ResponseType.CantLike;
+
+            if (status.Payload != null)
+                if (!string.IsNullOrEmpty(status.Payload.Message) && status.Payload.Message.ToLower().Contains("media is not accessible"))
+                    responseType = ResponseType.DeletedPost;
+
+            if (status.Spam)
+                responseType = ResponseType.Spam;
+
             //if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("challenge_required"))
             //    responseType = ResponseType.ChallengeRequired;
             return responseType;

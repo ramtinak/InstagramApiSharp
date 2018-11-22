@@ -16,5 +16,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("feedback_title")] public string FeedbackTitle { get; set; }
 
         [JsonProperty("feedback_message")] public string FeedbackMessage { get; set; }
+
+        [JsonProperty("payload")] public InstaPayloadResponse Payload { get; set; }
+
     }
 }

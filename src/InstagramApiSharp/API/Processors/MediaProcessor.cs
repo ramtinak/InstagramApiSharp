@@ -318,7 +318,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<Uri>(exception.Message);
+                return Result.Fail<Uri>(exception);
             }
         }
 
@@ -370,7 +370,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, false);
+                return Result.Fail(exception, false);
             }
         }
 

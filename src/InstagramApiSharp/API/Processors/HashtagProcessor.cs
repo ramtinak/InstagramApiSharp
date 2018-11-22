@@ -135,7 +135,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaHashtag>(exception.Message);
+                return Result.Fail<InstaHashtag>(exception);
             }
         }
 

@@ -94,7 +94,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaHighlightFeed>(exception.Message);
+                return Result.Fail<InstaHighlightFeed>(exception);
             }
         }
 
@@ -180,7 +180,7 @@ namespace InstagramApiSharp.API.Processors
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex.Message, list);
+                return Result.Fail(ex, list);
             }
         }
 
@@ -206,7 +206,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaHighlightFeeds>(exception.Message);
+                return Result.Fail<InstaHighlightFeeds>(exception);
             }
         }
 
@@ -232,7 +232,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaHighlightShortList>(exception.Message);
+                return Result.Fail<InstaHighlightShortList>(exception);
             }
         }
 
@@ -274,7 +274,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaHighlightSingleFeed>(exception.Message);
+                return Result.Fail<InstaHighlightSingleFeed>(exception);
             }
         }
 
@@ -315,7 +315,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaHighlightSingleFeed>(exception.Message);
+                return Result.Fail<InstaHighlightSingleFeed>(exception);
             }
         }
 
@@ -340,22 +340,22 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaStoryFeed>(exception.Message);
+                return Result.Fail<InstaStoryFeed>(exception);
             }
         }
         /// <summary>
         ///     Get story media viewers
         /// </summary>
-        /// <param name="StoryMediaId">Story media id</param>
+        /// <param name="storyMediaId">Story media id</param>
         /// <param name="paginationParameters">Pagination parameters</param>
-        public async Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewers(string StoryMediaId, PaginationParameters paginationParameters)
+        public async Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewersAsync(string storyMediaId, PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 if (paginationParameters.MaximumPagesToLoad > 1)
                     throw new Exception("Not supported");
-                var directInboxUri = new Uri(InstaApiConstants.BASE_INSTAGRAM_API_URL + $"media/{StoryMediaId}/list_reel_media_viewer/?max_id={paginationParameters.NextMaxId}", UriKind.RelativeOrAbsolute);
+                var directInboxUri = UriCreator.GetStoryMediaViewersUri(storyMediaId, paginationParameters?.NextMaxId);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -369,7 +369,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaReelStoryMediaViewers>(exception.Message);
+                return Result.Fail<InstaReelStoryMediaViewers>(exception);
             }
         }
 
@@ -395,7 +395,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaStory>(exception.Message);
+                return Result.Fail<InstaStory>(exception);
             }
         }
         /// <summary>
@@ -422,7 +422,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception.Message, feed);
+                return Result.Fail(exception, feed);
             }
         }
 
@@ -706,7 +706,7 @@ namespace InstagramApiSharp.API.Processors
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
-                return Result.Fail<InstaStoryMedia>(exception.Message);
+                return Result.Fail<InstaStoryMedia>(exception);
             }
         }
         /// <summary>
@@ -929,7 +929,7 @@ namespace InstagramApiSharp.API.Processors
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
-                return Result.Fail<InstaStoryMedia>(exception.Message);
+                return Result.Fail<InstaStoryMedia>(exception);
             }
         }
 
@@ -1032,7 +1032,7 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<bool>(exception.Message);
+                return Result.Fail<bool>(exception);
             }
         }
 
@@ -1106,7 +1106,7 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
-                return Result.Fail<InstaStoryMedia>(exception.Message);
+                return Result.Fail<InstaStoryMedia>(exception);
             }
         }
         /// <summary>
@@ -1213,9 +1213,8 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
-                return Result.Fail<InstaStoryMedia>(exception.Message);
+                return Result.Fail<InstaStoryMedia>(exception);
             }
         }
-        /// <s
     }
 }

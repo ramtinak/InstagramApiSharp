@@ -83,7 +83,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaTVSearch>(exception.Message);
+                return Result.Fail<InstaTVSearch>(exception);
             }
         }
 
@@ -109,7 +109,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaTV>(exception.Message);
+                return Result.Fail<InstaTV>(exception);
             }
         }
         /// <summary>
@@ -135,7 +135,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaTVSearch>(exception.Message);
+                return Result.Fail<InstaTVSearch>(exception);
             }
         }
 
@@ -193,7 +193,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaTVChannel>(exception.Message);
+                return Result.Fail<InstaTVChannel>(exception);
             }
         }
     }
