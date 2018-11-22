@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.5.3</Version>
-    <AssemblyVersion>1.1.5.3</AssemblyVersion>
-    <FileVersion>1.1.5.3</FileVersion>
+    <Version>1.1.5.5</Version>
+    <AssemblyVersion>1.1.5.5</AssemblyVersion>
+    <FileVersion>1.1.5.5</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,11 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.5.2
+    <PackageReleaseNotes>v1.1.5.5
+[Fix] Result is updated with more error support
+[Add] MutualFirst flag added to GetUserFollowersAsync
+
+v1.1.5.2
 - [Add] ability to request verification code again (thx to @sh2ezo for PR)
 - [Support] NetStandard 1.3
 - [Update] InstaRecentActivityConverter
