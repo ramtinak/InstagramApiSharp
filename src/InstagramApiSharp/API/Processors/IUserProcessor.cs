@@ -134,7 +134,7 @@ namespace InstagramApiSharp.API.Processors
         ///     <see cref="InstaUserShortList" />
         /// </returns>
         Task<IResult<InstaUserShortList>> GetUserFollowersAsync(string username,
-            PaginationParameters paginationParameters, string searchQuery = "");
+            PaginationParameters paginationParameters, string searchQuery = "", bool mutualsfirst = false);
 
         /// <summary>
         ///     Get following list by username asynchronously

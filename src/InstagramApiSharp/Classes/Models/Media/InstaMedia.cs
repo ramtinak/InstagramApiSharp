@@ -37,7 +37,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public InstaCaption Caption { get; set; }
 
-        public string CommentsCount { get; set; }
+        private string _cmcount;
+        public string CommentsCount { get => _cmcount; set { _cmcount = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CommentsCount")); } }
 
         public bool IsCommentsDisabled { get; set; }
 

@@ -1536,9 +1536,12 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
-        public static Uri GetUserFollowersUri(long userPk, string rankToken, string searchQuery, string maxId = "")
+        public static Uri GetUserFollowersUri(long userPk, string rankToken, string searchQuery, bool mutualsfirst = false, string maxId = "")
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_USER_FOLLOWERS, userPk, rankToken),
+            string muf = "";
+            if (mutualsfirst == true) muf = "rank_mutual=1";
+            else muf = "rank_mutual=0";
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FRIENDSHIPS_USER_FOLLOWERS, userPk, rankToken, muf),
                 out var instaUri))
                 throw new Exception("Cant create URI for user followers");
             return instaUri
