@@ -167,13 +167,20 @@ namespace UwpExample
                 var file = SelectedFiles.FirstOrDefault();
                 var fileBytes = (await FileIO.ReadBufferAsync(file)).ToArray();
                 UploadButton.Content = "Uploading photo...";
-                var img = new InstaImage
+                var img = new InstaImageUpload
                 {
                     // Set image bytes
                     ImageBytes = fileBytes,
                     // Note: you should set Uri path !
                     Uri = file.Path
                 };
+                // Add user tag (tag people)
+                img.UserTags.Add(new InstaUserTagUpload
+                {
+                    Username = "rmt4006",
+                    X = 0.5,
+                    Y = 0.5
+                });
                 var up = await InstaApi.MediaProcessor.UploadPhotoAsync(img, caption);
                 if (up.Succeeded)
                     "Your photo uploaded successfully.".ShowMsg();
