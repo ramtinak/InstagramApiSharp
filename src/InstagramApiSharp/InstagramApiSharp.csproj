@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452;uap10.0;netstandard1.3</TargetFrameworks>
-    <VersionPrefix>1.1.5</VersionPrefix>
+    <VersionPrefix>1.1.6</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.5.5</Version>
-    <AssemblyVersion>1.1.5.5</AssemblyVersion>
-    <FileVersion>1.1.5.5</FileVersion>
+    <Version>1.1.6.0</Version>
+    <AssemblyVersion>1.1.6.0</AssemblyVersion>
+    <FileVersion>1.1.6.0</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,9 +38,15 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.5.5
-[Fix] Result is updated with more error support
-[Add] MutualFirst flag added to GetUserFollowersAsync
+    <PackageReleaseNotes>v1.1.6.0
+- [Bugfix] for GetFollowingRecentActivityFeedAsync pagination
+- [Add] InstaImageUpload class (use this for uploading photo/album from now)
+- [Add] User tags support to UploadAlbumAsync (see album wiki page)
+- [Update] UploadPhotoAsync (you should use InstaImageUpload instead)
+
+v1.1.5.5
+- [Update] Result with more error support
+- [Add] MutualFirst flag added to GetUserFollowersAsync
 
 v1.1.5.2
 - [Add] ability to request verification code again (thx to @sh2ezo for PR)

@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.5.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.6.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -85,6 +85,16 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.6.0
+- [Bugfix] for GetFollowingRecentActivityFeedAsync pagination
+- [Add] InstaImageUpload class (use this for uploading photo/album from now)
+- [Add] User tags support to UploadAlbumAsync (see [album wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki/Upload-album))
+- [Update] UploadPhotoAsync (you should use InstaImageUpload instead! see [photo wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki/Upload-photo))
+
+v1.1.5.5
+- [Update] Result with more error support
+- [Add] MutualFirst flag added to GetUserFollowersAsync
+
 v1.1.5.2
 - [Add] ability to request verification code again (thx to [@sh2ezo](https://github.com/sh2ezo) for PR)
 - [Support] NetStandard 1.3
