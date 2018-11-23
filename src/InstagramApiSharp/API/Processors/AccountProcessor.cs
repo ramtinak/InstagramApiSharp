@@ -504,7 +504,7 @@ namespace InstagramApiSharp.API.Processors
         public async Task<IResult<InstaMedia>> UploadNametagAsync(InstaImage nametagImage)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(null, nametagImage, null, null, true);
+            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(null, nametagImage.ConvertToImageUpload(), null, null, true);
         }
         #endregion Profile edit
 
