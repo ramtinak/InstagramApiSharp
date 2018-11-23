@@ -1088,7 +1088,7 @@ namespace InstagramApiSharp.API.Processors
             paginationParameters.PagesLoaded++;
             activityFeed.NextMaxId = paginationParameters.NextMaxId = feedPage.NextMaxId;
             while (!string.IsNullOrEmpty(nextId)
-                   && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                   && paginationParameters.PagesLoaded <= paginationParameters.MaximumPagesToLoad)
             {
                 var nextFollowingFeed = await GetFollowingActivityWithMaxIdAsync(nextId);
                 if (!nextFollowingFeed.Succeeded)
