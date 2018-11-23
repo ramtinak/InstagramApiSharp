@@ -139,7 +139,7 @@ namespace UwpExample
 
             if (SelectedFiles.Count > 10)
             {
-                "Only 9 files can select".ShowERR();
+                "Only 10 files can select".ShowERR();
                 SelectedFiles = null;
                 UploadButton.IsEnabled = false;
             }
