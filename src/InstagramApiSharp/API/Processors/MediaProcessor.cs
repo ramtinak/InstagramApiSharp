@@ -399,7 +399,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="videos">Array of videos to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        public async Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImage[] images, InstaVideoUpload[] videos, string caption, InstaLocationShort location = null)
+        public async Task<IResult<InstaMedia>> UploadAlbumAsync(InstaImageUpload[] images, InstaVideoUpload[] videos, string caption, InstaLocationShort location = null)
         {
             return await UploadAlbumAsync(null, images, videos, caption, location);
         }
@@ -412,7 +412,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="videos">Array of videos to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        public async Task<IResult<InstaMedia>> UploadAlbumAsync(Action<InstaUploaderProgress> progress, InstaImage[] images, InstaVideoUpload[] videos, string caption, InstaLocationShort location = null)
+        public async Task<IResult<InstaMedia>> UploadAlbumAsync(Action<InstaUploaderProgress> progress, InstaImageUpload[] images, InstaVideoUpload[] videos, string caption, InstaLocationShort location = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             var upProgress = new InstaUploaderProgress
@@ -424,17 +424,45 @@ namespace InstagramApiSharp.API.Processors
             {
                 upProgress.Name = "Album upload";
                 progress?.Invoke(upProgress);
-                string[] imagesUploadIds = null;
-                var index = 0;
+                var imagesUploadIds = new Dictionary<string, InstaImageUpload>();
+                var index = 1;
                 if (images != null && images.Any())
                 {
-                    imagesUploadIds = new string[images.Length];
+                    foreach (var image in images)
+                    {
+                        if (image.UserTags != null && image.UserTags.Any())
+                        {
+                            var currentDelay = _instaApi.GetRequestDelay();
+                            _instaApi.SetRequestDelay(RequestDelay.FromSeconds(1, 2));
+                            foreach (var t in image.UserTags)
+                            {
+                                try
+                                {
+                                    bool tried = false;
+                                TryLabel:
+                                    var u = await _instaApi.UserProcessor.GetUserAsync(t.Username);
+                                    if (!u.Succeeded)
+                                    {
+                                        if (!tried)
+                                        {
+                                            tried = true;
+                                            goto TryLabel;
+                                        }
+                                    }
+                                    else
+                                        t.Pk = u.Value.Pk;
+                                }
+                                catch { }
+                            }
+                            _instaApi.SetRequestDelay(currentDelay);
+                        }
+                    }
                     foreach (var image in images)
                     {
                         var instaUri = UriCreator.GetUploadPhotoUri();
                         var uploadId = ApiRequestMessage.GenerateUploadId();
                         upProgress.UploadId = uploadId;
-                        upProgress.Name = $"[Album] Photo uploading {index + 1}/{images.Length}";
+                        upProgress.Name = $"[Album] Photo uploading {index}/{images.Length}";
                         upProgress.UploadState = InstaUploadState.Uploading;
                         progress?.Invoke(upProgress);
                         var requestContent = new MultipartFormDataContent(uploadId)
@@ -475,7 +503,7 @@ namespace InstagramApiSharp.API.Processors
                             //upProgress = progressContent?.UploaderProgress;
                             upProgress.UploadState = InstaUploadState.Uploaded;
                             progress?.Invoke(upProgress);
-                            imagesUploadIds[index++] = uploadId;
+                            imagesUploadIds.Add(uploadId, image);
                         }
                         else
                         {
@@ -747,7 +775,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, string[] imagesUploadIds, Dictionary<string, InstaVideo> videos, string caption, InstaLocationShort location)
+        private async Task<IResult<InstaMedia>> ConfigureAlbumAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, Dictionary<string, InstaImageUpload> imagesUploadIds, Dictionary<string, InstaVideo> videos, string caption, InstaLocationShort location)
         {
             try
             {
@@ -757,18 +785,44 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetMediaAlbumConfigureUri();
                 var clientSidecarId = ApiRequestMessage.GenerateUploadId();
                 var childrenArray = new JArray();
-                if (imagesUploadIds != null)
+                if (imagesUploadIds != null && imagesUploadIds.Any())
                 {
-                    foreach (var id in imagesUploadIds)
-                        childrenArray.Add(new JObject
+                    foreach (var img in imagesUploadIds)
+                    {
+                        var imgData = new JObject
                         {
                             {"timezone_offset", "16200"},
                             {"source_type", 4},
-                            {"upload_id", id},
+                            {"upload_id", img.Key},
                             {"caption", ""},
-                        });
+                        };
+                        if (img.Value.UserTags != null && img.Value.UserTags.Any())
+                        {
+                            var tagArr = new JArray();
+                            foreach (var tag in img.Value.UserTags)
+                            {
+                                if (tag.Pk != -1)
+                                {
+                                    var position = new JArray(tag.X, tag.Y);
+                                    var singleTag = new JObject
+                                    {
+                                        {"user_id", tag.Pk},
+                                        {"position", position}
+                                    };
+                                    tagArr.Add(singleTag);
+                                }
+                            }
+
+                            var root = new JObject
+                            {
+                                {"in",  tagArr}
+                            };
+                            imgData.Add("usertags", root.ToString(Formatting.None));
+                        }
+                        childrenArray.Add(imgData);
+                    }
                 }
-                if (videos != null)
+                if (videos != null && videos.Any())
                 {
                     foreach (var id in videos)
                     {
