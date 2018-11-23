@@ -25,16 +25,26 @@ namespace Examples.Samples
 
         public async Task DoShow()
         {
-            var images = new InstaImage[]
+            var images = new InstaImageUpload[]
             {
-                new InstaImage
+                new InstaImageUpload
                 {
                     // leave zero, if you don't know how height and width is it.
                     Height = 0,
                     Width = 0,
-                    Uri = @"c:\image1.jpg"
+                    Uri = @"c:\image1.jpg",
+                    // add user tags to your images
+                    UserTags = new List<InstaUserTagUpload>
+                    {
+                        new InstaUserTagUpload
+                        {
+                            Username = "rmt4006",
+                            X = 0.5,
+                            Y = 0.5
+                        }
+                    }
                 },
-                new InstaImage
+                new InstaImageUpload
                 {
                     // leave zero, if you don't know how height and width is it.
                     Height = 0,
