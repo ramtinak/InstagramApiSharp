@@ -22,13 +22,20 @@ namespace Examples.Samples
 
         public async Task DoShow()
         {
-            var mediaImage = new InstaImage
+            var mediaImage = new InstaImageUpload
             {  
                 // leave zero, if you don't know how height and width is it.
                 Height = 1080,
                 Width = 1080,
                 Uri = @"c:\someawesomepicture.jpg"
             };
+            // Add user tag (tag people)
+            mediaImage.UserTags.Add(new InstaUserTagUpload
+            {
+                Username = "rmt4006",
+                X = 0.5,
+                Y = 0.5
+            });
             var result = await _instaApi.MediaProcessor.UploadPhotoAsync(mediaImage, "someawesomepicture");
             Console.WriteLine(result.Succeeded
                 ? $"Media created: {result.Value.Pk}, {result.Value.Caption}"
