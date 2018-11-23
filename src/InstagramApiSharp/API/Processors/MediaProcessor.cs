@@ -611,32 +611,28 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
-        ///     Upload photo
+        ///     Upload photo [Supports user tags]
         /// </summary>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        /// <param name="userTags">User tags => Optional</param>
-        public async Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImage image, string caption, InstaLocationShort location = null,
-            InstaUserTagUpload[] userTags = null)
+        public async Task<IResult<InstaMedia>> UploadPhotoAsync(InstaImageUpload image, string caption, InstaLocationShort location = null)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(null, image, caption, location, false, userTags);
+            return await UploadPhotoAsync(null, image, caption, location);
         }
 
         /// <summary>
-        ///     Upload photo with progress
+        ///     Upload photo with progress [Supports user tags]
         /// </summary>
         /// <param name="progress">Progress action</param>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        /// <param name="userTags">User tags => Optional</param>
-        public async Task<IResult<InstaMedia>> UploadPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption,
-            InstaLocationShort location = null, InstaUserTagUpload[] userTags = null)
+        public async Task<IResult<InstaMedia>> UploadPhotoAsync(Action<InstaUploaderProgress> progress, InstaImageUpload image, string caption,
+            InstaLocationShort location = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(progress, image, caption, location, false, userTags);
+            return await _instaApi.HelperProcessor.SendMediaPhotoAsync(progress, image, caption, location);
         }
 
         /// <summary>

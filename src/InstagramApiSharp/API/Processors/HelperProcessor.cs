@@ -693,7 +693,7 @@ namespace InstagramApiSharp.API.Processors
 
 
         public async Task<IResult<InstaMedia>> SendMediaPhotoAsync(Action<InstaUploaderProgress> progress,
-            InstaImage image, string caption, InstaLocationShort location, bool configureAsNameTag = false, InstaUserTagUpload[] userTags = null)
+            InstaImageUpload image, string caption, InstaLocationShort location, bool configureAsNameTag = false)
         {
             var upProgress = new InstaUploaderProgress
             {
@@ -703,11 +703,11 @@ namespace InstagramApiSharp.API.Processors
             try
             {
 
-                if (userTags != null && userTags.Any())
+                if (image.UserTags != null && image.UserTags.Any())
                 {
                     var currentDelay = _instaApi.GetRequestDelay();
                     _instaApi.SetRequestDelay(RequestDelay.FromSeconds(1, 2));
-                    foreach (var t in userTags)
+                    foreach (var t in image.UserTags)
                     {
                         try
                         {
@@ -792,7 +792,7 @@ namespace InstagramApiSharp.API.Processors
                     progress?.Invoke(upProgress);
                     if (configureAsNameTag)
                         return await ConfigureMediaPhotoAsNametagAsync(progress, upProgress, uploadId);
-                    return await ConfigureMediaPhotoAsync(progress, upProgress, uploadId, caption, location, userTags);
+                    return await ConfigureMediaPhotoAsync(progress, upProgress, uploadId, caption, location, image.UserTags);
                 }
     
                 upProgress.UploadState = InstaUploadState.Error;
@@ -809,7 +809,7 @@ namespace InstagramApiSharp.API.Processors
 
         }
         private async Task<IResult<InstaMedia>> ConfigureMediaPhotoAsync(Action<InstaUploaderProgress> progress,
-            InstaUploaderProgress upProgress, string uploadId, string caption, InstaLocationShort location, InstaUserTagUpload[] userTags = null)
+            InstaUploaderProgress upProgress, string uploadId, string caption, InstaLocationShort location, List<InstaUserTagUpload> userTags = null)
         {
             try
             {

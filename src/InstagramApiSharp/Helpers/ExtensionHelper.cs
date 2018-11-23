@@ -156,5 +156,16 @@ namespace InstagramApiSharp
             System.Diagnostics.Debug.WriteLine(Convert.ToString(obj));
         }
 
+        public static InstaImageUpload ConvertToImageUpload(this InstaImage instaImage, InstaUserTagUpload[] userTags = null)
+        {
+            return new InstaImageUpload
+            {
+                Height = instaImage.Height,
+                ImageBytes = instaImage.ImageBytes,
+                Uri = instaImage.Uri,
+                Width = instaImage.Width,
+                UserTags = userTags?.ToList()
+            };
+        }
     }
 }
