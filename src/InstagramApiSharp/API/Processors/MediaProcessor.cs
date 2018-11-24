@@ -228,9 +228,45 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get multiple media by its multiple ids asynchronously
+        /// </summary>
+        /// <param name="mediaIds">Media ids</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        public async Task<IResult<InstaMediaList>> GetMediaByIdsAsync(params string[] mediaIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var mediaList = new InstaMediaList();
+            try
+            {
+                if (mediaIds?.Length == 0)
+                    throw new ArgumentNullException("At least one media id is required");
+
+                var instaUri = UriCreator.GetMediaInfoByMultipleMediaIdsUri(mediaIds,_deviceInfo.DeviceGuid.ToString(), _user.CsrfToken);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaMediaList>(response, json);
+
+                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
+                    new InstaMediaListDataConverter());
+                mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();    
+                
+                return Result.Success(mediaList);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, mediaList);
+            }
+        }
+        /// <summary>
         ///     Get media by its id asynchronously
         /// </summary>
-        /// <param name="mediaId">Maximum count of pages to retrieve</param>
+        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier>"/>)</param>
         /// <returns>
         ///     <see cref="InstaMedia" />
         /// </returns>

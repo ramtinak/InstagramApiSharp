@@ -441,16 +441,7 @@ namespace InstagramApiSharp.API
         public const string MEDIA_COMMENT_LIKERS = API_SUFFIX + "/media/{0}/comment_likers/";
         public const string MEDIA_COMMENTS = API_SUFFIX + "/media/{0}/comments/?can_support_threading=true";
         public const string MEDIA_CONFIGURE = API_SUFFIX + "/media/configure/";
-        /// <summary>
-        ///  get media infos
-        ///  <para>get method | queries:</para>
-        ///  <para>_uuid</para>
-        ///  <para>_csrftoken</para>
-        ///  <para>media_ids= split with comma</para>
-        ///  <para>ranked_content=true</para>
-        ///  <para>include_inactive_reel=true</para>
-        /// </summary>
-        public const string MEDIA_INFOS = API_SUFFIX + "/media/infos/";
+        public const string MEDIA_INFOS = API_SUFFIX + "/media/infos/?_uuid={0}&_csrftoken={1}&media_ids={2}&ranked_content=true&include_inactive_reel=true";
         public const string MEDIA_CONFIGURE_NAMETAG = API_SUFFIX + "/media/configure_to_nametag/";
         public const string MEDIA_INLINE_COMMENTS = API_SUFFIX + "/media/{0}/comments/{1}/inline_child_comments/";
         public const string MEDIA_LIKERS = API_SUFFIX + "/media/{0}/likers/";

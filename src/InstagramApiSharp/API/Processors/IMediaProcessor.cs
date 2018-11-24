@@ -35,9 +35,18 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaMediaIdList>> GetBlockedMediasAsync();
 
         /// <summary>
+        ///     Get multiple media by its multiple ids asynchronously
+        /// </summary>
+        /// <param name="mediaIds">Media ids</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        Task<IResult<InstaMediaList>> GetMediaByIdsAsync(params string[] mediaIds);
+
+        /// <summary>
         ///     Get media by its id asynchronously
         /// </summary>
-        /// <param name="mediaId">Maximum count of pages to retrieve</param>
+        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier>"/>)</param>
         /// <returns>
         ///     <see cref="InstaMedia" />
         /// </returns>

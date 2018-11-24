@@ -1938,5 +1938,12 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetMediaInfoByMultipleMediaIdsUri(string[] mediaIds, string uuid, string csrfToken)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_INFOS, 
+                uuid, csrfToken, string.Join("," , mediaIds)), out var instaUri))
+                throw new Exception("Cant create URI for media info by multiple media ids");
+            return instaUri;
+        }
     }
 }
