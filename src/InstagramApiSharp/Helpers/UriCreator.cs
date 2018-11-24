@@ -1931,5 +1931,12 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
+        public static Uri GetBlockedMediaUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.MEDIA_BLOCKED, out var instaUri))
+                throw new Exception("Cant create URI for blocked media");
+            return instaUri;
+        }
+
     }
 }

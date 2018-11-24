@@ -200,6 +200,34 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get blocked medias
+        ///     <para>Note: returns media ids!</para>
+        /// </summary>
+        public async Task<IResult<InstaMediaIdList>> GetBlockedMediasAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var mediaIds = new InstaMediaIdList();
+            try
+            {
+                var mediaUri = UriCreator.GetBlockedMediaUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, mediaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.Fail($"Error! Status code: {response.StatusCode}", mediaIds);
+                var obj = JsonConvert.DeserializeObject<InstaMediaIdsResponse>(json);
+
+                return Result.Success(obj.MediaIds);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, mediaIds);
+            }
+        }
+
+        /// <summary>
         ///     Get media by its id asynchronously
         /// </summary>
         /// <param name="mediaId">Maximum count of pages to retrieve</param>

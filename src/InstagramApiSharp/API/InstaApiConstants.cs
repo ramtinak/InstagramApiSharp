@@ -481,6 +481,7 @@ namespace InstagramApiSharp.API
         public const string UNLIKE_COMMENT = API_SUFFIX + "/media/{0}/comment_unlike/";
         public const string UNLIKE_MEDIA = API_SUFFIX + "/media/{0}/unlike/";
         public const string MEDIA_STORY_VIEWERS = API_SUFFIX + "/media/{0}/list_reel_media_viewer/";
+        public const string MEDIA_BLOCKED = API_SUFFIX + "/media/blocked/";
 
         #endregion Media endpoints constants
 

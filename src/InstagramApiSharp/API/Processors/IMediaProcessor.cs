@@ -29,6 +29,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaMedia>> EditMediaAsync(string mediaId, string caption, InstaLocationShort location = null, InstaUserTagUpload[] userTags = null);
 
         /// <summary>
+        ///     Get blocked medias
+        ///     <para>Note: returns media ids!</para>
+        /// </summary>
+        Task<IResult<InstaMediaIdList>> GetBlockedMediasAsync();
+
+        /// <summary>
         ///     Get media by its id asynchronously
         /// </summary>
         /// <param name="mediaId">Maximum count of pages to retrieve</param>
