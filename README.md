@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.1.6.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.1.6.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -85,6 +85,12 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.1.6.1
+- [Bugfix] for GetFollowingRecentActivityFeedAsync pagination [now works correctly]
+- [Add] new UploadAlbumAsync (check [#95 issue](https://github.com/ramtinak/InstagramApiSharp/issues/95))
+- [Add] GetBlockedMediasAsync to MediaProcessor
+- [Add] GetMediaByIdsAsync to MediaProcessor for getting multiple medias
+
 v1.1.6.0
 - [Bugfix] for GetFollowingRecentActivityFeedAsync pagination
 - [Add] InstaImageUpload class (use this for uploading photo/album from now)
@@ -129,32 +135,6 @@ v1.1.5.0
 
 v1.1.4.4
 - [Bugfix] for phone number/email login (now you can login with phone/email to as well) (spectial thanks to [@learn-itnow](https://github.com/learn-itnow) for his help)
-
-v1.1.4.3
-- [Update] PaginationParameters, change NextId to NextMaxId
-- [Add] NextMinId to PaginationParameters (for comments)
-- [Bugfix] for GetMediaCommentsAsync
-- [Bugfix] for GetMediaRepliesCommentsAsync
-
-v1.1.4.2
-- [Bugfix] Unique guid for devices (now instagram won't suspicious to you, relogin required)
-
-v1.1.4.1 
-- [Minor bugfix] for GetUserAsync in UserProcessor
-
-v1.1.4.0
-- [Bugfix] for RavenReplayChainCount in direct thread item
-- [Update] tiny update for story seen uri
-- [Add] MarkStoryAsSeenAsync to StoryProcessor
-- [Add] GetHighlightMediasAsync to StoryProcessor
-- [Add] ReplyToStoryAsync to StoryProcessor
-- [Bugfix] for Result.GetResponseType
-
-v1.1.3.8
-- [Bugfix] For checkpoint issue thx to [@hermaphros](https://github.com/hermaphros) for solution
-- [Bugfix] For GetFullUserInfoAsync
-- [Add] FriendshipStatus to InstaUserInfo
-- [Add] ProfileContextIds to InstaUserInfo
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
