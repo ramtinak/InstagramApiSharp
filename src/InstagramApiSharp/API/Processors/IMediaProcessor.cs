@@ -94,6 +94,23 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaMedia>> UploadAlbumAsync(Action<InstaUploaderProgress> progress, InstaImageUpload[] images, InstaVideoUpload[] videos, string caption, InstaLocationShort location = null);
 
         /// <summary>
+        ///     Upload album (videos and photos)
+        /// </summary>
+        /// <param name="album">Array of photos or videos to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        Task<IResult<InstaMedia>> UploadAlbumAsync(InstaAlbumUpload[] album, string caption, InstaLocationShort location = null);
+
+        /// <summary>
+        ///     Upload album (videos and photos) with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="album">Array of photos or videos to upload</param>
+        /// <param name="caption">Caption</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
+        Task<IResult<InstaMedia>> UploadAlbumAsync(Action<InstaUploaderProgress> progress, InstaAlbumUpload[] album, string caption, InstaLocationShort location = null);
+
+        /// <summary>
         ///     Upload photo [Supports user tags]
         /// </summary>
         /// <param name="image">Photo to upload</param>
