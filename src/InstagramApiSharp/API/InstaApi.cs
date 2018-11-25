@@ -1604,6 +1604,26 @@ namespace InstagramApiSharp.API
         #region Other public functions
 
         /// <summary>
+        /// Sets user credentials
+        /// </summary>
+        public void SetUser(string username, string password)
+        {
+            _user.UserName = username;
+            _user.Password = password;
+
+            _httpRequestProcessor.RequestMessage.Username = username;
+            _httpRequestProcessor.RequestMessage.Password = password;
+        }
+
+        /// <summary>
+        /// Sets user credentials
+        /// </summary>
+        public void SetUser(UserSessionData user)
+        {
+            SetUser(user.UserName, user.Password);
+        }
+
+        /// <summary>
         ///     Gets current device
         /// </summary>
         public AndroidDevice GetCurrentDevice()

@@ -31,7 +31,8 @@ namespace InstagramApiSharp.API.Builder
         public IInstaApi Build()
         {
             if (_user == null)
-                throw new ArgumentNullException("User auth data must be specified");
+                _user = UserSessionData.Empty;
+
             if (_httpClient == null)
                 _httpClient = new HttpClient(_httpHandler) {BaseAddress = new Uri(InstaApiConstants.INSTAGRAM_URL)};
 

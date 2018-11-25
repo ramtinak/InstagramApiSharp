@@ -142,6 +142,19 @@ namespace InstagramApiSharp.API
 
         #region Other public functions
         /// <summary>
+        /// Sets user credentials
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        void SetUser(string username, string password);
+
+        /// <summary>
+        /// Sets user credentials
+        /// </summary>
+        /// <param name="user"></param>
+        void SetUser(UserSessionData user);
+
+        /// <summary>
         ///     Gets current device
         /// </summary>
         AndroidDevice GetCurrentDevice();
