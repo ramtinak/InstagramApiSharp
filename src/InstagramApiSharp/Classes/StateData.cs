@@ -7,7 +7,7 @@ using InstagramApiSharp.Enums;
 namespace InstagramApiSharp.Classes
 {
     [Serializable]
-    internal class StateData
+    public class StateData
     {
         public AndroidDevice DeviceInfo { get; set; }
         public UserSessionData UserSession { get; set; }

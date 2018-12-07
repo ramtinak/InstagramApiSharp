@@ -11,6 +11,7 @@ using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.BaseResponse;
+using InstagramApiSharp.Classes.SessionHandlers;
 using InstagramApiSharp.Converters;
 using InstagramApiSharp.Enums;
 using InstagramApiSharp.Helpers;
@@ -57,9 +58,14 @@ namespace InstagramApiSharp.API
             get { return _isUserAuthenticated; }
             internal set { _isUserAuthenticated = value; _userAuthValidate.IsUserAuthenticated = value; }
         }
-
+        
         #endregion Variables and properties
 
+        #region SessionHandler
+        private ISessionHandler _sessionHandler;
+        public ISessionHandler SessionHandler { get => _sessionHandler; set => _sessionHandler = value; }
+        #endregion
+        
         #region Processors
 
         private ICollectionProcessor _collectionProcessor;
@@ -74,10 +80,13 @@ namespace InstagramApiSharp.API
         private ILiveProcessor _liveProcessor;
         private IDiscoverProcessor _discoverProcessor;
         private IAccountProcessor _accountProcessor;
+
+
         ITVProcessor _tvProcessor;
         HelperProcessor _helperProcessor;
         IBusinessProcessor _businessProcessor;
         IShoppingProcessor _shoppingProcessor;
+
         /// <summary>
         ///     Live api functions.
         /// </summary>
@@ -160,7 +169,7 @@ namespace InstagramApiSharp.API
             _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(apiVersionType);
             _httpHelper = new HttpHelper(_apiVersion);
         }
-        
+
         #endregion Constructor
 
         #region Register new account with Phone number and email
@@ -181,12 +190,12 @@ namespace InstagramApiSharp.API
                     _waterfallIdReg = Guid.NewGuid().ToString();
 
                 var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
-                var cookies = 
+                var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
-                
+
                 var postData = new Dictionary<string, string>
                 {
                     {"_csrftoken",      csrftoken},
@@ -239,14 +248,14 @@ namespace InstagramApiSharp.API
             try
             {
                 _deviceIdReg = ApiRequestMessage.GenerateDeviceId();
-       
+
                 var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
-                
+
                 var postData = new Dictionary<string, string>
                 {
                     {"_csrftoken",      csrftoken},
@@ -485,7 +494,7 @@ namespace InstagramApiSharp.API
                     .BaseAddress);
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
-                
+
                 var postData = new Dictionary<string, string>
                 {
                     {"allow_contacts_sync",       "true"},
@@ -658,7 +667,7 @@ namespace InstagramApiSharp.API
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaAccountCreation>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaAccountCreation>(json);
@@ -854,7 +863,7 @@ namespace InstagramApiSharp.API
                 var cookies =
                     _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                         .BaseAddress);
-              
+
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 _user.CsrfToken = csrftoken;
                 var instaUri = UriCreator.GetLoginUri();
@@ -874,7 +883,7 @@ namespace InstagramApiSharp.API
                 request.Headers.Add("Host", "i.instagram.com");
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     var loginFailReason = JsonConvert.DeserializeObject<InstaLoginBaseResponse>(json);
@@ -1152,7 +1161,7 @@ namespace InstagramApiSharp.API
 
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var result = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     var error = JsonConvert.DeserializeObject<BadStatusErrorsResponse>(result);
@@ -1213,7 +1222,7 @@ namespace InstagramApiSharp.API
                 return Result.Fail<TwoFactorLoginSMS>(exception);
             }
         }
-        
+
         #region Challenge part
         /// <summary>
         ///     Get challenge require (checkpoint required) options
@@ -1779,6 +1788,34 @@ namespace InstagramApiSharp.API
             };
             return SerializationHelper.SerializeToString(state);
         }
+
+        /// <summary>
+        ///     Get current state as StateData object
+        /// </summary>
+        /// <returns>
+        ///     State data object
+        /// </returns>
+        public StateData GetStateDataAsObject()
+        {
+            var Cookies = _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(new Uri(InstaApiConstants.INSTAGRAM_URL));
+            var RawCookiesList = new List<Cookie>();
+            foreach (Cookie cookie in Cookies)
+            {
+                RawCookiesList.Add(cookie);
+            }
+
+            var state = new StateData
+            {
+                DeviceInfo = _deviceInfo,
+                IsAuthenticated = IsUserAuthenticated,
+                UserSession = _user,
+                Cookies = _httpRequestProcessor.HttpHandler.CookieContainer,
+                RawCookies = RawCookiesList,
+                InstaApiVersion = _apiVersionType
+            };
+            return state;
+        }
+
         /// <summary>
         ///     Get current state info as Memory stream asynchronously
         /// </summary>
@@ -1819,10 +1856,10 @@ namespace InstagramApiSharp.API
             if (!IsCustomDeviceSet)
                 _deviceInfo = data.DeviceInfo;
             _user = data.UserSession;
-            
+
             _httpRequestProcessor.RequestMessage.Username = data.UserSession.UserName;
             _httpRequestProcessor.RequestMessage.Password = data.UserSession.Password;
-            
+
             _httpRequestProcessor.RequestMessage.DeviceId = data.DeviceInfo.DeviceId;
             _httpRequestProcessor.RequestMessage.PhoneId = data.DeviceInfo.PhoneGuid.ToString();
             _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
@@ -1851,11 +1888,11 @@ namespace InstagramApiSharp.API
             if (!IsCustomDeviceSet)
                 _deviceInfo = data.DeviceInfo;
             _user = data.UserSession;
-            
+
             //Load Stream Edit 
             _httpRequestProcessor.RequestMessage.Username = data.UserSession.UserName;
             _httpRequestProcessor.RequestMessage.Password = data.UserSession.Password;
-            
+
             _httpRequestProcessor.RequestMessage.DeviceId = data.DeviceInfo.DeviceId;
             _httpRequestProcessor.RequestMessage.PhoneId = data.DeviceInfo.PhoneGuid.ToString();
             _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
@@ -1875,6 +1912,42 @@ namespace InstagramApiSharp.API
             IsUserAuthenticated = data.IsAuthenticated;
             InvalidateProcessors();
         }
+
+
+        /// <summary>
+        ///     Set state data from StateData object
+        /// </summary>
+        /// <param name="stateData"></param>
+        public void LoadStateDataFromObject(StateData stateData)
+        {
+            if (!IsCustomDeviceSet)
+                _deviceInfo = stateData.DeviceInfo;
+            _user = stateData.UserSession;
+
+            //Load Stream Edit 
+            _httpRequestProcessor.RequestMessage.Username = stateData.UserSession.UserName;
+            _httpRequestProcessor.RequestMessage.Password = stateData.UserSession.Password;
+
+            _httpRequestProcessor.RequestMessage.DeviceId = stateData.DeviceInfo.DeviceId;
+            _httpRequestProcessor.RequestMessage.PhoneId = stateData.DeviceInfo.PhoneGuid.ToString();
+            _httpRequestProcessor.RequestMessage.Guid = stateData.DeviceInfo.DeviceGuid;
+            _httpRequestProcessor.RequestMessage.AdId = stateData.DeviceInfo.AdId.ToString();
+
+            foreach (var cookie in stateData.RawCookies)
+            {
+                _httpRequestProcessor.HttpHandler.CookieContainer.Add(new Uri(InstaApiConstants.INSTAGRAM_URL), cookie);
+            }
+
+            if (stateData.InstaApiVersion == null)
+                stateData.InstaApiVersion = InstaApiVersionType.Version44;
+            _apiVersionType = stateData.InstaApiVersion.Value;
+            _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(_apiVersionType);
+            _httpHelper = new HttpHelper(_apiVersion);
+
+            IsUserAuthenticated = stateData.IsAuthenticated;
+            InvalidateProcessors();
+        }
+
         /// <summary>
         ///     Set state data from provided stream asynchronously
         /// </summary>
