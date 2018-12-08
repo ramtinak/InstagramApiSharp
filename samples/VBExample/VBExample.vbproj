@@ -121,7 +121,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\InstagramApiSharp\InstagramApiSharp.csproj">
+    <ProjectReference Include="..\..\src\InstagramApiSharp\InstagramApiSharp.csproj">
       <Project>{2a588963-cebe-47ec-bfbb-2f3d405e4c80}</Project>
       <Name>InstagramApiSharp</Name>
     </ProjectReference>
