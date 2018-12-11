@@ -207,6 +207,10 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaAccountVerifySms>> VerifySmsCodeAsync(string phoneNumber, string verificationCode);
         #endregion two factor authentication enable/disable
 
+        /// <summary>
+        ///     Switch to personal account
+        /// </summary>
+        Task<IResult<InstaUser>> SwitchToPersonalAccountAsync();
 
 
 

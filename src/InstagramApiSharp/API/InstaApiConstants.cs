@@ -151,7 +151,8 @@ namespace InstagramApiSharp.API
         public const string CURRENTUSER = API_SUFFIX + "/accounts/current_user?edit=true";
         public const string SET_ACCOUNT_PRIVATE = API_SUFFIX + "/accounts/set_private/";
         public const string SET_ACCOUNT_PUBLIC = API_SUFFIX + "/accounts/set_public/";
-
+        public const string ACCOUNTS_CONVERT_TO_PERSONAL = API_SUFFIX + "/accounts/convert_to_personal/";
+        
         #endregion Account endpoint constants
 
         #region Business endpoints constants

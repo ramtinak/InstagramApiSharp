@@ -1955,5 +1955,12 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
+        public static Uri GetConvertToPersonalAccountUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_CONVERT_TO_PERSONAL, out var instaUri))
+                throw new Exception("Cant create URI for account convert to personal account");
+            return instaUri;
+        }
+
     }
 }

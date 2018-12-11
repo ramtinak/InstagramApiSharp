@@ -1066,8 +1066,37 @@ namespace InstagramApiSharp.API.Processors
         }
         #endregion two factor authentication enable/disable
 
+        /// <summary>
+        ///     Switch to personal account
+        /// </summary>
+        public async Task<IResult<InstaUser>> SwitchToPersonalAccountAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetConvertToPersonalAccountUri();
+                var data = new JObject
+                {
+                    { "_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                };
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUser>(response, json);
 
-
+                var obj = JsonConvert.DeserializeObject<InstaUserContainerResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetUserConverter(obj.User).Convert());
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUser>(exception);
+            }
+        }
 
         #region NOT COMPLETE FUNCTIONS
         //NOT COMPLETE
