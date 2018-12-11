@@ -1945,5 +1945,15 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for media info by multiple media ids");
             return instaUri;
         }
+
+        public static Uri GetBlockedUsersUri(string maxId = "")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USERS_BLOCKED_LIST, out var instaUri))
+                throw new Exception("Cant create URI for blocked users");
+            return !string.IsNullOrEmpty(maxId)
+                ? new UriBuilder(instaUri) { Query = $"max_id={maxId}" }.Uri
+                : instaUri;
+        }
+
     }
 }
