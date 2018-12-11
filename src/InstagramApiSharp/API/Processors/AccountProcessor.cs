@@ -23,6 +23,7 @@ using InstagramApiSharp.Classes.Models;
 using System.Net;
 using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Enums;
+using InstagramApiSharp.Classes.ResponseWrappers.Business;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -1095,6 +1096,56 @@ namespace InstagramApiSharp.API.Processors
                 Debug.WriteLine(exception.Message);
                 _logger?.LogException(exception);
                 return Result.Fail<InstaUser>(exception);
+            }
+        }
+        
+        /// <summary>
+        ///    [NOT WORKING] Set contact information for business account
+        /// </summary>
+        /// <param name="categoryId">Category id (Use <see cref="IBusinessProcessor.GetCategoriesAsync"/> to get category id)</param>
+        /// <param name="phoneNumber">Phone number</param>
+        /// <param name="email">Email address</param>
+        public async Task<IResult<InstaBusinessUser>> SetBusinessInfoAsync(string categoryId, string phoneNumber, string email)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                //[NOT WORKING]
+                var instaUri = UriCreator.GetCreateBusinessInfoUri();
+                
+                var publicPhoneContact = new JObject
+                {
+                    {"public_phone_number", phoneNumber},
+                    {"business_contact_method", InstaBusinessContactType.Call.ToString().ToUpper()},
+                };
+
+                var data = new JObject
+                {
+                    {"set_public", "true"},
+                    {"entry_point", "setting"},
+                    {"public_phone_contact", publicPhoneContact.ToString(Formatting.None)},
+                    {"public_email", email ?? string.Empty},
+                    {"category_id", categoryId},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
+                //{"message": "Business details are malformed", "error_identifier": "BUSINESS_ID", "status": "fail"}
+                //{"message": "Can not convert to business, Try again later", "error_identifier": "CANNOT_CONVERT", "status": "fail"}
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
             }
         }
 

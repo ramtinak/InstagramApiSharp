@@ -1962,5 +1962,12 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetCreateBusinessInfoUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_CREATE_BUSINESS_INFO, out var instaUri))
+                throw new Exception("Cant create URI for account create business info");
+            return instaUri;
+        }
+
     }
 }
