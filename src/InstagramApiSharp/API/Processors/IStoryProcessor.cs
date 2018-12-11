@@ -36,7 +36,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get list of users that blocked from seeing your stories
         /// </summary>
-        Task<IResult<InstaUserShortList>> GetBlockedStorySharingUsersStory();
+        Task<IResult<InstaUserShortList>> GetBlockedUsersFromStoriesAsync();
 
         /// <summary>
         ///     Get user highlight feeds by user id (pk)
