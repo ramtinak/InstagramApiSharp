@@ -1969,5 +1969,12 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetConvertToBusinessAccountUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.BUSINESS_CONVERT_TO_BUSINESS_ACCOUNT, out var instaUri))
+                throw new Exception("Cant create URI for convert to business account");
+            return instaUri;
+        }
+
     }
 }

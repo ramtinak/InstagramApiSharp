@@ -1100,6 +1100,31 @@ namespace InstagramApiSharp.API.Processors
         }
         
         /// <summary>
+        ///     Switch to business account
+        /// </summary>
+        public async Task<IResult<InstaBusinessUser>> SwitchToBusinessAccountAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetConvertToBusinessAccountUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
+            }
+        }
+        /// <summary>
         ///    [NOT WORKING] Set contact information for business account
         /// </summary>
         /// <param name="categoryId">Category id (Use <see cref="IBusinessProcessor.GetCategoriesAsync"/> to get category id)</param>
@@ -1116,19 +1141,31 @@ namespace InstagramApiSharp.API.Processors
                 var publicPhoneContact = new JObject
                 {
                     {"public_phone_number", phoneNumber},
-                    {"business_contact_method", InstaBusinessContactType.Call.ToString().ToUpper()},
+                    {"business_contact_method", "CALL"},
                 };
-
+                var edit = await GetRequestForEditProfileAsync();
+                //{
+                //  "set_public": "false",
+                //  "entry_point": "setting",
+                //  "_csrftoken": "UBPgM6BG1Qr95lO4ofLYpgJXtbVvVnvs",
+                //  "public_phone_contact": "{\"public_phone_number\":\"+989174314006\",\"business_contact_method\":\"CALL\"}",
+                //  "_uid": "7405924766",
+                //  "_uuid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
+                //  "public_email": "ramtinjokar@yahoo.com",
+                //  "category_id": "2700"
+                //}
+                var pub = edit.Value.IsPrivate;
+                
                 var data = new JObject
                 {
-                    {"set_public", "true"},
+                    {"set_public", pub.ToString().ToLower()},
                     {"entry_point", "setting"},
+                    {"_csrftoken", _user.CsrfToken},
                     {"public_phone_contact", publicPhoneContact.ToString(Formatting.None)},
-                    {"public_email", email ?? string.Empty},
-                    {"category_id", categoryId},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
+                    {"public_email", email ?? string.Empty},
+                    {"category_id", categoryId},
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);

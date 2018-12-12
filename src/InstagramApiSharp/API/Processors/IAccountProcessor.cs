@@ -212,7 +212,10 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         Task<IResult<InstaUser>> SwitchToPersonalAccountAsync();
 
-
+        /// <summary>
+        ///     Switch to business account
+        /// </summary>
+        Task<IResult<InstaBusinessUser>> SwitchToBusinessAccountAsync();
 
         #region NOT COMPLETE FUNCTIONS
         /// <summary>
