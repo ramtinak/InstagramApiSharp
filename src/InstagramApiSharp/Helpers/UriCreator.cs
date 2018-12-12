@@ -1976,5 +1976,12 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetUsersLookupUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USERS_LOOKUP, out var instaUri))
+                throw new Exception("Cant create URI for user lookup");
+            return instaUri;
+        }
+
     }
 }

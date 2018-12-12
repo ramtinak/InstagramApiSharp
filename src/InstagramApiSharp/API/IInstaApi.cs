@@ -353,6 +353,11 @@ namespace InstagramApiSharp.API
         /// </returns>
         Task<IResult<InstaTwoFactorLoginInfo>> GetTwoFactorInfoAsync();
         /// <summary>
+        ///     Get user lookup for recovery options
+        /// </summary>
+        /// <param name="usernameOrEmailOrPhoneNumber">Username or email or phone number</param>
+        Task<IResult<InstaUserLookup>> GetRecoveryOptionsAsync(string usernameOrEmailOrPhoneNumber);
+        /// <summary>
         ///     Send recovery code by Username
         /// </summary>
         /// <param name="username">Username</param>

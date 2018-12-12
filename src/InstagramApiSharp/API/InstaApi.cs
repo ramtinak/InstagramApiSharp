@@ -1071,6 +1071,61 @@ namespace InstagramApiSharp.API
         }
 
         /// <summary>
+        ///     Get user lookup for recovery options
+        /// </summary>
+        /// <param name="usernameOrEmailOrPhoneNumber">Username or email or phone number</param>
+        public async Task<IResult<InstaUserLookup>> GetRecoveryOptionsAsync(string usernameOrEmailOrPhoneNumber)
+        {
+            try
+            {
+                var csrfToken = "";
+                if (!string.IsNullOrEmpty(_user.CsrfToken))
+                    csrfToken = _user.CsrfToken;
+                else
+                {
+                    var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                    var cookies =
+                        _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                            .BaseAddress);
+                    _logger?.LogResponse(firstResponse);
+                    csrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
+                }
+                //{
+                //  "_csrftoken": "2D967fFeQvMnUsAPyEWum0yqjo9HxBy9",
+                //  "q": "jalebofun",
+                //  "_uid": "9013775990",
+                //  "guid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
+                //  "device_id": "android-70d6ba15a3d76520",
+                //  "_uuid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
+                //  "directly_sign_in": "true"
+                //}
+                var data = new JObject
+                {
+                    {"_csrftoken", csrfToken},
+                    {"q", usernameOrEmailOrPhoneNumber},
+                    {"guid",  _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id", _deviceInfo.DeviceId},
+                    {"directly_sign_in", "true"},
+                };
+
+                var instaUri = UriCreator.GetUsersLookupUri();
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+
+                var response = await _httpRequestProcessor.SendAsync(request);
+
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<InstaUserLookupResponse>(json);
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.Fail<InstaUserLookup>(obj.Message);
+
+                return Result.Success(ConvertersFabric.Instance.GetUserLookupConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                return Result.Fail<InstaUserLookup>(exception);
+            }
+        }
+        /// <summary>
         ///     Send recovery code by Username
         /// </summary>
         /// <param name="username">Username</param>

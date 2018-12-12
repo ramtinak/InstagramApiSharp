@@ -583,5 +583,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaBlockedUsersConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaUserLookup, InstaUserLookupResponse> GetUserLookupConverter(
+            InstaUserLookupResponse response)
+        {
+            return new InstaUserLookupConverter { SourceObject = response };
+        }
     }
 }
