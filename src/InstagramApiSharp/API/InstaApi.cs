@@ -1520,7 +1520,7 @@ namespace InstagramApiSharp.API
                         msg = j.Message;
                     }
                     catch { }
-                    return Result.UnExpectedResponse<InstaLoginResult>(response, msg + "\t"+ json);
+                    return Result.Fail(msg, InstaLoginResult.Exception);
                 }
 
                 var obj = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyCode>(json);
@@ -1543,7 +1543,7 @@ namespace InstagramApiSharp.API
                         return await LoginAsync(false);
                     }
                 }
-                return Result.UnExpectedResponse<InstaLoginResult>(response, json);
+                return Result.Fail(obj?.Message, InstaLoginResult.Exception);
             }
             catch (Exception ex)
             {
