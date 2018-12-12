@@ -27,6 +27,7 @@ using InstagramApiSharp.Classes.Models;
 using System.Net;
 using System.Net.Sockets;
 using InstagramApiSharp;
+using InstagramApiSharp.Classes.SessionHandlers;
 /////////////////////////////////////////////////////////////////////
 ////////////////////// IMPORTANT NOTE ///////////////////////////////
 // Please check wiki pages for more information:
@@ -96,11 +97,11 @@ namespace ChallengeRequireExample
                 .SetUser(userSession)
                 .UseLogger(new DebugLogger(LogLevel.All))
                 .SetRequestDelay(RequestDelay.FromSeconds(0, 1))
+                .SetSessionHandler(new FileSessionHandler() {FilePath =  StateFile })
                 .Build();
             Text = $"{AppName} Connecting";
-
-            LoadSession();
-
+            //Load session
+            InstaApi.SessionHandler.Load();
             if (!InstaApi.IsUserAuthenticated)
             {
                 var logInResult = await InstaApi.LoginAsync();
@@ -110,7 +111,7 @@ namespace ChallengeRequireExample
                     GetFeedButton.Visible = true;
                     Text = $"{AppName} Connected";
                     // Save session 
-                    SaveSession();
+                    InstaApi.SessionHandler.Save();
                 }
                 else
                 {

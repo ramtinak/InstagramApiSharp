@@ -75,6 +75,13 @@ namespace InstagramApiSharp.API.Builder
         IInstaApiBuilder SetApiVersion(InstaApiVersionType apiVersion);
 
         /// <summary>
+        ///     Set Http request processor
+        /// </summary>
+        /// <param name="httpRequestProcessor">HttpRequestProcessor</param>
+        /// <returns></returns>
+        IInstaApiBuilder SetHttpRequestProcessor(IHttpRequestProcessor httpRequestProcessor);
+
+        /// <summary>
         ///     Set session handler
         /// </summary>
         /// <param name="sessionHandler">Session handler</param>

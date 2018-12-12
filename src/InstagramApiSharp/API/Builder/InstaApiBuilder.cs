@@ -38,7 +38,7 @@ namespace InstagramApiSharp.API.Builder
                 _user = UserSessionData.Empty;
 
             if (_httpClient == null)
-                _httpClient = new HttpClient(_httpHandler) {BaseAddress = new Uri(InstaApiConstants.INSTAGRAM_URL)};
+                _httpClient = new HttpClient(_httpHandler) { BaseAddress = new Uri(InstaApiConstants.INSTAGRAM_URL) };
 
             if (_requestMessage == null)
             {
@@ -54,7 +54,7 @@ namespace InstagramApiSharp.API.Builder
                     AdId = _device.AdId.ToString()
                 };
             }
-            
+
             if (string.IsNullOrEmpty(_requestMessage.Password)) _requestMessage.Password = _user?.Password;
             if (string.IsNullOrEmpty(_requestMessage.Username)) _requestMessage.Username = _user?.UserName;
 
@@ -70,7 +70,7 @@ namespace InstagramApiSharp.API.Builder
                 _apiVersionType = InstaApiVersionType.Version44;
 
             var instaApi = new InstaApi(_user, _logger, _device, _httpRequestProcessor, _apiVersionType.Value);
-            if(_sessionHandler != null)
+            if (_sessionHandler != null)
             {
                 _sessionHandler.InstaApi = instaApi;
                 instaApi.SessionHandler = _sessionHandler;
@@ -190,6 +190,17 @@ namespace InstagramApiSharp.API.Builder
         public IInstaApiBuilder SetSessionHandler(ISessionHandler sessionHandler)
         {
             _sessionHandler = sessionHandler;
+            return this;
+        }
+
+        /// <summary>
+        ///     Set Http request processor
+        /// </summary>
+        /// <param name="httpRequestProcessor">HttpRequestProcessor</param>
+        /// <returns></returns>
+        public IInstaApiBuilder SetHttpRequestProcessor(IHttpRequestProcessor httpRequestProcessor)
+        {
+            _httpRequestProcessor = httpRequestProcessor;
             return this;
         }
 
