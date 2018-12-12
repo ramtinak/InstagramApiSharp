@@ -26,6 +26,7 @@ Imports System.Text.RegularExpressions
 Imports InstagramApiSharp.Classes.Models
 Imports System.Net
 Imports InstagramApiSharp
+Imports InstagramApiSharp.Classes.SessionHandlers
 
 Public Class Form1
 
@@ -56,8 +57,10 @@ Public Class Form1
             .UserName = txtUser.Text,
             .Password = txtPass.Text
         }
+        ' Session handler, set a file path to save/load your state/session data
+        Dim sessionHandler = New FileSessionHandler With {.FilePath = StateFile}
 
-        InstaApi = InstaApiBuilder.CreateBuilder.SetUser(userSession).UseLogger(New DebugLogger(LogLevel.All)).SetRequestDelay(RequestDelay.FromSeconds(0, 1)).Build
+        InstaApi = InstaApiBuilder.CreateBuilder.SetUser(userSession).UseLogger(New DebugLogger(LogLevel.All)).SetRequestDelay(RequestDelay.FromSeconds(0, 1)).SetSessionHandler(sessionHandler).Build
         Text = $"{AppName} Connecting"
         LoadSession()
 
@@ -330,17 +333,18 @@ Public Class Form1
     End Sub
 
     Private Sub LoadSession()
-        Try
-            If File.Exists(StateFile) Then
-                Debug.WriteLine("Loading state from file")
-                Dim fs = File.OpenRead(StateFile)
-                InstaApi.LoadStateDataFromStream(fs)
-            End If
+        InstaApi.SessionHandler.Load()
+        '' Old load session
+        'Try
+        '    If File.Exists(StateFile) Then
+        '        Debug.WriteLine("Loading state from file")
+        '        Dim fs = File.OpenRead(StateFile)
+        '        InstaApi.LoadStateDataFromStream(fs)
+        '    End If
 
-        Catch ex As Exception
-            Debug.WriteLine(ex)
-        End Try
-
+        'Catch ex As Exception
+        '    Debug.WriteLine(ex)
+        'End Try
     End Sub
 
     Private Sub SaveSession()
@@ -351,11 +355,12 @@ Public Class Form1
         If Not InstaApi.IsUserAuthenticated Then
             Return
         End If
-
-        Dim state = InstaApi.GetStateDataAsStream
-        Dim fileStream = File.Create(StateFile)
-        state.Seek(0, SeekOrigin.Begin)
-        state.CopyTo(fileStream)
+        InstaApi.SessionHandler.Save()
+        '' Old save session
+        'Dim state = InstaApi.GetStateDataAsStream
+        'Dim fileStream = File.Create(StateFile)
+        'state.Seek(0, SeekOrigin.Begin)
+        'state.CopyTo(fileStream)
     End Sub
 
 End Class
