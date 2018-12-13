@@ -4,6 +4,7 @@ using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Logger;
 using System;
 using InstagramApiSharp.Enums;
+using InstagramApiSharp.Classes.SessionHandlers;
 
 namespace InstagramApiSharp.API.Builder
 {
@@ -72,6 +73,20 @@ namespace InstagramApiSharp.API.Builder
         /// </summary>
         /// <param name="apiVersion">Api version</param>
         IInstaApiBuilder SetApiVersion(InstaApiVersionType apiVersion);
+
+        /// <summary>
+        ///     Set Http request processor
+        /// </summary>
+        /// <param name="httpRequestProcessor">HttpRequestProcessor</param>
+        /// <returns></returns>
+        IInstaApiBuilder SetHttpRequestProcessor(IHttpRequestProcessor httpRequestProcessor);
+
+        /// <summary>
+        ///     Set session handler
+        /// </summary>
+        /// <param name="sessionHandler">Session handler</param>
+        /// <returns></returns>
+        IInstaApiBuilder SetSessionHandler(ISessionHandler sessionHandler);
 
     }
 }

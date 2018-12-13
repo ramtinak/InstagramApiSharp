@@ -27,6 +27,7 @@ using InstagramApiSharp.Classes.Models;
 using System.Net;
 using System.Net.Sockets;
 using InstagramApiSharp;
+using InstagramApiSharp.Classes.SessionHandlers;
 /////////////////////////////////////////////////////////////////////
 ////////////////////// IMPORTANT NOTE ///////////////////////////////
 // Please check wiki pages for more information:
@@ -96,11 +97,12 @@ namespace ChallengeRequireExample
                 .SetUser(userSession)
                 .UseLogger(new DebugLogger(LogLevel.All))
                 .SetRequestDelay(RequestDelay.FromSeconds(0, 1))
+                // Session handler, set a file path to save/load your state/session data
+                .SetSessionHandler(new FileSessionHandler() {FilePath =  StateFile })
                 .Build();
             Text = $"{AppName} Connecting";
-
+            //Load session
             LoadSession();
-
             if (!InstaApi.IsUserAuthenticated)
             {
                 var logInResult = await InstaApi.LoginAsync();
@@ -387,21 +389,24 @@ namespace ChallengeRequireExample
 
         void LoadSession()
         {
-            try
-            {
-                if (File.Exists(StateFile))
-                {
-                    Debug.WriteLine("Loading state from file");
-                    using (var fs = File.OpenRead(StateFile))
-                    {
-                        InstaApi.LoadStateDataFromStream(fs);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
+            InstaApi?.SessionHandler?.Load();
+
+            //// Old load session
+            //try
+            //{
+            //    if (File.Exists(StateFile))
+            //    {
+            //        Debug.WriteLine("Loading state from file");
+            //        using (var fs = File.OpenRead(StateFile))
+            //        {
+            //            InstaApi.LoadStateDataFromStream(fs);
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine(ex);
+            //}
         }
         void SaveSession()
         {
@@ -409,12 +414,15 @@ namespace ChallengeRequireExample
                 return;
             if (!InstaApi.IsUserAuthenticated)
                 return;
-            var state = InstaApi.GetStateDataAsStream();
-            using (var fileStream = File.Create(StateFile))
-            {
-                state.Seek(0, SeekOrigin.Begin);
-                state.CopyTo(fileStream);
-            }
+            InstaApi.SessionHandler.Save();
+
+            //// Old save session 
+            //var state = InstaApi.GetStateDataAsStream();
+            //using (var fileStream = File.Create(StateFile))
+            //{
+            //    state.Seek(0, SeekOrigin.Begin);
+            //    state.CopyTo(fileStream);
+            //}
         }
 
     }

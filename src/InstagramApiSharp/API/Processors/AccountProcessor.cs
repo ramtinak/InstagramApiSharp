@@ -23,6 +23,7 @@ using InstagramApiSharp.Classes.Models;
 using System.Net;
 using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Enums;
+using InstagramApiSharp.Classes.ResponseWrappers.Business;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -1066,8 +1067,124 @@ namespace InstagramApiSharp.API.Processors
         }
         #endregion two factor authentication enable/disable
 
+        /// <summary>
+        ///     Switch to personal account
+        /// </summary>
+        public async Task<IResult<InstaUser>> SwitchToPersonalAccountAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetConvertToPersonalAccountUri();
+                var data = new JObject
+                {
+                    { "_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                };
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUser>(response, json);
 
+                var obj = JsonConvert.DeserializeObject<InstaUserContainerResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetUserConverter(obj.User).Convert());
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUser>(exception);
+            }
+        }
+        
+        /// <summary>
+        ///     Switch to business account
+        /// </summary>
+        public async Task<IResult<InstaBusinessUser>> SwitchToBusinessAccountAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetConvertToBusinessAccountUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
 
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
+            }
+        }
+        /// <summary>
+        ///    [NOT WORKING] Set contact information for business account
+        /// </summary>
+        /// <param name="categoryId">Category id (Use <see cref="IBusinessProcessor.GetCategoriesAsync"/> to get category id)</param>
+        /// <param name="phoneNumber">Phone number</param>
+        /// <param name="email">Email address</param>
+        public async Task<IResult<InstaBusinessUser>> SetBusinessInfoAsync(string categoryId, string phoneNumber, string email)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                //[NOT WORKING]
+                var instaUri = UriCreator.GetCreateBusinessInfoUri();
+                
+                var publicPhoneContact = new JObject
+                {
+                    {"public_phone_number", phoneNumber},
+                    {"business_contact_method", "CALL"},
+                };
+                var edit = await GetRequestForEditProfileAsync();
+                //{
+                //  "set_public": "false",
+                //  "entry_point": "setting",
+                //  "_csrftoken": "UBPgM6BG1Qr95lO4ofLYpgJXtbVvVnvs",
+                //  "public_phone_contact": "{\"public_phone_number\":\"+989174314006\",\"business_contact_method\":\"CALL\"}",
+                //  "_uid": "7405924766",
+                //  "_uuid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
+                //  "public_email": "ramtinjokar@yahoo.com",
+                //  "category_id": "2700"
+                //}
+                var pub = edit.Value.IsPrivate;
+                
+                var data = new JObject
+                {
+                    {"set_public", pub.ToString().ToLower()},
+                    {"entry_point", "setting"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"public_phone_contact", publicPhoneContact.ToString(Formatting.None)},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"public_email", email ?? string.Empty},
+                    {"category_id", categoryId},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBusinessUser>(response, json);
+                //{"message": "Business details are malformed", "error_identifier": "BUSINESS_ID", "status": "fail"}
+                //{"message": "Can not convert to business, Try again later", "error_identifier": "CANNOT_CONVERT", "status": "fail"}
+                var obj = JsonConvert.DeserializeObject<InstaBusinessUserContainerResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetBusinessUserConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBusinessUser>(exception);
+            }
+        }
 
         #region NOT COMPLETE FUNCTIONS
         //NOT COMPLETE

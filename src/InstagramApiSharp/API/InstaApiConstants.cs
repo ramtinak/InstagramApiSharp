@@ -134,7 +134,7 @@ namespace InstagramApiSharp.API
         public const string ACCOUNTS_REGEN_BACKUP_CODES = API_SUFFIX + "/accounts/regen_backup_codes/";
         public const string ACCOUNTS_REMOVE_PROFILE_PICTURE = API_SUFFIX + "/accounts/remove_profile_picture/";
         public const string ACCOUNTS_REQUEST_PROFILE_EDIT = API_SUFFIX + "/accounts/current_user/?edit=true";
-        public const string ACCOUNTS_SECURITY_INFO = API_SUFFIX + "accounts/account_security_info/";
+        public const string ACCOUNTS_SECURITY_INFO = API_SUFFIX + "/accounts/account_security_info/";
         public const string ACCOUNTS_SEND_CONFIRM_EMAIL = API_SUFFIX + "/accounts/send_confirm_email/";
         public const string ACCOUNTS_SEND_RECOVERY_EMAIL = API_SUFFIX + "/accounts/send_recovery_flow_email/";
         public const string ACCOUNTS_SEND_SIGNUP_SMS_CODE = API_SUFFIX + "/accounts/send_signup_sms_code/";
@@ -151,6 +151,8 @@ namespace InstagramApiSharp.API
         public const string CURRENTUSER = API_SUFFIX + "/accounts/current_user?edit=true";
         public const string SET_ACCOUNT_PRIVATE = API_SUFFIX + "/accounts/set_private/";
         public const string SET_ACCOUNT_PUBLIC = API_SUFFIX + "/accounts/set_public/";
+        public const string ACCOUNTS_CONVERT_TO_PERSONAL = API_SUFFIX + "/accounts/convert_to_personal/";
+        public const string ACCOUNTS_CREATE_BUSINESS_INFO = API_SUFFIX + "/accounts/create_business_info/";
 
         #endregion Account endpoint constants
 
@@ -166,6 +168,7 @@ namespace InstagramApiSharp.API
         public const string BUSINESS_BRANDED_GET_SETTINGS = API_SUFFIX + "/business/branded_content/get_whitelist_settings/";
         public const string BUSINESS_BRANDED_USER_SEARCH = API_SUFFIX + "/users/search/?q={0}&count={1}&branded_content_creator_only=true";
         public const string BUSINESS_BRANDED_UPDATE_SETTINGS = API_SUFFIX + "/business/branded_content/update_whitelist_settings/";
+        public const string BUSINESS_CONVERT_TO_BUSINESS_ACCOUNT = API_SUFFIX + "/business_conversion/get_business_convert_social_context/";
 
         #endregion Business endpoints constants
 
@@ -540,6 +543,7 @@ namespace InstagramApiSharp.API
         public const string USERS_FOLLOWING_TAG_INFO = API_SUFFIX + "/users/{0}/following_tags_info/";
         public const string USERS_FULL_DETAIL_INFO = API_SUFFIX + "/users/{0}/full_detail_info/";
         public const string USERS_NAMETAG_LOOKUP = API_SUFFIX + "/users/nametag_lookup/";
+        public const string USERS_BLOCKED_LIST = API_SUFFIX + "/users/blocked_list/";
 
         #endregion Users endpoints constants
 

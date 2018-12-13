@@ -150,7 +150,7 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get list of users that blocked from seeing your stories
         /// </summary>
-        public async Task<IResult<InstaUserShortList>> GetBlockedStorySharingUsersStory()
+        public async Task<IResult<InstaUserShortList>> GetBlockedUsersFromStoriesAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             var list = new InstaUserShortList();

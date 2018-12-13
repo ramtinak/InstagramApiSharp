@@ -1945,5 +1945,43 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for media info by multiple media ids");
             return instaUri;
         }
+
+        public static Uri GetBlockedUsersUri(string maxId = "")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USERS_BLOCKED_LIST, out var instaUri))
+                throw new Exception("Cant create URI for blocked users");
+            return !string.IsNullOrEmpty(maxId)
+                ? new UriBuilder(instaUri) { Query = $"max_id={maxId}" }.Uri
+                : instaUri;
+        }
+
+        public static Uri GetConvertToPersonalAccountUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_CONVERT_TO_PERSONAL, out var instaUri))
+                throw new Exception("Cant create URI for account convert to personal account");
+            return instaUri;
+        }
+
+        public static Uri GetCreateBusinessInfoUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_CREATE_BUSINESS_INFO, out var instaUri))
+                throw new Exception("Cant create URI for account create business info");
+            return instaUri;
+        }
+
+        public static Uri GetConvertToBusinessAccountUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.BUSINESS_CONVERT_TO_BUSINESS_ACCOUNT, out var instaUri))
+                throw new Exception("Cant create URI for convert to business account");
+            return instaUri;
+        }
+
+        public static Uri GetUsersLookupUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USERS_LOOKUP, out var instaUri))
+                throw new Exception("Cant create URI for user lookup");
+            return instaUri;
+        }
+
     }
 }

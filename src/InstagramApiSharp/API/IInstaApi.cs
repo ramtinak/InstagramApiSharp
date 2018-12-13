@@ -19,6 +19,7 @@ using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Enums;
+using InstagramApiSharp.Classes.SessionHandlers;
 
 namespace InstagramApiSharp.API
 {
@@ -95,6 +96,12 @@ namespace InstagramApiSharp.API
         ///     Shopping and commerce api functions
         /// </summary>
         IShoppingProcessor ShoppingProcessor { get; }
+
+        /// <summary>
+        ///     Session handler
+        /// </summary>
+        ISessionHandler SessionHandler { get; set; }
+
         #endregion
 
         #region State data
@@ -115,6 +122,16 @@ namespace InstagramApiSharp.API
         /// <returns>
         ///     State data
         /// </returns>
+        /// 
+
+        ///<summary>
+        ///     Get current state as StateData object
+        /// </summary>
+        /// <returns>
+        ///     State data object
+        /// </returns>
+        StateData GetStateDataAsObject();
+            
         Task<string> GetStateDataAsStringAsync();
         /// <summary>
         ///     Get current state info as Memory stream asynchronously
@@ -132,11 +149,18 @@ namespace InstagramApiSharp.API
         /// <summary>
         ///     Set state data from provided stream asynchronously
         /// </summary>
+
+        /// <summary>
+        ///     Set state data from object
+        /// </summary>
+        void LoadStateDataFromObject(StateData stateData);
+
         Task LoadStateDataFromStreamAsync(Stream stream);
         /// <summary>
         ///     Set state data from provided json string asynchronously
         /// </summary>
         Task LoadStateDataFromStringAsync(string json);
+
 
         #endregion State data
 
@@ -328,6 +352,11 @@ namespace InstagramApiSharp.API
         ///     required, if not, don't run this method
         /// </returns>
         Task<IResult<InstaTwoFactorLoginInfo>> GetTwoFactorInfoAsync();
+        /// <summary>
+        ///     Get user lookup for recovery options
+        /// </summary>
+        /// <param name="usernameOrEmailOrPhoneNumber">Username or email or phone number</param>
+        Task<IResult<InstaUserLookup>> GetRecoveryOptionsAsync(string usernameOrEmailOrPhoneNumber);
         /// <summary>
         ///     Send recovery code by Username
         /// </summary>

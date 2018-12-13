@@ -49,8 +49,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "userdebug",
                     HardwareManufacturer = "LGE",
                     HardwareModel = "LG-LS970",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -71,8 +71,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "asus",
                     HardwareModel = "Nexus 7",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -93,8 +93,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "asus",
                     HardwareModel = "Nexus 7",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -115,8 +115,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "HTC",
                     HardwareModel = "HTC 10",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -137,8 +137,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "samsung",
                     HardwareModel = "samsungexynos7420",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -159,8 +159,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "samsung",
                     HardwareModel = "SM-G900F",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -181,8 +181,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "LGE",
                     HardwareModel = "LG-D500",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -203,8 +203,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "LGE",
                     HardwareModel = "Nexus 5X",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -226,8 +226,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "samsung",
                     HardwareModel = "SM-G935T",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -248,8 +248,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "Sony",
                     HardwareModel = "E6653",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -270,8 +270,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "samsung",
                     HardwareModel = "SGH-I337M",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -292,8 +292,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "Huawei",
                     HardwareModel = "Nexus 6P",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -314,8 +314,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "Sony",
                     HardwareModel = "SO-02G",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -337,8 +337,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "samsung",
                     HardwareModel = "SM-T310",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -359,8 +359,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "LGE",
                     HardwareModel = "Nexus 5",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -381,8 +381,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "samsung",
                     HardwareModel = "SM-N915W8",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -403,8 +403,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "userdebug",
                     HardwareManufacturer = "LGE",
                     HardwareModel = "Nexus 4",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -425,8 +425,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "samsung",
                     HardwareModel = "SM-N900P",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -447,8 +447,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     FirmwareType = "user",
                     HardwareManufacturer = "samsung",
                     HardwareModel = "SM-T705",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1440x2560",
                     Dpi = "640dpi"
                 }
@@ -464,8 +464,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     DeviceModelIdentifier = "PRA-LA1",
                     FirmwareBrand = "HWPRA-H",
                     HardwareModel = "hi6250",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1080x1812",
                     Dpi = "480dpi",
                     FirmwareFingerprint = "HUAWEI/HONOR/PRA-LA1:7.0/hi6250/95414346:user/release-keys",
@@ -486,8 +486,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     DeviceModelIdentifier = "4W",
                     FirmwareBrand = "4W",
                     HardwareModel = "cancro",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1080x1920",
                     Dpi = "480dpi",
                     FirmwareFingerprint = "Xiaomi/MI/4W:7.1/cancro/95414346:user/release-keys",
@@ -508,8 +508,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     DeviceModelIdentifier = "1SW",
                     FirmwareBrand = "1SW",
                     HardwareModel = "armani",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "720x1280",
                     Dpi = "320dpi",
                     FirmwareFingerprint = "Xiaomi/HM/1SW:6.0/cancro/95414346:user/release-keys",
@@ -530,8 +530,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                     DeviceModelIdentifier = "Plus",
                     FirmwareBrand = "Plus",
                     HardwareModel = "A3010",
-                    DeviceGuid = new Guid(),
-                    PhoneGuid = new Guid(),
+                    DeviceGuid = Guid.NewGuid(),
+                    PhoneGuid = Guid.NewGuid(),
                     Resolution = "1080x1920",
                     Dpi = "380dpi",
                     FirmwareFingerprint = "Htc/One/Plus:6.0/cancro/95414346:user/release-keys",

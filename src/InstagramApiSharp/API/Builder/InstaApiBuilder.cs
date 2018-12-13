@@ -4,6 +4,8 @@ using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Logger;
 using InstagramApiSharp.Enums;
+using InstagramApiSharp.Classes.SessionHandlers;
+
 namespace InstagramApiSharp.API.Builder
 {
     public class InstaApiBuilder : IInstaApiBuilder
@@ -17,6 +19,8 @@ namespace InstagramApiSharp.API.Builder
         private ApiRequestMessage _requestMessage;
         private UserSessionData _user;
         private InstaApiVersionType? _apiVersionType;
+        private ISessionHandler _sessionHandler;
+
         private InstaApiBuilder()
         {
         }
@@ -34,7 +38,7 @@ namespace InstagramApiSharp.API.Builder
                 _user = UserSessionData.Empty;
 
             if (_httpClient == null)
-                _httpClient = new HttpClient(_httpHandler) {BaseAddress = new Uri(InstaApiConstants.INSTAGRAM_URL)};
+                _httpClient = new HttpClient(_httpHandler) { BaseAddress = new Uri(InstaApiConstants.INSTAGRAM_URL) };
 
             if (_requestMessage == null)
             {
@@ -66,6 +70,11 @@ namespace InstagramApiSharp.API.Builder
                 _apiVersionType = InstaApiVersionType.Version44;
 
             var instaApi = new InstaApi(_user, _logger, _device, _httpRequestProcessor, _apiVersionType.Value);
+            if (_sessionHandler != null)
+            {
+                _sessionHandler.InstaApi = instaApi;
+                instaApi.SessionHandler = _sessionHandler;
+            }
             return instaApi;
         }
 
@@ -172,6 +181,29 @@ namespace InstagramApiSharp.API.Builder
             _apiVersionType = apiVersion;
             return this;
         }
+
+        /// <summary>
+        ///     Set session handler
+        /// </summary>
+        /// <param name="sessionHandler">Session handler</param>
+        /// <returns></returns>
+        public IInstaApiBuilder SetSessionHandler(ISessionHandler sessionHandler)
+        {
+            _sessionHandler = sessionHandler;
+            return this;
+        }
+
+        /// <summary>
+        ///     Set Http request processor
+        /// </summary>
+        /// <param name="httpRequestProcessor">HttpRequestProcessor</param>
+        /// <returns></returns>
+        public IInstaApiBuilder SetHttpRequestProcessor(IHttpRequestProcessor httpRequestProcessor)
+        {
+            _httpRequestProcessor = httpRequestProcessor;
+            return this;
+        }
+
         /// <summary>
         ///     Creates the builder.
         /// </summary>

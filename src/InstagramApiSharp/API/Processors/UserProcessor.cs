@@ -117,6 +117,54 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get blocked users
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaUserShortList" />
+        /// </returns>
+        public async Task<IResult<InstaUserShortList>> GetBlockedUsersAsync(PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                InstaUserShortList Convert(InstaBlockedUsersResponse instaBlockedUsers)
+                {
+                    return ConvertersFabric.Instance.GetBlockedUsersConverter(instaBlockedUsers).Convert();
+                }
+                var blockedUsersResponse = await GetBlockedUsers(paginationParameters?.NextMaxId);
+                if (!blockedUsersResponse.Succeeded)
+                    return Result.Fail(blockedUsersResponse.Info, Convert(blockedUsersResponse.Value));
+
+                paginationParameters.NextMaxId = blockedUsersResponse.Value.MaxId;
+
+                paginationParameters.PagesLoaded++;
+                while (!string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var moreUsers = await GetBlockedUsers(paginationParameters.NextMaxId);
+                    if (!moreUsers.Succeeded)
+                        return Result.Fail(moreUsers.Info, Convert(blockedUsersResponse.Value));
+
+                    blockedUsersResponse.Value.BlockedList.AddRange(moreUsers.Value.BlockedList);
+                    blockedUsersResponse.Value.PageSize = moreUsers.Value.PageSize;
+                    blockedUsersResponse.Value.BigList = moreUsers.Value.BigList;
+                    blockedUsersResponse.Value.MaxId = paginationParameters.NextMaxId = moreUsers.Value.MaxId;
+                    paginationParameters.PagesLoaded++;
+                }
+                return Result.Success(Convert(blockedUsersResponse.Value));
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUserShortList>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Get currently logged in user info asynchronously
         /// </summary>
         /// <returns>
@@ -370,12 +418,13 @@ namespace InstagramApiSharp.API.Processors
                 {
                     var moreSuggestions = await GetSuggestionUsers(paginationParameters);
                     if (!moreSuggestions.Succeeded)
-                        return Result.Fail(moreSuggestions.Info, Convert(moreSuggestions.Value));
+                        return Result.Fail(moreSuggestions.Info, Convert(suggestionsResponse.Value));
 
                     suggestionsResponse.Value.NewSuggestedUsers.Suggestions.AddRange(moreSuggestions.Value.NewSuggestedUsers.Suggestions);
                     suggestionsResponse.Value.SuggestedUsers.Suggestions.AddRange(moreSuggestions.Value.SuggestedUsers.Suggestions);
                     suggestionsResponse.Value.MoreAvailable = moreSuggestions.Value.MoreAvailable;
                     suggestionsResponse.Value.MaxId = paginationParameters.NextMaxId = moreSuggestions.Value.MaxId;
+                    paginationParameters.PagesLoaded++;
                 }
                 return Result.Success(Convert(suggestionsResponse.Value));
             }
@@ -1102,6 +1151,28 @@ namespace InstagramApiSharp.API.Processors
             }
 
             return Result.Success(activityFeed);
+        }
+
+        private async Task<IResult<InstaBlockedUsersResponse>> GetBlockedUsers(string maxId)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetBlockedUsersUri(maxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaBlockedUsersResponse>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaBlockedUsersResponse>(json);
+                return Result.Success(obj);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaBlockedUsersResponse>(exception);
+            }
         }
 
         private async Task<IResult<InstaSuggestionUserContainerResponse>> GetSuggestionUsers(PaginationParameters paginationParameters)

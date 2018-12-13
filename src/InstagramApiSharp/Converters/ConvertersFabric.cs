@@ -577,5 +577,53 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaProductInfoConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaUserShortList, InstaBlockedUsersResponse> GetBlockedUsersConverter(
+            InstaBlockedUsersResponse response)
+        {
+            return new InstaBlockedUsersConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaUserLookup, InstaUserLookupResponse> GetUserLookupConverter(
+            InstaUserLookupResponse response)
+        {
+            return new InstaUserLookupConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaAudio, InstaAudioResponse> GetAudioConverter(
+            InstaAudioResponse response)
+        {
+            return new InstaAudioConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaVoice, InstaVoiceResponse> GetVoiceConverter(
+            InstaVoiceResponse response)
+        {
+            return new InstaVoiceConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaVoiceMedia, InstaVoiceMediaResponse> GetVoiceMediaConverter(
+            InstaVoiceMediaResponse response)
+        {
+            return new InstaVoiceMediaConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaAnimatedImage, InstaAnimatedImageResponse> GetAnimatedImageConverter(
+            InstaAnimatedImageResponse response)
+        {
+            return new InstaAnimatedImageConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaAnimatedImageMedia, InstaAnimatedImageMediaResponse> GetAnimatedImageMediaConverter(
+            InstaAnimatedImageMediaResponse response)
+        {
+            return new InstaAnimatedImageMediaConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaAnimatedImageUser, InstaAnimatedImageUserResponse> GetAnimatedImageUserConverter(
+            InstaAnimatedImageUserResponse response)
+        {
+            return new InstaAnimatedImageUserConverter { SourceObject = response };
+        }
     }
 }

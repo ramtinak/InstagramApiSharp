@@ -15,8 +15,10 @@
         Profile = 10,
         Location = 11,
         /// <summary>
-        /// Instagram TV video share type
+        ///     Instagram TV video share type
         /// </summary>
-        FelixShare
+        FelixShare = 12,
+        VoiceMedia = 13,
+        AnimatedMedia = 14
     }
 }

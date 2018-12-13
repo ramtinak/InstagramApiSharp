@@ -195,7 +195,22 @@ namespace InstagramApiSharp.Converters
                 }
                 catch { }
             }
-
+            else if (threadItem.ItemType == InstaDirectThreadItemType.VoiceMedia && SourceObject.VoiceMedia != null)
+            {
+                try
+                {
+                    threadItem.VoiceMedia = ConvertersFabric.Instance.GetVoiceMediaConverter(SourceObject.VoiceMedia).Convert();
+                }
+                catch { }
+            }
+            else if (threadItem.ItemType == InstaDirectThreadItemType.AnimatedMedia && SourceObject.AnimatedMedia != null)
+            {
+                try
+                {
+                    threadItem.AnimatedMedia = ConvertersFabric.Instance.GetAnimatedImageConverter(SourceObject.AnimatedMedia).Convert();
+                }
+                catch { }
+            }
             return threadItem;
         }
     }
