@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.6.2</Version>
-    <AssemblyVersion>1.1.6.2</AssemblyVersion>
-    <FileVersion>1.1.6.2</FileVersion>
+    <Version>1.1.6.3</Version>
+    <AssemblyVersion>1.1.6.3</AssemblyVersion>
+    <FileVersion>1.1.6.3</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,16 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.6.2
+    <PackageReleaseNotes>1.1.6.3
+-Fixed Recent activities return following activities
+-Add animated image (gif) message support to direct thread itemm 
+-Add voice message support to direct thread item 
+-Update all android devices
+-add GetRecoveryOptionsAsync to IInstaApi
+-Add SwitchToBusinessAccountAsync
+-Add SwitchToPersonalAccountAsync to AccountProcessor
+
+v1.1.6.2
 - [Fix] A change in builder to made it IoC/DI compatible
 
 v1.1.6.1
