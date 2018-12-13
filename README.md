@@ -85,6 +85,18 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+1.1.6.3
+- Fixed Recent activities return following activities
+- Add animated image (gif) message support to direct thread itemm 
+- Add voice message support to direct thread item 
+- Update all android devices
+- Add GetRecoveryOptionsAsync to IInstaApi
+- Add SwitchToBusinessAccountAsync
+- Add SwitchToPersonalAccountAsync to AccountProcessor
+
+v1.1.6.2
+- [Fix] A change in builder to made it IoC/DI compatible
+
 v1.1.6.1
 - [Bugfix] for GetFollowingRecentActivityFeedAsync pagination [now works correctly]
 - [Add] new UploadAlbumAsync (check [#95 issue](https://github.com/ramtinak/InstagramApiSharp/issues/95))
