@@ -5,7 +5,7 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.2.0.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.2.0.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -85,6 +85,24 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.2.0.1
+- [Bugfix] for recent activities return following activities
+
+v1.2.0
+- [Add] ISessionHandler for save/load session to IInstaApiBuilder (thx to [@estgold](https://github.com/estgold) for PR)
+- [Bugfix] for GetSecuritySettingsInfoAsync
+- [Add] GetBlockedUsersAsync to UserProcessor
+- [Add] SwitchToPersonalAccountAsync to AccountProcessor
+- [Add] SetHttpRequestProccesor in IInstaApiBuilder (thx to [@estgold](https://github.com/estgold) for PR)
+- [Add] GetRecoveryOptionsAsync to IInstaApi
+- [Bugfix] for VerifyCodeForChallengeRequireAsync
+- [Rename] GetBlockedStorySharingUsersStory to GetBlockedUsersFromStoriesAsync
+- [Add] voice message support to direct thread item (Api version v74 or newer is required => `InstaApi.SetApiVersion(InstaApiVersionType.Version74)`)
+- [Add] animated image (gif) message support to direct thread item (Api version v74 or newer is required => `InstaApi.SetApiVersion(InstaApiVersionType.Version74)`)
+
+v1.1.6.2
+- [Update] A change in builder to made it IoC/DI compatible
+
 v1.1.6.1
 - [Bugfix] for GetFollowingRecentActivityFeedAsync pagination [now works correctly]
 - [Add] new UploadAlbumAsync (check [#95 issue](https://github.com/ramtinak/InstagramApiSharp/issues/95))
