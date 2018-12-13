@@ -1071,12 +1071,15 @@ namespace InstagramApiSharp.API.Processors
         private async Task<IResult<InstaActivityFeed>> GetRecentActivityInternalAsync(Uri uri,
             PaginationParameters paginationParameters)
         {
-            var result = await GetFollowingActivityWithMaxIdAsync(paginationParameters?.NextMaxId);
-            if (!result.Succeeded)
-                return Result.Fail(result.Info, (InstaActivityFeed)null);
+            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+            var response = await _httpRequestProcessor.SendAsync(request, HttpCompletionOption.ResponseContentRead);
             var activityFeed = new InstaActivityFeed();
-            
-            var feedPage = result.Value;
+            var json = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode != HttpStatusCode.OK)
+                return Result.UnExpectedResponse<InstaActivityFeed>(response, json);
+            var feedPage = JsonConvert.DeserializeObject<InstaRecentActivityResponse>(json,
+                new Converters.Json.InstaRecentActivityConverter());
             activityFeed.IsOwnActivity = feedPage.IsOwnActivity;
             var nextId = feedPage.NextMaxId;
             activityFeed.Items.AddRange(

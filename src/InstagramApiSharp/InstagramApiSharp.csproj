@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.6.1</Version>
-    <AssemblyVersion>1.1.6.1</AssemblyVersion>
-    <FileVersion>1.1.6.1</FileVersion>
+    <Version>1.1.6.2</Version>
+    <AssemblyVersion>1.1.6.2</AssemblyVersion>
+    <FileVersion>1.1.6.2</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,10 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.1.6.1
+    <PackageReleaseNotes>v1.1.6.2
+- [Fix] A change in builder to made it IoC/DI compatible
+
+v1.1.6.1
 - [Bugfix] for GetFollowingRecentActivityFeedAsync pagination [now works correctly]
 - [Add] new UploadAlbumAsync (check #95 issue)
 - [Add] GetBlockedMediasAsync to MediaProcessor
@@ -107,74 +110,7 @@ v1.1.4.0
 - [Add] MarkStoryAsSeenAsync to StoryProcessor
 - [Add] GetHighlightMediasAsync to StoryProcessor
 - [Add] ReplyToStoryAsync to StoryProcessor
-- [Bugfix] for Result.GetResponseType
-
-v1.1.3.8
-- [Add] ProfileContextIds to InstaUserInfo
-- [Bugfix] For checkpoint issue thx to @Hermaphros for solution
-- [Add] FriendshipStatus to InstaUserInfo
-- [Bugfix] For GetFullUserInfoAsync
-
-v1.1.3.7
-- [Update] SearchUserByLocationAsync
-- [Bugfix] for GetStoryFeedAsync (thx to @iancona for report)
-- [Update] LoginAsync
-- [Add] ActionBlocked to ResponseType
-- Some minor improvements
-
-v1.1.3.6
-- [Bugfix] For GetExploreFeedAsync pagination
-- [Bugfix] For direct reel share
-- [Bugfix] For GetMediaCommentLikersAsync
-- [Update] InstaComment
-- [Update] ShareMediaToThreadAsync
-- [Add] GetRankedRecipientsByUsernameAsync to MessagingProcessor
-- [Add] ShareMediaToUser to MessagingProcessor
-
-v1.1.3.5
-- [Add] Support reel share in direct threads
-- [Add] Remove follower
-- [Add] Translate biography
-- [Add] Translate comments/captions
-- [Add] Search places (in facebook)
-- [Bugfix] For SetApiVersion
-
-v1.1.3.4
-- [Update] Microsoft.NETCore.UniversalWindowsPlatform (uwp)
-
-v1.1.3.3
-- [Bugfix] For direct inbox/thread/pending
-
-v1.1.3.2
-- [Add] StoryFeedMedia and ShowOneTapTooltip to InstaStoryItem
-- [Add] Get user from nametag image
-- [Add] Upload nametag image
-- [Add] PaginationParameters to GetDirectInboxAsync
-- [Add] PaginationParameters to GetDirectInboxThreadAsync
-- [Add] PaginationParameters to GetPendingDirectAsync
-
-v1.1.3.1
-- [Add] Get branded content approval to BusinessProcessor
-- [Add] Search branded users to BusinessProcessor
-- [Add] Enable/disable branded approval to BusinessProcessor
-- [Add] Remove/add users to branded whitelist to BusinessProcessor
-- [Add] Add users to group threads
-- [Bugfix] For uploading photo/video/album
-
-v1.1.3.0
-- [Add] Suggested users
-- [Add] Follow/Unfollow hashtags
-- [Add] Get stories of an hashtag
-- [Add] Get recent hashtag medias
-- [Add] Get ranked hashtag medias
-- [Add] Sync phone contact
-- [Add] Get direct users presence
-- [Add] Get friendship status for multiple ids
-- [Add] Get suggested hashtags
-- [Add] Get following hashtags information
-- [Add] Get suggestion details
-- [Add] Get highlights archive
-- [Add] Get highlights archive medias</PackageReleaseNotes>
+- [Bugfix] for Result.GetResponseType</PackageReleaseNotes>
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo, igtv</PackageTags>
