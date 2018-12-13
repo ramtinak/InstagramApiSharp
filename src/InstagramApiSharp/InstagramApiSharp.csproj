@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.2.0.0</Version>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
+    <Version>1.1.6.1</Version>
+    <AssemblyVersion>1.1.6.1</AssemblyVersion>
+    <FileVersion>1.1.6.1</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,19 +38,7 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.2.0
-- [Add] ISessionHandler for save/load session to IInstaApiBuilder (thx to @estgold for PR)
-- [Bugfix] for GetSecuritySettingsInfoAsync
-- [Add] GetBlockedUsersAsync to UserProcessor
-- [Add] SwitchToPersonalAccountAsync to AccountProcessor
-- [Add] SetHttpRequestProccesor in IInstaApiBuilder (thx to @estgold for PR)
-- [Add] GetRecoveryOptionsAsync to IInstaApi
-- [Bugfix] for VerifyCodeForChallengeRequireAsync
-- [Rename] GetBlockedStorySharingUsersStory to GetBlockedUsersFromStoriesAsync
-- [Add] voice message support to direct thread item (Api version v74 or newer is required)
-- [Add] animated image (gif) message support to direct thread item (Api version v74 or newer is required)
-
-v1.1.6.1
+    <PackageReleaseNotes>v1.1.6.1
 - [Bugfix] for GetFollowingRecentActivityFeedAsync pagination [now works correctly]
 - [Add] new UploadAlbumAsync (check #95 issue)
 - [Add] GetBlockedMediasAsync to MediaProcessor

@@ -85,18 +85,6 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
-v1.2.0
-- [Add] ISessionHandler for save/load session to IInstaApiBuilder (thx to [@estgold](https://github.com/estgold) for PR)
-- [Bugfix] for GetSecuritySettingsInfoAsync
-- [Add] GetBlockedUsersAsync to UserProcessor
-- [Add] SwitchToPersonalAccountAsync to AccountProcessor
-- [Add] SetHttpRequestProccesor in IInstaApiBuilder (thx to [@estgold](https://github.com/estgold) for PR)
-- [Add] GetRecoveryOptionsAsync to IInstaApi
-- [Bugfix] for VerifyCodeForChallengeRequireAsync
-- [Rename] GetBlockedStorySharingUsersStory to GetBlockedUsersFromStoriesAsync
-- [Add] voice message support to direct thread item (Api version v74 or newer is required => `InstaApi.SetApiVersion(InstaApiVersionType.Version74)`)
-- [Add] animated image (gif) message support to direct thread item (Api version v74 or newer is required => `InstaApi.SetApiVersion(InstaApiVersionType.Version74)`)
-
 v1.1.6.1
 - [Bugfix] for GetFollowingRecentActivityFeedAsync pagination [now works correctly]
 - [Add] new UploadAlbumAsync (check [#95 issue](https://github.com/ramtinak/InstagramApiSharp/issues/95))
