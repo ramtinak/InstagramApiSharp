@@ -607,5 +607,23 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaVoiceMediaConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaAnimatedImage, InstaAnimatedImageResponse> GetAnimatedImageConverter(
+            InstaAnimatedImageResponse response)
+        {
+            return new InstaAnimatedImageConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaAnimatedImageMedia, InstaAnimatedImageMediaResponse> GetAnimatedImageMediaConverter(
+            InstaAnimatedImageMediaResponse response)
+        {
+            return new InstaAnimatedImageMediaConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaAnimatedImageUser, InstaAnimatedImageUserResponse> GetAnimatedImageUserConverter(
+            InstaAnimatedImageUserResponse response)
+        {
+            return new InstaAnimatedImageUserConverter { SourceObject = response };
+        }
     }
 }

@@ -203,6 +203,14 @@ namespace InstagramApiSharp.Converters
                 }
                 catch { }
             }
+            else if (threadItem.ItemType == InstaDirectThreadItemType.AnimatedMedia && SourceObject.AnimatedMedia != null)
+            {
+                try
+                {
+                    threadItem.AnimatedMedia = ConvertersFabric.Instance.GetAnimatedImageConverter(SourceObject.AnimatedMedia).Convert();
+                }
+                catch { }
+            }
             return threadItem;
         }
     }

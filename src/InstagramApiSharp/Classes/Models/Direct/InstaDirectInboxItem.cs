@@ -53,5 +53,8 @@ namespace InstagramApiSharp.Classes.Models
         public InstaReelShare ReelShareMedia { get; set; }
 
         public InstaVoiceMedia VoiceMedia { get; set; }
+
+        public InstaAnimatedImage AnimatedMedia { get; set; }
+
     }
 }

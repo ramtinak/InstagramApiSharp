@@ -55,5 +55,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("reel_share")] public InstaReelShareResponse ReelShareMedia { get; set; }
 
         [JsonProperty("voice_media")] public InstaVoiceMediaResponse VoiceMedia { get; set; }
+
+        [JsonProperty("animated_media")] public InstaAnimatedImageResponse AnimatedMedia { get; set; }
+
     }
 }
