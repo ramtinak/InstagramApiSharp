@@ -7,12 +7,16 @@
  * IRANIAN DEVELOPERS
  */
 
-using Newtonsoft.Json;
-
-namespace InstagramApiSharp.Classes.ResponseWrappers
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaActionLogResponse
+    public class InstaAudio
     {
-        [JsonProperty("description")] public string Description { get; set; }
+        public string AudioSource { get; set; }
+
+        public double Duration { get; set; }
+
+        public float[] WaveformData { get; set; }
+
+        public int WaveformSamplingFrequencyHz { get; set; }
     }
 }

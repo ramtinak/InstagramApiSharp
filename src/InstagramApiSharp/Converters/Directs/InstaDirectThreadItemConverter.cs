@@ -195,7 +195,14 @@ namespace InstagramApiSharp.Converters
                 }
                 catch { }
             }
-
+            else if (threadItem.ItemType == InstaDirectThreadItemType.VoiceMedia && SourceObject.VoiceMedia != null)
+            {
+                try
+                {
+                    threadItem.VoiceMedia = ConvertersFabric.Instance.GetVoiceMediaConverter(SourceObject.VoiceMedia).Convert();
+                }
+                catch { }
+            }
             return threadItem;
         }
     }

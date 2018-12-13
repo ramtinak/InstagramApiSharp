@@ -7,10 +7,6 @@
  * IRANIAN DEVELOPERS
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace InstagramApiSharp.Enums
 {
     public enum InstaApiVersionType
@@ -24,12 +20,16 @@ namespace InstagramApiSharp.Enums
         /// </summary>
         Version35 = 1,
         /// <summary>
-        ///     Api version 61.0.0.19.86 => Has consent required for unverified accounts.
+        ///     Api version 61.0.0.19.86 => All data like signature key, version code and ... is for v44 except instagram version
         /// </summary>
         Version61 = 2,
         /// <summary>
         ///     Api version 64.0.0.14.96
         /// </summary>
-        Version64 = 3
+        Version64 = 3,
+        /// <summary>
+        ///     Api version 74.0.0.21.99 => All data like signature key, version code and ... is for v64 except instagram version
+        /// </summary>
+        Version74 = 4
     }
 }
