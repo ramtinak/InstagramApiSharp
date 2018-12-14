@@ -1,7 +1,7 @@
 # InstagramApiSharp ![InstagramApiSharp](http://s8.picofile.com/file/8336601292/insta50x.png)
 An complete Private Instagram Api for .NET (C#, VB.NET).
 
-Supports: Create new account, verify account, edit profile, set profile picture and many more...
+Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
@@ -11,10 +11,10 @@ Supports: Create new account, verify account, edit profile, set profile picture 
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
 
 ## Note
-This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharper) with more functions and flexibility.
+This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharper) with more features and new cool things.
 
 ## Install
-Use this library as dll, reference from [NuGet](https://www.nuget.org/packages/InstagramApiSharp/).
+Use this library as dll or reference it from [NuGet](https://www.nuget.org/packages/InstagramApiSharp/).
 
 Nuget package manager command:
 ```
@@ -32,7 +32,7 @@ Note: this library uses [Json.NET v10.0.3 and above](https://www.nuget.org/packa
 | .NET Core(UWP) | 10.0.10240 |
 
 ## Overview
-There's a lot of functions and bug fix me and [NGame1](https://github.com/NGame1) added to this library.
+There are a lot of features and bug fix me and [NGame1](https://github.com/NGame1) and [other contributors](https://github.com/ramtinak/InstagramApiSharp/graphs/contributors) added to this library.
 Check [sample projects](https://github.com/ramtinak/InstagramApiSharp/tree/master/samples) and [wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) to see how it's works.
 
 ## Features
@@ -101,7 +101,7 @@ v1.2.0
 - [Add] animated image (gif) message support to direct thread item (Api version v74 or newer is required => `InstaApi.SetApiVersion(InstaApiVersionType.Version74)`)
 
 v1.1.6.2
-- [Update] A change in builder to made it IoC/DI compatible
+- [Update] A change in builder to made it IoC/DI compatible (thx to [@raminmt](https://github.com/RaminMT) for PR)
 
 v1.1.6.1
 - [Bugfix] for GetFollowingRecentActivityFeedAsync pagination [now works correctly]
@@ -181,6 +181,7 @@ No need to donate.
 Feel free to contribute and submit pull requests.
 
 ## Thanks
+Special thanks to [all contributors](https://github.com/ramtinak/InstagramApiSharp/graphs/contributors)
 Special thanks to [mgp25](https://github.com/mgp25) and his [php wrapper](https://github.com/mgp25/Instagram-API/).
 
 ## Legal
