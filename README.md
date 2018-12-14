@@ -181,7 +181,8 @@ No need to donate.
 Feel free to contribute and submit pull requests.
 
 ## Thanks
-Special thanks to [all contributors](https://github.com/ramtinak/InstagramApiSharp/graphs/contributors)
+Special thanks to [all contributors](https://github.com/ramtinak/InstagramApiSharp/graphs/contributors).
+
 Special thanks to [mgp25](https://github.com/mgp25) and his [php wrapper](https://github.com/mgp25/Instagram-API/).
 
 ## Legal
