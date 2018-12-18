@@ -29,15 +29,8 @@ namespace InstagramApiSharp.Converters.Users
                 {
                     try
                     {
-                        var friend = new InstaFriendshipShortStatus
-                        {
-                            Following = item.Following,
-                            IncomingRequest = item.IncomingRequest,
-                            IsBestie = item.IsBestie,
-                            IsPrivate = item.IsPrivate,
-                            OutgoingRequest = item.OutgoingRequest,
-                            Pk = item.Pk
-                        };
+                        var friend = ConvertersFabric.Instance.GetSingleFriendshipShortStatusConverter(item).Convert();
+                        friend.Pk = item.Pk;
                         friendships.Add(friend);
                     }
                     catch { }

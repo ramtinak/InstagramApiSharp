@@ -446,6 +446,12 @@ namespace InstagramApiSharp.Converters
             return new InstaFriendshipShortStatusListConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaFriendshipShortStatus, InstaFriendshipShortStatusResponse> GetSingleFriendshipShortStatusConverter(
+            InstaFriendshipShortStatusResponse response)
+        {
+            return new InstaFriendshipShortStatusConverter { SourceObject = response };
+        }
+
         public IObjectConverter<InstaUserChaining, InstaUserChainingResponse> GetSingleUserChainingConverter(
             InstaUserChainingResponse response)
         {

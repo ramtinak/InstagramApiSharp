@@ -20,6 +20,6 @@
         public string SearchSocialContext { get; set; }
         public int MutualFollowers { get; set; }
         public int UnseenCount { get; set; }
-        public InstaFriendshipStatus FriendshipStatus { get; set; }
+        public InstaFriendshipShortStatus FriendshipStatus { get; set; }
     }
 }

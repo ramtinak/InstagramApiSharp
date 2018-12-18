@@ -27,7 +27,7 @@ namespace InstagramApiSharp.Converters
             if (SourceObject.FriendshipStatus != null)
             {
                 var freindShipStatusConverter =
-                    ConvertersFabric.Instance.GetFriendShipStatusConverter(SourceObject.FriendshipStatus);
+                    ConvertersFabric.Instance.GetSingleFriendshipShortStatusConverter(SourceObject.FriendshipStatus);
                 user.FriendshipStatus = freindShipStatusConverter.Convert();
             }
 
