@@ -210,6 +210,32 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get blocked users from commenting
+        /// </summary>
+        public async Task<IResult<InstaUserShortList>> GetBlockedCommentersAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetBlockedCommentersUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUserShortList>(response, json);
+                
+                var obj = JsonConvert.DeserializeObject<InstaBlockedCommentersResponse>(json);
+                
+                return Result.Success(ConvertersFabric.Instance.GetBlockedCommentersConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUserShortList>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Get media comments likers
         /// </summary>
         /// <param name="mediaId">Media id</param>

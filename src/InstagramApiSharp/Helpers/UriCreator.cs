@@ -2008,5 +2008,12 @@ namespace InstagramApiSharp.Helpers
             return uriBuilder.Uri;
         }
 
+        public static Uri GetBlockedCommentersUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_GET_BLOCKED_COMMENTERS, out var instaUri))
+                throw new Exception("Cant create URI for blocked commenters");
+            return instaUri;
+        }
+
     }
 }

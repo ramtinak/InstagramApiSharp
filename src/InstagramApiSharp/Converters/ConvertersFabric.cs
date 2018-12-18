@@ -631,5 +631,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaPresenceConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaUserShortList, InstaBlockedCommentersResponse> GetBlockedCommentersConverter(
+            InstaBlockedCommentersResponse response)
+        {
+            return new InstaBlockedCommentersConverter { SourceObject = response };
+        }
     }
 }

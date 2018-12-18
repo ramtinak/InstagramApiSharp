@@ -43,6 +43,11 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> EnableMediaCommentAsync(string mediaId);
 
         /// <summary>
+        ///     Get blocked users from commenting
+        /// </summary>
+        Task<IResult<InstaUserShortList>> GetBlockedCommentersAsync();
+
+        /// <summary>
         ///     Get media comments likers
         /// </summary>
         /// <param name="mediaId">Media id</param>
