@@ -24,7 +24,7 @@ namespace InstagramApiSharp.Converters
 
             var presence = new InstaPresence
             {
-                Disabled = SourceObject.Disabled ?? false,
+                PresenceDisabled = SourceObject.Disabled ?? false,
                 ThreadPresenceDisabled = SourceObject.ThreadPresenceDisabled ?? false
             };
 

@@ -215,6 +215,11 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> EnablePresenceAsync();
 
         /// <summary>
+        ///     Disable presence (people can't track your activities and you can't see their activies too)
+        /// </summary>
+        Task<IResult<bool>> DisablePresenceAsync();
+
+        /// <summary>
         ///     Get presence options (see your presence is disable or not)
         /// </summary>
         Task<IResult<InstaPresence>> GetPresenceOptionsAsync();
@@ -231,11 +236,8 @@ namespace InstagramApiSharp.API.Processors
 
 
         #endregion Other functions
+
         #region NOT COMPLETE FUNCTIONS
-        /// <summary>
-        ///     NOT COMPLETE dastrasi last activity
-        /// </summary>
-        //Task<IResult<object>> DisablePresenceAsync();
         /// <summary>
         ///     NOT COMPLETE dastrasi last activity
         /// </summary>

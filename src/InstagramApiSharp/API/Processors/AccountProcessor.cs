@@ -1070,7 +1070,7 @@ namespace InstagramApiSharp.API.Processors
         #region Other functions
 
         /// <summary>
-        ///     Get presence options (see your presence is disable or not)
+        ///     Enable presence (people can track your activities and you can see their activies too)
         /// </summary>
         public async Task<IResult<bool>> EnablePresenceAsync()
         {
@@ -1078,6 +1078,23 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 return await EnableDisablePresenceAsync(true);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Disable presence (people can't track your activities and you can't see their activies too)
+        /// </summary>
+        public async Task<IResult<bool>> DisablePresenceAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                return await EnableDisablePresenceAsync(false);
             }
             catch (Exception exception)
             {

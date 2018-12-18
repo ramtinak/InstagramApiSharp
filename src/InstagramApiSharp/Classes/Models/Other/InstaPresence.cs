@@ -15,7 +15,7 @@ namespace InstagramApiSharp.Classes.Models
 {
     public class InstaPresence
     {
-        public bool Disabled { get; set; }
+        public bool PresenceDisabled { get; set; }
 
         public bool ThreadPresenceDisabled { get; set; }
     }
