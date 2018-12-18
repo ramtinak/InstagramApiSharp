@@ -91,6 +91,14 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> ReportMediaAsync(string mediaId);
 
         /// <summary>
+        /// <summary>
+        ///     Remove an post from archive list (this will show the post for everyone!)
+        /// </summary>
+        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier"/>)</param>
+        /// <returns>Return true if the media is unarchived</returns>
+        Task<IResult<bool>> UnArchiveMediaAsync(string mediaId);
+
+        /// <summary>
         ///     Remove like from media (photo or video)
         /// </summary>
         /// <param name="mediaId">Media id</param>

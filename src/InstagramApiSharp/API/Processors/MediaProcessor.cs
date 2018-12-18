@@ -459,6 +459,25 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Remove an post from archive list (this will show the post for everyone!)
+        /// </summary>
+        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier"/>)</param>
+        /// <returns>Return true if the media is unarchived</returns>
+        public async Task<IResult<bool>> UnArchiveMediaAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetUnArchiveMediaUri(mediaId));
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Remove like from media (photo or video)
         /// </summary>
         /// <param name="mediaId">Media id</param>

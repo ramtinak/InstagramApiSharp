@@ -477,6 +477,7 @@ namespace InstagramApiSharp.API
         public const string MEDIA_STORY_VIEWERS = API_SUFFIX + "/media/{0}/list_reel_media_viewer/";
         public const string MEDIA_BLOCKED = API_SUFFIX + "/media/blocked/";
         public const string MEDIA_ARCHIVE = API_SUFFIX + "/media/{0}/only_me/";
+        public const string MEDIA_UNARCHIVE = API_SUFFIX + "/media/{0}/undo_only_me/";
 
         #endregion Media endpoints constants
 

@@ -1990,5 +1990,12 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetUnArchiveMediaUri(string mediaId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_UNARCHIVE, mediaId), out var instaUri))
+                throw new Exception("Cant create URI for unarchive an post");
+            return instaUri;
+        }
+
     }
 }
