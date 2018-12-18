@@ -31,6 +31,10 @@ Note: this library uses [Json.NET v10.0.3 and above](https://www.nuget.org/packa
 | .NET Standard | 2.0 |
 | .NET Core(UWP) | 10.0.10240 |
 
+## Donation
+
+Buy me a coffee if you like this project: https://buymeacoff.ee/rXdVTHQkh
+
 ## Overview
 There are a lot of features and bug fix me and [NGame1](https://github.com/NGame1) and [other contributors](https://github.com/ramtinak/InstagramApiSharp/graphs/contributors) added to this library.
 Check [sample projects](https://github.com/ramtinak/InstagramApiSharp/tree/master/samples) and [wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) to see how it's works.
@@ -173,9 +177,6 @@ Do whatever you want to do! Except changing library name!!!!
 
 ## Terms and conditions
 - Use this Api at your own risk.
-
-## Donation
-No need to donate.
 
 ## Contribute
 Feel free to contribute and submit pull requests.
