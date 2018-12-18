@@ -11,9 +11,16 @@ namespace InstagramApiSharp.API.Processors
     public interface IMediaProcessor
     {
         /// <summary>
+        ///     Add an post to archive list (this will show the post only for you!)
+        /// </summary>
+        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier"/>)</param>
+        /// <returns>Return true if the media is archived</returns>
+        Task<IResult<bool>> ArchiveMediaAsync(string mediaId);
+
+        /// <summary>
         ///     Delete a media (photo, video or album)
         /// </summary>
-        /// <param name="mediaId">The media ID</param>
+        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier"/>)</param>
         /// <param name="mediaType">The type of the media</param>
         /// <returns>Return true if the media is deleted</returns>
         Task<IResult<bool>> DeleteMediaAsync(string mediaId, InstaMediaType mediaType);

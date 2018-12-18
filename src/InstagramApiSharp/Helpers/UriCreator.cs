@@ -1983,5 +1983,12 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetArchiveMediaUri(string mediaId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_ARCHIVE, mediaId), out var instaUri))
+                throw new Exception("Cant create URI for archive an post");
+            return instaUri;
+        }
+
     }
 }

@@ -43,10 +43,30 @@ namespace InstagramApiSharp.API.Processors
             _instaApi = instaApi;
             _httpHelper = httpHelper;
         }
+
+        /// <summary>
+        ///     Add an post to archive list (this will show the post only for you!)
+        /// </summary>
+        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier"/>)</param>
+        /// <returns>Return true if the media is archived</returns>
+        public async Task<IResult<bool>> ArchiveMediaAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetArchiveMediaUri(mediaId));
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
         /// <summary>
         ///     Delete a media (photo, video or album)
         /// </summary>
-        /// <param name="mediaId">The media ID</param>
+        /// <param name="mediaId">Media id (<see cref="InstaMedia.InstaIdentifier"/>)</param>
         /// <param name="mediaType">The type of the media</param>
         /// <returns>Return true if the media is deleted</returns>
         public async Task<IResult<bool>> DeleteMediaAsync(string mediaId, InstaMediaType mediaType)
@@ -395,7 +415,7 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                return await LikeUnlikeMediaInternal(mediaId, UriCreator.GetLikeMediaUri(mediaId));
+                return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetLikeMediaUri(mediaId));
             }
             catch (Exception exception)
             {
@@ -447,7 +467,7 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                return await LikeUnlikeMediaInternal(mediaId, UriCreator.GetUnLikeMediaUri(mediaId));
+                return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetUnLikeMediaUri(mediaId));
             }
             catch (Exception exception)
             {
@@ -1407,7 +1427,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<bool>> LikeUnlikeMediaInternal(string mediaId, Uri instaUri)
+        private async Task<IResult<bool>> LikeUnlikeArchiveUnArchiveMediaInternal(string mediaId, Uri instaUri)
         {
             var fields = new Dictionary<string, string>
             {
