@@ -178,6 +178,25 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="threadIds">Thread ids</param>
         /// <returns>Returns True if link sent</returns>
         Task<IResult<bool>> SendDirectLinkAsync(string text, string link, params string[] threadIds);
+        
+        /// <summary>
+        ///     Send link address to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="link">Link to send (only one link will approved)</param>
+        /// <param name="threadIds">Thread ids</param>
+        /// <param name="recipients">Recipients ids</param>
+        /// <returns>Returns True if link sent</returns>
+        Task<IResult<bool>> SendDirectLinkAsync(string text, string link, string[] threadIds, string[] recipients);
+
+        /// <summary>
+        ///     Send link address to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="link">Link to send (only one link will approved)</param>
+        /// <param name="recipients">Thread ids</param>
+        /// <returns>Returns True if link sent</returns>
+        Task<IResult<bool>> SendDirectLinkToRecipientsAsync(string text, string link, params string[] recipients);
 
         /// <summary>
         ///     Send location to direct thread

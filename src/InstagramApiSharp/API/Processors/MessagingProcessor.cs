@@ -399,7 +399,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaDirectInboxContainer>(exception);
             }
         }
-        
+
         /// <summary>
         ///     Get ranked recipients (threads and users) asynchronously
         /// </summary>
@@ -705,6 +705,30 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         /// <param name="threadIds">Thread ids</param>
         public async Task<IResult<bool>> SendDirectLinkAsync(string text, string link, params string[] threadIds)
         {
+            return await SendDirectLinkAsync(text, link, threadIds, null);
+        }
+
+        /// <summary>
+        ///     Send link address to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="link">Link to send</param>
+        /// <param name="recipients">Recipients ids</param>
+        public async Task<IResult<bool>> SendDirectLinkToRecipientsAsync(string text, string link, params string[] recipients)
+        {
+            return await SendDirectLinkAsync(text, link, null, recipients);
+        }
+
+
+        /// <summary>
+        ///     Send link address to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="link">Link to send</param>
+        /// <param name="threadIds">Thread ids</param>
+        /// <param name="recipients">Recipients ids</param>
+        public async Task<IResult<bool>> SendDirectLinkAsync(string text, string link, string[] threadIds, string[] recipients)
+        {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
@@ -715,12 +739,18 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     {"link_text", text},
                     {"link_urls", $"[{ExtensionHelper.EncodeList(new[]{ link })}]"},
                     {"action", "send_item"},
-                    {"thread_ids", $"[{threadIds.EncodeList(false)}]"},
                     {"client_context", clientContext},
                     {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
-
+                if (threadIds?.Length > 0)
+                {
+                    data.Add("thread_ids", $"[{threadIds.EncodeList(false)}]");
+                }
+                if (recipients?.Length > 0)
+                {
+                    data.Add("recipient_users", "[[" + recipients.EncodeList(false) + "]]");
+                }
                 var request =
                     _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -1323,7 +1353,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaDirectInboxThreadResponse>(response, json);
                 var threadResponse = JsonConvert.DeserializeObject<InstaDirectInboxThreadResponse>(json,
