@@ -219,6 +219,52 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        public async Task<IResult<InstaMediaList>> GetArchivedMediaAsync(PaginationParameters paginationParameters)
+        {
+            var mediaList = new InstaMediaList();
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                InstaMediaList Convert(InstaMediaListResponse instaMediaListResponse)
+                {
+                    return ConvertersFabric.Instance.GetMediaListConverter(instaMediaListResponse).Convert();
+                }
+
+                var archivedPostsResult = await GetArchivedMedia(paginationParameters?.NextMaxId);
+                if (!archivedPostsResult.Succeeded)
+                    return Result.Fail(archivedPostsResult.Info, mediaList);
+                var archivedResponse = archivedPostsResult.Value;
+
+                mediaList = Convert(archivedResponse);
+                mediaList.NextMaxId = paginationParameters.NextMaxId = archivedResponse.NextMaxId;
+
+                paginationParameters.PagesLoaded++;
+                while (archivedResponse.MoreAvailable
+                       && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                       && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    paginationParameters.PagesLoaded++;
+                    var nextMedia = await GetArchivedMedia(paginationParameters.NextMaxId);
+                    if (!nextMedia.Succeeded)
+                        return Result.Fail(nextMedia.Info, mediaList);
+                    mediaList.NextMaxId = paginationParameters.NextMaxId = nextMedia.Value.NextMaxId;
+                    mediaList.AddRange(Convert(nextMedia.Value));
+                    paginationParameters.PagesLoaded++;
+                }
+
+                mediaList.Pages = paginationParameters.PagesLoaded;
+                mediaList.PageSize = archivedResponse.ResultsCount;
+                return Result.Success(mediaList);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, mediaList);
+            }
+        }
+
         /// <summary>
         ///     Get blocked medias
         ///     <para>Note: returns media ids!</para>
@@ -1516,6 +1562,26 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        private async Task<IResult<InstaMediaListResponse>> GetArchivedMedia(string nextMaxId)
+        {
+            var mediaList = new InstaMediaList();
+            try
+            {
+                var instaUri = UriCreator.GetArchivedMediaFeedsListUri(nextMaxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaMediaListResponse>(response, json);
+                var archivedResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json);
+                return Result.Success(archivedResponse);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<InstaMediaListResponse>(ex);
+            }
+        }
 
         JObject GetImageConfigure(string uploadId, InstaImageUpload image)
         {

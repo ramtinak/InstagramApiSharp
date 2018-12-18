@@ -1607,10 +1607,10 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
-        public static Uri GetSelfMediaFeedsListUri(string nextId = "")
+        public static Uri GetArchivedMediaFeedsListUri(string nextId = "")
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FEED_ONLY_ME_FEED, out var instaUri))
-                throw new Exception("Cant create URI for self media feeds");
+                throw new Exception("Cant create URI for arhcived media feeds");
             return !string.IsNullOrEmpty(nextId)
                 ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
                 : instaUri;

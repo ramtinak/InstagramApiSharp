@@ -36,6 +36,15 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaMedia>> EditMediaAsync(string mediaId, string caption, InstaLocationShort location = null, InstaUserTagUpload[] userTags = null);
 
         /// <summary>
+        ///     Get archived medias
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        Task<IResult<InstaMediaList>> GetArchivedMediaAsync(PaginationParameters paginationParameters);
+
+        /// <summary>
         ///     Get blocked medias
         ///     <para>Note: returns media ids!</para>
         /// </summary>
