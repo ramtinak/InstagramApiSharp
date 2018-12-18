@@ -1072,6 +1072,23 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get presence options (see your presence is disable or not)
         /// </summary>
+        public async Task<IResult<bool>> EnablePresenceAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                return await EnableDisablePresenceAsync(true);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Get presence options (see your presence is disable or not)
+        /// </summary>
         public async Task<IResult<InstaPresence>> GetPresenceOptionsAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -1213,79 +1230,40 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaBusinessUser>(exception);
             }
         }
-        
+
+
+        private async Task<IResult<bool>> EnableDisablePresenceAsync(bool enable)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetAccountSetPresenseDisabledUri();
+                var data = new JObject
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"disabled", enable ? "0" : "1"},
+                    { "_csrftoken", _user.CsrfToken}
+                };
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
         #endregion Other functions
 
         #region NOT COMPLETE FUNCTIONS
-        //NOT COMPLETE
-        private async Task<IResult<object>> EnablePresenceAsync()
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetAccountSetPresenseDisabledUri();
-                Debug.WriteLine(instaUri.ToString());
 
-                var data = new JObject
-                {
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"disabled", "0"},
-                    { "_csrftoken", _user.CsrfToken}
-                };
-                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-
-                var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(response.StatusCode);
-
-                Debug.WriteLine(json);
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<object>(response, json);
-
-                return null;
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<object>(exception);
-            }
-        }
-
-        //NOT COMPLETE
-        private async Task<IResult<object>> DisablePresenceAsync()
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetAccountSetPresenseDisabledUri();
-                Debug.WriteLine(instaUri.ToString());
-
-                var data = new JObject
-                {
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"disabled", "1"},
-                    { "_csrftoken", _user.CsrfToken}
-                };
-                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-
-                var json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(response.StatusCode);
-                Debug.WriteLine(json);
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<object>(response, json);
-
-
-                return null;
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<object>(exception);
-            }
-        }
 
         //NOT COMPLETE
         private async Task<IResult<object>> GetCommentFilterAsync()

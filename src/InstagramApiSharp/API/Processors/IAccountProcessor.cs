@@ -208,6 +208,12 @@ namespace InstagramApiSharp.API.Processors
         #endregion two factor authentication enable/disable
 
         #region Other functions
+
+        /// <summary>
+        ///     Enable presence (people can track your activities and you can see their activies too)
+        /// </summary>
+        Task<IResult<bool>> EnablePresenceAsync();
+
         /// <summary>
         ///     Get presence options (see your presence is disable or not)
         /// </summary>
@@ -226,10 +232,6 @@ namespace InstagramApiSharp.API.Processors
 
         #endregion Other functions
         #region NOT COMPLETE FUNCTIONS
-        /// <summary>
-        ///     NOT COMPLETE dastrasi last activity
-        /// </summary>
-        //Task<IResult<object>> EnablePresenceAsync();
         /// <summary>
         ///     NOT COMPLETE dastrasi last activity
         /// </summary>
