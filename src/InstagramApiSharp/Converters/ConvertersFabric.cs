@@ -625,5 +625,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaAnimatedImageUserConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaPresence, InstaPresenceResponse> GetPresenceConverter(
+            InstaPresenceResponse response)
+        {
+            return new InstaPresenceConverter { SourceObject = response };
+        }
     }
 }

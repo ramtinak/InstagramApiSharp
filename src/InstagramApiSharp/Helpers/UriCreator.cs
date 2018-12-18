@@ -1997,5 +1997,16 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetPresenceUri(string signedKey)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_GET_PRESENCE, out var instaUri))
+                throw new Exception("Cant create URI for get presence disabled");
+            //?signed_body=b941ff07b83716087710019790b3529ab123c8deabfb216e056651e9cf4b4ca7.{}&ig_sig_key_version=4
+            var signedBody = signedKey + ".{}";
+            var query = $"{InstaApiConstants.HEADER_IG_SIGNATURE}={signedBody}&{InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION}={InstaApiConstants.IG_SIGNATURE_KEY_VERSION}";
+            var uriBuilder = new UriBuilder(instaUri) { Query = query };
+            return uriBuilder.Uri;
+        }
+
     }
 }

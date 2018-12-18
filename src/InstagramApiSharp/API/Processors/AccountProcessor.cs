@@ -1067,6 +1067,34 @@ namespace InstagramApiSharp.API.Processors
         }
         #endregion two factor authentication enable/disable
 
+        #region Other functions
+
+        /// <summary>
+        ///     Get presence options (see your presence is disable or not)
+        /// </summary>
+        public async Task<IResult<InstaPresence>> GetPresenceOptionsAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetPresenceUri(_httpHelper._apiVersion.SignatureKey);
+                
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaPresence>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaPresenceResponse>(json);
+
+                return Result.Success(ConvertersFabric.Instance.GetPresenceConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaPresence>(exception);
+            }
+        }
+
         /// <summary>
         ///     Switch to personal account
         /// </summary>
@@ -1185,6 +1213,8 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaBusinessUser>(exception);
             }
         }
+        
+        #endregion Other functions
 
         #region NOT COMPLETE FUNCTIONS
         //NOT COMPLETE
