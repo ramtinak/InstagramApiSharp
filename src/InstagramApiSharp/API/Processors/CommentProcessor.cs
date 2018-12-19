@@ -13,6 +13,7 @@ using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -40,6 +41,26 @@ namespace InstagramApiSharp.API.Processors
             _instaApi = instaApi;
             _httpHelper = httpHelper;
         }
+
+        /// <summary>
+        ///     Block an user from commenting to medias
+        /// </summary>
+        /// <param name="userIds">User ids (pk)</param>
+        public async Task<IResult<bool>> BlockUserCommentingAsync(params long[] userIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+
+                return await BlockUnblockCommenting(true, userIds);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, false);
+            }
+        }
+
         /// <summary>
         ///     Comment media
         /// </summary>
@@ -606,6 +627,68 @@ namespace InstagramApiSharp.API.Processors
                 return Result.UnExpectedResponse<InstaInlineCommentListResponse>(response, json);
             var commentListResponse = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
             return Result.Success(commentListResponse);
+        }
+
+        private async Task<IResult<bool>> BlockUnblockCommenting(bool block, long[] userIds)
+        {
+            try
+            {
+                if (userIds == null || userIds?.Length == 0)
+                    Result.Fail<bool>("At least one user id (pk) is require");
+
+                var instaUri = UriCreator.GetSetBlockedCommentersUri();
+                //var blockedUsersResponse = await GetBlockedCommentersAsync();
+                //var blockedUsers = new List<long>();
+                //if (blockedUsersResponse.Succeeded && blockedUsersResponse.Value?.Count > 0)
+                //{
+                //    foreach (var u in blockedUsersResponse.Value)
+                //    {
+                //        foreach (var id in userIds)
+                //            if (u.Pk == id)
+                //                blockedUsers.Add(u.Pk);
+                //    }
+                //}
+
+                //{
+                //	"_csrftoken": "UBPgM6BG1Qr95lO4ofLYpgJXtbVvVnvs",
+                //	"_uid": "7405924766",
+                //	"_uuid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
+                //	"commenter_block_status": {
+                //		"block": [9013775990, 9013775990],
+                //		"unblock": [9013775990]
+                //	}
+                //}
+                var commenterBlockStatus = new JObject();
+                if (block)
+                {
+                    commenterBlockStatus.Add("block", new JArray(userIds));
+                    commenterBlockStatus.Add("unblock", new JArray());
+                }
+                else
+                {
+                    commenterBlockStatus.Add("block", new JArray());
+                    commenterBlockStatus.Add("unblock", new JArray(userIds));
+                }
+
+                var data = new JObject
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"commenter_block_status", commenterBlockStatus}
+                };
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, false);
+            }
         }
     }
 }

@@ -9,6 +9,13 @@ namespace InstagramApiSharp.API.Processors
     /// </summary>
     public interface ICommentProcessor
     {
+
+        /// <summary>
+        ///     Block an user from commenting to medias
+        /// </summary>
+        /// <param name="userIds">User ids (pk)</param>
+        Task<IResult<bool>> BlockUserCommentingAsync(params long[] userIds);
+
         /// <summary>
         ///     Comment media
         /// </summary>
