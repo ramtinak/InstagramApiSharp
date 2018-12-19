@@ -1,0 +1,4 @@
+﻿License: RMT
+
+You can do whatever you want to do, except changing library name!
+You can use this library in your personal or commercial products.
