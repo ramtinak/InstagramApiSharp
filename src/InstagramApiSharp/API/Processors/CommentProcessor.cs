@@ -495,6 +495,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaComment>(exception);
             }
         }
+
         /// <summary>
         ///     Report media comment
         /// </summary>
@@ -522,6 +523,25 @@ namespace InstagramApiSharp.API.Processors
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, false);
+            }
+        }
+
+        /// <summary>
+        ///     Unblock an user from commenting to medias
+        /// </summary>
+        /// <param name="userIds">User ids (pk)</param>
+        public async Task<IResult<bool>> UnblockUserCommentingAsync(params long[] userIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+
+                return await BlockUnblockCommenting(false, userIds);
             }
             catch (Exception exception)
             {
