@@ -191,6 +191,18 @@ namespace InstagramApiSharp.API
         /// </summary>
         string GetAcceptLanguage();
         /// <summary>
+        ///     Get current time zone
+        ///     <para>Returns something like: Asia/Tehran</para>
+        /// </summary>
+        /// <returns>Returns something like: Asia/Tehran</returns>
+        string GetTimezone();
+        /// <summary>
+        ///     Get current time zone offset
+        ///     <para>Returns something like this: 16200</para>
+        /// </summary>
+        /// <returns>Returns something like this: 16200</returns>
+        int GetTimezoneOffset();
+        /// <summary>
         ///     Set delay between requests. Useful when API supposed to be used for mass-bombing.
         /// </summary>
         /// <param name="delay">Timespan delay</param>
@@ -215,7 +227,24 @@ namespace InstagramApiSharp.API
         /// <para>fa-IR for IRAN</para>
         /// </param>
         bool SetAcceptLanguage(string languageCodeAndCountryCode);
-        
+        /// <summary>
+        ///     Set time zone
+        ///     <para>I.e: Asia/Tehran for Iran</para>
+        /// </summary>
+        /// <param name="timezone">
+        ///     time zone
+        ///     <para>I.e: Asia/Tehran for Iran</para>
+        /// </param>
+        void SetTimezone(string timezone);
+        /// <summary>
+        ///     Set time zone offset
+        ///     <para>I.e: 16200 for Iran/Tehran</para>
+        /// </summary>
+        /// <param name="timezoneOffset">
+        ///     timezone offset
+        ///     <para>I.e: 16200 for Iran/Tehran</para>
+        /// </param>
+        void SetTimezoneOffset(int timezoneOffset);
         #endregion Other public functions
 
         #region Authentication, challenge functions

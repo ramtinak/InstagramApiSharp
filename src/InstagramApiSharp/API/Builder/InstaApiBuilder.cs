@@ -58,8 +58,11 @@ namespace InstagramApiSharp.API.Builder
             if (string.IsNullOrEmpty(_requestMessage.Password)) _requestMessage.Password = _user?.Password;
             if (string.IsNullOrEmpty(_requestMessage.Username)) _requestMessage.Username = _user?.UserName;
 
-            //if (_device == null && !string.IsNullOrEmpty(_requestMessage.DeviceId))
-            //    _device = AndroidDeviceGenerator.GetById(_requestMessage.DeviceId);
+            try
+            {
+                InstaApiConstants.TIMEZONE_OFFSET = int.Parse(DateTimeOffset.Now.Offset.TotalSeconds.ToString());
+            }
+            catch { }
             if (_device == null) AndroidDeviceGenerator.GetRandomAndroidDevice();
 
             if (_httpRequestProcessor == null)

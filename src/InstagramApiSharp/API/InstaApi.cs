@@ -1728,6 +1728,18 @@ namespace InstagramApiSharp.API
             }
         }
         /// <summary>
+        ///     Get current time zone
+        ///     <para>Returns something like: Asia/Tehran</para>
+        /// </summary>
+        /// <returns>Returns something like: Asia/Tehran</returns>
+        public string GetTimezone() => InstaApiConstants.TIMEZONE;
+        /// <summary>
+        ///     Get current time zone offset
+        ///     <para>Returns something like this: 16200</para>
+        /// </summary>
+        /// <returns>Returns something like this: 16200</returns>
+        public int GetTimezoneOffset() => InstaApiConstants.TIMEZONE_OFFSET;
+        /// <summary>
         ///     Set delay between requests. Useful when API supposed to be used for mass-bombing.
         /// </summary>
         /// <param name="delay">Timespan delay</param>
@@ -1783,6 +1795,32 @@ namespace InstagramApiSharp.API
             {
                 return Result.Fail<bool>(exception).Value;
             }
+        }
+        /// <summary>
+        ///     Set time zone
+        ///     <para>I.e: Asia/Tehran for Iran</para>
+        /// </summary>
+        /// <param name="timezone">
+        ///     time zone
+        ///     <para>I.e: Asia/Tehran for Iran</para>
+        /// </param>
+        public void SetTimezone(string timezone)
+        {
+            if (string.IsNullOrEmpty(timezone))
+                return;
+            InstaApiConstants.TIMEZONE = timezone;
+        }
+        /// <summary>
+        ///     Set time zone offset
+        ///     <para>I.e: 16200 for Iran/Tehran</para>
+        /// </summary>
+        /// <param name="timezoneOffset">
+        ///     time zone offset
+        ///     <para>I.e: 16200 for Iran/Tehran</para>
+        /// </param>
+        public void SetTimezoneOffset(int timezoneOffset)
+        {
+            InstaApiConstants.TIMEZONE_OFFSET = timezoneOffset;
         }
         #endregion Other public functions
 
