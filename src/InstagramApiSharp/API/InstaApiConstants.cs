@@ -215,8 +215,11 @@ namespace InstagramApiSharp.API
         public const string DIRECT_STAR = API_SUFFIX + "/direct_v2/threads/{0}/label/";
         public const string DIRECT_THREAD_HIDE = API_SUFFIX + "/direct_v2/threads/{0}/hide/";
         public const string DIRECT_THREAD_ADD_USER = API_SUFFIX + "/direct_v2/threads/{0}/add_user/";
-
+        /// <summary>
+        ///  deprecated
+        /// </summary>
         public const string DIRECT_THREAD_ITEM_SEEN = API_SUFFIX + "/direct_v2/visual_threads/{0}/item_seen/";
+        public const string DIRECT_THREAD_SEEN = API_SUFFIX + "/direct_v2/threads/{0}/items/{1}/seen/";
         public const string DIRECT_THREAD_LEAVE = API_SUFFIX + "/direct_v2/threads/{0}/leave/";
         public const string DIRECT_THREAD_MUTE = API_SUFFIX + "/direct_v2/threads/{0}/mute/";
         public const string DIRECT_THREAD_UNMUTE = API_SUFFIX + "/direct_v2/threads/{0}/unmute/";

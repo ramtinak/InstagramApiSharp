@@ -518,10 +518,10 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetDirectThreadSeenUri(string threadId)
+        public static Uri GetDirectThreadSeenUri(string threadId, string itemId)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_THREAD_ITEM_SEEN, threadId), out var instaUri))
-                throw new Exception("Cant create URI for story share");
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.DIRECT_THREAD_SEEN, threadId, itemId), out var instaUri))
+                throw new Exception("Cant create URI for seen thread");
             return instaUri;
         }
 

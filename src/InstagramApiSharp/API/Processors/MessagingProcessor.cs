@@ -588,14 +588,16 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetDirectThreadSeenUri(threadId);
+                var instaUri = UriCreator.GetDirectThreadSeenUri(threadId, itemId);
 
-                var data = new JObject
+                var data = new Dictionary<string, string>
                 {
+                    {"thread_id", threadId},
+                    {"action", "mark_seen"},
                     {"_csrftoken", _user.CsrfToken},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"item_ids", $"[{itemId}]"},
+                    {"item_id", itemId},
+                    {"use_unified_inbox", "true"},
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
