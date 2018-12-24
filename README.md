@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.0.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.1.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -89,6 +89,11 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.1.0
+- [Add] set/get timezone and timezone offset  (thx to [@burak1000](https://github.com/burak1000) for report)
+- [Bugfix] for MarkDirectThreadAsSeenAsync
+- [Add] PaginationParameters to SearchPlacesAsync
+
 v1.3.0.0
 - [Add] SendDirectLinks with recipients and threadId to MessagingProcessor (thx to [@estgold](https://github.com/estgold) for PR)
 - [Add] ArchiveMediaAsync to MediaProcessor
