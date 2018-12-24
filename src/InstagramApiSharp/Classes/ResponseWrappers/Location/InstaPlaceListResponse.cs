@@ -23,5 +23,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("status")] internal string Status { get; set; }
 
         [JsonProperty("message")] internal string Message { get; set; }
+
+        [JsonIgnore] public List<long> ExcludeList = new List<long>();
     }
 }

@@ -38,6 +38,7 @@ namespace InstagramApiSharp.Converters
                     }
                     catch { }
                 }
+                list.ExcludeList = SourceObject.ExcludeList;
             }
             return list;
         }

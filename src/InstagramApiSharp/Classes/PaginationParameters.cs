@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace InstagramApiSharp
 {
@@ -19,6 +20,8 @@ namespace InstagramApiSharp
         public string NextMinId { get; set; } = string.Empty;
         public int MaximumPagesToLoad { get; private set; }
         public int PagesLoaded { get; set; } = 1;
+
+        public List<long> ExcludeList { get; set; } = new List<long>();
 
         public static PaginationParameters Empty => MaxPagesToLoad(int.MaxValue);
 

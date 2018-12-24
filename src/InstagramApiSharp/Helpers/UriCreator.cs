@@ -1758,7 +1758,7 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetSearchPlacesUri(int timezoneOffset, double lat, double lng, string query, string rankToken)
+        public static Uri GetSearchPlacesUri(int timezoneOffset, double lat, double lng, string query, string rankToken, List<long> excludeList)
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FBSEARCH_PLACES, out var instaUri))
                 throw new Exception("Cant create URI for search places");
@@ -1769,7 +1769,10 @@ namespace InstagramApiSharp.Helpers
                 parameters += $"&query={query}";
 
             if (!string.IsNullOrEmpty(rankToken))
-                parameters += $"&&rank_token={rankToken}";
+                parameters += $"&rank_token={rankToken}";
+
+            if (excludeList?.Count > 0)
+                parameters += $"&exclude_list=[{string.Join(",", excludeList)}]";
 
             return new UriBuilder(instaUri) { Query = parameters }.Uri;
         }

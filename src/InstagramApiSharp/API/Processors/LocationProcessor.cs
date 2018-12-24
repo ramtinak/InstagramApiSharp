@@ -222,12 +222,13 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="latitude">Latitude</param>
         /// <param name="longitude">Longitude</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <returns>
         ///     <see cref="InstaPlaceList" />
         /// </returns>
-        public async Task<IResult<InstaPlaceList>> SearchPlacesAsync(double latitude, double longitude)
+        public async Task<IResult<InstaPlaceList>> SearchPlacesAsync(double latitude, double longitude, PaginationParameters paginationParameters)
         {
-            return await SearchPlacesAsync(latitude, longitude, null);
+            return await SearchPlacesAsync(latitude, longitude, null, paginationParameters);
         }
 
         /// <summary>
@@ -237,16 +238,17 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="latitude">Latitude</param>
         /// <param name="longitude">Longitude</param>
         /// <param name="query">Query to search (city, country or ...)</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <returns>
         ///     <see cref="InstaPlaceList" />
         /// </returns>
-        public async Task<IResult<InstaPlaceList>> SearchPlacesAsync(double latitude, double longitude, string query)
+        public async Task<IResult<InstaPlaceList>> SearchPlacesAsync(double latitude, double longitude, string query, PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                // pagination is not working!
-                var paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+                if(paginationParameters == null)
+                paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
                 InstaPlaceList Convert(InstaPlaceListResponse placelistResponse)
                 {
@@ -258,6 +260,7 @@ namespace InstagramApiSharp.API.Processors
 
                 var placesResponse = places.Value;
                 paginationParameters.NextMaxId = placesResponse.RankToken;
+                paginationParameters.ExcludeList = placesResponse.ExcludeList;
                 var pagesLoaded = 1;
                 while (placesResponse.HasMore != null 
                       && placesResponse.HasMore.Value
@@ -273,6 +276,7 @@ namespace InstagramApiSharp.API.Processors
                     placesResponse.HasMore = nextPlaces.Value.HasMore;
                     placesResponse.Items.AddRange(nextPlaces.Value.Items);
                     placesResponse.Status = nextPlaces.Value.Status;
+                    paginationParameters.ExcludeList = nextPlaces.Value.ExcludeList;
                     pagesLoaded++;
                 }
 
@@ -296,7 +300,7 @@ namespace InstagramApiSharp.API.Processors
                     paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
                 var instaUri = UriCreator.GetSearchPlacesUri(InstaApiConstants.TIMEZONE_OFFSET,
-                    latitude, longitude, query, paginationParameters.NextMaxId);
+                    latitude, longitude, query, paginationParameters.NextMaxId, paginationParameters.ExcludeList);
 
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -305,6 +309,11 @@ namespace InstagramApiSharp.API.Processors
 
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.Fail<InstaPlaceListResponse>(obj.Message);
+                if (obj.Items?.Count > 0)
+                {
+                    foreach (var item in obj.Items)
+                        obj.ExcludeList.Add(item.Location.Pk);
+                }
 
                 return Result.Success(obj);
             }
