@@ -220,7 +220,7 @@ namespace InstagramApiSharp.API.Processors
 
         public async Task<IResult<InstaActivityFeed>> GetFollowingRecentActivityFeedAsync(PaginationParameters paginationParameters)
         {
-            var uri = UriCreator.GetFollowingRecentActivityUri();
+            var uri = UriCreator.GetFollowingRecentActivityUri(paginationParameters.NextMaxId);
             return await GetRecentActivityInternalAsync(uri, paginationParameters);
         }
 

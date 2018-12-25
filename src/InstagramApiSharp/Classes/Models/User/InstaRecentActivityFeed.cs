@@ -13,6 +13,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public string Text { get; set; }
 
+        public string RichText { get; set; }
+
         public List<InstaLink> Links { get; set; } = new List<InstaLink>();
         public InstaInlineFollow InlineFollow { get; set; }
         public int Type { get; set; }
