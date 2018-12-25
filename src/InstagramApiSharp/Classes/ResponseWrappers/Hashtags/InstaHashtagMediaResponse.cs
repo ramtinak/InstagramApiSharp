@@ -49,7 +49,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("total_num_columns")]
         public int TotalNumBolumns { get; set; }
         [JsonProperty("aspect_ratio")]
-        public int AspectYatio { get; set; }
+        public float AspectRatio { get; set; }
         [JsonProperty("autoplay")]
         public bool Autoplay { get; set; }
     }
