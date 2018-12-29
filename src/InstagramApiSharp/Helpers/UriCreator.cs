@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Globalization;
+
 namespace InstagramApiSharp.Helpers
 {
     internal class UriCreator
@@ -1763,7 +1765,7 @@ namespace InstagramApiSharp.Helpers
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FBSEARCH_PLACES, out var instaUri))
                 throw new Exception("Cant create URI for search places");
 
-            var parameters = $"timezone_offset={timezoneOffset}&lat={lat}&lng={lng}";
+            var parameters = $"timezone_offset={timezoneOffset}&lat={lat.ToString(CultureInfo.InvariantCulture)}&lng={lng.ToString(CultureInfo.InvariantCulture)}";
 
             if (!string.IsNullOrEmpty(query))
                 parameters += $"&query={query}";

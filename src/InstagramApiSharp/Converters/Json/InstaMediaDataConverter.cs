@@ -21,7 +21,7 @@ namespace InstagramApiSharp.Converters.Json
             var media = root.ToObject<InstaMediaItemResponse>();
             if (media?.Pk != null) return media;
             var mediaToken = root.SelectToken("media");
-            return mediaToken.ToObject<InstaMediaItemResponse>();
+            return mediaToken?.ToObject<InstaMediaItemResponse>();
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
