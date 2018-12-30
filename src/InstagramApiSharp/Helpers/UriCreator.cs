@@ -122,11 +122,20 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetBroadcastCommentUri(string broadcastId)
+        public static Uri GetBroadcastCommentUri(string broadcastId, string lastcommentts = "")
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_GET_COMMENT, broadcastId), out var instaUri))
-                throw new Exception("Cant create URI for broadcast get comments");
-            return instaUri;
+            if(lastcommentts == "")
+            {
+                if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_GET_COMMENT, broadcastId), out var instaUri))
+                    throw new Exception("Cant create URI for broadcast get comments");
+                return instaUri;
+            }
+            else
+            {
+                if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_GET_COMMENT_LASTCOMMENTTS, broadcastId, lastcommentts), out var instaUri))
+                    throw new Exception("Cant create URI for broadcast get comments");
+                return instaUri;
+            }
         }
 
         public static Uri GetBroadcastCreateUri()

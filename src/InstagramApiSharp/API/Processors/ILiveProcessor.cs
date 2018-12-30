@@ -78,7 +78,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="lastCommentTs">Last comment time stamp</param>
         /// <param name="commentsRequested">Comments requested count</param>
         /// <returns></returns>
-        Task<IResult<InstaBroadcastCommentResponse>> GetCommentsAsync(string broadcastId, int lastCommentTs = 0, int commentsRequested = 4);
+        Task<IResult<InstaBroadcastCommentResponse>> GetCommentsAsync(string broadcastId, string lastCommentTs = "", int commentsRequested = 4);
 
         /// <summary>
         /// Get discover top live.

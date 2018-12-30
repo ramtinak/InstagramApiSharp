@@ -400,6 +400,7 @@ namespace InstagramApiSharp.API
         public const string LIVE_DELETE_POST_LIVE = API_SUFFIX + "/live/{0}/delete_post_live/";
         public const string LIVE_END = API_SUFFIX + "/live/{0}/end_broadcast/";
         public const string LIVE_GET_COMMENT = API_SUFFIX + "/live/{0}/get_comment/";
+        public const string LIVE_GET_COMMENT_LASTCOMMENTTS = API_SUFFIX + "/live/{0}/get_comment/?last_comment_ts={1}";
         public const string LIVE_GET_FINAL_VIEWER_LIST = API_SUFFIX + "/live/{0}/get_final_viewer_list/";
         public const string LIVE_GET_JOIN_REQUESTS = API_SUFFIX + "/live/{0}/get_join_requests/";
         public const string LIVE_GET_LIKE_COUNT = API_SUFFIX + "/live/{0}/get_like_count/";

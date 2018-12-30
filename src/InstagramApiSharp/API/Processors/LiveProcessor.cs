@@ -297,11 +297,11 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="lastCommentTs">Last comment time stamp</param>
         /// <param name="commentsRequested">Comments requested count</param>
         /// <returns></returns>
-        public async Task<IResult<InstaBroadcastCommentResponse>> GetCommentsAsync(string broadcastId, int lastCommentTs = 0, int commentsRequested = 4)
+        public async Task<IResult<InstaBroadcastCommentResponse>> GetCommentsAsync(string broadcastId, string lastCommentTs = "", int commentsRequested = 4)
         {
             try
             {
-                var instaUri = UriCreator.GetBroadcastCommentUri(broadcastId);
+                var instaUri = UriCreator.GetBroadcastCommentUri(broadcastId, lastCommentTs);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
