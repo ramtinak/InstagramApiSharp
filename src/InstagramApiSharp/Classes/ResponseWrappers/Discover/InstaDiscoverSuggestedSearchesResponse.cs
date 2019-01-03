@@ -8,6 +8,7 @@
  */
 
 using System.Collections.Generic;
+using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
@@ -20,4 +21,5 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("status")]
         public string Status { get; set; }
     }
+    
 }

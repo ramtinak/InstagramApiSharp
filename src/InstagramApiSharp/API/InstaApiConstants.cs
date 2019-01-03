@@ -276,6 +276,7 @@ namespace InstagramApiSharp.API
         public const string FBSEARCH_SUGGESTED_SEARCHS = API_SUFFIX + "/fbsearch/suggested_searches/?type={0}";
         public const string FBSEARCH_TOPSEARCH = API_SUFFIX + "/fbsearch/topsearch/";
         public const string FBSEARCH_TOPSEARCH_FALT = API_SUFFIX + "/fbsearch/topsearch_flat/";
+        public const string FBSEARCH_TOPSEARCH_FALT_PARAMETER = API_SUFFIX + "/fbsearch/topsearch_flat/?rank_token={0}&timezone_offset={1}&query={2}&context={3}";
 
         #endregion FBSearch endpoints constants
 

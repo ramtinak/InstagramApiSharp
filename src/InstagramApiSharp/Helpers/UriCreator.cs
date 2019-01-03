@@ -891,6 +891,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetPushRegisterUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.PUSH_REGISTER), out var instaUri))
+                throw new Exception("Cant create URI for live heartbeat and get viewer count");
+            return instaUri;
+        }
+
         public static Uri GetLiveLikeCountUri(string broadcastId)
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_GET_LIKE_COUNT, broadcastId), out var instaUri))
@@ -1388,6 +1395,12 @@ namespace InstagramApiSharp.Helpers
         public static Uri GetSuggestedSearchUri(InstaDiscoverSearchType searchType)
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FBSEARCH_SUGGESTED_SEARCHS, searchType.ToString().ToLower()), out var instaUri))
+                throw new Exception("Cant create URI for suggested search");
+            return instaUri;
+        }
+        public static Uri GetTopSearchUri(string rankToken,string querry = "", InstaDiscoverSearchType searchType = InstaDiscoverSearchType.Users, int timezone_offset = 12600)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.FBSEARCH_TOPSEARCH_FALT_PARAMETER,rankToken,timezone_offset,querry, searchType.ToString().ToLower()), out var instaUri))
                 throw new Exception("Cant create URI for suggested search");
             return instaUri;
         }

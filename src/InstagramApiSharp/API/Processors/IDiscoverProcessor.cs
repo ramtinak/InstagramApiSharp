@@ -33,11 +33,21 @@ namespace InstagramApiSharp.API.Processors
         ///     Get recent searches
         /// </summary>
         Task<IResult<InstaDiscoverRecentSearches>> GetRecentSearchesAsync();
+
+        /// <summary>
+        /// Get top searches
+        /// </summary>
+        /// <param name="querry">querry string of the search</param>
+        /// <param name="searchType">Search type(only blended and users works)</param>
+        /// <param name="timezone_offset">Timezone offset of the search region (GMT Offset * 60 * 60 - Like Tehran GMT +3:30 = 3.5* 60*60 = 12600)</param>
+        /// <returns></returns>
+        Task<IResult<InstaDiscoverTopSearchesResponse>> GetTopSearchesAsync(string querry = "", InstaDiscoverSearchType searchType = InstaDiscoverSearchType.Users, int timezone_offset = 12600);
+
         /// <summary>
         ///     Get suggested searches
         /// </summary>
         /// <param name="searchType">Search type(only blended and users works)</param>
-        Task<IResult<InstaDiscoverSuggestedSearches>> GetSuggestedSearchesAsync(InstaDiscoverSearchType searchType = 
+        Task<IResult<InstaDiscoverSuggestedSearches>> GetSuggestedSearchesAsync(InstaDiscoverSearchType searchType =
             InstaDiscoverSearchType.Users);
         /// <summary>
         ///     Search user people

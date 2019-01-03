@@ -130,6 +130,36 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaDiscoverRecentSearches>(exception);
             }
         }
+
+        /// <summary>
+        /// Get top searches
+        /// </summary>
+        /// <param name="querry">querry string of the search</param>
+        /// <param name="searchType">Search type(only blended and users works)</param>
+        /// <param name="timezone_offset">Timezone offset of the search region (GMT Offset * 60 * 60 - Like Tehran GMT +3:30 = 3.5* 60*60 = 12600)</param>
+        /// <returns></returns>
+        public async Task<IResult<InstaDiscoverTopSearchesResponse>> GetTopSearchesAsync(string querry = "", InstaDiscoverSearchType searchType = InstaDiscoverSearchType.Users, int timezone_offset = 12600)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetTopSearchUri(_user.RankToken, querry, searchType, timezone_offset);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaDiscoverTopSearchesResponse>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaDiscoverTopSearchesResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetDiscoverSuggestedSearchesConverter(obj).Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaDiscoverTopSearchesResponse>(exception);
+            }
+        }
+
         /// <summary>
         ///     Get suggested searches
         /// </summary>
