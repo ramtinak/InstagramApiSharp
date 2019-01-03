@@ -360,6 +360,12 @@ namespace InstagramApiSharp.API
         /// </returns>
         Task<IResult<InstaLoginResult>> LoginAsync(bool isNewLogin = true);
         /// <summary>
+        ///     Login using cookies
+        ///     <para>Note: You won't be able to change password, if you use <see cref="LoginWithCookiesAsync(string)"/> function for logging in!</para>
+        /// </summary>
+        /// <param name="cookies">Cookies</param>
+        Task<IResult<bool>> LoginWithCookiesAsync(string cookies);
+        /// <summary>
         ///     2-Factor Authentication Login using a verification code
         ///     Before call this method, please run LoginAsync first.
         /// </summary>

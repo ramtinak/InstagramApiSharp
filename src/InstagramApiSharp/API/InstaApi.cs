@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -954,7 +955,79 @@ namespace InstagramApiSharp.API
                 InvalidateProcessors();
             }
         }
+        /// <summary>
+        ///     Login using cookies
+        ///     <para>Note: You won't be able to change password, if you use <see cref="IInstaApi.LoginWithCookiesAsync(string)"/> function for logging in!</para>
+        /// </summary>
+        /// <param name="cookies">Cookies</param>
+        public async Task<IResult<bool>> LoginWithCookiesAsync(string cookies)
+        {
+            try
+            {
+                if (cookies.Contains("Cookie:"))
+                    cookies = cookies.Substring(8);
 
+                var parts = cookies.Split(';')                    
+                    .Where(xx => xx.Contains("="))
+                    .Select(xx => xx.Trim().Split('='))
+                    .Select(xx => new { Name = xx.First(), Value = xx.Last() });
+
+                var user = parts.FirstOrDefault(u => u.Name.ToLower() == "ds_user")?.Value?.ToLower();
+                var userId = parts.FirstOrDefault(u => u.Name.ToLower() == "ds_user_id")?.Value;
+                var csrfToken = parts.FirstOrDefault(u => u.Name.ToLower() == "csrftoken")?.Value;
+
+                if (string.IsNullOrEmpty(csrfToken))
+                    return Result.Fail<bool>("Cannot find 'csrftoken' in cookies!");
+
+                if (string.IsNullOrEmpty(user))
+                    return Result.Fail<bool>("Cannot find 'ds_user' in cookies!");
+
+                if (string.IsNullOrEmpty(userId))
+                    return Result.Fail<bool>("Cannot find 'ds_user_id' in cookies!");
+
+                var uri = new Uri(InstaApiConstants.INSTAGRAM_URL);
+                cookies = cookies.Replace(';', ',');
+                _httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(uri, cookies);
+                _user = UserSessionData.Empty;
+                _user.UserName = _httpRequestProcessor.RequestMessage.Username = user;
+                _user.Password = "AlakiMasalan";
+                _user.LoggedInUser = new InstaUserShort
+                {
+                    UserName = user
+                };
+                try
+                {
+                    _user.LoggedInUser.Pk = long.Parse(userId);
+                }
+                catch { }
+                _user.CsrfToken = csrfToken;
+                _user.RankToken = $"{_deviceInfo.RankToken}_{userId}";
+
+                IsUserAuthenticated = true;
+                InvalidateProcessors();
+
+                var us = await UserProcessor.GetUserAsync(user);
+                if (!us.Succeeded)
+                {
+                    IsUserAuthenticated = false;
+                    return Result.Fail(us.Info, false);
+                }
+
+                _user.LoggedInUser.FullName = us.Value.FullName;
+                _user.LoggedInUser.IsPrivate = us.Value.IsPrivate;
+                _user.LoggedInUser.IsVerified = us.Value.IsVerified;
+                _user.LoggedInUser.ProfilePicture = us.Value.ProfilePicture;
+                _user.LoggedInUser.ProfilePictureId = us.Value.ProfilePictureId;
+                _user.LoggedInUser.ProfilePicUrl = us.Value.ProfilePicUrl;
+                
+                return Result.Success(true);
+            }
+            catch (Exception exception)
+            {
+                LogException(exception);
+                return Result.Fail(exception, false);
+            }
+        }
         /// <summary>
         ///     2-Factor Authentication Login using a verification code
         ///     Before call this method, please run LoginAsync first.
