@@ -138,7 +138,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="searchType">Search type(only blended and users works)</param>
         /// <param name="timezone_offset">Timezone offset of the search region (GMT Offset * 60 * 60 - Like Tehran GMT +3:30 = 3.5* 60*60 = 12600)</param>
         /// <returns></returns>
-        public async Task<IResult<InstaDiscoverTopSearchesResponse>> GetTopSearchesAsync(string querry = "", InstaDiscoverSearchType searchType = InstaDiscoverSearchType.Users, int timezone_offset = 12600)
+        public async Task<IResult<InstaDiscoverTopSearches>> GetTopSearchesAsync(string querry = "", InstaDiscoverSearchType searchType = InstaDiscoverSearchType.Users, int timezone_offset = 12600)
         {
             try
             {
@@ -148,15 +148,15 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaDiscoverTopSearchesResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaDiscoverTopSearches>(response, json);
 
                 var obj = JsonConvert.DeserializeObject<InstaDiscoverTopSearchesResponse>(json);
-                return Result.Success(ConvertersFabric.Instance.GetDiscoverSuggestedSearchesConverter(obj).Convert());
+                return Result.Success(ConvertersFabric.Instance.GetDiscoverTopSearchesConverter(obj).Convert());
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDiscoverTopSearchesResponse>(exception);
+                return Result.Fail<InstaDiscoverTopSearches>(exception);
             }
         }
 

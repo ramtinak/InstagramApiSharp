@@ -428,6 +428,12 @@ namespace InstagramApiSharp.Converters
             return new InstaDiscoverRecentSearchesConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaDiscoverTopSearches, InstaDiscoverTopSearchesResponse> GetDiscoverTopSearchesConverter(
+           InstaDiscoverTopSearchesResponse response)
+        {
+            return new InstaDiscoverTopSearchesConverter { SourceObject = response };
+        }
+
         public IObjectConverter<InstaDiscoverSuggestedSearches, InstaDiscoverSuggestedSearchesResponse> GetDiscoverSuggestedSearchesConverter(
             InstaDiscoverSuggestedSearchesResponse response)
         {
