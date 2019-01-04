@@ -21,7 +21,7 @@ namespace Examples.Samples
         public async Task DoShow()
         {
             // get all collections of current user
-            var collections = await _instaApi.CollectionProcessor.GetCollectionsAsync();
+            var collections = await _instaApi.CollectionProcessor.GetCollectionsAsync(InstagramApiSharp.PaginationParameters.MaxPagesToLoad(1));
             Console.WriteLine($"Loaded {collections.Value.Items.Count} collections for current user");
             foreach (var instaCollection in collections.Value.Items)
             {

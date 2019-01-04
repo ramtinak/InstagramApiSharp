@@ -59,14 +59,16 @@ namespace InstagramApiSharp.API
             get { return _isUserAuthenticated; }
             internal set { _isUserAuthenticated = value; _userAuthValidate.IsUserAuthenticated = value; }
         }
-        
+
+        public HttpClient HttpClient { get => _httpRequestProcessor.Client; }
+
         #endregion Variables and properties
 
         #region SessionHandler
         private ISessionHandler _sessionHandler;
         public ISessionHandler SessionHandler { get => _sessionHandler; set => _sessionHandler = value; }
         #endregion
-        
+
         #region Processors
 
         private ICollectionProcessor _collectionProcessor;
@@ -224,7 +226,7 @@ namespace InstagramApiSharp.API
                 else
                 {
                     var obj = JsonConvert.DeserializeObject<InstaCheckEmailRegistration>(json);
-                    if(obj.ErrorType == "fail")
+                    if (obj.ErrorType == "fail")
                         return Result.UnExpectedResponse<InstaCheckEmailRegistration>(response, json);
                     if (obj.ErrorType == "email_is_taken")
                         return Result.Fail("Email is taken.", (InstaCheckEmailRegistration)null);
@@ -391,7 +393,7 @@ namespace InstagramApiSharp.API
                 }
 
                 var r = JsonConvert.DeserializeObject<InstaAccountRegistrationPhoneNumberVerifySms>(json);
-                if(r.ErrorType == "invalid_nonce")
+                if (r.ErrorType == "invalid_nonce")
                     return Result.Fail(r.Errors?.Nonce?[0], (InstaPhoneNumberRegistration)null);
 
                 await GetRegistrationStepsAsync();
@@ -435,7 +437,7 @@ namespace InstagramApiSharp.API
                     {"_csrftoken",      csrftoken},
                     {"email",           ""}
                 };
-                if(useNewIds)
+                if (useNewIds)
                 {
                     postData.Add("phone_id", _phoneIdReg);
                     postData.Add("guid", _guidReg);
@@ -484,7 +486,7 @@ namespace InstagramApiSharp.API
                 if (string.IsNullOrEmpty(_waterfallIdReg) || _signUpPhoneNumberInfo == null)
                     throw new ArgumentException("You should call SendSignUpSmsCodeAsync function first.");
 
-                if(_signUpPhoneNumberInfo.GdprRequired)
+                if (_signUpPhoneNumberInfo.GdprRequired)
                 {
                     var acceptGdpr = await AcceptConsentRequiredAsync(null, phoneNumber);
                     if (!acceptGdpr.Succeeded)
@@ -631,7 +633,7 @@ namespace InstagramApiSharp.API
                 await Task.Delay((int)delay.Value.TotalMilliseconds);
                 if (username.Length > 6)
                 {
-                    await GetUsernameSuggestions(username.Substring(0,4), false);
+                    await GetUsernameSuggestions(username.Substring(0, 4), false);
                     await Task.Delay(1000);
                     await GetUsernameSuggestions(username.Substring(0, 5), false);
                 }
@@ -871,7 +873,7 @@ namespace InstagramApiSharp.API
                 var signature = string.Empty;
                 var devid = string.Empty;
                 if (isNewLogin)
-                    signature = $"{_httpRequestProcessor.RequestMessage.GenerateSignature(_apiVersion,_apiVersion.SignatureKey, out devid)}.{_httpRequestProcessor.RequestMessage.GetMessageString()}";
+                    signature = $"{_httpRequestProcessor.RequestMessage.GenerateSignature(_apiVersion, _apiVersion.SignatureKey, out devid)}.{_httpRequestProcessor.RequestMessage.GetMessageString()}";
                 else
                     signature = $"{_httpRequestProcessor.RequestMessage.GenerateChallengeSignature(_apiVersion, _apiVersion.SignatureKey, csrftoken, out devid)}.{_httpRequestProcessor.RequestMessage.GetChallengeMessageString(csrftoken)}";
                 _deviceInfo.DeviceId = devid;
@@ -936,7 +938,7 @@ namespace InstagramApiSharp.API
                 var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
                 _user.LoggedInUser = converter.Convert();
                 _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
-                if(string.IsNullOrEmpty(_user.CsrfToken))
+                if (string.IsNullOrEmpty(_user.CsrfToken))
                 {
                     cookies =
                       _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
@@ -967,7 +969,7 @@ namespace InstagramApiSharp.API
                 if (cookies.Contains("Cookie:"))
                     cookies = cookies.Substring(8);
 
-                var parts = cookies.Split(';')                    
+                var parts = cookies.Split(';')
                     .Where(xx => xx.Contains("="))
                     .Select(xx => xx.Trim().Split('='))
                     .Select(xx => new { Name = xx.First(), Value = xx.Last() });
@@ -1019,7 +1021,7 @@ namespace InstagramApiSharp.API
                 _user.LoggedInUser.ProfilePicture = us.Value.ProfilePicture;
                 _user.LoggedInUser.ProfilePictureId = us.Value.ProfilePictureId;
                 _user.LoggedInUser.ProfilePicUrl = us.Value.ProfilePicUrl;
-                
+
                 return Result.Success(true);
             }
             catch (Exception exception)
@@ -1662,11 +1664,11 @@ namespace InstagramApiSharp.API
         /// <returns>True if logged in, False if not</returns>
         public async Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaWebBrowserResponse webBrowserResponse, string cookie, bool facebookLogin = true)
         {
-            if(webBrowserResponse == null)
+            if (webBrowserResponse == null)
                 return Result.Fail("", false);
-            if(webBrowserResponse.Config == null)
+            if (webBrowserResponse.Config == null)
                 return Result.Fail("", false);
-            if(webBrowserResponse.Config.Viewer == null)
+            if (webBrowserResponse.Config.Viewer == null)
                 return Result.Fail("", false);
 
             if (!string.IsNullOrEmpty(cookie))
@@ -1720,7 +1722,7 @@ namespace InstagramApiSharp.API
                             var obj = JsonConvert.DeserializeObject<InstaFacebookLoginResponse>(json);
                             _user.FacebookUserId = obj.FbUserId;
                         }
-                        catch(Exception)
+                        catch (Exception)
                         {
                         }
                         InvalidateProcessors();
@@ -1739,7 +1741,10 @@ namespace InstagramApiSharp.API
         #endregion Authentication and challenge functions
 
         #region Other public functions
-
+        public void UseHttpClientHandler(HttpClientHandler handler)
+        {
+            _httpRequestProcessor.SetHttpClientHandler(handler);
+        }
         /// <summary>
         /// Sets user credentials
         /// </summary>

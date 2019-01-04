@@ -21,9 +21,14 @@ namespace InstagramApiSharp.Classes
             _logger = logger;
         }
 
-        public HttpClientHandler HttpHandler { get; }
+        public HttpClientHandler HttpHandler { get; set; }
         public ApiRequestMessage RequestMessage { get; }
-        public HttpClient Client { get; }
+        public HttpClient Client { get; set; }
+        public void SetHttpClientHandler(HttpClientHandler handler)
+        {
+            HttpHandler = handler;
+            Client = new HttpClient(handler);
+        }
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
         {

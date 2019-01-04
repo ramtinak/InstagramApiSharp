@@ -186,7 +186,7 @@ EndAsync");
 
 
                 // get broadcast comments
-                await _instaApi.LiveProcessor.GetCommentsAsync(broadcastId, 0, 20);
+                await _instaApi.LiveProcessor.GetCommentsAsync(broadcastId);
 
 
                 // enable broadcast comments

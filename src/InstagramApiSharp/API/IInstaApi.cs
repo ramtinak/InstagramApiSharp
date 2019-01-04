@@ -20,6 +20,7 @@ using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Enums;
 using InstagramApiSharp.Classes.SessionHandlers;
+using System.Net.Http;
 
 namespace InstagramApiSharp.API
 {
@@ -29,7 +30,7 @@ namespace InstagramApiSharp.API
     public interface IInstaApi
     {
         #region Properties
-
+        HttpClient HttpClient { get; }
         /// <summary>
         ///     Indicates whether user authenticated or not
         /// </summary>
@@ -165,6 +166,7 @@ namespace InstagramApiSharp.API
         #endregion State data
 
         #region Other public functions
+        void UseHttpClientHandler(HttpClientHandler handler);
         /// <summary>
         /// Sets user credentials
         /// </summary>

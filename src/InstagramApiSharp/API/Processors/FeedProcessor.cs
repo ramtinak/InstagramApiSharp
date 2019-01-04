@@ -229,10 +229,11 @@ namespace InstagramApiSharp.API.Processors
         ///     Get user timeline feed (feed of recent posts from users you follow) asynchronously.
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="SeenMediaIDs">Id of the posts seen till now</param>
         /// <returns>
         ///     <see cref="InstaFeed" />
         /// </returns>
-        public async Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters)
+        public async Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters, string[] SeenMediaIDs= null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             var feed = new InstaFeed();
@@ -240,6 +241,22 @@ namespace InstagramApiSharp.API.Processors
             {
                 var userFeedUri = UriCreator.GetUserFeedUri(paginationParameters.NextMaxId);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
+                if(SeenMediaIDs != null)
+                {
+                    string SeendStr = "";
+                    for (int i = 0; i < SeenMediaIDs.Length; i++)
+                    {
+                        if(i < (SeenMediaIDs.Length -1))
+                        {
+                            SeendStr += SeenMediaIDs[i] + ",";
+                        }
+                        else
+                        {
+                            SeendStr += SeenMediaIDs[i];
+                        }
+                    }
+                    request.Headers.Add("seen_posts", SeendStr);
+                }
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
