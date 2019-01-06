@@ -7,13 +7,18 @@
  * IRANIAN DEVELOPERS
  */
 
+using System;
+
 namespace InstagramApiSharp.Classes.Models
 {
     public class InstaAudio
     {
         public string AudioSource { get; set; }
 
-        public double Duration { get; set; }
+        private double _duration;
+        public double Duration { get => _duration; set { _duration = value; DurationTs = System.TimeSpan.FromMilliseconds(value); } }
+
+        public TimeSpan DurationTs { get; set; }
 
         public float[] WaveformData { get; set; }
 

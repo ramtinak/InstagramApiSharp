@@ -12,8 +12,10 @@ namespace InstagramApiSharp.Classes.Models
         public string Title { get; set; }
 
         public string OldestCursor { get; set; }
-
+        
         public DateTime LastActivity { get; set; }
+
+        public bool HasUnreadMessage { get; set; }
 
         public string VieweId { get; set; }
 

@@ -34,10 +34,11 @@ namespace InstagramApiSharp.Converters
                 ReshareSendCount = SourceObject.ReshareSendCount,
                 ExpiringMediaReceiveCount = SourceObject.ExpiringMediaReceiveCount,
                 ExpiringMediaSendCount = SourceObject.ExpiringMediaSendCount,
-                NewestCursor = SourceObject.NewestCursor
+                NewestCursor = SourceObject.NewestCursor,
+                ThreadType = SourceObject.ThreadType,
+                Title = SourceObject.Title
             };
-            thread.ThreadType = SourceObject.ThreadType;
-            thread.Title = SourceObject.Title;
+
             if (SourceObject.Inviter != null)
             {
                 var userConverter = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.Inviter);
@@ -96,7 +97,8 @@ namespace InstagramApiSharp.Converters
                 }
                 catch { }
             }
-
+            if (thread.LastActivity > thread.LastSeenAt[0].SeenTime)
+                thread.HasUnreadMessage = true;
 
             return thread;
         }
