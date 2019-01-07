@@ -97,8 +97,16 @@ namespace InstagramApiSharp.Converters
                 }
                 catch { }
             }
-            if (thread.LastActivity > thread.LastSeenAt[0].SeenTime)
-                thread.HasUnreadMessage = true;
+            try
+            {
+                if (thread.LastActivity > thread.LastSeenAt[0].SeenTime)
+                    thread.HasUnreadMessage = true;
+            }
+            catch 
+            {
+                thread.HasUnreadMessage = false;
+            }
+            
 
             return thread;
         }
