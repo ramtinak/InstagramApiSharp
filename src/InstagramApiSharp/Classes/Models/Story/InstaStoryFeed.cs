@@ -17,6 +17,17 @@ namespace InstagramApiSharp.Classes.Models
 
         public List<InstaBroadcast> Broadcasts { get; set; } = new List<InstaBroadcast>();
 
+        public PostliveitemsClass PostLives { get; set; } = new PostliveitemsClass();
+
         public List<InstaHashtagStory> HashtagStories { get; set; } = new List<InstaHashtagStory>();
     }
+    public class PostliveitemsClass
+    {
+        public List<PostliveitemClass> PostLiveItems { get; set; } = new List<PostliveitemClass>();
+    }
+    public class PostliveitemClass
+    {
+        public List<InstaBroadcast> Broadcasts { get; set; } = new List<InstaBroadcast>();
+    }
+
 }

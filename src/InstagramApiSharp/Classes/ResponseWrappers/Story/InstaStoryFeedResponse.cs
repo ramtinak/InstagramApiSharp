@@ -20,5 +20,19 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("tray")] public List</*InstaReelFeedResponse*/JToken> Tray { get; set; }
 
         [JsonProperty("broadcasts")] public List<InstaBroadcast> Broadcasts { get; set; }
+
+        [JsonProperty("post_live")] public PostliveitemsResponseClass PostLives { get; set; }
     }
+
+    public class PostliveitemsResponseClass
+    {
+        [JsonProperty("post_live_items")]
+        public List<PostliveitemResponseClass> PostLiveItems { get; set; }
+    }
+    public class PostliveitemResponseClass
+    {
+        [JsonProperty("broadcasts")]
+        public List<InstaBroadcast> Broadcasts { get; set; }
+    }
+
 }

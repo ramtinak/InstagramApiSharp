@@ -39,6 +39,12 @@ namespace InstagramApiSharp.Converters
             if (SourceObject.Broadcasts != null && SourceObject.Broadcasts.Any())
                 feed.Broadcasts = SourceObject.Broadcasts;
 
+            if (SourceObject.PostLives != null && SourceObject.PostLives.PostLiveItems.Any())
+                foreach (var item in SourceObject.PostLives.PostLiveItems)
+                {
+                    feed.PostLives.PostLiveItems.Add(new PostliveitemClass() { Broadcasts = item.Broadcasts });
+                }
+
             return feed;
         }
     }
