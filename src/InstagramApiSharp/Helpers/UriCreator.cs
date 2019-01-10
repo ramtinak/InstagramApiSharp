@@ -216,6 +216,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for broadcast post live likes");
             return instaUri;
         }
+        public static Uri GetDirectThreadBroadcastLikeUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_THREAD_LIKE, out var instaUri))
+                throw new Exception("Cant create URI for broadcast post live likes");
+            return instaUri;
+        }
 
         public static Uri GetBroadcastStartUri(string broadcastId)
         {

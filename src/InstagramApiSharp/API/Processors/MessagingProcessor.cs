@@ -1227,9 +1227,9 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
-                if(!all)
+                if (!all)
                 {
-                    if(threadIds.Length == 1)
+                    if (threadIds.Length == 1)
                         instaUri = UriCreator.GetDeclinePendingDirectRequestUri(threadIds.FirstOrDefault());
                     else
                     {
@@ -1247,6 +1247,36 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 if (obj.IsSucceed)
                     return Result.Success(true);
                 return Result.Fail("Error: " + obj.Message, false);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+        public async Task<IResult<bool>> SendLikeAsync(string threadId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetDirectThreadBroadcastLikeUri();
+
+                var data = new Dictionary<string, string>
+                {
+                    {"action", "send_item"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"thread_id", $"{threadId}"},
+                    {"client_context", Guid.NewGuid().ToString()}
+                };
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
             }
             catch (Exception exception)
             {
