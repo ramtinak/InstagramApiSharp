@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.1.6</Version>
-    <AssemblyVersion>1.3.1.6</AssemblyVersion>
-    <FileVersion>1.3.1.6</FileVersion>
+    <Version>1.3.1.7</Version>
+    <AssemblyVersion>1.3.1.7</AssemblyVersion>
+    <FileVersion>1.3.1.7</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,12 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.3.1.6
+    <PackageReleaseNotes>v1.3.1.7
+-Added support for postlives
+-Added like in directs
+-Added Challenge support in 2FALogin
+
+v1.3.1.6
 -Added timespan for InstaAudio
 -Added support for dynamically setting httphandler
 
