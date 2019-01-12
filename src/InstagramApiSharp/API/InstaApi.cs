@@ -1090,6 +1090,13 @@ namespace InstagramApiSharp.API
 
                 if (loginFailReason.ErrorType == "sms_code_validation_code_invalid")
                     return Result.Fail("Please check the security code.", InstaLoginTwoFactorResult.InvalidCode);
+                else if (loginFailReason.Message.ToLower().Contains("challenge"))
+                {
+                    _challengeinfo = loginFailReason.Challenge;
+
+                    return Result.Fail("Challenge is required", InstaLoginTwoFactorResult.ChallengeRequired);
+
+                }
                 return Result.Fail("This code is no longer valid, please, call LoginAsync again to request a new one",
                     InstaLoginTwoFactorResult.CodeExpired);
             }
