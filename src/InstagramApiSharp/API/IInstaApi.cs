@@ -21,6 +21,7 @@ using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Enums;
 using InstagramApiSharp.Classes.SessionHandlers;
 using System.Net.Http;
+using System.Collections.Generic;
 
 namespace InstagramApiSharp.API
 {
@@ -257,6 +258,18 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
         Task<IResult<T>> SendGetRequestAsync<T>(System.Uri uri);
+        /// <summary>
+        ///     Send signed post request (include signed signature) 
+        /// </summary>
+        /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
+        /// <param name="data">Data to post</param>
+        Task<IResult<T>> SendSignedPostRequestAsync<T>(System.Uri uri, Dictionary<string, string> data);
+        /// <summary>
+        ///     Send signed post request (include signed signature) 
+        /// </summary>
+        /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
+        /// <param name="data">Data to post</param>
+        Task<IResult<T>> SendSignedPostRequestAsync<T>(System.Uri uri, Newtonsoft.Json.Linq.JObject data);
 
         #endregion Other public functions
 
