@@ -233,7 +233,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="InstaFeed" />
         /// </returns>
-        public async Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters, string[] SeenMediaIDs= null)
+        public async Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters, string[] SeenMediaIDs= null, bool RefreshRequest = false)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             var feed = new InstaFeed();
@@ -256,6 +256,11 @@ namespace InstagramApiSharp.API.Processors
                         }
                     }
                     request.Headers.Add("seen_posts", SeendStr);
+                }
+                if (RefreshRequest)
+                {
+                    request.Headers.Add("reason", "pull_to_refresh");
+                    request.Headers.Add("is_pull_to_refresh", "1");
                 }
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
