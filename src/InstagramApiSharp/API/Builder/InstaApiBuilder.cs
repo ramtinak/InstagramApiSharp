@@ -37,6 +37,8 @@ namespace InstagramApiSharp.API.Builder
             if (_user == null)
                 _user = UserSessionData.Empty;
 
+            if (_httpHandler == null) _httpHandler = new HttpClientHandler();
+
             if (_httpClient == null)
                 _httpClient = new HttpClient(_httpHandler) { BaseAddress = new Uri(InstaApiConstants.INSTAGRAM_URL) };
 
@@ -63,7 +65,6 @@ namespace InstagramApiSharp.API.Builder
                 InstaApiConstants.TIMEZONE_OFFSET = int.Parse(DateTimeOffset.Now.Offset.TotalSeconds.ToString());
             }
             catch { }
-            if (_device == null) AndroidDeviceGenerator.GetRandomAndroidDevice();
 
             if (_httpRequestProcessor == null)
                 _httpRequestProcessor =
