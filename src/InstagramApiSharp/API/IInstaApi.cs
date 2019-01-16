@@ -247,6 +247,11 @@ namespace InstagramApiSharp.API
         ///     <para>I.e: 16200 for Iran/Tehran</para>
         /// </param>
         void SetTimezoneOffset(int timezoneOffset);
+        /// <summary>
+        ///     Send get request
+        /// </summary>
+        /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
+        Task<IResult<string>> SendGetRequestAsync(System.Uri uri);
         #endregion Other public functions
 
         #region Authentication, challenge functions

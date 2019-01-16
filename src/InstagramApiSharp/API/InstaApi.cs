@@ -1904,6 +1904,48 @@ namespace InstagramApiSharp.API
         {
             InstaApiConstants.TIMEZONE_OFFSET = timezoneOffset;
         }
+        /// <summary>
+        ///     Send get request
+        /// </summary>
+        /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
+        public async Task<IResult<string>> SendGetRequestAsync(Uri uri)
+        {
+            try
+            {
+                return await SendGetRequestAsync<string>(uri);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, "");
+            }
+        }
+        /// <summary>
+        ///     Send get request
+        /// </summary>
+        /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
+        public async Task<IResult<T>> SendGetRequestAsync<T>(Uri uri)
+        {
+            try
+            {
+                if (uri == null)
+                    return Result.Fail("Uri cannot be null!", default(T));
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<T>(response, json);
+
+                return Result.Success(JsonConvert.DeserializeObject<T>(json));
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, default(T));
+            }
+        }
         #endregion Other public functions
 
         #region State data
