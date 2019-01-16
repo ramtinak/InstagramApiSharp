@@ -56,9 +56,11 @@ namespace InstagramApiSharp.API.Processors
         ///     Get user timeline feed (feed of recent posts from users you follow) asynchronously.
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="seenMediaIds">Id of the posts seen till now</param>
+        /// <param name="refreshRequest">Request refresh feeds</param>
         /// <returns>
         ///     <see cref="InstaFeed" />
         /// </returns>
-        Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters, string[] SeenMediaIDs = null);
+        Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters, string[] seenMediaIds = null, bool refreshRequest = false);
     }
 }

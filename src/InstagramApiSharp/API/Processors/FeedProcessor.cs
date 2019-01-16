@@ -229,11 +229,11 @@ namespace InstagramApiSharp.API.Processors
         ///     Get user timeline feed (feed of recent posts from users you follow) asynchronously.
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        /// <param name="SeenMediaIDs">Id of the posts seen till now</param>
+        /// <param name="seenMediaIds">Id of the posts seen till now</param>
         /// <returns>
         ///     <see cref="InstaFeed" />
         /// </returns>
-        public async Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters, string[] SeenMediaIDs= null, bool RefreshRequest = false)
+        public async Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters, string[] seenMediaIds = null, bool refreshRequest = false)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             var feed = new InstaFeed();
@@ -241,23 +241,23 @@ namespace InstagramApiSharp.API.Processors
             {
                 var userFeedUri = UriCreator.GetUserFeedUri(paginationParameters.NextMaxId);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
-                if(SeenMediaIDs != null)
+                if(seenMediaIds != null)
                 {
                     string SeendStr = "";
-                    for (int i = 0; i < SeenMediaIDs.Length; i++)
+                    for (int i = 0; i < seenMediaIds.Length; i++)
                     {
-                        if(i < (SeenMediaIDs.Length -1))
+                        if(i < (seenMediaIds.Length -1))
                         {
-                            SeendStr += SeenMediaIDs[i] + ",";
+                            SeendStr += seenMediaIds[i] + ",";
                         }
                         else
                         {
-                            SeendStr += SeenMediaIDs[i];
+                            SeendStr += seenMediaIds[i];
                         }
                     }
                     request.Headers.Add("seen_posts", SeendStr);
                 }
-                if (RefreshRequest)
+                if (refreshRequest)
                 {
                     request.Headers.Add("reason", "pull_to_refresh");
                     request.Headers.Add("is_pull_to_refresh", "1");
