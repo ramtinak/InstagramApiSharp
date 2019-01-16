@@ -230,6 +230,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <param name="seenMediaIds">Id of the posts seen till now</param>
+        /// <param name="refreshRequest">Request refresh feeds</param>
         /// <returns>
         ///     <see cref="InstaFeed" />
         /// </returns>

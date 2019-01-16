@@ -981,8 +981,8 @@ namespace InstagramApiSharp.API
                 if (string.IsNullOrEmpty(csrfToken))
                     return Result.Fail<bool>("Cannot find 'csrftoken' in cookies!");
 
-                if (string.IsNullOrEmpty(user))
-                    return Result.Fail<bool>("Cannot find 'ds_user' in cookies!");
+                //if (string.IsNullOrEmpty(user))
+                //    return Result.Fail<bool>("Cannot find 'ds_user' in cookies!");
 
                 if (string.IsNullOrEmpty(userId))
                     return Result.Fail<bool>("Cannot find 'ds_user_id' in cookies!");
@@ -991,7 +991,7 @@ namespace InstagramApiSharp.API
                 cookies = cookies.Replace(';', ',');
                 _httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(uri, cookies);
                 _user = UserSessionData.Empty;
-                _user.UserName = _httpRequestProcessor.RequestMessage.Username = user;
+                _user.UserName = _httpRequestProcessor.RequestMessage.Username = user ?? "AlakiMasalan";
                 _user.Password = "AlakiMasalan";
                 _user.LoggedInUser = new InstaUserShort
                 {
@@ -1008,18 +1008,17 @@ namespace InstagramApiSharp.API
                 IsUserAuthenticated = true;
                 InvalidateProcessors();
 
-                var us = await UserProcessor.GetUserAsync(user);
+                var us = await UserProcessor.GetUserInfoByIdAsync(long.Parse(userId));
                 if (!us.Succeeded)
                 {
                     IsUserAuthenticated = false;
                     return Result.Fail(us.Info, false);
                 }
-
+                _user.UserName = _httpRequestProcessor.RequestMessage.Username = _user.LoggedInUser.UserName = us.Value.Username;
                 _user.LoggedInUser.FullName = us.Value.FullName;
                 _user.LoggedInUser.IsPrivate = us.Value.IsPrivate;
                 _user.LoggedInUser.IsVerified = us.Value.IsVerified;
-                _user.LoggedInUser.ProfilePicture = us.Value.ProfilePicture;
-                _user.LoggedInUser.ProfilePictureId = us.Value.ProfilePictureId;
+                _user.LoggedInUser.ProfilePicture = us.Value.ProfilePicUrl;
                 _user.LoggedInUser.ProfilePicUrl = us.Value.ProfilePicUrl;
 
                 return Result.Success(true);
