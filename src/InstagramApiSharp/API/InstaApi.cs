@@ -1954,25 +1954,7 @@ namespace InstagramApiSharp.API
         /// <param name="data">Data to post</param>
         public async Task<IResult<T>> SendSignedPostRequestAsync<T>(Uri uri, Dictionary<string, string> data)
         {
-            try
-            {
-                if (uri == null)
-                    return Result.Fail("Uri cannot be null!", default(T));
-
-                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, uri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<T>(response, json);
-
-                return Result.Success(JsonConvert.DeserializeObject<T>(json));
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception, default(T));
-            }
+            return await SendSignedPostRequest<T>(uri, null, data);
         }
         /// <summary>
         ///     Send signed post request (include signed signature) 
@@ -1981,12 +1963,21 @@ namespace InstagramApiSharp.API
         /// <param name="data">Data to post</param>
         public async Task<IResult<T>> SendSignedPostRequestAsync<T>(Uri uri, JObject data)
         {
+            return await SendSignedPostRequest<T>(uri, data, null);
+        }
+        public async Task<IResult<T>> SendSignedPostRequest<T>(Uri uri, JObject JData, Dictionary<string, string> DicData)
+        {
             try
             {
                 if (uri == null)
                     return Result.Fail("Uri cannot be null!", default(T));
 
-                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, uri, _deviceInfo, data);
+                HttpRequestMessage request;
+                if (JData != null)
+                    request = _httpHelper.GetSignedRequest(HttpMethod.Post, uri, _deviceInfo, JData);
+                else
+                    request = _httpHelper.GetSignedRequest(HttpMethod.Post, uri, _deviceInfo, DicData);
+
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -2001,6 +1992,8 @@ namespace InstagramApiSharp.API
                 return Result.Fail(exception, default(T));
             }
         }
+
+
         #endregion Other public functions
 
         #region State data
