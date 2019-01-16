@@ -1965,7 +1965,7 @@ namespace InstagramApiSharp.API
         {
             return await SendSignedPostRequest<T>(uri, data, null);
         }
-        public async Task<IResult<T>> SendSignedPostRequest<T>(Uri uri, JObject JData, Dictionary<string, string> DicData)
+        private async Task<IResult<T>> SendSignedPostRequest<T>(Uri uri, JObject JData, Dictionary<string, string> DicData)
         {
             try
             {
@@ -1992,7 +1992,33 @@ namespace InstagramApiSharp.API
                 return Result.Fail(exception, default(T));
             }
         }
+        /// <summary>
+        ///     Send post request
+        /// </summary>
+        /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
+        /// <param name="data">Data to post</param>
+        public async Task<IResult<T>> SendPostRequestAsync<T>(Uri uri, Dictionary<string, string> data)
+        {
+            try
+            {
+                if (uri == null)
+                    return Result.Fail("Uri cannot be null!", default(T));
 
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, uri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<T>(response, json);
+
+                return Result.Success(JsonConvert.DeserializeObject<T>(json));
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, default(T));
+            }
+        }
 
         #endregion Other public functions
 

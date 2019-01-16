@@ -270,7 +270,12 @@ namespace InstagramApiSharp.API
         /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
         /// <param name="data">Data to post</param>
         Task<IResult<T>> SendSignedPostRequestAsync<T>(System.Uri uri, Newtonsoft.Json.Linq.JObject data);
-
+        /// <summary>
+        ///     Send post request
+        /// </summary>
+        /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
+        /// <param name="data">Data to post</param>
+        Task<IResult<T>> SendPostRequestAsync<T>(System.Uri uri, Dictionary<string, string> data);
         #endregion Other public functions
 
         #region Authentication, challenge functions
