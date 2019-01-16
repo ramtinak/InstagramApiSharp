@@ -243,21 +243,8 @@ namespace InstagramApiSharp.API.Processors
                 var userFeedUri = UriCreator.GetUserFeedUri(paginationParameters.NextMaxId);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
                 if(seenMediaIds != null)
-                {
-                    string SeendStr = "";
-                    for (int i = 0; i < seenMediaIds.Length; i++)
-                    {
-                        if(i < (seenMediaIds.Length -1))
-                        {
-                            SeendStr += seenMediaIds[i] + ",";
-                        }
-                        else
-                        {
-                            SeendStr += seenMediaIds[i];
-                        }
-                    }
-                    request.Headers.Add("seen_posts", SeendStr);
-                }
+                    request.Headers.Add("seen_posts", seenMediaIds.EncodeList(false));
+                
                 if (refreshRequest)
                 {
                     request.Headers.Add("reason", "pull_to_refresh");
