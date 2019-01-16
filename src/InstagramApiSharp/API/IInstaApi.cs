@@ -252,6 +252,12 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
         Task<IResult<string>> SendGetRequestAsync(System.Uri uri);
+        /// <summary>
+        ///     Send get request
+        /// </summary>
+        /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
+        Task<IResult<T>> SendGetRequestAsync<T>(System.Uri uri);
+
         #endregion Other public functions
 
         #region Authentication, challenge functions
