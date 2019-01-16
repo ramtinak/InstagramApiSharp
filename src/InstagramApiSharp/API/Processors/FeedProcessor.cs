@@ -14,6 +14,8 @@ using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
 using InstaRecentActivityConverter = InstagramApiSharp.Converters.Json.InstaRecentActivityConverter;
 using System.Diagnostics;
+using System.Collections.Generic;
+
 namespace InstagramApiSharp.API.Processors
 {
     /// <summary>
@@ -241,16 +243,26 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userFeedUri = UriCreator.GetUserFeedUri(paginationParameters.NextMaxId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
-                if(seenMediaIds != null)
-                    request.Headers.Add("seen_posts", seenMediaIds.EncodeList(false));
-                
+                Dictionary<string, string> fields = new Dictionary<string, string>()
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"session_id", _user.RankToken},
+                    {"is_async_ads", "0"},
+                    {"will_sound_on", "0"},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"phone_id", _deviceInfo.DeviceGuid.ToString()},
+                };
+                if (seenMediaIds != null)
+                    fields.Add("seen_posts", seenMediaIds.EncodeList(false));
+
                 if (refreshRequest)
                 {
-                    request.Headers.Add("reason", "pull_to_refresh");
-                    request.Headers.Add("is_pull_to_refresh", "1");
+                    fields.Add("reason", "pull_to_refresh");
+                    fields.Add("is_pull_to_refresh", "1");
                 }
-                var response = await _httpRequestProcessor.SendAsync(request);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo, fields);
+                
+               var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
                 if (response.StatusCode != HttpStatusCode.OK)
