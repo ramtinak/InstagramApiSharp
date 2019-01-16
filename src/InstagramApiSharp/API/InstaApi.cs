@@ -981,9 +981,6 @@ namespace InstagramApiSharp.API
                 if (string.IsNullOrEmpty(csrfToken))
                     return Result.Fail<bool>("Cannot find 'csrftoken' in cookies!");
 
-                //if (string.IsNullOrEmpty(user))
-                //    return Result.Fail<bool>("Cannot find 'ds_user' in cookies!");
-
                 if (string.IsNullOrEmpty(userId))
                     return Result.Fail<bool>("Cannot find 'ds_user_id' in cookies!");
 
@@ -991,7 +988,8 @@ namespace InstagramApiSharp.API
                 cookies = cookies.Replace(';', ',');
                 _httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(uri, cookies);
                 _user = UserSessionData.Empty;
-                _user.UserName = _httpRequestProcessor.RequestMessage.Username = user ?? "AlakiMasalan";
+                user = user ?? "AlakiMasalan";
+                _user.UserName = _httpRequestProcessor.RequestMessage.Username = user;
                 _user.Password = "AlakiMasalan";
                 _user.LoggedInUser = new InstaUserShort
                 {
