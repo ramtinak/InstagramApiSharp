@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.1.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.1.7 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -89,6 +89,25 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.1.7
+- [Add] support for postlives
+- [Add] like in directs
+- [Add] Challenge support in 2FALogin
+
+v1.3.1.6
+- [Add] timespan for InstaAudio
+- [Add] support for dynamically setting httphandler
+
+v1.3.1.3
+- [Add] top searches in discover processor
+- [Add] LoginWithCookiesAsync to IInstaApi
+- [Bugfix] for live comments get
+- [Bugfix] for SearchPlacesAsync
+
+v1.3.1.1
+- [Bugfix] fix for hashtags deserialize on api version 64
+- [Add] RichText support in API Version 64 for Activities
+
 v1.3.1.0
 - [Add] set/get timezone and timezone offset  (thx to [@burak1000](https://github.com/burak1000) for report)
 - [Bugfix] for MarkDirectThreadAsSeenAsync
@@ -106,75 +125,6 @@ v1.3.0.0
 - [Add] UnblockUserCommentingAsync to CommentProcessor
 - [Add] GetBlockedCommentersAsync to CommentProcessor
 - [Update] FriendshipStatus property in GetUserAsync
-
-v1.2.0.1
-- [Bugfix] for recent activities return following activities
-
-v1.2.0
-- [Add] ISessionHandler for save/load session to IInstaApiBuilder (thx to [@estgold](https://github.com/estgold) for PR)
-- [Bugfix] for GetSecuritySettingsInfoAsync
-- [Add] GetBlockedUsersAsync to UserProcessor
-- [Add] SwitchToPersonalAccountAsync to AccountProcessor
-- [Add] SetHttpRequestProccesor in IInstaApiBuilder (thx to [@estgold](https://github.com/estgold) for PR)
-- [Add] GetRecoveryOptionsAsync to IInstaApi
-- [Bugfix] for VerifyCodeForChallengeRequireAsync
-- [Rename] GetBlockedStorySharingUsersStory to GetBlockedUsersFromStoriesAsync
-- [Add] voice message support to direct thread item (Api version v74 or newer is required => `InstaApi.SetApiVersion(InstaApiVersionType.Version74)`)
-- [Add] animated image (gif) message support to direct thread item (Api version v74 or newer is required => `InstaApi.SetApiVersion(InstaApiVersionType.Version74)`)
-
-v1.1.6.2
-- [Update] A change in builder to made it IoC/DI compatible (thx to [@raminmt](https://github.com/RaminMT) for PR)
-
-v1.1.6.1
-- [Bugfix] for GetFollowingRecentActivityFeedAsync pagination [now works correctly]
-- [Add] new UploadAlbumAsync (check [#95 issue](https://github.com/ramtinak/InstagramApiSharp/issues/95))
-- [Add] GetBlockedMediasAsync to MediaProcessor
-- [Add] GetMediaByIdsAsync to MediaProcessor for getting multiple medias
-
-v1.1.6.0
-- [Bugfix] for GetFollowingRecentActivityFeedAsync pagination
-- [Add] InstaImageUpload class (use this for uploading photo/album from now)
-- [Add] User tags support to UploadAlbumAsync (see [album wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki/Upload-album))
-- [Update] UploadPhotoAsync (you should use InstaImageUpload instead! see [photo wiki page](https://github.com/ramtinak/InstagramApiSharp/wiki/Upload-photo))
-
-v1.1.5.5
-- [Update] Result with more error support
-- [Add] MutualFirst flag added to GetUserFollowersAsync
-
-v1.1.5.2
-- [Add] ability to request verification code again (thx to [@sh2ezo](https://github.com/sh2ezo) for PR)
-- [Support] NetStandard 1.3
-- [Update] InstaRecentActivityConverter
-- [Add] PaginationParameters support to GetCollectionsAsync
-- [Rename] GetCollectionAsync to GetSingleCollectionAsync
-- [Add] PaginationParameters support to GetSingleCollectionAsync
-- [Add] GetLocationInfoAdd GetLocationInfo to LocationProcessor to LocationProcessor
-- [Add] EditCollectionAsync to CollectionProcessor
-
-v1.1.5.1
-- [Add] to VerifyEmailByVerificationUriAsync to AccountProcessor
-- [Add] DeleteDirectThreadAsync to MessagingProcessor
-- [Add] DeleteSelfMessageAsync to MessagingProcessor
-
-v1.1.5.0
-- [Bugfix] for GetUserAsync
-- [Add] user tags support to UploadPhotoAsync
-- [Add] user tags edit to EditMediaAsync
-- [Add] Product tags to InstaMedia
-- [Add] user tag support to InstaCarouselItem
-- [Add] ShoppingProcessor
-- [Add] GetUserShoppableMediaAsync to ShoppingProcessor and UserProcessor
-- [Add] GetProductInfoAsync to ShoppingProcessor
-- [Add] MarkUserAsOverageAsync to UserProcessor
-- [Add] FavoriteUserAsync and UnFavoriteUserAsync to UserProcessor
-- [Add] FavoriteUserStoriesAsync and UnFavoriteUserStoriesAsync to UserProcessor
-- [Add] MuteUserMediaAsync and UnMuteUserMediaAsync to UserProcessor
-- [Add] HideMyStoryFromUserAsync and UnHideMyStoryFromUserAsync to UserProcessor
-- [Add] MuteFriendStoryAsync and UnMuteFriendStoryAsync to UserProcessor
-- [Add] GetBlockedStorySharingUsersStory to StoryProcessor
-
-v1.1.4.4
-- [Bugfix] for phone number/email login (now you can login with phone/email to as well) (spectial thanks to [@learn-itnow](https://github.com/learn-itnow) for his help)
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
