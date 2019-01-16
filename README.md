@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.1.7 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.1.8 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -44,7 +44,7 @@ Some of features:
 
 |    |    |    |    |
 | ------ | ------ | ------ | ------ |
-| Login | Login with Facebook | Logout | Create new account email/phone number |
+| Login | Login with cookies | Logout | Create new account email/phone number |
 | Edit profile | Change/remove profile picture | Story settings | Get user explore feed |
 | Get user timeline feed | Get all user media by username | Get media by its id | Get user info by its username |
 | Get current user info | Get tag feed by tag value | Get current user media | Get followers list |
@@ -89,6 +89,10 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.1.8
+- [Add] refresh to timeline feed
+- [Bugfix] for LoginWithCookiesAsync
+
 v1.3.1.7
 - [Add] support for postlives
 - [Add] like in directs

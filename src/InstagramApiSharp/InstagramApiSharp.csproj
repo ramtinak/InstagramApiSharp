@@ -11,15 +11,15 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.1.7</Version>
-    <AssemblyVersion>1.3.1.7</AssemblyVersion>
-    <FileVersion>1.3.1.7</FileVersion>
+    <Version>1.3.1.8</Version>
+    <AssemblyVersion>1.3.1.8</AssemblyVersion>
+    <FileVersion>1.3.1.8</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
 Support:
 - Create new account with phone number and email.
-- Login with Facebook.
+- Login with Cookies.
 - Edit Profile, change/remove profile picture.
 - Upload album (videos and photos)
 - Upload story (video/photo) to self story and direct thread
@@ -38,23 +38,27 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.3.1.7
--Added support for postlives
--Added like in directs
--Added Challenge support in 2FALogin
+    <PackageReleaseNotes>v1.3.1.8
+- [Add] refresh to timeline feed
+- [Bugfix] for LoginWithCookiesAsync
+
+v1.3.1.7
+- [Add] support for postlives
+- [Add] like in directs
+- [Add] Challenge support in 2FALogin
 
 v1.3.1.6
--Added timespan for InstaAudio
--Added support for dynamically setting httphandler
+- [Add] timespan for InstaAudio
+- [Add] support for dynamically setting httphandler
 
 v1.3.1.3
--Added top searches in discover processor
--Add LoginWithCookiesAsync to IInstaApi
--Fix for live comments get
--bugfix for SearchPlacesAsync
+- [Add] top searches in discover processor
+- [Add] LoginWithCookiesAsync to IInstaApi
+- [Bugfix] for live comments get
+- [Bugfix] for SearchPlacesAsync
 
 v1.3.1.1
-- [Fix] fix for hashtags deserialize on api version 64
+- [Bugfix] fix for hashtags deserialize on api version 64
 - [Add] RichText support in API Version 64 for Activities 
 
 v1.3.1.0
