@@ -243,15 +243,31 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var userFeedUri = UriCreator.GetUserFeedUri(paginationParameters.NextMaxId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
-                if(seenMediaIds != null)
-                    request.Headers.Add("seen_posts", seenMediaIds.EncodeList(false));
-                
+
+                var data = new Dictionary<string, string>
+                {
+                    {"is_prefetch", "0"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id", _deviceInfo.PhoneGuid.ToString()},
+                    {"phone_id", _deviceInfo.RankToken.ToString()},
+                    {"client_session_id",  _deviceInfo.AdId.ToString()}
+                };
+
+                if (seenMediaIds != null)
+                    data.Add("seen_posts", seenMediaIds.EncodeList(false));
+
                 if (refreshRequest)
                 {
-                    request.Headers.Add("reason", "pull_to_refresh");
-                    request.Headers.Add("is_pull_to_refresh", "1");
+                    data.Add("reason", "pull_to_refresh");
+                    data.Add("is_pull_to_refresh", "1");
                 }
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, userFeedUri, _deviceInfo, data);
+                request.Headers.Add("X-Ads-Opt-Out", "0");
+                request.Headers.Add("X-Google-AD-ID", _deviceInfo.GoogleAdId.ToString());
+                request.Headers.Add("X-DEVICE-ID", _deviceInfo.DeviceGuid.ToString());
+
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
