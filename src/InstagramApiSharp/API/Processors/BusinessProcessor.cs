@@ -381,14 +381,17 @@ namespace InstagramApiSharp.API.Processors
                 var variables = new JObject
                 {
                     {"query_params", queryParamsData},
-                    {"timezone", InstaApiConstants.TIMEZONE}
+                    {"timezone", InstaApiConstants.TIMEZONE},
+                    {"activityTab", true},
+                    {"audienceTab", true},
+                    {"contentTab", true}
                 };
                 var data = new Dictionary<string, string>
                 {
                     {"access_token", "undefined"},
                     {"fb_api_caller_class", "RelayModern"},
                     {"variables", variables.ToString(Formatting.None)},
-                    {"doc_id", "1618080801573402"}
+                    {"doc_id", "1926322010754880"}
                 };
                 var request =
                     _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
