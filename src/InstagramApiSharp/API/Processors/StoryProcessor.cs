@@ -67,7 +67,7 @@ namespace InstagramApiSharp.API.Processors
                 var cover = new JObject
                 {
                     {"media_id", mediaId},
-                    {"crop_rect", new JArray { 0.0, 0.20198676, 1.0, 0.79801327 }.ToString(Formatting.None) }
+                    {"crop_rect", new JArray { 0.0, 0.19545822, 1.0, 0.8037307 }.ToString(Formatting.None) }
                 }.ToString(Formatting.None);
                 var data = new JObject
                 {
