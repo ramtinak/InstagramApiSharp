@@ -169,6 +169,31 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaBroadcastStartResponse>> StartAsync(string broadcastId, bool sendNotifications);
 
         /// <summary>
+        ///     Share an live broadcast to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="broadcastId">Broadcast id to send ( <see cref="InstaBroadcast.Id"/> )</param>
+        /// <param name="threadIds">Thread ids</param>
+        Task<IResult<bool>> ShareLiveToDirectThreadAsync(string text, string broadcastId, params string[] threadIds);
+
+        /// <summary>
+        ///     Share an live broadcast to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="broadcastId">Broadcast id to send ( <see cref="InstaBroadcast.Id"/> )</param>
+        /// <param name="threadIds">Thread ids</param>
+        /// <param name="recipients">Recipients ids</param>
+        Task<IResult<bool>> ShareLiveToDirectThreadAsync(string text, string broadcastId, string[] threadIds, string[] recipients);
+
+        /// <summary>
+        ///     Share an live broadcast to direct recipients
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="broadcastId">Broadcast id to send ( <see cref="InstaBroadcast.Id"/> )</param>
+        /// <param name="recipients">Recipients ids</param>
+        Task<IResult<bool>> ShareLiveToDirectRecipientAsync(string text, string broadcastId, params string[] recipients);
+
+        /// <summary>
         /// Unpin comment from broadcast.
         /// </summary>
         /// <param name="broadcastId"></param>

@@ -13,7 +13,7 @@ namespace InstagramApiSharp.Classes.Models
     public class InstaBroadcast
     {
         [JsonProperty("id")]
-        public long Id { get; set; }
+        public string Id { get; set; }
         [JsonProperty("rtmp_playback_url")]
         public string RtmpPlaybackUrl { get; set; }
         [JsonProperty("dash_playback_url")]

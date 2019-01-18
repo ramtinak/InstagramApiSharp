@@ -528,6 +528,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetShareLiveToDirectUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_LIVE_VIEWER_INVITE, out var instaUri))
+                throw new Exception("Cant create URI for share live to direct");
+            return instaUri;
+        }
+
         public static Uri GetDirectSendPhotoUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_UPLOAD_PHOTO, out var instaUri))

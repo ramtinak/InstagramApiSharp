@@ -194,7 +194,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="text">Text to send</param>
         /// <param name="hashtag">Hashtag to send</param>
-        /// <param name="recipients">Thread ids</param>
+        /// <param name="recipients">Recipients ids</param>
         /// <returns>Returns True if hashtag sent</returns>
         Task<IResult<bool>> SendDirectHashtagToRecipientsAsync(string text, string hashtag, params string[] recipients);
 
@@ -222,7 +222,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="text">Text to send</param>
         /// <param name="link">Link to send (only one link will approved)</param>
-        /// <param name="recipients">Thread ids</param>
+        /// <param name="recipients">Recipients ids</param>
         /// <returns>Returns True if link sent</returns>
         Task<IResult<bool>> SendDirectLinkToRecipientsAsync(string text, string link, params string[] recipients);
 
