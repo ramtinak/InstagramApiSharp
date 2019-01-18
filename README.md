@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.1.8 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.2.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -89,6 +89,19 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.2.0
+- [Add] Api Version 76
+- [Set] api version v76 as default (for new logins)
+- [Update] GetStatisticsAsync
+- [Update] highlight values
+- [Add] SendDirectHashtagAsync to MessagingProcessor
+- [Add] SendDirectHashtagToRecipientsAsync to MessagingProcessor
+- [Add] support Hashtag message in direct threads
+- [Add] support LiveViewerInvite in direct message
+- [Add] ShareLiveToDirectThreadAsync to LiveProcessor
+- [Add] ShareLiveToDirectRecipientAsync to LiveProcessor
+- [Update] GetUserTimelineFeedAsync
+
 v1.3.1.8
 - [Add] refresh to timeline feed
 - [Bugfix] for LoginWithCookiesAsync
@@ -170,4 +183,4 @@ This code is in no way affiliated with, authorized, maintained, sponsored or end
 
 
 
-Iranian developers - (c) 2018 | Tabestan & Paeez 1397.
+Iranian developers - (c) 2019 | Tabestan & Paeez 1397.
