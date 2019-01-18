@@ -59,5 +59,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("animated_media")] public InstaAnimatedImageResponse AnimatedMedia { get; set; }
 
         [JsonProperty("hashtag")] public InstaDirectHashtagResponse HashtagMedia { get; set; }
+
+        [JsonProperty("live_viewer_invite")] public InstaDirectBroadcastResponse LiveViewerInvite { get; set; }
     }
 }

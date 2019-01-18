@@ -20,6 +20,7 @@
         FelixShare = 12,
         VoiceMedia = 13,
         AnimatedMedia = 14,
-        Hashtag = 15
+        Hashtag = 15,
+        LiveViewerInvite = 16
     }
 }

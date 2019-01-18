@@ -23,7 +23,7 @@ namespace InstagramApiSharp.Classes.Models
         [JsonProperty("broadcast_status")]
         public string BroadcastStatus { get; set; }
         [JsonProperty("viewer_count")]
-        public float ViewerCount { get; set; }
+        public long ViewerCount { get; set; }
         [JsonProperty("internal_only")]
         public bool InternalOnly { get; set; }
         [JsonProperty("cover_frame_url")]

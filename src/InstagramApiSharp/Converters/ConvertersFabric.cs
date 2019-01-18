@@ -655,5 +655,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaDirectHashtagConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaDirectBroadcast, InstaDirectBroadcastResponse> GetDirectBroadcastConverter(
+            InstaDirectBroadcastResponse response)
+        {
+            return new InstaDirectBroadcastConverter { SourceObject = response };
+        }
     }
 }

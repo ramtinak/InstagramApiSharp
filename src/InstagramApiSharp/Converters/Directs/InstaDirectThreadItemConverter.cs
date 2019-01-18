@@ -219,6 +219,14 @@ namespace InstagramApiSharp.Converters
                 }
                 catch { }
             }
+            else if (threadItem.ItemType == InstaDirectThreadItemType.LiveViewerInvite && SourceObject.LiveViewerInvite != null)
+            {
+                try
+                {
+                    threadItem.LiveViewerInvite = ConvertersFabric.Instance.GetDirectBroadcastConverter(SourceObject.LiveViewerInvite).Convert();
+                }
+                catch { }
+            }
             return threadItem;
         }
     }
