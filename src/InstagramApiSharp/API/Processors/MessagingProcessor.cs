@@ -700,6 +700,79 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
         }
 
         /// <summary>
+        ///     Send hashtag to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="hashtag">Hashtag to send</param>
+        /// <param name="threadIds">Thread ids</param>
+        /// <returns>Returns True if hashtag sent</returns>
+        public async Task<IResult<bool>> SendDirectHashtagAsync(string text, string hashtag, params string[] threadIds)
+        {
+            return await SendDirectHashtagAsync(text, hashtag, threadIds, null);
+        }
+
+        /// <summary>
+        ///     Send hashtag to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="hashtag">Hashtag to send</param>
+        /// <param name="threadIds">Thread ids</param>
+        /// <param name="recipients">Recipients ids</param>
+        /// <returns>Returns True if hashtag sent</returns>
+        public async Task<IResult<bool>> SendDirectHashtagToRecipientsAsync(string text, string hashtag, params string[] recipients)
+        {
+            return await SendDirectHashtagAsync(text, hashtag, null, recipients);
+        }
+
+
+        /// <summary>
+        ///     Send hashtag to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="hashtag">Hashtag to send</param>
+        /// <param name="recipients">Thread ids</param>
+        /// <returns>Returns True if hashtag sent</returns>
+        public async Task<IResult<bool>> SendDirectHashtagAsync(string text, string hashtag, string[] threadIds, string[] recipients)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetSendDirectHashtagUri();
+                var clientContext = Guid.NewGuid().ToString();
+                var data = new Dictionary<string, string>
+                {
+                    {"text", text ?? string.Empty},
+                    {"hashtag", hashtag},
+                    {"action", "send_item"},
+                    {"client_context", clientContext},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+                if (threadIds?.Length > 0)
+                {
+                    data.Add("thread_ids", $"[{threadIds.EncodeList(false)}]");
+                }
+                if (recipients?.Length > 0)
+                {
+                    data.Add("recipient_users", "[[" + recipients.EncodeList(false) + "]]");
+                }
+                var request =
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
+                return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Send link address to direct thread
         /// </summary>
         /// <param name="text">Text to send</param>
@@ -738,7 +811,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                 var clientContext = Guid.NewGuid().ToString();
                 var data = new Dictionary<string, string>
                 {
-                    {"link_text", text},
+                    {"link_text", text ?? string.Empty},
                     {"link_urls", $"[{ExtensionHelper.EncodeList(new[]{ link })}]"},
                     {"action", "send_item"},
                     {"client_context", clientContext},
@@ -915,8 +988,7 @@ InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds)
                     fields.Add("recipient_users", "[[" + recipients + "]]");
                 else
                     fields.Add("recipient_users", "[]");
-                //else
-                //    return Result.Fail<InstaDirectInboxThreadList>("Please provide at least one recipient.");
+
                 if (!string.IsNullOrEmpty(threadIds))
                     fields.Add("thread_ids", "[" + threadIds + "]");
 

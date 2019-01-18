@@ -1281,6 +1281,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetSendDirectHashtagUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_HASHTAG, out var instaUri))
+                throw new Exception("Cant create URI for send hashtag to direct thread");
+            return instaUri;
+        }
+
         public static Uri GetSendTwoFactorEnableSmsUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_SEND_TWO_FACTOR_ENABLE_SMS, out var instaUri))

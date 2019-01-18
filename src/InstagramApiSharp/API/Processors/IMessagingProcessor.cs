@@ -171,6 +171,34 @@ namespace InstagramApiSharp.API.Processors
        InstaViewMode viewMode = InstaViewMode.Replayable, params string[] threadIds);
 
         /// <summary>
+        ///     Send hashtag to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="hashtag">Hashtag to send</param>
+        /// <param name="threadIds">Thread ids</param>
+        /// <returns>Returns True if hashtag sent</returns>
+        Task<IResult<bool>> SendDirectHashtagAsync(string text, string hashtag, params string[] threadIds);
+
+        /// <summary>
+        ///     Send hashtag to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="hashtag">Hashtag to send</param>
+        /// <param name="threadIds">Thread ids</param>
+        /// <param name="recipients">Recipients ids</param>
+        /// <returns>Returns True if hashtag sent</returns>
+        Task<IResult<bool>> SendDirectHashtagAsync(string text, string hashtag, string[] threadIds, string[] recipients);
+
+        /// <summary>
+        ///     Send hashtag to direct thread
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="hashtag">Hashtag to send</param>
+        /// <param name="recipients">Thread ids</param>
+        /// <returns>Returns True if hashtag sent</returns>
+        Task<IResult<bool>> SendDirectHashtagToRecipientsAsync(string text, string hashtag, params string[] recipients);
+
+        /// <summary>
         ///     Send link address to direct thread
         /// </summary>
         /// <param name="text">Text to send</param>
