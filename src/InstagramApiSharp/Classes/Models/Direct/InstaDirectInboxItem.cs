@@ -56,5 +56,6 @@ namespace InstagramApiSharp.Classes.Models
 
         public InstaAnimatedImage AnimatedMedia { get; set; }
 
+        public InstaDirectHashtag HashtagMedia { get; set; }
     }
 }

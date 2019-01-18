@@ -211,6 +211,14 @@ namespace InstagramApiSharp.Converters
                 }
                 catch { }
             }
+            else if (threadItem.ItemType == InstaDirectThreadItemType.Hashtag && SourceObject.HashtagMedia != null)
+            {
+                try
+                {
+                    threadItem.HashtagMedia = ConvertersFabric.Instance.GetDirectHashtagConverter(SourceObject.HashtagMedia).Convert();
+                }
+                catch { }
+            }
             return threadItem;
         }
     }

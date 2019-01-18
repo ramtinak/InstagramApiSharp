@@ -649,5 +649,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaBlockedCommentersConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaDirectHashtag, InstaDirectHashtagResponse> GetDirectHashtagConverter(
+            InstaDirectHashtagResponse response)
+        {
+            return new InstaDirectHashtagConverter { SourceObject = response };
+        }
     }
 }
