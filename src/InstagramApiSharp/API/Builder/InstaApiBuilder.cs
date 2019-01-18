@@ -170,7 +170,9 @@ namespace InstagramApiSharp.API.Builder
         ///     <para>Note: this is optional, if you didn't set this, InstagramApiSharp will choose random device.</para>
         /// </summary>
         /// <param name="androidDevice">Android device</param>
-        /// <returns>API Builder</returns>
+        /// <returns>
+        ///     API Builder
+        /// </returns>
         public IInstaApiBuilder SetDevice(AndroidDevice androidDevice)
         {
             _device = androidDevice;
@@ -180,6 +182,9 @@ namespace InstagramApiSharp.API.Builder
         ///     Set instagram api version (for user agent version)
         /// </summary>
         /// <param name="apiVersion">Api version</param>
+        /// <returns>
+        ///     API Builder
+        /// </returns>
         public IInstaApiBuilder SetApiVersion(InstaApiVersionType apiVersion)
         {
             _apiVersionType = apiVersion;
@@ -190,7 +195,9 @@ namespace InstagramApiSharp.API.Builder
         ///     Set session handler
         /// </summary>
         /// <param name="sessionHandler">Session handler</param>
-        /// <returns></returns>
+        /// <returns>
+        ///     API Builder
+        /// </returns>
         public IInstaApiBuilder SetSessionHandler(ISessionHandler sessionHandler)
         {
             _sessionHandler = sessionHandler;
@@ -201,7 +208,9 @@ namespace InstagramApiSharp.API.Builder
         ///     Set Http request processor
         /// </summary>
         /// <param name="httpRequestProcessor">HttpRequestProcessor</param>
-        /// <returns></returns>
+        /// <returns>
+        ///     API Builder
+        /// </returns>
         public IInstaApiBuilder SetHttpRequestProcessor(IHttpRequestProcessor httpRequestProcessor)
         {
             _httpRequestProcessor = httpRequestProcessor;
@@ -211,7 +220,9 @@ namespace InstagramApiSharp.API.Builder
         /// <summary>
         ///     Creates the builder.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        ///     API Builder
+        /// </returns>
         public static IInstaApiBuilder CreateBuilder()
         {
             return new InstaApiBuilder();
