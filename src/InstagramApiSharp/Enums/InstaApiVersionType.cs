@@ -30,6 +30,10 @@ namespace InstagramApiSharp.Enums
         /// <summary>
         ///     Api version 74.0.0.21.99 => All data like signature key, version code and ... is for v64 except instagram version
         /// </summary>
-        Version74 = 4
+        Version74 = 4,
+        /// <summary>
+        ///     Api version 76.0.0.15.395
+        /// </summary>
+        Version76 = 5
     }
 }
