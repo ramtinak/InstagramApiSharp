@@ -490,6 +490,7 @@ namespace InstagramApiSharp.API
         public const string MEDIA_ARCHIVE = API_SUFFIX + "/media/{0}/only_me/";
         public const string MEDIA_UNARCHIVE = API_SUFFIX + "/media/{0}/undo_only_me/";
         public const string MEDIA_STORY_POLL_VOTERS = API_SUFFIX + "/media/{0}/{1}/story_poll_voters/";
+        public const string MEDIA_STORY_POLL_VOTE = API_SUFFIX + "/media/{0}/{1}/story_poll_vote/";
 
         #endregion Media endpoints constants
 

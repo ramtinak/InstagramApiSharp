@@ -2079,5 +2079,13 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
+        public static Uri GetStoryPollVoteUri(string storyMediaId, string pollId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.MEDIA_STORY_POLL_VOTE, storyMediaId, pollId), out var instaUri))
+                throw new Exception("Cant create URI for get story poll vote");
+            return instaUri;
+        }
+
     }
 }

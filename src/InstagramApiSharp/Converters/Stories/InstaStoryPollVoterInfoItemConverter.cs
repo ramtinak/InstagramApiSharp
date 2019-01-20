@@ -24,7 +24,7 @@ namespace InstagramApiSharp.Converters
 
             var voterInfoItem = new InstaStoryPollVoterInfoItem
             {
-                LatestPollVoteTime = DateTimeHelper.FromUnixTimeSeconds(SourceObject.LatestPollVoteTime),
+                LatestPollVoteTime = DateTimeHelper.FromUnixTimeSeconds(SourceObject.LatestPollVoteTime ?? DateTime.Now.ToUnixTime()),
                 MaxId = SourceObject.MaxId,
                 MoreAvailable = SourceObject.MoreAvailable,
                 PollId = SourceObject.PollId

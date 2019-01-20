@@ -189,7 +189,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="storyType">Story type</param>
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video,
-    InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
+            InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
 
         /// <summary>
         ///     Upload story video (to self story) with adding link address
@@ -229,6 +229,14 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="storyType">Story type</param>
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> UploadStoryVideoWithUrlAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, Uri uri,
-    InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
+            InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
+
+        /// <summary>
+        ///     Vote to an story poll
+        /// </summary>
+        /// <param name="storyMediaId">Story media id</param>
+        /// <param name="pollId">Story poll id</param>
+        /// <param name="vote">Your vote</param>
+        Task<IResult<InstaStoryItem>> VoteStoryPollAsync(string storyMediaId, string pollId, InstaStoryPollVoteType vote);
     }
 }

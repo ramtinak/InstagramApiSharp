@@ -1066,6 +1066,46 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
             }
         }
 
+        /// <summary>
+        ///     Vote to an story poll
+        /// </summary>
+        /// <param name="storyMediaId">Story media id</param>
+        /// <param name="pollId">Story poll id</param>
+        /// <param name="vote">Your vote</param>
+        public async Task<IResult<InstaStoryItem>> VoteStoryPollAsync(string storyMediaId, string pollId, InstaStoryPollVoteType vote)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetStoryPollVoteUri(storyMediaId, pollId);
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"radio_type", "wifi-none"},
+                    {"vote", ((int)vote).ToString()},
+                };
+
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaStoryItem>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaReelStoryMediaViewersResponse>(json);
+                var covertedObj = ConvertersFabric.Instance.GetReelStoryMediaViewersConverter(obj).Convert();
+
+                return Result.Success(covertedObj.UpdatedMedia);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaStoryItem>(exception);
+            }
+        }
+
         private async Task<IResult<bool>> AppendOrDeleteHighlight(string highlightId, string mediaId, bool delete)
         {
             UserAuthValidator.Validate(_userAuthValidate);

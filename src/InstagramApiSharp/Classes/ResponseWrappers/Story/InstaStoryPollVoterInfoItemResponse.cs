@@ -23,6 +23,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("more_available")]
         public bool MoreAvailable { get; set; }
         [JsonProperty("latest_poll_vote_time")]
-        public long LatestPollVoteTime { get; set; }
+        public long? LatestPollVoteTime { get; set; }
     }
 }
