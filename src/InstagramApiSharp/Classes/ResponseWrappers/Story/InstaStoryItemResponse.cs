@@ -98,5 +98,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("video_versions")] public List<InstaVideoResponse> VideoVersions { get; set; }
 
         [JsonProperty("story_cta")] public List<InstaStoryCTAContainerResponse> StoryCTA { get; set; }
+
+        [JsonProperty("story_poll_voter_infos")] public List<InstaStoryPollVoterInfoItemResponse> StoryPollVoters { get; set; }
     }
 }

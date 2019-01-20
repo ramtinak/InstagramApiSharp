@@ -82,6 +82,10 @@ namespace InstagramApiSharp.Converters
                 foreach (var poll in SourceObject.StoryPolls)
                     instaStory.StoryPolls.Add(ConvertersFabric.Instance.GetStoryPollItemConverter(poll).Convert());
 
+            if (SourceObject.StoryPollVoters?.Count > 0)
+                foreach (var voter in SourceObject.StoryPollVoters)
+                    instaStory.StoryPollVoters.Add(ConvertersFabric.Instance.GetStoryPollVoterInfoItemConverter(voter).Convert());
+
             return instaStory;
         }
     }
