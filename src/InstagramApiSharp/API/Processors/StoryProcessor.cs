@@ -362,9 +362,11 @@ namespace InstagramApiSharp.API.Processors
 
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaReelStoryMediaViewers>(response, json);
-                var threadResponse = JsonConvert.DeserializeObject<InstaReelStoryMediaViewers>(json);
 
-                return Result.Success(threadResponse);
+                var storyMediaViewersResponse = JsonConvert.DeserializeObject<InstaReelStoryMediaViewersResponse>(json);
+                var obj = ConvertersFabric.Instance.GetReelStoryMediaViewersConverter(storyMediaViewersResponse).Convert();
+
+                return Result.Success(obj);
             }
             catch (Exception exception)
             {
