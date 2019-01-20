@@ -353,20 +353,34 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                if (paginationParameters.MaximumPagesToLoad > 1)
-                    throw new Exception("Not supported");
-                var directInboxUri = UriCreator.GetStoryMediaViewersUri(storyMediaId, paginationParameters?.NextMaxId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaReelStoryMediaViewers>(response, json);
+                InstaReelStoryMediaViewers Convert(InstaReelStoryMediaViewersResponse reelResponse)
+                {
+                    return ConvertersFabric.Instance.GetReelStoryMediaViewersConverter(reelResponse).Convert();
+                }
 
-                var storyMediaViewersResponse = JsonConvert.DeserializeObject<InstaReelStoryMediaViewersResponse>(json);
-                var obj = ConvertersFabric.Instance.GetReelStoryMediaViewersConverter(storyMediaViewersResponse).Convert();
+                var storyMediaViewersResult = await GetStoryMediaViewers(storyMediaId, paginationParameters?.NextMaxId);
 
-                return Result.Success(obj);
+                if (!storyMediaViewersResult.Succeeded)
+                    return Result.Fail<InstaReelStoryMediaViewers>(storyMediaViewersResult.Info.Message);
+
+                var storyMediaViewersResponse = storyMediaViewersResult.Value;
+                paginationParameters.NextMaxId = storyMediaViewersResponse.NextMaxId;
+
+                while (!string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                    && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    paginationParameters.PagesLoaded++;
+                    var nextStoryViewers = await GetStoryMediaViewers(storyMediaId, paginationParameters.NextMaxId);
+                    if (!nextStoryViewers.Succeeded)
+                        return Result.Fail(nextStoryViewers.Info, Convert(nextStoryViewers.Value));
+                    storyMediaViewersResponse.NextMaxId = paginationParameters.NextMaxId = nextStoryViewers.Value.NextMaxId;
+                    storyMediaViewersResponse.Users.AddRange(nextStoryViewers.Value.Users);
+                }
+
+                return Result.Success(Convert(storyMediaViewersResponse));
             }
             catch (Exception exception)
             {
@@ -1216,6 +1230,29 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
                 progress?.Invoke(upProgress);
                 _logger?.LogException(exception);
                 return Result.Fail<InstaStoryMedia>(exception);
+            }
+        }
+
+        private async Task<IResult<InstaReelStoryMediaViewersResponse>> GetStoryMediaViewers(string storyMediaId, string maxId)
+        {
+            try
+            {
+                var directInboxUri = UriCreator.GetStoryMediaViewersUri(storyMediaId, maxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaReelStoryMediaViewersResponse>(response, json);
+
+                var storyMediaViewersResponse = JsonConvert.DeserializeObject<InstaReelStoryMediaViewersResponse>(json);
+
+                return Result.Success(storyMediaViewersResponse);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaReelStoryMediaViewersResponse>(exception);
             }
         }
     }
