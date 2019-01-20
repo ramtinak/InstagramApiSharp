@@ -76,6 +76,14 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaReelStoryMediaViewers>> GetStoryMediaViewersAsync(string storyMediaId, PaginationParameters paginationParameters);
 
         /// <summary>
+        ///     Get story poll voters
+        /// </summary>
+        /// <param name="storyMediaId">Story media id</param>
+        /// <param name="pollId">Story poll id</param>
+        /// <param name="paginationParameters">Pagination parameters</param>
+        Task<IResult<InstaStoryPollVotersList>> GetStoryPollVotersAsync(string storyMediaId, string pollId, PaginationParameters paginationParameters);
+
+        /// <summary>
         ///     Get the story by userId
         /// </summary>
         /// <param name="userId">User Id</param>

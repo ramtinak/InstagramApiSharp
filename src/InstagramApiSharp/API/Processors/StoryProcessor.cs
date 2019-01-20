@@ -390,6 +390,57 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get story poll voters
+        /// </summary>
+        /// <param name="storyMediaId">Story media id</param>
+        /// <param name="pollId">Story poll id</param>
+        /// <param name="paginationParameters">Pagination parameters</param>
+        public async Task<IResult<InstaStoryPollVotersList>> GetStoryPollVotersAsync(string storyMediaId, string pollId, PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                InstaStoryPollVotersList Convert(InstaStoryPollVotersListResponse storyVotersResponse)
+                {
+                    return ConvertersFabric.Instance.GetStoryPollVotersListConverter(storyVotersResponse).Convert();
+                }
+
+                var votersResult = await GetStoryPollVoters(storyMediaId, pollId, paginationParameters?.NextMaxId);
+
+                if (!votersResult.Succeeded)
+                    return Result.Fail<InstaStoryPollVotersList>(votersResult.Info.Message);
+
+                var votersResponse = votersResult.Value;
+                paginationParameters.NextMaxId = votersResponse.MaxId;
+
+                while (votersResponse.MoreAvailable &&
+                    !string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                    && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    paginationParameters.PagesLoaded++;
+                    var nextVoters = await GetStoryPollVoters(storyMediaId, pollId, paginationParameters.NextMaxId);
+                    if (!nextVoters.Succeeded)
+                        return Result.Fail(nextVoters.Info, Convert(nextVoters.Value));
+                    votersResponse.MaxId = paginationParameters.NextMaxId = nextVoters.Value.MaxId;
+                    votersResponse.Voters.AddRange(nextVoters.Value.Voters);
+                    votersResponse.LatestPollVoteTime = nextVoters.Value.LatestPollVoteTime;
+                    votersResponse.MoreAvailable = nextVoters.Value.MoreAvailable;
+                }
+
+                return Result.Success(Convert(votersResponse));
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaStoryPollVotersList>(exception);
+            }
+        }
+
+
+        /// <summary>
         ///     Get the story by userId
         /// </summary>
         /// <param name="userId">User Id</param>
@@ -1253,6 +1304,29 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaReelStoryMediaViewersResponse>(exception);
+            }
+        }
+
+        private async Task<IResult<InstaStoryPollVotersListResponse>> GetStoryPollVoters(string storyMediaId, string pollId, string maxId)
+        {
+            try
+            {
+                var directInboxUri = UriCreator.GetStoryPollVotersUri(storyMediaId, pollId, maxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, directInboxUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaStoryPollVotersListResponse>(response, json);
+
+                var storyVotersResponse = JsonConvert.DeserializeObject<InstaStoryPollVotersListContainerResponse>(json);
+
+                return Result.Success(storyVotersResponse.VoterInfo);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaStoryPollVotersListResponse>(exception);
             }
         }
     }

@@ -2069,5 +2069,15 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetStoryPollVotersUri(string storyMediaId, string pollId, string maxId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, 
+                string.Format(InstaApiConstants.MEDIA_STORY_POLL_VOTERS, storyMediaId, pollId), out var instaUri))
+                throw new Exception("Cant create URI for get story poll voters list");
+            return !string.IsNullOrEmpty(maxId)
+                ? new UriBuilder(instaUri) { Query = $"max_id={maxId}" }.Uri
+                : instaUri;
+        }
+
     }
 }
