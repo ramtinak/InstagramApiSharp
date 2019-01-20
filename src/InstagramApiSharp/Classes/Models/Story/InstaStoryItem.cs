@@ -91,5 +91,7 @@ namespace InstagramApiSharp.Classes.Models
         public List<InstaStoryPollItem> StoryPolls { get; set; } = new List<InstaStoryPollItem>();
 
         public List<InstaStoryPollVoterInfoItem> StoryPollVoters { get; set; } = new List<InstaStoryPollVoterInfoItem>();
+
+        public List<InstaUserShort> Viewers { get; set; } = new List<InstaUserShort>();
     }
 }
