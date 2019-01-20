@@ -27,7 +27,8 @@ namespace InstagramApiSharp.Converters
                 IsSharedResult = SourceObject.IsSharedResult,
                 PollId = SourceObject.PollId,
                 Question = SourceObject.Question,
-                ViewerCanVote = SourceObject.ViewerCanVote
+                ViewerCanVote = SourceObject.ViewerCanVote,
+                ViewerVote = SourceObject.ViewerVote ?? 0
             };
 
             if (SourceObject.Tallies?.Count > 0)

@@ -26,5 +26,7 @@ namespace InstagramApiSharp.Classes.Models
         public bool IsSharedResult { get; set; }
 
         public bool Finished { get; set; }
+
+        public long ViewerVote { get; set; } = 0;
     }
 }

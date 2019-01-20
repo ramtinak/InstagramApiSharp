@@ -28,5 +28,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public bool IsSharedResult { get; set; }
         [JsonProperty("finished")]
         public bool Finished { get; set; }
+        [JsonProperty("viewer_vote")]
+        public long? ViewerVote { get; set; }
     }
 }
