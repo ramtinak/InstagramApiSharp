@@ -22,6 +22,7 @@ using InstagramApiSharp.Enums;
 using InstagramApiSharp.Classes.SessionHandlers;
 using System.Net.Http;
 using System.Collections.Generic;
+using System;
 
 namespace InstagramApiSharp.API
 {
@@ -167,6 +168,15 @@ namespace InstagramApiSharp.API
         #endregion State data
 
         #region Other public functions
+        /// <summary>
+        ///     Set timeout to <see cref="HttpClient"/>
+        /// </summary>
+        /// <param name="timeout">Timeout</param>
+        void SetTimeout(TimeSpan timeout);
+        /// <summary>
+        ///     Set custom HttpClientHandler to be able to use certain features, e.g Proxy and so on
+        /// </summary>
+        /// <param name="handler">HttpClientHandler</param>
         void UseHttpClientHandler(HttpClientHandler handler);
         /// <summary>
         /// Sets user credentials

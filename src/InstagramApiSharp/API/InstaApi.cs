@@ -1745,6 +1745,22 @@ namespace InstagramApiSharp.API
         #endregion Authentication and challenge functions
 
         #region Other public functions
+        /// <summary>
+        ///     Set timeout to <see cref="HttpClient"/>
+        ///     <para>Note: Set timeout more than 100 seconds!</para>
+        /// </summary>
+        /// <param name="timeout">Timeout (set more than 100 seconds!)</param>
+        public void SetTimeout(TimeSpan timeout)
+        {
+            if (timeout == null)
+                timeout = TimeSpan.FromSeconds(350);
+
+            HttpClient.Timeout = timeout;
+        }
+        /// <summary>
+        ///     Set custom HttpClientHandler to be able to use certain features, e.g Proxy and so on
+        /// </summary>
+        /// <param name="handler">HttpClientHandler</param>
         public void UseHttpClientHandler(HttpClientHandler handler)
         {
             _httpRequestProcessor.SetHttpClientHandler(handler);
