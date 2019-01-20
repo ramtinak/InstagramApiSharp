@@ -78,6 +78,10 @@ namespace InstagramApiSharp.Converters
                         foreach (var link in cta.Links)
                             instaStory.StoryCTA.Add(ConvertersFabric.Instance.GetStoryCtaConverter(link).Convert());
 
+            if (SourceObject.StoryPolls?.Count > 0)
+                foreach (var poll in SourceObject.StoryPolls)
+                    instaStory.StoryPolls.Add(ConvertersFabric.Instance.GetStoryPollItemConverter(poll).Convert());
+
             return instaStory;
         }
     }

@@ -661,5 +661,23 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaDirectBroadcastConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaStoryTalliesItem, InstaStoryTalliesItemResponse> GetStoryTalliesItemConverter(
+            InstaStoryTalliesItemResponse response)
+        {
+            return new InstaStoryTalliesItemConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaStoryPollStickerItem, InstaStoryPollStickerItemResponse> GetStoryPollStickerItemConverter(
+            InstaStoryPollStickerItemResponse response)
+        {
+            return new InstaStoryPollStickerItemConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaStoryPollItem, InstaStoryPollItemResponse> GetStoryPollItemConverter(
+            InstaStoryPollItemResponse response)
+        {
+            return new InstaStoryPollItemConverter { SourceObject = response };
+        }
     }
 }
