@@ -11,16 +11,16 @@ namespace Examples.Samples
 {
     internal class CommentMedia : IDemoSample
     {
-        private readonly IInstaApi _instaApi;
+        private readonly IInstaApi InstaApi;
 
         public CommentMedia(IInstaApi instaApi)
         {
-            _instaApi = instaApi;
+            InstaApi = instaApi;
         }
 
         public async Task DoShow()
         {
-            var commentResult = await _instaApi.CommentProcessor.CommentMediaAsync("", "Hi there!");
+            var commentResult = await InstaApi.CommentProcessor.CommentMediaAsync("", "Hi there!");
             Console.WriteLine(commentResult.Succeeded
                 ? $"Comment created: {commentResult.Value.Pk}, text: {commentResult.Value.Text}"
                 : $"Unable to create comment: {commentResult.Info.Message}");

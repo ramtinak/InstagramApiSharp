@@ -25,17 +25,17 @@ namespace Examples.Samples
 {
     internal class Live : IDemoSample
     {
-        private readonly IInstaApi _instaApi;
+        private readonly IInstaApi InstaApi;
 
         public Live(IInstaApi instaApi)
         {
-            _instaApi = instaApi;
+            InstaApi = instaApi;
         }
 
         public async Task DoShow()
         {
             // get currently logged in user
-            var currentUser = await _instaApi.GetCurrentUserAsync();
+            var currentUser = await InstaApi.GetCurrentUserAsync();
             Console.WriteLine(
                 $"Logged in: username - {currentUser.Value.UserName}, full name - {currentUser.Value.FullName}");
 
@@ -66,7 +66,7 @@ EndAsync");
 
         public async void SuggestedBroadcasts()
         {
-            var result = await _instaApi.LiveProcessor.GetSuggestedBroadcastsAsync();
+            var result = await InstaApi.LiveProcessor.GetSuggestedBroadcastsAsync();
             if (result.Succeeded)
             {
                 Console.WriteLine("Suggested broadcast count: " + result.Value.Broadcasts?.Count);
@@ -79,7 +79,7 @@ EndAsync");
 
         public async void DiscoverTopLive()
         {
-            var result = await _instaApi.LiveProcessor.GetDiscoverTopLiveAsync();
+            var result = await InstaApi.LiveProcessor.GetDiscoverTopLiveAsync();
             if (result.Succeeded)
             {
                 Console.WriteLine("Discover top lives count: " + result.Value.Broadcasts?.Count);
@@ -92,7 +92,7 @@ EndAsync");
 
         public async void TopLiveStatus()
         {
-            var result = await _instaApi.LiveProcessor.GetTopLiveStatusAsync("broadcastsID1", "broadcastID2");
+            var result = await InstaApi.LiveProcessor.GetTopLiveStatusAsync("broadcastsID1", "broadcastID2");
             if (result.Succeeded)
             {
                 Console.WriteLine("Discover top lives count: " + result.Value.BroadcastStatusItems?.Count);
@@ -105,7 +105,7 @@ EndAsync");
 
         public async void BroadcastInfo()
         {
-            var result = await _instaApi.LiveProcessor.GetInfoAsync("broadcastID");
+            var result = await InstaApi.LiveProcessor.GetInfoAsync("broadcastID");
             if (result.Succeeded)
             {
                 Console.WriteLine($"Broadcast info for {result.Value.Id}");
@@ -122,7 +122,7 @@ EndAsync");
         public async void CommentBroadcast()
         {
             var commentText = "Ramtin your good! keep it up!";
-            var result = await _instaApi.LiveProcessor.CommentAsync("broadcastID", commentText);
+            var result = await InstaApi.LiveProcessor.CommentAsync("broadcastID", commentText);
             if (result.Succeeded)
             {
                 Console.WriteLine($"Send new comment to broadcast");
@@ -137,7 +137,7 @@ EndAsync");
         public async void LikeBroadcast()
         {
             var likeCount = 6; // from 1 to 6
-            var result = await _instaApi.LiveProcessor.LikeAsync("broadcastID", likeCount);
+            var result = await InstaApi.LiveProcessor.LikeAsync("broadcastID", likeCount);
             if (result.Succeeded)
             {
                 Console.WriteLine($"Like broadcast");
@@ -152,12 +152,12 @@ EndAsync");
             Console.WriteLine("Be aware some of this methods only works on your own broadcasts!!!!");
             // live broadcast
             // first you need to call CreateAsync
-            var result = await _instaApi.LiveProcessor.CreateAsync(720, 1184, "My new live broadcast");
+            var result = await InstaApi.LiveProcessor.CreateAsync(720, 1184, "My new live broadcast");
             if (result.Succeeded)
             {
                 var broadcastId = result.Value.BroadcastId.ToString();
                 // second you need to call StartAsync to instagram know you start filming!
-                await _instaApi.LiveProcessor.StartAsync(broadcastId, true);
+                await InstaApi.LiveProcessor.StartAsync(broadcastId, true);
                 Console.WriteLine("Broadcast " + result.Value.BroadcastId + " started");
                 // use uploadurl to stream your video to instagram
                 // note: I really don't know how RTMP server works, so there is no
@@ -168,50 +168,50 @@ EndAsync");
 
 
                 // get heart beat and viewer count (works if you are broadcast owner)
-                await _instaApi.LiveProcessor.GetHeartBeatAndViewerCountAsync(broadcastId);
+                await InstaApi.LiveProcessor.GetHeartBeatAndViewerCountAsync(broadcastId);
 
 
                 // get viewer list
-                await _instaApi.LiveProcessor.GetViewerListAsync(broadcastId);
+                await InstaApi.LiveProcessor.GetViewerListAsync(broadcastId);
 
 
                 // get post live viewer list
-                await _instaApi.LiveProcessor.GetPostLiveViewerListAsync(broadcastId, 10);
+                await InstaApi.LiveProcessor.GetPostLiveViewerListAsync(broadcastId, 10);
 
 
                 // Pin comment from broadcast
-                await _instaApi.LiveProcessor.PinCommentAsync(broadcastId, "commentID"); 
+                await InstaApi.LiveProcessor.PinCommentAsync(broadcastId, "commentID"); 
                 // UnPin comment from broadcast
-                await _instaApi.LiveProcessor.UnPinCommentAsync(broadcastId, "commentID");
+                await InstaApi.LiveProcessor.UnPinCommentAsync(broadcastId, "commentID");
 
 
                 // get broadcast comments
-                await _instaApi.LiveProcessor.GetCommentsAsync(broadcastId);
+                await InstaApi.LiveProcessor.GetCommentsAsync(broadcastId);
 
 
                 // enable broadcast comments
-                await _instaApi.LiveProcessor.EnableCommentsAsync(broadcastId);
+                await InstaApi.LiveProcessor.EnableCommentsAsync(broadcastId);
                 // disable broadcast comments
-                await _instaApi.LiveProcessor.DisableCommentsAsync(broadcastId);
+                await InstaApi.LiveProcessor.DisableCommentsAsync(broadcastId);
 
 
                 // get broadcast likes count
-                await _instaApi.LiveProcessor.GetLikeCountAsync(broadcastId, 0);
+                await InstaApi.LiveProcessor.GetLikeCountAsync(broadcastId, 0);
 
 
                 // add broadcast to post live
-                await _instaApi.LiveProcessor.AddToPostLiveAsync(broadcastId);
+                await InstaApi.LiveProcessor.AddToPostLiveAsync(broadcastId);
                 // delete broadcast from post live
-                await _instaApi.LiveProcessor.DeletePostLiveAsync(broadcastId);
+                await InstaApi.LiveProcessor.DeletePostLiveAsync(broadcastId);
 
 
 
 
                 // end live broadcast
-                await _instaApi.LiveProcessor.EndAsync(broadcastId);
+                await InstaApi.LiveProcessor.EndAsync(broadcastId);
 
                 // after you ended your live broadcast, you should call this
-                await _instaApi.LiveProcessor.GetFinalViewerListAsync(broadcastId);
+                await InstaApi.LiveProcessor.GetFinalViewerListAsync(broadcastId);
 
             }
             else

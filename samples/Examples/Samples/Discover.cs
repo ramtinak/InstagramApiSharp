@@ -26,17 +26,17 @@ namespace Examples.Samples
 {
     internal class Discover : IDemoSample
     {
-        private readonly IInstaApi _instaApi;
+        private readonly IInstaApi InstaApi;
 
         public Discover(IInstaApi instaApi)
         {
-            _instaApi = instaApi;
+            InstaApi = instaApi;
         }
 
         public async Task DoShow()
         {
             // get currently logged in user
-            var currentUser = await _instaApi.GetCurrentUserAsync();
+            var currentUser = await InstaApi.GetCurrentUserAsync();
             Console.WriteLine(
                 $"Logged in: username - {currentUser.Value.UserName}, full name - {currentUser.Value.FullName}");
 
@@ -50,7 +50,7 @@ SearchPeopleAsync");
 
         public async void RecentSearches()
         {
-            var result = await _instaApi.DiscoverProcessor.GetRecentSearchesAsync();
+            var result = await InstaApi.DiscoverProcessor.GetRecentSearchesAsync();
             if (result.Succeeded)
             {
                 Console.WriteLine("Recent search count: " + result.Value.Recent?.Count);
@@ -63,7 +63,7 @@ SearchPeopleAsync");
 
         public async void ClearRecentSearches()
         {
-            var result = await _instaApi.DiscoverProcessor.ClearRecentSearchsAsync();
+            var result = await InstaApi.DiscoverProcessor.ClearRecentSearchsAsync();
             if (result.Succeeded)
             {
                 Console.WriteLine("Recent search cleared.");
@@ -74,7 +74,7 @@ SearchPeopleAsync");
 
         public async void SuggestedSearches()
         {
-            var result = await _instaApi.DiscoverProcessor.GetSuggestedSearchesAsync(InstaDiscoverSearchType.Blended);
+            var result = await InstaApi.DiscoverProcessor.GetSuggestedSearchesAsync(InstaDiscoverSearchType.Blended);
             if (result.Succeeded)
             {
                 Console.WriteLine("Suggested search count: " + result.Value.Suggested?.Count);
@@ -89,7 +89,7 @@ SearchPeopleAsync");
         {
             var search = "iran";
             var count = 30;
-            var result = await _instaApi.DiscoverProcessor.SearchPeopleAsync(search, count);
+            var result = await InstaApi.DiscoverProcessor.SearchPeopleAsync(search, count);
             if (result.Succeeded)
             {
                 Console.WriteLine("User search count: " + result.Value.Users?.Count);

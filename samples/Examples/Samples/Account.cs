@@ -25,17 +25,17 @@ namespace Examples.Samples
 {
     internal class Account : IDemoSample
     {
-        private readonly IInstaApi _instaApi;
+        private readonly IInstaApi InstaApi;
 
         public Account(IInstaApi instaApi)
         {
-            _instaApi = instaApi;
+            InstaApi = instaApi;
         }
 
         public async Task DoShow()
         {   
             // get currently logged in user
-            var currentUser = await _instaApi.GetCurrentUserAsync();
+            var currentUser = await InstaApi.GetCurrentUserAsync();
             Console.WriteLine(
                 $"Logged in: username - {currentUser.Value.UserName}, full name - {currentUser.Value.FullName}");
 
@@ -73,7 +73,7 @@ VerifySmsCodeAsync");
             string biography = "C# Programmer\n\nIRaN/FARS/KaZeRouN"; // leave null if you don't want to change it
             string newUsername = ""; // leave empty if you don't want to change your username
 
-            var result = await _instaApi.AccountProcessor.EditProfileAsync(name, biography, url, email, phone, gender, newUsername);
+            var result = await InstaApi.AccountProcessor.EditProfileAsync(name, biography, url, email, phone, gender, newUsername);
 
             if (result.Succeeded)
             {
@@ -98,7 +98,7 @@ VerifySmsCodeAsync");
             // note: only JPG and JPEG format will accept it in instagram!
             var pictureBytes = File.ReadAllBytes(picturePath);
 
-            var result = await _instaApi.AccountProcessor.ChangeProfilePictureAsync(pictureBytes);
+            var result = await InstaApi.AccountProcessor.ChangeProfilePictureAsync(pictureBytes);
             if(result.Succeeded)
             {
                 Console.WriteLine("New profile picture: " + result.Value.ProfilePicUrl);
@@ -110,7 +110,7 @@ VerifySmsCodeAsync");
 
         public async void RemoveProfilePicture()
         {
-            var result = await _instaApi.AccountProcessor.RemoveProfilePictureAsync();
+            var result = await InstaApi.AccountProcessor.RemoveProfilePictureAsync();
             if (result.Succeeded)
             {
                 Console.WriteLine("Profile picture removed.");
@@ -124,7 +124,7 @@ VerifySmsCodeAsync");
         {
             string name = "Ramtin Jokar";
             string phone = "+989171234567";
-            var result = await _instaApi.AccountProcessor.SetNameAndPhoneNumberAsync(name, phone);
+            var result = await InstaApi.AccountProcessor.SetNameAndPhoneNumberAsync(name, phone);
             if (result.Succeeded)
             {
                 Console.WriteLine("Name and phone number changed");
@@ -135,7 +135,7 @@ VerifySmsCodeAsync");
 
         public async void StorySettings()
         {
-            var storySettings = await _instaApi.AccountProcessor.GetStorySettingsAsync();
+            var storySettings = await InstaApi.AccountProcessor.GetStorySettingsAsync();
             if (storySettings.Succeeded)
             {
                 Console.WriteLine("Story settings");
@@ -145,19 +145,19 @@ VerifySmsCodeAsync");
                 Console.WriteLine("Allow sharing story: " + storySettings.Value.AllowStoryReshare);
 
                 // enable/disable save story to gallery(camera roll)
-                await _instaApi.AccountProcessor.EnableSaveStoryToGalleryAsync();
-                await _instaApi.AccountProcessor.DisableSaveStoryToGalleryAsync();
+                await InstaApi.AccountProcessor.EnableSaveStoryToGalleryAsync();
+                await InstaApi.AccountProcessor.DisableSaveStoryToGalleryAsync();
 
                 // enable/disable save story to archive
-                await _instaApi.AccountProcessor.EnableSaveStoryToArchiveAsync();
-                await _instaApi.AccountProcessor.DisableSaveStoryToArchiveAsync();
+                await InstaApi.AccountProcessor.EnableSaveStoryToArchiveAsync();
+                await InstaApi.AccountProcessor.DisableSaveStoryToArchiveAsync();
 
                 // allow/disallow sharing stories
-                await _instaApi.AccountProcessor.AllowStorySharingAsync(true);
+                await InstaApi.AccountProcessor.AllowStorySharingAsync(true);
                 // await _instaApi.AccountProcessor.AllowStorySharingAsync(false);
                 
                 // allow story message replies
-                await _instaApi.AccountProcessor.AllowStoryMessageRepliesAsync(InstaMessageRepliesType.Everyone);
+                await InstaApi.AccountProcessor.AllowStoryMessageRepliesAsync(InstaMessageRepliesType.Everyone);
                 // await _instaApi.AccountProcessor.AllowStoryMessageRepliesAsync(InstaMessageRepliesType.Following);
                 // await _instaApi.AccountProcessor.AllowStoryMessageRepliesAsync(InstaMessageRepliesType.Off);
             }
@@ -167,7 +167,7 @@ VerifySmsCodeAsync");
         {
             var username = "rmt4006";
 
-            var result = await _instaApi.AccountProcessor.CheckUsernameAsync(username);
+            var result = await InstaApi.AccountProcessor.CheckUsernameAsync(username);
             if (result.Succeeded)
             {
                 if(result.Value.Available)
@@ -181,7 +181,7 @@ VerifySmsCodeAsync");
 
         public async void SecuritySettingsAndTwoFactor()
         {
-            var result = await _instaApi.AccountProcessor.GetSecuritySettingsInfoAsync();
+            var result = await InstaApi.AccountProcessor.GetSecuritySettingsInfoAsync();
             if (result.Succeeded)
             {
                 Console.WriteLine("Security settings information");
@@ -193,32 +193,32 @@ VerifySmsCodeAsync");
                 Console.WriteLine("BackupCodes: " + string.Join("\t", result.Value.BackupCodes));
                 
                 // disable two factor authentication
-                await _instaApi.AccountProcessor.DisableTwoFactorAuthenticationAsync();
+                await InstaApi.AccountProcessor.DisableTwoFactorAuthenticationAsync();
 
 
 
                 var phoneNumber = result.Value.PhoneNumber; // "+989171234567"
                 // send enable two factor sms authentication 
-                await _instaApi.AccountProcessor.SendTwoFactorEnableSmsAsync(phoneNumber);
+                await InstaApi.AccountProcessor.SendTwoFactorEnableSmsAsync(phoneNumber);
 
                 // enable(verify) two factor authentication
                 var verificationCode = "40061373";
-                await _instaApi.AccountProcessor.TwoFactorEnableAsync(phoneNumber, verificationCode);
+                await InstaApi.AccountProcessor.TwoFactorEnableAsync(phoneNumber, verificationCode);
 
 
 
 
                 // send sms code to verify account with sms
-                await _instaApi.AccountProcessor.SendSmsCodeAsync(phoneNumber);
+                await InstaApi.AccountProcessor.SendSmsCodeAsync(phoneNumber);
 
                 // verify sms code for verify account with sms
-                await _instaApi.AccountProcessor.VerifySmsCodeAsync(phoneNumber, "13734006");
+                await InstaApi.AccountProcessor.VerifySmsCodeAsync(phoneNumber, "13734006");
 
 
 
 
                 // send confirm email for verify account with email
-                await _instaApi.AccountProcessor.SendConfirmEmailAsync();
+                await InstaApi.AccountProcessor.SendConfirmEmailAsync();
 
 
             }

@@ -20,7 +20,7 @@ namespace Examples
         /// <summary>
         ///     Api instance (one instance per Instagram user)
         /// </summary>
-        private static IInstaApi _instaApi;
+        private static IInstaApi InstaApi;
 
         static void Main(string[] args)
         {
@@ -45,7 +45,7 @@ namespace Examples
 
                 var delay = RequestDelay.FromSeconds(2, 2);
                 // create new InstaApi instance using Builder
-                _instaApi = InstaApiBuilder.CreateBuilder()
+                InstaApi = InstaApiBuilder.CreateBuilder()
                     .SetUser(userSession)
                     .UseLogger(new DebugLogger(LogLevel.All)) // use logger for requests and debug messages
                     .SetRequestDelay(delay)
@@ -61,7 +61,7 @@ namespace Examples
                         Console.WriteLine("Loading state from file");
                         using (var fs = File.OpenRead(stateFile))
                         {
-                            _instaApi.LoadStateDataFromStream(fs);
+                            InstaApi.LoadStateDataFromStream(fs);
                             // in .net core or uwp apps don't use LoadStateDataFromStream
                             // use this one:
                             // _instaApi.LoadStateDataFromString(new StreamReader(fs).ReadToEnd());
@@ -74,12 +74,12 @@ namespace Examples
                     Console.WriteLine(e);
                 }
 
-                if (!_instaApi.IsUserAuthenticated)
+                if (!InstaApi.IsUserAuthenticated)
                 {
                     // login
                     Console.WriteLine($"Logging in as {userSession.UserName}");
                     delay.Disable();
-                    var logInResult = await _instaApi.LoginAsync();
+                    var logInResult = await InstaApi.LoginAsync();
                     delay.Enable();
                     if (!logInResult.Succeeded)
                     {
@@ -87,7 +87,7 @@ namespace Examples
                         return false;
                     }
                 }
-                var state = _instaApi.GetStateDataAsStream();
+                var state = InstaApi.GetStateDataAsStream();
                 // in .net core or uwp apps don't use GetStateDataAsStream.
                 // use this one:
                 // var state = _instaApi.GetStateDataAsString();
@@ -110,15 +110,15 @@ namespace Examples
 
                 var samplesMap = new Dictionary<ConsoleKey, IDemoSample>
                 {
-                    [ConsoleKey.D1] = new Basics(_instaApi),
-                    [ConsoleKey.D2] = new UploadPhoto(_instaApi),
-                    [ConsoleKey.D3] = new CommentMedia(_instaApi),
-                    [ConsoleKey.D4] = new Stories(_instaApi),
-                    [ConsoleKey.D5] = new SaveLoadState(_instaApi),
-                    [ConsoleKey.D6] = new Messaging(_instaApi),
-                    [ConsoleKey.D7] = new LocationSample(_instaApi),
-                    [ConsoleKey.D8] = new CollectionSample(_instaApi),
-                    [ConsoleKey.D9] = new UploadVideo(_instaApi)
+                    [ConsoleKey.D1] = new Basics(InstaApi),
+                    [ConsoleKey.D2] = new UploadPhoto(InstaApi),
+                    [ConsoleKey.D3] = new CommentMedia(InstaApi),
+                    [ConsoleKey.D4] = new Stories(InstaApi),
+                    [ConsoleKey.D5] = new SaveLoadState(InstaApi),
+                    [ConsoleKey.D6] = new Messaging(InstaApi),
+                    [ConsoleKey.D7] = new LocationSample(InstaApi),
+                    [ConsoleKey.D8] = new CollectionSample(InstaApi),
+                    [ConsoleKey.D9] = new UploadVideo(InstaApi)
                 };
                 var key = Console.ReadKey();
                 Console.WriteLine(Environment.NewLine);

@@ -14,11 +14,11 @@ namespace Examples.Samples
 {
     internal class UploadPhoto : IDemoSample
     {
-        private readonly IInstaApi _instaApi;
+        private readonly IInstaApi InstaApi;
 
         public UploadPhoto(IInstaApi instaApi)
         {
-            _instaApi = instaApi;
+            InstaApi = instaApi;
         }
 
         public async Task DoShow()
@@ -37,7 +37,7 @@ namespace Examples.Samples
                 X = 0.5,
                 Y = 0.5
             });
-            var result = await _instaApi.MediaProcessor.UploadPhotoAsync(mediaImage, "someawesomepicture");
+            var result = await InstaApi.MediaProcessor.UploadPhotoAsync(mediaImage, "someawesomepicture");
             Console.WriteLine(result.Succeeded
                 ? $"Media created: {result.Value.Pk}, {result.Value.Caption}"
                 : $"Unable to upload photo: {result.Info.Message}");
@@ -60,7 +60,7 @@ namespace Examples.Samples
                 Y = 0.5
             });
             // Upload photo with progress
-            var result = await _instaApi.MediaProcessor.UploadPhotoAsync(UploadProgress, mediaImage, "someawesomepicture");
+            var result = await InstaApi.MediaProcessor.UploadPhotoAsync(UploadProgress, mediaImage, "someawesomepicture");
             Console.WriteLine(result.Succeeded
                 ? $"Media created: {result.Value.Pk}, {result.Value.Caption}"
                 : $"Unable to upload photo: {result.Info.Message}");

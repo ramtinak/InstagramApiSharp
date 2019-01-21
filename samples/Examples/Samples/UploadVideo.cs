@@ -24,11 +24,11 @@ namespace Examples.Samples
 {
     internal class UploadVideo : IDemoSample
     {
-        private readonly IInstaApi _instaApi;
+        private readonly IInstaApi InstaApi;
 
         public UploadVideo(IInstaApi instaApi)
         {
-            _instaApi = instaApi;
+            InstaApi = instaApi;
         }
         public async Task DoShow()
         {
@@ -38,7 +38,7 @@ namespace Examples.Samples
                 Video = new InstaVideo(@"c:\video1.mp4", 0, 0),
                 VideoThumbnail = new InstaImage(@"c:\video thumbnail 1.jpg", 0, 0)
             };
-            var result = await _instaApi.MediaProcessor.UploadVideoAsync(video, "ramtinak");
+            var result = await InstaApi.MediaProcessor.UploadVideoAsync(video, "ramtinak");
             Console.WriteLine(result.Succeeded
                 ? $"Media created: {result.Value.Pk}, {result.Value.Caption}"
                 : $"Unable to upload video: {result.Info.Message}");

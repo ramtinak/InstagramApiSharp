@@ -13,23 +13,23 @@ namespace Examples.Samples
 {
     internal class SaveLoadState : IDemoSample
     {
-        private readonly IInstaApi _instaApi;
+        private readonly IInstaApi InstaApi;
 
         public SaveLoadState(IInstaApi instaApi)
         {
-            _instaApi = instaApi;
+            InstaApi = instaApi;
         }
 
         public async Task DoShow()
         {
-            var result = await _instaApi.GetCurrentUserAsync();
+            var result = await InstaApi.GetCurrentUserAsync();
             if (!result.Succeeded)
             {
                 Console.WriteLine($"Unable to get current user using current API instance: {result.Info}");
                 return;
             }
             Console.WriteLine($"Got current user: {result.Value.UserName} using existing API instance");
-            var stream = _instaApi.GetStateDataAsStream();
+            var stream = InstaApi.GetStateDataAsStream();
             //// for .net core you should use this method:
             // var json = _instaApi.GetStateDataAsString();
             var anotherInstance = InstaApiBuilder.CreateBuilder()

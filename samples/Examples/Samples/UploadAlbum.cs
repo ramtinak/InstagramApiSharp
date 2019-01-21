@@ -20,11 +20,11 @@ namespace Examples.Samples
         // Way 1 is DoShow() function, but it has an issue that described in https://github.com/ramtinak/InstagramApiSharp/issues/95
         // Way 2 [NewAlbumUpload() function] fixes this issue but it's little bit harder.
 
-        private readonly IInstaApi _instaApi;
+        private readonly IInstaApi InstaApi;
 
         public UploadAlbum(IInstaApi instaApi)
         {
-            _instaApi = instaApi;
+            InstaApi = instaApi;
         }
 
         public async Task DoShow()
@@ -72,7 +72,7 @@ namespace Examples.Samples
                     VideoThumbnail = new InstaImage(@"c:\video thumbnail 2.jpg", 0, 0)
                 }
             };
-            var result = await _instaApi.MediaProcessor.UploadAlbumAsync(images, 
+            var result = await InstaApi.MediaProcessor.UploadAlbumAsync(images, 
                 videos, 
                 "Hey, this my first album upload via InstagramApiSharp library.");
 
@@ -145,7 +145,7 @@ namespace Examples.Samples
             });
 
 
-            var result = await _instaApi.MediaProcessor.UploadAlbumAsync(album.ToArray(),
+            var result = await InstaApi.MediaProcessor.UploadAlbumAsync(album.ToArray(),
                 "Hey, this my first album upload via InstagramApiSharp library.");
 
             // Above result will be something like this: IMAGE1, VIDEO1, VIDEO2, IMAGE2 [You can mix photos and videos together]
