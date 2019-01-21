@@ -167,5 +167,71 @@ namespace InstagramApiSharp
                 UserTags = userTags?.ToList()
             };
         }
+
+        public static JObject ConvertToJson(this InstaStoryPollUpload poll)
+        {
+            var jArray = new JArray
+            {
+                new JObject
+                {
+                    {"text", poll.Answer1},
+                    {"count", 0},
+                    {"font_size", poll.Answer1FontSize}
+                },
+                new JObject
+                {
+                    {"text", poll.Answer2},
+                    {"count", 0},
+                    {"font_size", poll.Answer2FontSize}
+                },
+            };
+
+            return new JObject
+            {
+                {"x", poll.X},
+                {"y", poll.Y},
+                {"z", poll.Z},
+                {"width", poll.Width},
+                {"height", poll.Height},
+                {"rotation", poll.Rotation},
+                {"question", poll.Question},
+                {"viewer_vote", 0},
+                {"viewer_can_vote", true},
+                {"tallies", jArray},
+                {"is_shared_result", false},
+                {"finished", false},
+                {"is_sticker", poll.IsSticker},
+            };
+        }
+
+        public static JObject ConvertToJson(this InstaStoryLocationUpload location)
+        {
+            return new JObject
+            {
+                {"x", location.X},
+                {"y", location.Y},
+                {"z", location.Z},
+                {"width", location.Width},
+                {"height", location.Height},
+                {"rotation", location.Rotation},
+                {"location_id", location.LocationId},
+                {"is_sticker", location.IsSticker},
+            };
+        }
+
+        public static JObject ConvertToJson(this InstaStoryHashtagUpload hashtag)
+        {
+            return new JObject
+            {
+                {"x", hashtag.X},
+                {"y", hashtag.Y},
+                {"z", hashtag.Z},
+                {"width", hashtag.Width},
+                {"height", hashtag.Height},
+                {"rotation", hashtag.Rotation},
+                {"tag_name", hashtag.TagName},
+                {"is_sticker", hashtag.IsSticker},
+            };
+        }
     }
 }

@@ -133,14 +133,17 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
-        Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(InstaImage image, string caption);
+        /// <param name="uploadOptions">Upload options => Optional</param>
+        Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(InstaImage image, string caption, InstaStoryUploadOptions uploadOptions = null);
         /// <summary>
         ///     Upload story photo with progress
         /// </summary>
         /// <param name="progress">Progress action</param>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
-        Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption);
+        /// <param name="uploadOptions">Upload options => Optional</param>
+        Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption,
+            InstaStoryUploadOptions uploadOptions = null);
         /// <summary>
         ///     Upload story photo with adding link address
         ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
@@ -148,7 +151,9 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="uri">Uri to add</param>
-        Task<IResult<InstaStoryMedia>> UploadStoryPhotoWithUrlAsync(InstaImage image, string caption, Uri uri);
+        /// <param name="uploadOptions">Upload options => Optional</param>
+        Task<IResult<InstaStoryMedia>> UploadStoryPhotoWithUrlAsync(InstaImage image, string caption, Uri uri,
+            InstaStoryUploadOptions uploadOptions = null);
         /// <summary>
         ///     Upload story photo with adding link address (with progress)
         ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
@@ -157,21 +162,22 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="uri">Uri to add</param>
+        /// <param name="uploadOptions">Upload options => Optional</param>
         Task<IResult<InstaStoryMedia>> UploadStoryPhotoWithUrlAsync(Action<InstaUploaderProgress> progress, InstaImage image,
-            string caption, Uri uri);
+            string caption, Uri uri, InstaStoryUploadOptions uploadOptions = null);
         /// <summary>
         ///     Upload story video (to self story)
         /// </summary>
         /// <param name="video">Video to upload</param>
         /// <param name="caption">Caption</param>
-        Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(InstaVideoUpload video, string caption);
+        Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(InstaVideoUpload video, string caption, InstaStoryUploadOptions uploadOptions = null);
         /// <summary>
         ///     Upload story video (to self story) with progress
         /// </summary>
         /// <param name="progress">Progress action</param>
         /// <param name="video">Video to upload</param>
         /// <param name="caption">Caption</param>
-        Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string caption);
+        Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string caption, InstaStoryUploadOptions uploadOptions = null);
         /// <summary>
         ///     Upload story video [to self story, to direct threads or both(self and direct)]
         /// </summary>
@@ -179,7 +185,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="storyType">Story type</param>
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> UploadStoryVideoAsync(InstaVideoUpload video,
-            InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
+            InstaStoryType storyType = InstaStoryType.SelfStory, InstaStoryUploadOptions uploadOptions = null, params string[] threadIds);
 
         /// <summary>
         ///     Upload story video (to self story) with progress
@@ -189,7 +195,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="storyType">Story type</param>
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video,
-            InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
+            InstaStoryType storyType = InstaStoryType.SelfStory, InstaStoryUploadOptions uploadOptions = null, params string[] threadIds);
 
         /// <summary>
         ///     Upload story video (to self story) with adding link address
@@ -199,7 +205,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="uri">Uri to add</param>
-        Task<IResult<InstaStoryMedia>> UploadStoryVideoWithUrlAsync(InstaVideoUpload video, string caption, Uri uri);
+        Task<IResult<InstaStoryMedia>> UploadStoryVideoWithUrlAsync(InstaVideoUpload video, string caption, Uri uri, InstaStoryUploadOptions uploadOptions = null);
         /// <summary>
         ///     Upload story video (to self story) with adding link address (with progress)
         ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
@@ -209,7 +215,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="caption">Caption</param>
         /// <param name="uri">Uri to add</param>
         Task<IResult<InstaStoryMedia>> UploadStoryVideoWithUrlAsync(Action<InstaUploaderProgress> progress,
-            InstaVideoUpload video, string caption, Uri uri);
+            InstaVideoUpload video, string caption, Uri uri, InstaStoryUploadOptions uploadOptions = null);
         /// <summary>
         ///     Upload story video [to self story, to direct threads or both(self and direct)] with adding link address
         ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
@@ -219,7 +225,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="storyType">Story type</param>
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> UploadStoryVideoWithUrlAsync(InstaVideoUpload video, Uri uri,
-            InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
+            InstaStoryType storyType = InstaStoryType.SelfStory, InstaStoryUploadOptions uploadOptions = null, params string[] threadIds);
         /// <summary>
         ///     Upload story video (to self story) with adding link address (with progress)
         ///     <para>Note: this function only works with verified account or you have more than 10k followers.</para>
@@ -229,7 +235,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="storyType">Story type</param>
         /// <param name="threadIds">Thread ids</param>
         Task<IResult<bool>> UploadStoryVideoWithUrlAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, Uri uri,
-            InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds);
+            InstaStoryType storyType = InstaStoryType.SelfStory, InstaStoryUploadOptions uploadOptions = null, params string[] threadIds);
 
         /// <summary>
         ///     Vote to an story poll

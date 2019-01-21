@@ -678,9 +678,11 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
-        public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(InstaImage image, string caption)
+        /// param name="uploadOptions">Upload options => Optional</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(InstaImage image, string caption,
+            InstaStoryUploadOptions uploadOptions = null)
         {
-            return await UploadStoryPhotoAsync(null, image, caption);
+            return await UploadStoryPhotoAsync(null, image, caption, uploadOptions);
         }
         /// <summary>
         ///     Upload story photo with progress
@@ -688,9 +690,11 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="progress">Progress action</param>
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
-        public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption)
+        /// <param name="uploadOptions">Upload options => Optional</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoAsync(Action<InstaUploaderProgress> progress, InstaImage image, string caption,
+            InstaStoryUploadOptions uploadOptions = null)
         {
-            return await UploadStoryPhotoWithUrlAsync(progress, image, caption, null);
+            return await UploadStoryPhotoWithUrlAsync(progress, image, caption, null, uploadOptions);
         }
         /// <summary>
         ///     Upload story photo with adding link address
@@ -699,9 +703,11 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="uri">Uri to add</param>
-        public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoWithUrlAsync(InstaImage image, string caption, Uri uri)
+        /// <param name="uploadOptions">Upload options => Optional</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoWithUrlAsync(InstaImage image, string caption, Uri uri,
+            InstaStoryUploadOptions uploadOptions = null)
         {
-            return await UploadStoryPhotoWithUrlAsync(null, image, caption, uri);
+            return await UploadStoryPhotoWithUrlAsync(null, image, caption, uri, uploadOptions);
         }
         /// <summary>
         ///     Upload story photo with adding link address (with progress)
@@ -711,8 +717,10 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="image">Photo to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="uri">Uri to add</param>
+        /// <param name="uploadOptions">Upload options => Optional</param>
         public async Task<IResult<InstaStoryMedia>> UploadStoryPhotoWithUrlAsync(Action<InstaUploaderProgress> progress, InstaImage image, 
-            string caption, Uri uri)
+            string caption, Uri uri,
+            InstaStoryUploadOptions uploadOptions = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             var upProgress = new InstaUploaderProgress
@@ -762,7 +770,7 @@ namespace InstagramApiSharp.API.Processors
                     upProgress.UploadState = InstaUploadState.Uploaded;
                     progress?.Invoke(upProgress);
                     //upProgress = progressContent?.UploaderProgress;
-                    return await ConfigureStoryPhotoAsync(progress, upProgress, image, uploadId, caption, uri);
+                    return await ConfigureStoryPhotoAsync(progress, upProgress, image, uploadId, caption, uri, uploadOptions);
                 }
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
@@ -781,9 +789,10 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="video">Video to upload</param>
         /// <param name="caption">Caption</param>
-        public async Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(InstaVideoUpload video, string caption)
+        /// <param name="uploadOptions">Upload options => Optional</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(InstaVideoUpload video, string caption, InstaStoryUploadOptions uploadOptions = null)
         {
-            return await UploadStoryVideoAsync(null, video, caption);
+            return await UploadStoryVideoAsync(null, video, caption, uploadOptions);
         }
 
         /// <summary>
@@ -792,9 +801,11 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="progress">Progress action</param>
         /// <param name="video">Video to upload</param>
         /// <param name="caption">Caption</param>
-        public async Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string caption)
+        /// <param name="uploadOptions">Upload options => Optional</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, 
+            string caption, InstaStoryUploadOptions uploadOptions = null)
         {
-            return await UploadStoryVideoWithUrlAsync(progress, video, caption, null);
+            return await UploadStoryVideoWithUrlAsync(progress, video, caption, null, uploadOptions);
         }
 
         /// <summary>
@@ -802,10 +813,10 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="video">Video to upload</param>
         public async Task<IResult<bool>> UploadStoryVideoAsync(InstaVideoUpload video,
-    InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
+            InstaStoryType storyType = InstaStoryType.SelfStory, InstaStoryUploadOptions uploadOptions = null, params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendVideoAsync(null, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video);
+            return await _instaApi.HelperProcessor.SendVideoAsync(null, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video, null, uploadOptions);
         }
 
         /// <summary>
@@ -813,11 +824,12 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="progress">Progress action</param>
         /// <param name="video">Video to upload</param>
+        /// <param name="uploadOptions">Upload options => Optional</param>
         public async Task<IResult<bool>> UploadStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video,
-    InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
+            InstaStoryType storyType = InstaStoryType.SelfStory, InstaStoryUploadOptions uploadOptions = null, params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendVideoAsync(progress, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video);
+            return await _instaApi.HelperProcessor.SendVideoAsync(progress, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video, null, uploadOptions);
         }
 
         /// <summary>
@@ -828,9 +840,11 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="uri">Uri to add</param>
-        public async Task<IResult<InstaStoryMedia>> UploadStoryVideoWithUrlAsync(InstaVideoUpload video, string caption, Uri uri)
+        /// <param name="uploadOptions">Upload options => Optional</param>
+        public async Task<IResult<InstaStoryMedia>> UploadStoryVideoWithUrlAsync(InstaVideoUpload video, string caption, Uri uri,
+            InstaStoryUploadOptions uploadOptions = null)
         {
-            return await UploadStoryVideoWithUrlAsync(null, video, caption, uri);
+            return await UploadStoryVideoWithUrlAsync(null, video, caption, uri, uploadOptions);
         }
 
         /// <summary>
@@ -841,8 +855,9 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="uri">Uri to add</param>
+        /// <param name="uploadOptions">Upload options => Optional</param>
         public async Task<IResult<InstaStoryMedia>> UploadStoryVideoWithUrlAsync(Action<InstaUploaderProgress> progress,
-            InstaVideoUpload video, string caption, Uri uri)
+            InstaVideoUpload video, string caption, Uri uri, InstaStoryUploadOptions uploadOptions = null)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             var upProgress = new InstaUploaderProgress
@@ -985,7 +1000,7 @@ namespace InstagramApiSharp.API.Processors
                     //upProgress = progressContent?.UploaderProgress;
                     upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
                     progress?.Invoke(upProgress);
-                    return await ConfigureStoryVideoAsync(progress, upProgress, video, uploadId, caption, uri);
+                    return await ConfigureStoryVideoAsync(progress, upProgress, video, uploadId, caption, uri, uploadOptions);
                 }
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
@@ -1008,11 +1023,12 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="uri">Uri to add</param>
         /// <param name="storyType">Story type</param>
         /// <param name="threadIds">Thread ids</param>
+        /// <param name="uploadOptions">Upload options => Optional</param>
         public async Task<IResult<bool>> UploadStoryVideoWithUrlAsync(InstaVideoUpload video, Uri uri,
-    InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
+            InstaStoryType storyType = InstaStoryType.SelfStory, InstaStoryUploadOptions uploadOptions = null, params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendVideoAsync(null, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video, uri);
+            return await _instaApi.HelperProcessor.SendVideoAsync(null, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video, uri, uploadOptions);
         }
 
         /// <summary>
@@ -1023,11 +1039,12 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="video">Video to upload</param>
         /// <param name="storyType">Story type</param>
         /// <param name="threadIds">Thread ids</param>
+        /// <param name="uploadOptions">Upload options => Optional</param>
         public async Task<IResult<bool>> UploadStoryVideoWithUrlAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, Uri uri,
-InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
+            InstaStoryType storyType = InstaStoryType.SelfStory, InstaStoryUploadOptions uploadOptions = null, params string[] threadIds)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            return await _instaApi.HelperProcessor.SendVideoAsync(progress, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video, uri);
+            return await _instaApi.HelperProcessor.SendVideoAsync(progress, false, false, "", InstaViewMode.Replayable, storyType, null, threadIds.EncodeList(), video, uri, uploadOptions);
         }
 
         /// <summary>
@@ -1151,13 +1168,13 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
         /// <param name="caption">Caption</param>
         /// <param name="uri">Uri to add</param>
         private async Task<IResult<InstaStoryMedia>> ConfigureStoryPhotoAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaImage image, string uploadId,
-            string caption, Uri uri)
+            string caption, Uri uri, InstaStoryUploadOptions uploadOptions = null)
         {
             try
             {
                 upProgress.UploadState = InstaUploadState.Configuring;
                 progress?.Invoke(upProgress);
-                var instaUri = UriCreator.GetStoryConfigureUri();
+                var instaUri = UriCreator.GetVideoStoryConfigureUri();// UriCreator.GetStoryConfigureUri();
                 var data = new JObject
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
@@ -1188,6 +1205,35 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
                         }
                     };
                     data.Add("story_cta", storyCta.ToString(Formatting.None));
+                }
+                if (uploadOptions != null)
+                {
+                    if (uploadOptions.Hashtags?.Count > 0)
+                    {
+                        var hashtagArr = new JArray();
+                        foreach (var item in uploadOptions.Hashtags)
+                            hashtagArr.Add(item.ConvertToJson());
+
+                        data.Add("story_hashtags", hashtagArr.ToString(Formatting.None));
+                    }
+
+                    if (uploadOptions.Locations?.Count > 0)
+                    {
+                        var locationArr = new JArray();
+                        foreach (var item in uploadOptions.Locations)
+                            locationArr.Add(item.ConvertToJson());
+
+                        data.Add("story_locations", locationArr.ToString(Formatting.None));
+                    }
+
+                    if (uploadOptions.Polls?.Count > 0)
+                    {
+                        var pollArr = new JArray();
+                        foreach (var item in uploadOptions.Polls)
+                            pollArr.Add(item.ConvertToJson());
+
+                        data.Add("story_polls", pollArr.ToString(Formatting.None));
+                    }
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -1224,7 +1270,7 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
         /// <param name="caption">Caption</param>
         /// <param name="uri">Uri to add</param>
         private async Task<IResult<InstaStoryMedia>> ConfigureStoryVideoAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaVideoUpload video, string uploadId,
-            string caption, Uri uri)
+            string caption, Uri uri, InstaStoryUploadOptions uploadOptions = null)
         {
             try
             {
@@ -1288,7 +1334,35 @@ InstaStoryType storyType = InstaStoryType.SelfStory, params string[] threadIds)
                     };
                     data.Add("story_cta", storyCta.ToString(Formatting.None));
                 }
+                if (uploadOptions != null)
+                {
+                    if (uploadOptions.Hashtags?.Count > 0)
+                    {
+                        var hashtagArr = new JArray();
+                        foreach (var item in uploadOptions.Hashtags)
+                            hashtagArr.Add(item.ConvertToJson());
 
+                        data.Add("story_hashtags", hashtagArr.ToString(Formatting.None));
+                    }
+
+                    if (uploadOptions.Locations?.Count > 0)
+                    {
+                        var locationArr = new JArray();
+                        foreach (var item in uploadOptions.Locations)
+                            locationArr.Add(item.ConvertToJson());
+
+                        data.Add("story_locations", locationArr.ToString(Formatting.None));
+                    }
+
+                    if (uploadOptions.Polls?.Count > 0)
+                    {
+                        var pollArr = new JArray();
+                        foreach (var item in uploadOptions.Polls)
+                            pollArr.Add(item.ConvertToJson());
+
+                        data.Add("story_polls", pollArr.ToString(Formatting.None));
+                    }
+                }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var uploadParamsObj = new JObject
                 {

@@ -60,7 +60,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="isDirectVideo">Direct video</param>
         /// <param name="isDisappearingVideo">Disappearing video</param>
         public async Task<IResult<bool>> SendVideoAsync(Action<InstaUploaderProgress> progress, bool isDirectVideo, bool isDisappearingVideo,string caption, 
-            InstaViewMode viewMode, InstaStoryType storyType,  string recipients, string threadId, InstaVideoUpload video, Uri uri = null)
+            InstaViewMode viewMode, InstaStoryType storyType,  string recipients, string threadId, InstaVideoUpload video, Uri uri = null, InstaStoryUploadOptions uploadOptions = null)
         {
             var upProgress = new InstaUploaderProgress
             {
@@ -255,7 +255,7 @@ namespace InstagramApiSharp.API.Processors
                     upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
                     progress?.Invoke(upProgress);
                 }
-                return await ConfigureVideo(progress, upProgress, uploadId, isDirectVideo, isDisappearingVideo,caption, viewMode,storyType, recipients, threadId, uri);
+                return await ConfigureVideo(progress, upProgress, uploadId, isDirectVideo, isDisappearingVideo,caption, viewMode,storyType, recipients, threadId, uri, uploadOptions);
             }
             catch (Exception exception)
             {
@@ -267,7 +267,7 @@ namespace InstagramApiSharp.API.Processors
         }
 
         private async Task<IResult<bool>> ConfigureVideo(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, string uploadId, bool isDirectVideo, bool isDisappearingVideo, string caption,
-            InstaViewMode viewMode, InstaStoryType storyType, string recipients, string threadId, Uri uri)
+            InstaViewMode viewMode, InstaStoryType storyType, string recipients, string threadId, Uri uri, InstaStoryUploadOptions uploadOptions = null)
         {
             try
             {
@@ -406,6 +406,36 @@ namespace InstagramApiSharp.API.Processors
                                 }
                             };
                             data.Add("story_cta", storyCta.ToString(Formatting.None));
+                        }
+
+                        if (uploadOptions != null)
+                        {
+                            if (uploadOptions.Hashtags?.Count > 0)
+                            {
+                                var hashtagArr = new JArray();
+                                foreach (var item in uploadOptions.Hashtags)
+                                    hashtagArr.Add(item.ConvertToJson());
+
+                                data.Add("story_hashtags", hashtagArr.ToString(Formatting.None));
+                            }
+
+                            if (uploadOptions.Locations?.Count > 0)
+                            {
+                                var locationArr = new JArray();
+                                foreach (var item in uploadOptions.Locations)
+                                    locationArr.Add(item.ConvertToJson());
+
+                                data.Add("story_locations", locationArr.ToString(Formatting.None));
+                            }
+
+                            if (uploadOptions.Polls?.Count > 0)
+                            {
+                                var pollArr = new JArray();
+                                foreach (var item in uploadOptions.Polls)
+                                    pollArr.Add(item.ConvertToJson());
+
+                                data.Add("story_polls", pollArr.ToString(Formatting.None));
+                            }
                         }
                     }
                     instaUri = UriCreator.GetVideoStoryConfigureUri(true);
