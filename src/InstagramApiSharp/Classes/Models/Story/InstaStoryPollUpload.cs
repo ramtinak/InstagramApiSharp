@@ -21,8 +21,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public string Question { get; set; }
 
-        public string Answer1 { get; set; }
-        public string Answer2 { get; set; }
+        public string Answer1 { get; set; } = "YES";
+        public string Answer2 { get; set; } = "NO";
 
         public double Answer1FontSize { get; set; } = 35.0;
         public double Answer2FontSize { get; set; } = 35.0;

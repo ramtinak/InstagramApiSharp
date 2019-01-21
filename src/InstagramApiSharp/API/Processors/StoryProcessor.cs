@@ -1180,7 +1180,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
                     {"_csrftoken", _user.CsrfToken},
-                    {"source_type", "1"},
+                    {"source_type", "3"},
                     {"caption", caption},
                     {"upload_id", uploadId},
                     {"edits", new JObject()},
