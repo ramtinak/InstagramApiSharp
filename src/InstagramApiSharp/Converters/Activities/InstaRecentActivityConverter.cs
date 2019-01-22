@@ -11,6 +11,7 @@ namespace InstagramApiSharp.Converters
 
         public InstaRecentActivityFeed Convert()
         {
+            var t = (long)System.Convert.ToDouble(SourceObject.Args.TimeStamp);
             var activityStory = new InstaRecentActivityFeed
             {
                 Pk = SourceObject.Pk,
@@ -19,7 +20,7 @@ namespace InstagramApiSharp.Converters
                 ProfileImage = SourceObject.Args.ProfileImage,
                 Text = SourceObject.Args.Text,
                 RichText = SourceObject.Args.RichText,
-                TimeStamp = DateTimeHelper.UnixTimestampToDateTime(SourceObject.Args.TimeStamp)
+                TimeStamp = DateTimeHelper.UnixTimestampToDateTime(t)
             };
             if (SourceObject.Args.Links != null)
                 foreach (var instaLinkResponse in SourceObject.Args.Links)
