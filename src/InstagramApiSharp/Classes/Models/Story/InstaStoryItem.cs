@@ -36,6 +36,11 @@ namespace InstagramApiSharp.Classes.Models
 
         public DateTime ExpiringAt { get; set; }
 
+        public object Where(Func<object, object> p)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool HasAudio { get; set; }
 
         public string LinkText { get; set; }
@@ -89,6 +94,8 @@ namespace InstagramApiSharp.Classes.Models
         public List<InstaVideo> VideoList { get; set; } = new List<InstaVideo>();
 
         public List<InstaStoryPollItem> StoryPolls { get; set; } = new List<InstaStoryPollItem>();
+
+        public List<InstaStorySliderItem> StorySliders { get; set; } = new List<InstaStorySliderItem>();
 
         public List<InstaStoryPollVoterInfoItem> StoryPollVoters { get; set; } = new List<InstaStoryPollVoterInfoItem>();
 

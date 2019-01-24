@@ -674,10 +674,21 @@ namespace InstagramApiSharp.Converters
             return new InstaStoryPollStickerItemConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaStorySliderStickerItem, InstaStorySliderStickerItemResponse> GetStorySliderStickerItemConverter(
+           InstaStorySliderStickerItemResponse response)
+        {
+            return new InstaStorySliderStickerItemConverter { SourceObject = response };
+        }
+
         public IObjectConverter<InstaStoryPollItem, InstaStoryPollItemResponse> GetStoryPollItemConverter(
             InstaStoryPollItemResponse response)
         {
             return new InstaStoryPollItemConverter { SourceObject = response };
+        }
+        public IObjectConverter<InstaStorySliderItem, InstaStorySliderItemResponse> GetStorySliderItemConverter(
+            InstaStorySliderItemResponse response)
+        {
+            return new InstaStorySliderItemConverter { SourceObject = response };
         }
 
         public IObjectConverter<InstaStoryPollVoterItem, InstaStoryPollVoterItemResponse> GetStoryPollVoterItemConverter(

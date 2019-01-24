@@ -75,6 +75,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("story_polls")] public List<InstaStoryPollItemResponse> StoryPolls { get; set; }
 
+        [JsonProperty("story_sliders")] public List<InstaStorySliderItemResponse> StorySliders { get; set; }
+
         [JsonProperty("reel_mentions")] public List<InstaReelMentionResponse> ReelMentions { get; set; }
 
         [JsonProperty("preview_comments")] public List<object> PreviewComments { get; set; }
