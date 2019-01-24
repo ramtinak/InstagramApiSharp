@@ -195,4 +195,4 @@ This code is in no way affiliated with, authorized, maintained, sponsored or end
 
 
 
-Iranian developers - (c) 2019 | Tabestan & Paeez 1397.
+Iranian developers - (c) 2019 | Tabestan - Zemestan 1397.

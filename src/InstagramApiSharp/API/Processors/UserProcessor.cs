@@ -552,6 +552,9 @@ namespace InstagramApiSharp.API.Processors
             var followers = new InstaUserShortList();
             try
             {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
                 var user = await GetUserAsync(username);
                 var userFollowersUri =
                     UriCreator.GetUserFollowersUri(user.Value.Pk, _user.RankToken, searchQuery, mutualsfirst,
@@ -562,7 +565,7 @@ namespace InstagramApiSharp.API.Processors
                 followers.AddRange(
                     followersResponse.Value.Items?.Select(ConvertersFabric.Instance.GetUserShortConverter)
                         .Select(converter => converter.Convert()));
-                followers.NextMaxId = followersResponse.Value.NextMaxId;
+                paginationParameters.NextMaxId = followers.NextMaxId = followersResponse.Value.NextMaxId;
 
                 var pagesLoaded = 1;
                 while (!string.IsNullOrEmpty(followersResponse.Value.NextMaxId)
@@ -578,7 +581,8 @@ namespace InstagramApiSharp.API.Processors
                         followersResponse.Value.Items?.Select(ConvertersFabric.Instance.GetUserShortConverter)
                             .Select(converter => converter.Convert()));
                     pagesLoaded++;
-                    followers.NextMaxId = followersResponse.Value.NextMaxId;
+                    paginationParameters.PagesLoaded = pagesLoaded;
+                    paginationParameters.NextMaxId = followers.NextMaxId = followersResponse.Value.NextMaxId;
                 }
 
                 return Result.Success(followers);
@@ -606,6 +610,9 @@ namespace InstagramApiSharp.API.Processors
             var following = new InstaUserShortList();
             try
             {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
                 var user = await GetUserAsync(username);
                 var uri = UriCreator.GetUserFollowingUri(user.Value.Pk, _user.RankToken, searchQuery,
                     paginationParameters.NextMaxId);
@@ -615,7 +622,7 @@ namespace InstagramApiSharp.API.Processors
                 following.AddRange(
                     userListResponse.Value.Items.Select(ConvertersFabric.Instance.GetUserShortConverter)
                         .Select(converter => converter.Convert()));
-                following.NextMaxId = userListResponse.Value.NextMaxId;
+                paginationParameters.NextMaxId = following.NextMaxId = userListResponse.Value.NextMaxId;
                 var pages = 1;
                 while (!string.IsNullOrEmpty(following.NextMaxId)
                        && pages < paginationParameters.MaximumPagesToLoad)
@@ -630,7 +637,8 @@ namespace InstagramApiSharp.API.Processors
                         userListResponse.Value.Items.Select(ConvertersFabric.Instance.GetUserShortConverter)
                             .Select(converter => converter.Convert()));
                     pages++;
-                    following.NextMaxId = userListResponse.Value.NextMaxId;
+                    paginationParameters.PagesLoaded = pages;
+                    paginationParameters.NextMaxId = following.NextMaxId = userListResponse.Value.NextMaxId;
                 }
 
                 return Result.Success(following);
