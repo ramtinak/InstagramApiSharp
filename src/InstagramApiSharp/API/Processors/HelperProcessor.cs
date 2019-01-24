@@ -427,14 +427,25 @@ namespace InstagramApiSharp.API.Processors
 
                                 data.Add("story_locations", locationArr.ToString(Formatting.None));
                             }
-
-                            if (uploadOptions.Polls?.Count > 0)
+                            if (uploadOptions.Slider != null)
                             {
-                                var pollArr = new JArray();
-                                foreach (var item in uploadOptions.Polls)
-                                    pollArr.Add(item.ConvertToJson());
+                                var sliderArr = new JArray
+                                {
+                                    uploadOptions.Slider.ConvertToJson()
+                                };
 
-                                data.Add("story_polls", pollArr.ToString(Formatting.None));
+                                data.Add("story_sliders", sliderArr.ToString(Formatting.None));
+                            }
+                            else
+                            {
+                                if (uploadOptions.Polls?.Count > 0)
+                                {
+                                    var pollArr = new JArray();
+                                    foreach (var item in uploadOptions.Polls)
+                                        pollArr.Add(item.ConvertToJson());
+
+                                    data.Add("story_polls", pollArr.ToString(Formatting.None));
+                                }
                             }
                         }
                     }
