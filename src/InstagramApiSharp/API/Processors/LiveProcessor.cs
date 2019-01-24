@@ -75,6 +75,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastAddToPostLiveResponse>(json);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastAddToPostLiveResponse), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -116,6 +121,11 @@ namespace InstagramApiSharp.API.Processors
                 var converter = ConvertersFabric.Instance.GetCommentConverter(commentResponse);
                 return Result.Success(converter.Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaComment), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -155,6 +165,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastCreateResponse>(json);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastCreateResponse), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -186,6 +201,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<bool>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
                 return obj.Status == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -219,6 +239,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastCommentEnableDisableResponse>(json);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastCommentEnableDisableResponse), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -250,6 +275,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaBroadcastCommentEnableDisableResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastCommentEnableDisableResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastCommentEnableDisableResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -284,6 +314,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
                 return obj.Status == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -311,6 +346,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastCommentResponse>(json);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastCommentResponse), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -334,6 +374,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaDiscoverTopLiveResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaDiscoverTopLiveResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaDiscoverTopLiveResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -359,7 +404,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaBroadcastFinalViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastFinalViewerListResponse>(json);
                 return Result.Success(obj);
-
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastFinalViewerListResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -394,6 +443,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastLiveHeartBeatViewerCountResponse>(json);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastLiveHeartBeatViewerCountResponse), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -405,7 +459,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        public async Task<IResult<BroadcastInfoResponse>> GetInfoAsync(string broadcastId)
+        public async Task<IResult<InstaBroadcastInfoResponse>> GetInfoAsync(string broadcastId)
         {
             try
             {
@@ -414,14 +468,19 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<BroadcastInfoResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<BroadcastInfoResponse>(json);
+                    return Result.UnExpectedResponse<InstaBroadcastInfoResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaBroadcastInfoResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastInfoResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<BroadcastInfoResponse>(exception);
+                return Result.Fail<InstaBroadcastInfoResponse>(exception);
             }
         }
 
@@ -441,6 +500,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaBroadcastFinalViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastFinalViewerListResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastFinalViewerListResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -468,6 +532,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastLikeResponse>(json);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastLikeResponse), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -493,6 +562,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBroadCastNotifyFriendsResponse>(json);
                 return Result.Success(json);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(string), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -516,6 +590,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaBroadcastViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadCastNotifyFriendsResponse>(json);
                 return Result.Success(json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(string), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -543,6 +622,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastViewerListResponse>(json);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastViewerListResponse), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -566,6 +650,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaBroadcastSuggestedResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastSuggestedResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastSuggestedResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -598,6 +687,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastTopLiveStatusResponse>(json);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastTopLiveStatusResponse), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -621,6 +715,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaBroadcastViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastViewerListResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastViewerListResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -655,6 +754,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastLikeResponse>(json);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastLikeResponse), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -678,6 +782,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaBroadcastViewerListResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadCastNotifyFriendsResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadCastNotifyFriendsResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -713,6 +822,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaBroadcastPinUnpinResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastPinUnpinResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastPinUnpinResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -752,6 +866,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaBroadcastViewerListResponse>(response, json);
                 return Result.Success(json);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastLiveHeartBeatViewerCountResponse), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 Debug.WriteLine(exception.Message);
@@ -785,6 +904,11 @@ namespace InstagramApiSharp.API.Processors
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaBroadcastStartResponse>(response, json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastStartResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -843,6 +967,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
                 return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -888,6 +1017,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaBroadcastPinUnpinResponse>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastPinUnpinResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaBroadcastPinUnpinResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {

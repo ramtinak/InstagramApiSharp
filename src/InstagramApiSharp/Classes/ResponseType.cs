@@ -81,6 +81,10 @@ namespace InstagramApiSharp.Classes
         /// <summary>
         ///     When happens that you aren't be able to like media or comment
         /// </summary>
-        CantLike = 19
+        CantLike = 19,
+        /// <summary>
+        ///     Network problem
+        /// </summary>
+        NetworkProblem = 20
     }
 }

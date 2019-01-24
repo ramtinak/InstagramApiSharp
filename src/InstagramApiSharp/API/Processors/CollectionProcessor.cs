@@ -74,6 +74,11 @@ namespace InstagramApiSharp.API.Processors
                 var converter = ConvertersFabric.Instance.GetCollectionConverter(newCollectionResponse);
                 return Result.Success(converter.Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaCollectionItem), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -116,6 +121,11 @@ namespace InstagramApiSharp.API.Processors
                     ? Result.UnExpectedResponse<InstaCollectionItem>(response, json)
                     : Result.Success(converter.Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaCollectionItem), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -152,6 +162,11 @@ namespace InstagramApiSharp.API.Processors
 
                 var error = JsonConvert.DeserializeObject<BadStatusResponse>(json);
                 return Result.Fail(error.Message, false);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -200,6 +215,11 @@ namespace InstagramApiSharp.API.Processors
                 var converter = ConvertersFabric.Instance.GetCollectionConverter(newCollectionResponse);
                 return Result.Success(converter.Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaCollectionItem), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -231,7 +251,7 @@ namespace InstagramApiSharp.API.Processors
 
                 var collectionList = await GetSingleCollection(collectionId, paginationParameters);
                 if (!collectionList.Succeeded)
-                    return Result.Fail<InstaCollectionItem>(collectionList.Info.Message);
+                    return Result.Fail(collectionList.Info, default(InstaCollectionItem));
                 
                 var collectionsListResponse = collectionList.Value;
                 paginationParameters.NextMaxId = collectionsListResponse.NextMaxId;
@@ -257,6 +277,11 @@ namespace InstagramApiSharp.API.Processors
 
                 var converter = ConvertersFabric.Instance.GetCollectionConverter(collectionsListResponse);
                 return Result.Success(converter.Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaCollectionItem), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -287,7 +312,7 @@ namespace InstagramApiSharp.API.Processors
                 var collections = await GetCollections(paginationParameters);
 
                 if (!collections.Succeeded)
-                    return Result.Fail<InstaCollections>(collections.Info.Message);
+                    return Result.Fail(collections.Info, default(InstaCollections));
 
                 var collectionsResponse = collections.Value;
                 paginationParameters.NextMaxId = collectionsResponse.NextMaxId;
@@ -314,6 +339,11 @@ namespace InstagramApiSharp.API.Processors
 
                 return Result.Success(converter.Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaCollections), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -336,6 +366,11 @@ namespace InstagramApiSharp.API.Processors
 
                 var collectionsResponse = JsonConvert.DeserializeObject<InstaCollectionsResponse>(json);
                 return Result.Success(collectionsResponse);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaCollectionsResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -361,6 +396,11 @@ namespace InstagramApiSharp.API.Processors
                     JsonConvert.DeserializeObject<InstaCollectionItemResponse>(json,
                         new InstaCollectionDataConverter());
                 return Result.Success(collectionsListResponse);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaCollectionItemResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {

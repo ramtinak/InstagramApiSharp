@@ -236,6 +236,11 @@ namespace InstagramApiSharp.API
                     return Result.Success(obj);
                 }
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaCheckEmailRegistration), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -277,6 +282,11 @@ namespace InstagramApiSharp.API
 
                 return Result.Success(true);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -302,6 +312,11 @@ namespace InstagramApiSharp.API
                 var json = await response.Content.ReadAsStringAsync();
                 var obj = JsonConvert.DeserializeObject<InstaAccountCheck>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaAccountCheck), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -348,6 +363,11 @@ namespace InstagramApiSharp.API
                 }
                 _signUpPhoneNumberInfo = JsonConvert.DeserializeObject<InstaAccountRegistrationPhoneNumber>(json);
                 return Result.Success(true);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -399,6 +419,11 @@ namespace InstagramApiSharp.API
                 await GetRegistrationStepsAsync();
                 var obj = JsonConvert.DeserializeObject<InstaPhoneNumberRegistration>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaPhoneNumberRegistration), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -464,6 +489,11 @@ namespace InstagramApiSharp.API
 
                 var obj = JsonConvert.DeserializeObject<InstaRegistrationSuggestionResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaRegistrationSuggestionResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -541,6 +571,11 @@ namespace InstagramApiSharp.API
                     ValidateUserAsync(obj.CreatedUser, csrftoken, true, password);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaAccountCreation), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -587,6 +622,11 @@ namespace InstagramApiSharp.API
 
                 var obj = JsonConvert.DeserializeObject<InstaRegistrationSuggestionResponse>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaRegistrationSuggestionResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -682,6 +722,11 @@ namespace InstagramApiSharp.API
 
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaAccountCreation), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -744,6 +789,11 @@ namespace InstagramApiSharp.API
                     ValidateUserAsync(obj.CreatedUser, csrftoken, true, password);
 
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaAccountCreation), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -828,6 +878,11 @@ namespace InstagramApiSharp.API
                     return Result.UnExpectedResponse<bool>(response, json);
 
                 return Result.Success(true);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception ex)
             {
@@ -947,6 +1002,11 @@ namespace InstagramApiSharp.API
                 }
                 return Result.Success(InstaLoginResult.Success);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, InstaLoginResult.Exception, ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 LogException(exception);
@@ -1020,6 +1080,11 @@ namespace InstagramApiSharp.API
                 _user.LoggedInUser.ProfilePicUrl = us.Value.ProfilePicUrl;
 
                 return Result.Success(true);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -1097,6 +1162,11 @@ namespace InstagramApiSharp.API
                 return Result.Fail("This code is no longer valid, please, call LoginAsync again to request a new one",
                     InstaLoginTwoFactorResult.CodeExpired);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaLoginTwoFactorResult), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 LogException(exception);
@@ -1142,6 +1212,11 @@ namespace InstagramApiSharp.API
                     IsUserAuthenticated = false;
                 return Result.Success(!IsUserAuthenticated);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 LogException(exception);
@@ -1169,15 +1244,6 @@ namespace InstagramApiSharp.API
                     _logger?.LogResponse(firstResponse);
                     csrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 }
-                //{
-                //  "_csrftoken": "2D967fFeQvMnUsAPyEWum0yqjo9HxBy9",
-                //  "q": "jalebofun",
-                //  "_uid": "9013775990",
-                //  "guid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
-                //  "device_id": "android-70d6ba15a3d76520",
-                //  "_uuid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
-                //  "directly_sign_in": "true"
-                //}
                 var data = new JObject
                 {
                     {"_csrftoken", csrfToken},
@@ -1198,6 +1264,11 @@ namespace InstagramApiSharp.API
                     return Result.Fail<InstaUserLookup>(obj.Message);
 
                 return Result.Success(ConvertersFabric.Instance.GetUserLookupConverter(obj).Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaUserLookup), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -1257,6 +1328,11 @@ namespace InstagramApiSharp.API
 
                 return Result.Success(JsonConvert.DeserializeObject<InstaRecovery>(result));
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaRecovery), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 return Result.Fail<InstaRecovery>(exception);
@@ -1314,6 +1390,11 @@ namespace InstagramApiSharp.API
                 }
                 return Result.Success(JsonConvert.DeserializeObject<InstaRecovery>(result));
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaRecovery), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 return Result.Fail<InstaRecovery>(exception);
@@ -1349,6 +1430,11 @@ namespace InstagramApiSharp.API
                 if (!string.IsNullOrEmpty(T.TwoFactorInfo.TwoFactorIdentifier))
                     _twoFactorInfo.TwoFactorIdentifier = T.TwoFactorInfo.TwoFactorIdentifier;
                 return Result.Success(T);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(TwoFactorLoginSMS), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -1386,6 +1472,11 @@ namespace InstagramApiSharp.API
 
                 var obj = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyMethod>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaChallengeRequireVerifyMethod), ResponseType.NetworkProblem);
             }
             catch (Exception ex)
             {
@@ -1426,6 +1517,11 @@ namespace InstagramApiSharp.API
 
                 var obj = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyMethod>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaChallengeRequireVerifyMethod), ResponseType.NetworkProblem);
             }
             catch (Exception ex)
             {
@@ -1500,6 +1596,11 @@ namespace InstagramApiSharp.API
                 var obj = JsonConvert.DeserializeObject<InstaChallengeRequireSMSVerify>(json);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaChallengeRequireSMSVerify), ResponseType.NetworkProblem);
+            }
             catch (Exception ex)
             {
                 return Result.Fail(ex, (InstaChallengeRequireSMSVerify)null);
@@ -1552,6 +1653,11 @@ namespace InstagramApiSharp.API
 
                 var obj = JsonConvert.DeserializeObject<InstaChallengeRequireEmailVerify>(json);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaChallengeRequireEmailVerify), ResponseType.NetworkProblem);
             }
             catch (Exception ex)
             {
@@ -1623,6 +1729,11 @@ namespace InstagramApiSharp.API
                     }
                 }
                 return Result.Fail(obj?.Message, InstaLoginResult.Exception);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaLoginResult), ResponseType.NetworkProblem);
             }
             catch (Exception ex)
             {
@@ -1732,6 +1843,11 @@ namespace InstagramApiSharp.API
                         InvalidateProcessors();
                     }
                     return Result.Success(true);
+                }
+                catch (HttpRequestException httpException)
+                {
+                    _logger?.LogException(httpException);
+                    return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
                 }
                 catch (Exception ex)
                 {
@@ -1928,38 +2044,27 @@ namespace InstagramApiSharp.API
         {
             try
             {
-                return await SendGetRequestAsync<string>(uri);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception, "");
-            }
-        }
-        /// <summary>
-        ///     Send get request
-        /// </summary>
-        /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
-        public async Task<IResult<T>> SendGetRequestAsync<T>(Uri uri)
-        {
-            try
-            {
                 if (uri == null)
-                    return Result.Fail("Uri cannot be null!", default(T));
+                    return Result.Fail("Uri cannot be null!", default(string));
 
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<T>(response, json);
+                    return Result.UnExpectedResponse<string>(response, json);
 
-                return Result.Success(JsonConvert.DeserializeObject<T>(json));
+                return Result.Success(JsonConvert.DeserializeObject<string>(json));
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(string), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception, default(T));
+                return Result.Fail(exception, default(string));
             }
         }
         
@@ -1968,25 +2073,25 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
         /// <param name="data">Data to post</param>
-        public async Task<IResult<T>> SendSignedPostRequestAsync<T>(Uri uri, Dictionary<string, string> data)
+        public async Task<IResult<string>> SendSignedPostRequestAsync(Uri uri, Dictionary<string, string> data)
         {
-            return await SendSignedPostRequest<T>(uri, null, data);
+            return await SendSignedPostRequest(uri, null, data);
         }
         /// <summary>
         ///     Send signed post request (include signed signature) 
         /// </summary>
         /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
         /// <param name="data">Data to post</param>
-        public async Task<IResult<T>> SendSignedPostRequestAsync<T>(Uri uri, JObject data)
+        public async Task<IResult<string>> SendSignedPostRequestAsync(Uri uri, JObject data)
         {
-            return await SendSignedPostRequest<T>(uri, data, null);
+            return await SendSignedPostRequest(uri, data, null);
         }
-        private async Task<IResult<T>> SendSignedPostRequest<T>(Uri uri, JObject JData, Dictionary<string, string> DicData)
+        private async Task<IResult<string>> SendSignedPostRequest(Uri uri, JObject JData, Dictionary<string, string> DicData)
         {
             try
             {
                 if (uri == null)
-                    return Result.Fail("Uri cannot be null!", default(T));
+                    return Result.Fail("Uri cannot be null!", default(string));
 
                 HttpRequestMessage request;
                 if (JData != null)
@@ -1998,14 +2103,19 @@ namespace InstagramApiSharp.API
                 var json = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<T>(response, json);
+                    return Result.UnExpectedResponse<string>(response, json);
 
-                return Result.Success(JsonConvert.DeserializeObject<T>(json));
+                return Result.Success(json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(string), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception, default(T));
+                return Result.Fail(exception, default(string));
             }
         }
         /// <summary>
@@ -2013,26 +2123,31 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
         /// <param name="data">Data to post</param>
-        public async Task<IResult<T>> SendPostRequestAsync<T>(Uri uri, Dictionary<string, string> data)
+        public async Task<IResult<string>> SendPostRequestAsync(Uri uri, Dictionary<string, string> data)
         {
             try
             {
                 if (uri == null)
-                    return Result.Fail("Uri cannot be null!", default(T));
+                    return Result.Fail("Uri cannot be null!", default(string));
 
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, uri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<T>(response, json);
+                    return Result.UnExpectedResponse<string>(response, json);
 
-                return Result.Success(JsonConvert.DeserializeObject<T>(json));
+                return Result.Success(json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(string), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception, default(T));
+                return Result.Fail(exception, default(string));
             }
         }
 

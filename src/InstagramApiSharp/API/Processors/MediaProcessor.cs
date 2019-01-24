@@ -51,16 +51,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>Return true if the media is archived</returns>
         public async Task<IResult<bool>> ArchiveMediaAsync(string mediaId)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetArchiveMediaUri(mediaId));
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
-            }
+            return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetArchiveMediaUri(mediaId));
         }
 
         /// <summary>
@@ -94,6 +85,11 @@ namespace InstagramApiSharp.API.Processors
 
                 var deletedResponse = JsonConvert.DeserializeObject<DeleteResponse>(json);
                 return Result.Success(deletedResponse.IsDeleted);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -212,6 +208,11 @@ namespace InstagramApiSharp.API.Processors
                 var error = JsonConvert.DeserializeObject<BadStatusResponse>(json);
                 return Result.Fail(error.Message, (InstaMedia)null);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -258,6 +259,11 @@ namespace InstagramApiSharp.API.Processors
                 mediaList.PageSize = archivedResponse.ResultsCount;
                 return Result.Success(mediaList);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, mediaList, ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -285,6 +291,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaMediaIdsResponse>(json);
 
                 return Result.Success(obj.MediaIds);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, mediaIds, ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -323,6 +334,11 @@ namespace InstagramApiSharp.API.Processors
                 
                 return Result.Success(mediaList);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, mediaList, ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -360,6 +376,11 @@ namespace InstagramApiSharp.API.Processors
                     ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse.Medias.FirstOrDefault());
                 return Result.Success(converter.Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -386,6 +407,11 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = JsonConvert.DeserializeObject<InstaOembedUrlResponse>(json);
                 return Result.Success(data.MediaId);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(string), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -417,6 +443,11 @@ namespace InstagramApiSharp.API.Processors
                         .Select(converter => converter.Convert()));
                 return Result.Success(likers);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaLikersList), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -445,6 +476,11 @@ namespace InstagramApiSharp.API.Processors
                 var data = JsonConvert.DeserializeObject<InstaPermalinkResponse>(json);
                 return Result.Success(new Uri(data.Permalink));
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(Uri), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -458,16 +494,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="mediaId">Media id</param>
         public async Task<IResult<bool>> LikeMediaAsync(string mediaId)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetLikeMediaUri(mediaId));
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
-            }
+            return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetLikeMediaUri(mediaId));
         }
 
         /// <summary>
@@ -497,6 +524,11 @@ namespace InstagramApiSharp.API.Processors
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -511,16 +543,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>Return true if the media is unarchived</returns>
         public async Task<IResult<bool>> UnArchiveMediaAsync(string mediaId)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetUnArchiveMediaUri(mediaId));
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
-            }
+            return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetUnArchiveMediaUri(mediaId));
         }
 
         /// <summary>
@@ -529,16 +552,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="mediaId">Media id</param>
         public async Task<IResult<bool>> UnLikeMediaAsync(string mediaId)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetUnLikeMediaUri(mediaId));
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<bool>(exception);
-            }
+            return await LikeUnlikeArchiveUnArchiveMediaInternal(mediaId, UriCreator.GetUnLikeMediaUri(mediaId));
         }
 
         /// <summary>
@@ -778,6 +792,11 @@ namespace InstagramApiSharp.API.Processors
                 var config = await ConfigureAlbumAsync(progress, upProgress, imagesUploadIds, videosDic, caption, location);
                 return config;
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 upProgress.UploadState = InstaUploadState.Error;
@@ -877,6 +896,11 @@ namespace InstagramApiSharp.API.Processors
                 }
                 var config = await ConfigureAlbumAsync(progress, upProgress, uploadIds, caption, location);
                 return config;
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -1125,6 +1149,11 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 upProgress.UploadState = InstaUploadState.Error;
@@ -1265,6 +1294,11 @@ namespace InstagramApiSharp.API.Processors
 
                 return await ConfigureVideoAsync(progress, upProgress, video.Video, uploadId, caption, location);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 upProgress.UploadState = InstaUploadState.Error;
@@ -1353,6 +1387,11 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 upProgress.UploadState = InstaUploadState.Error;
@@ -1431,6 +1470,11 @@ namespace InstagramApiSharp.API.Processors
                 }
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 upProgress.UploadState = InstaUploadState.Error;
@@ -1494,20 +1538,33 @@ namespace InstagramApiSharp.API.Processors
 
         private async Task<IResult<bool>> LikeUnlikeArchiveUnArchiveMediaInternal(string mediaId, Uri instaUri)
         {
-            var fields = new Dictionary<string, string>
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var fields = new Dictionary<string, string>
             {
                 {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                 {"_uid", _user.LoggedInUser.Pk.ToString()},
                 {"_csrftoken", _user.CsrfToken},
                 {"media_id", mediaId}
             };
-            var request =
-                _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
-            var response = await _httpRequestProcessor.SendAsync(request);
-            var json = await response.Content.ReadAsStringAsync();
-            return response.StatusCode == HttpStatusCode.OK
-                ? Result.Success(true)
-                : Result.UnExpectedResponse<bool>(response, json);
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                return Result.Fail<bool>(exception);
+            }
         }
 
         private async Task<IResult<bool>> UploadVideoThumbnailAsync(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, InstaImage image, string uploadId)
@@ -1553,6 +1610,11 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 return Result.Fail<bool>("Could not upload thumbnail");
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 upProgress.UploadState = InstaUploadState.Error;
@@ -1576,6 +1638,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaMediaListResponse>(response, json);
                 var archivedResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json);
                 return Result.Success(archivedResponse);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMediaListResponse), ResponseType.NetworkProblem);
             }
             catch (Exception ex)
             {

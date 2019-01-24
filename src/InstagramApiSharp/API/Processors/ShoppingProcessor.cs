@@ -95,6 +95,11 @@ namespace InstagramApiSharp.API.Processors
 
                 return Result.Success(converted);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaProductInfo), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -133,6 +138,11 @@ namespace InstagramApiSharp.API.Processors
                 var converted = ConvertersFabric.Instance.GetProductInfoConverter(productInfoResponse).Convert();
 
                 return Result.Success(converted);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaProductInfo), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -179,6 +189,11 @@ namespace InstagramApiSharp.API.Processors
                 mediaList.Pages = paginationParameters.PagesLoaded;
                 mediaList.PageSize = mediaResponse.ResultsCount;
                 return Result.Success(mediaList);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMediaList), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
