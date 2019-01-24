@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.2.1</Version>
-    <AssemblyVersion>1.3.2.1</AssemblyVersion>
-    <FileVersion>1.3.2.1</FileVersion>
+    <Version>1.3.2.2</Version>
+    <AssemblyVersion>1.3.2.2</AssemblyVersion>
+    <FileVersion>1.3.2.2</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,17 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.3.2.1
+    <PackageReleaseNotes>v1.3.2.2
+- [Bugfix] for user activities timespan
+- [Add] support for story sliders
+- [Add] VoteStorySliderAsync to StoryProcessor
+- [Add] some new properties to InstaStoryItem
+- [Add] StorySliderVoters to InstaStoryItem
+- [Add] Slider to InstaStoryUploadOptions
+- [Add] Fail&lt;T&gt;(Exception, T, ResponseType) to Result
+- [Add] NetworkProblem to ResponseType
+
+v1.3.2.1
 - [Add] support story poll to InstaStoryItem
 - [Add] ViewerVote property to InstaStoryPollStickerItem
 - [Add] story voters support in InstaStoryItem
@@ -48,7 +58,7 @@ See example projects and wiki pages to find out how this library works.</Descrip
 - [Add] GetStoryPollVotersAsync to StoryProcessor
 - [Add] VoteStoryPollAsync to StoryProcessor
 - [Add] SetTimeout to IInstaApi
-- [Add] story options (- [Add] locations, hashtags or poll questions) to UploadStoryPhotoAsync and UploadStoryVideoAsync
+- [Add] story options (add locations, hashtags or poll questions) to UploadStoryPhotoAsync and UploadStoryVideoAsync
 
 v1.3.2.0
 - [Add] Api Version 76

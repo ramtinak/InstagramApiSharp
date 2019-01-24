@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.2.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.2.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -89,6 +89,16 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.2.2
+- [Bugfix] for user activities timespan
+- [Add] support for story sliders
+- [Add] VoteStorySliderAsync to StoryProcessor
+- [Add] some new properties to InstaStoryItem
+- [Add] StorySliderVoters to InstaStoryItem
+- [Add] Slider to InstaStoryUploadOptions
+- [Add] Fail<T>(Exception, T, ResponseType) to Result
+- [Add] NetworkProblem to ResponseType
+
 v1.3.2.1
 - [Add] support story poll to InstaStoryItem
 - [Add] ViewerVote property to InstaStoryPollStickerItem
@@ -99,7 +109,7 @@ v1.3.2.1
 - [Add] GetStoryPollVotersAsync to StoryProcessor
 - [Add] VoteStoryPollAsync to StoryProcessor
 - [Add] SetTimeout to IInstaApi
-- [Add] story options (- [Add] locations, hashtags or poll questions) to UploadStoryPhotoAsync and UploadStoryVideoAsync
+- [Add] story options (add locations, hashtags or poll questions) to UploadStoryPhotoAsync and UploadStoryVideoAsync
 
 v1.3.2.0
 - [Add] Api Version 76
