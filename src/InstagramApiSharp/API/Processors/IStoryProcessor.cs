@@ -242,7 +242,17 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="storyMediaId">Story media id</param>
         /// <param name="pollId">Story poll id</param>
-        /// <param name="vote">Your vote</param>
-        Task<IResult<InstaStoryItem>> VoteStoryPollAsync(string storyMediaId, string pollId, InstaStoryPollVoteType vote);
+        /// <param name="pollVote">Your poll vote</param>
+        Task<IResult<InstaStoryItem>> VoteStoryPollAsync(string storyMediaId, string pollId, InstaStoryPollVoteType pollVote);
+
+        /// <summary>
+        ///     Vote to an story slider
+        ///     <para>Note: slider vote must be between 0 and 1</para>
+        /// </summary>
+        /// <param name="storyMediaId">Story media id</param>
+        /// <param name="pollId">Story poll id</param>
+        /// <param name="sliderVote">Your slider vote (from 0 to 1)</param>
+        Task<IResult<InstaStoryItem>> VoteStorySliderAsync(string storyMediaId, string pollId, double sliderVote = 0.5);
+
     }
 }

@@ -36,11 +36,6 @@ namespace InstagramApiSharp.Classes.Models
 
         public DateTime ExpiringAt { get; set; }
 
-        public object Where(Func<object, object> p)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool HasAudio { get; set; }
 
         public string LinkText { get; set; }

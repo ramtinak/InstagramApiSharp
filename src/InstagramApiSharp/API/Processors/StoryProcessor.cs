@@ -1088,8 +1088,8 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="storyMediaId">Story media id</param>
         /// <param name="pollId">Story poll id</param>
-        /// <param name="vote">Your vote</param>
-        public async Task<IResult<InstaStoryItem>> VoteStoryPollAsync(string storyMediaId, string pollId, InstaStoryPollVoteType vote)
+        /// <param name="pollVote">Your poll vote</param>
+        public async Task<IResult<InstaStoryItem>> VoteStoryPollAsync(string storyMediaId, string pollId, InstaStoryPollVoteType pollVote)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -1101,7 +1101,52 @@ namespace InstagramApiSharp.API.Processors
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"radio_type", "wifi-none"},
-                    {"vote", ((int)vote).ToString()},
+                    {"vote", ((int)pollVote).ToString()},
+                };
+
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaStoryItem>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaReelStoryMediaViewersResponse>(json);
+                var covertedObj = ConvertersFabric.Instance.GetReelStoryMediaViewersConverter(obj).Convert();
+
+                return Result.Success(covertedObj.UpdatedMedia);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaStoryItem>(exception);
+            }
+        }
+
+        /// <summary>
+        ///     Vote to an story slider
+        ///     <para>Note: slider vote must be between 0 and 1</para>
+        /// </summary>
+        /// <param name="storyMediaId">Story media id</param>
+        /// <param name="pollId">Story poll id</param>
+        /// <param name="sliderVote">Your slider vote (from 0 to 1)</param>
+        public async Task<IResult<InstaStoryItem>> VoteStorySliderAsync(string storyMediaId, string pollId, double sliderVote = 0.5)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (sliderVote > 1)
+                    return Result.Fail<InstaStoryItem>("sliderVote cannot be more than 1.\r\nIt must be between 0 and 1");
+                if(sliderVote < 0)
+                    return Result.Fail<InstaStoryItem>("sliderVote cannot be less than 0.\r\nIt must be between 0 and 1");
+
+                var instaUri = UriCreator.GetVoteStorySliderUri(storyMediaId, pollId);
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"vote", sliderVote.ToString()},
                 };
 
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
