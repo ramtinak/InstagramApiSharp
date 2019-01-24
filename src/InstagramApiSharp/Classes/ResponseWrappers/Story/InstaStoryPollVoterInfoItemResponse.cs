@@ -17,7 +17,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("poll_id")]
         public long PollId { get; set; }
         [JsonProperty("voters")]
-        public List<InstaStoryPollVoterItemResponse> Voters { get; set; }
+        public List<InstaStoryVoterItemResponse> Voters { get; set; }
         [JsonProperty("max_id")]
         public string MaxId { get; set; }
         [JsonProperty("more_available")]

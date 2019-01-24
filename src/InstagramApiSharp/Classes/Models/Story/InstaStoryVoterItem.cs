@@ -11,11 +11,11 @@ using System;
 
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaStoryPollVoterItem
+    public class InstaStoryVoterItem
     {
         public InstaUserShortFriendship User { get; set; }
 
-        public int Vote { get; set; }
+        public double Vote { get; set; }
 
         public DateTime Time { get; set; }
     }

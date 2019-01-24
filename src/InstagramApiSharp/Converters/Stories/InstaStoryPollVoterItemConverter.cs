@@ -14,17 +14,17 @@ using System;
 
 namespace InstagramApiSharp.Converters
 {
-    internal class InstaStoryPollVoterItemConverter : IObjectConverter<InstaStoryPollVoterItem, InstaStoryPollVoterItemResponse>
+    internal class InstaStoryPollVoterItemConverter : IObjectConverter<InstaStoryVoterItem, InstaStoryVoterItemResponse>
     {
-        public InstaStoryPollVoterItemResponse SourceObject { get; set; }
+        public InstaStoryVoterItemResponse SourceObject { get; set; }
 
-        public InstaStoryPollVoterItem Convert()
+        public InstaStoryVoterItem Convert()
         {
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
 
-            var voterItem = new InstaStoryPollVoterItem
+            var voterItem = new InstaStoryVoterItem
             {
-                Vote = SourceObject.Vote,
+                Vote = SourceObject.Vote ?? 0,
                 Time = DateTimeHelper.FromUnixTimeSeconds(SourceObject.Ts),
                 User = ConvertersFabric.Instance.GetUserShortFriendshipConverter(SourceObject.User).Convert()
             };
