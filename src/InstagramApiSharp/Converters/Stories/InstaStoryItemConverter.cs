@@ -38,7 +38,19 @@ namespace InstagramApiSharp.Converters
                 VideoDuration = SourceObject.VideoDuration ?? 0,
                 AdAction = SourceObject.AdAction,
                 SupportsReelReactions = SourceObject.SupportsReelReactions,
-                ShowOneTapTooltip = SourceObject.ShowOneTapTooltip
+                ShowOneTapTooltip = SourceObject.ShowOneTapTooltip,
+                LinkText = SourceObject.LinkText,
+                CanReshare = SourceObject.CanReshare,
+                CommentLikesEnabled = SourceObject.CommentLikesEnabled,
+                CommentThreadingEnabled = SourceObject.CommentThreadingEnabled,
+                NumberOfQualities = SourceObject.NumberOfQualities ?? 0,
+                TimezoneOffset = SourceObject.TimezoneOffset ?? 0,
+                VideoDashManifest = SourceObject.VideoDashManifest,
+                StoryIsSavedToArchive = SourceObject.StoryIsSavedToArchive ?? false,
+                ViewerCount = SourceObject.ViewerCount ?? 0,
+                TotalViewerCount = SourceObject.TotalViewerCount ?? 0,
+                ViewerCursor = SourceObject.ViewerCursor,
+                HasSharedToFb = SourceObject.HasSharedToFb ?? 0
             };
 
             if (SourceObject.User != null)
@@ -93,6 +105,14 @@ namespace InstagramApiSharp.Converters
             if (SourceObject.Viewers?.Count > 0)
                 foreach (var viewer in SourceObject.Viewers)
                     instaStory.Viewers.Add(ConvertersFabric.Instance.GetUserShortConverter(viewer).Convert());
+
+            if (SourceObject.Likers?.Count > 0)
+                foreach (var liker in SourceObject.Likers)
+                    instaStory.Likers.Add(ConvertersFabric.Instance.GetUserShortConverter(liker).Convert());
+
+            if (SourceObject.PreviewComments?.Count > 0)
+                foreach (var comment in SourceObject.PreviewComments)
+                    instaStory.PreviewComments.Add(ConvertersFabric.Instance.GetCommentConverter(comment).Convert());
 
             return instaStory;
         }

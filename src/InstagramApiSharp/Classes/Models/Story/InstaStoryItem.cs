@@ -66,6 +66,20 @@ namespace InstagramApiSharp.Classes.Models
 
         public bool PhotoOfYou { get; set; }
 
+        public string StoryStickerIds { get; set; }
+
+        public double TimezoneOffset { get; set; }
+
+        public bool StoryIsSavedToArchive { get; set; }
+
+        public double ViewerCount { get; set; }
+
+        public double TotalViewerCount { get; set; }
+
+        public string ViewerCursor { get; set; }
+
+        public double HasSharedToFb { get; set; }
+
         public List<InstaReelMention> ReelMentions { get; set; } = new List<InstaReelMention>();
 
         public List<InstaReelMention> StoryHashtags { get; set; } = new List<InstaReelMention>();
@@ -95,5 +109,9 @@ namespace InstagramApiSharp.Classes.Models
         public List<InstaStoryPollVoterInfoItem> StoryPollVoters { get; set; } = new List<InstaStoryPollVoterInfoItem>();
 
         public List<InstaUserShort> Viewers { get; set; } = new List<InstaUserShort>();
+
+        public List<InstaUserShort> Likers { get; set; } = new List<InstaUserShort>();
+
+        public List<InstaComment> PreviewComments { get; set; } = new List<InstaComment>();
     }
 }
