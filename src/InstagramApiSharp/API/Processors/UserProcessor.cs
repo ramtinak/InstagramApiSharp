@@ -618,6 +618,10 @@ namespace InstagramApiSharp.API.Processors
                     paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
                 var user = await GetUserAsync(username);
+                if(user.Value.FriendshipStatus.IsPrivate && !user.Value.FriendshipStatus.Following)
+                {
+                    return Result.Fail("You must be a follower of private accounts to be able to get user's followers", followers);
+                }
                 var userFollowersUri =
                     UriCreator.GetUserFollowersUri(user.Value.Pk, _user.RankToken, searchQuery, mutualsfirst,
                         paginationParameters.NextMaxId);
@@ -681,6 +685,10 @@ namespace InstagramApiSharp.API.Processors
                     paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
                 var user = await GetUserAsync(username);
+                if (user.Value.FriendshipStatus.IsPrivate && !user.Value.FriendshipStatus.Following)
+                {
+                    return Result.Fail("You must be a follower of private accounts to be able to get user's followings", following);
+                }
                 var uri = UriCreator.GetUserFollowingUri(user.Value.Pk, _user.RankToken, searchQuery,
                     paginationParameters.NextMaxId);
                 var userListResponse = await GetUserListByUriAsync(uri);
