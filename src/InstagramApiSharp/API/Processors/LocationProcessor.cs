@@ -84,6 +84,11 @@ namespace InstagramApiSharp.API.Processors
 
                 return Result.Success(feed);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaLocationFeed), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -117,6 +122,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaPlaceResponse>(json);
 
                 return Result.Success(ConvertersFabric.Instance.GetPlaceShortConverter(obj.Location).Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaPlaceShort), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -167,6 +177,11 @@ namespace InstagramApiSharp.API.Processors
                 var converter = ConvertersFabric.Instance.GetLocationsSearchConverter(locations);
                 return Result.Success(converter.Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaLocationShortList), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -208,6 +223,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<InstaUserSearchLocation>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaUserSearchLocation>(json);
                 return obj.Status.ToLower() =="ok"? Result.Success(obj) : Result.UnExpectedResponse<InstaUserSearchLocation>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaUserSearchLocation), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -256,7 +276,7 @@ namespace InstagramApiSharp.API.Processors
                 }
                 var places = await SearchPlaces(latitude, longitude, query, paginationParameters);
                 if (!places.Succeeded)
-                    return Result.Fail<InstaPlaceList>(places.Info.Message);
+                    return Result.Fail(places.Info, default(InstaPlaceList));
 
                 var placesResponse = places.Value;
                 paginationParameters.NextMaxId = placesResponse.RankToken;
@@ -281,6 +301,11 @@ namespace InstagramApiSharp.API.Processors
                 }
 
                 return Result.Success(ConvertersFabric.Instance.GetPlaceListConverter(placesResponse).Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaPlaceList), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -316,6 +341,11 @@ namespace InstagramApiSharp.API.Processors
                 }
 
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaPlaceListResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {

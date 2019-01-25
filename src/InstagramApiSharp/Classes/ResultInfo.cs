@@ -19,6 +19,14 @@ namespace InstagramApiSharp.Classes
             HandleMessages(Message);
         }
 
+        public ResultInfo(Exception exception, ResponseType responseType)
+        {
+            Exception = exception;
+            Message = exception?.Message;
+            ResponseType = responseType;
+            HandleMessages(Message);
+        }
+
         public ResultInfo(ResponseType responseType, string errorMessage)
         {
             ResponseType = responseType;

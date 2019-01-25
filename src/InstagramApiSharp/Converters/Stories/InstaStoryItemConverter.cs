@@ -114,6 +114,10 @@ namespace InstagramApiSharp.Converters
                 foreach (var comment in SourceObject.PreviewComments)
                     instaStory.PreviewComments.Add(ConvertersFabric.Instance.GetCommentConverter(comment).Convert());
 
+            if (SourceObject.StorySliderVoters?.Count > 0)
+                foreach (var voter in SourceObject.StorySliderVoters)
+                    instaStory.StorySliderVoters.Add(ConvertersFabric.Instance.GetStorySliderVoterInfoItemConverter(voter).Convert());
+
             return instaStory;
         }
     }

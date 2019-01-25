@@ -233,5 +233,26 @@ namespace InstagramApiSharp
                 {"is_sticker", hashtag.IsSticker},
             };
         }
+
+        public static JObject ConvertToJson(this InstaStorySliderUpload slider)
+        {
+            return new JObject
+            {
+                {"x", slider.X},
+                {"y", slider.Y},
+                {"z", slider.Z},
+                {"width", slider.Width},
+                {"height", slider.Height},
+                {"rotation", slider.Rotation},
+                {"question", slider.Question},
+                {"viewer_can_vote", true},
+                {"viewer_vote", -1.0},
+                {"slider_vote_average",0.0},
+                {"background_color", slider.BackgroundColor},
+                {"emoji", slider.Emoji},
+                {"text_color", slider.TextColor},
+                {"is_sticker", slider.IsSticker},
+            };
+        }
     }
 }

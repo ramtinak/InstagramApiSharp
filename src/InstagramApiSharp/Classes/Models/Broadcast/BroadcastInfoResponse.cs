@@ -9,7 +9,7 @@
 
 namespace InstagramApiSharp.Classes
 {
-    public class BroadcastInfoResponse: InstaBroadcastInfo
+    public class InstaBroadcastInfoResponse: InstaBroadcastInfo
     {
     }
 }

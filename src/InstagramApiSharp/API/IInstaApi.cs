@@ -264,28 +264,23 @@ namespace InstagramApiSharp.API
         /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
         Task<IResult<string>> SendGetRequestAsync(System.Uri uri);
         /// <summary>
-        ///     Send get request
+        ///     Send signed post request (include signed signature) 
         /// </summary>
         /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
-        Task<IResult<T>> SendGetRequestAsync<T>(System.Uri uri);
+        /// <param name="data">Data to post</param>
+        Task<IResult<string>> SendSignedPostRequestAsync(System.Uri uri, Dictionary<string, string> data);
         /// <summary>
         ///     Send signed post request (include signed signature) 
         /// </summary>
         /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
         /// <param name="data">Data to post</param>
-        Task<IResult<T>> SendSignedPostRequestAsync<T>(System.Uri uri, Dictionary<string, string> data);
-        /// <summary>
-        ///     Send signed post request (include signed signature) 
-        /// </summary>
-        /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
-        /// <param name="data">Data to post</param>
-        Task<IResult<T>> SendSignedPostRequestAsync<T>(System.Uri uri, Newtonsoft.Json.Linq.JObject data);
+        Task<IResult<string>> SendSignedPostRequestAsync(System.Uri uri, Newtonsoft.Json.Linq.JObject data);
         /// <summary>
         ///     Send post request
         /// </summary>
         /// <param name="uri">Desire uri (must include https://i.instagram.com/api/v...) </param>
         /// <param name="data">Data to post</param>
-        Task<IResult<T>> SendPostRequestAsync<T>(System.Uri uri, Dictionary<string, string> data);
+        Task<IResult<string>> SendPostRequestAsync(System.Uri uri, Dictionary<string, string> data);
         #endregion Other public functions
 
         #region Authentication, challenge functions

@@ -12,9 +12,9 @@ using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaStoryPollVotersList
+    public class InstaStorySliderVoterInfoItem
     {
-        public long PollId { get; set; }
+        public long SliderId { get; set; }
 
         public List<InstaStoryVoterItem> Voters { get; set; } = new List<InstaStoryVoterItem>();
 
@@ -22,6 +22,6 @@ namespace InstagramApiSharp.Classes.Models
 
         public bool MoreAvailable { get; set; }
 
-        public DateTime LatestPollVoteTime { get; set; }
+        public DateTime LatestSliderVoteTime { get; set; }
     }
 }

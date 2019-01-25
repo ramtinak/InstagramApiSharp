@@ -11,12 +11,12 @@ using Newtonsoft.Json;
 
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    public class InstaStoryPollVoterItemResponse
+    public class InstaStoryVoterItemResponse
     {
         [JsonProperty("user")]
         public InstaUserShortFriendshipResponse User { get; set; }
         [JsonProperty("vote")]
-        public int Vote { get; set; }
+        public double? Vote { get; set; }
         [JsonProperty("ts")]
         public long Ts { get; set; }
     }

@@ -427,14 +427,25 @@ namespace InstagramApiSharp.API.Processors
 
                                 data.Add("story_locations", locationArr.ToString(Formatting.None));
                             }
-
-                            if (uploadOptions.Polls?.Count > 0)
+                            if (uploadOptions.Slider != null)
                             {
-                                var pollArr = new JArray();
-                                foreach (var item in uploadOptions.Polls)
-                                    pollArr.Add(item.ConvertToJson());
+                                var sliderArr = new JArray
+                                {
+                                    uploadOptions.Slider.ConvertToJson()
+                                };
 
-                                data.Add("story_polls", pollArr.ToString(Formatting.None));
+                                data.Add("story_sliders", sliderArr.ToString(Formatting.None));
+                            }
+                            else
+                            {
+                                if (uploadOptions.Polls?.Count > 0)
+                                {
+                                    var pollArr = new JArray();
+                                    foreach (var item in uploadOptions.Polls)
+                                        pollArr.Add(item.ConvertToJson());
+
+                                    data.Add("story_polls", pollArr.ToString(Formatting.None));
+                                }
                             }
                         }
                     }
@@ -465,6 +476,11 @@ namespace InstagramApiSharp.API.Processors
                     progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<bool>(response, json);
                 }
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -570,6 +586,11 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
 
                 return await ConfigurePhoto(progress, upProgress, uploadId, isDirectPhoto, isDisappearingPhoto, caption, viewMode, storyType, recipients, threadId);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -712,6 +733,11 @@ namespace InstagramApiSharp.API.Processors
                     return Result.UnExpectedResponse<bool>(response, json);
                 }
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 upProgress.UploadState = InstaUploadState.Error;
@@ -829,6 +855,11 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 return Result.UnExpectedResponse<InstaMedia>(response, json);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 upProgress.UploadState = InstaUploadState.Error;
@@ -932,6 +963,11 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 return Result.Success(obj);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 upProgress.UploadState = InstaUploadState.Error;
@@ -981,6 +1017,11 @@ namespace InstagramApiSharp.API.Processors
                 upProgress.UploadState = InstaUploadState.Completed;
                 progress?.Invoke(upProgress);
                 return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -1142,7 +1183,12 @@ namespace InstagramApiSharp.API.Processors
                 }
                 upProgress.UploadState = InstaUploadState.Error;
                 progress?.Invoke(upProgress);
-                return Result.UnExpectedResponse<InstaMedia>(response, json);            
+                return Result.UnExpectedResponse<InstaMedia>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -1219,6 +1265,11 @@ namespace InstagramApiSharp.API.Processors
                 }
                 return Result.UnExpectedResponse<InstaMedia>(response, json);
 
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMedia), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {

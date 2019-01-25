@@ -696,8 +696,8 @@ namespace InstagramApiSharp.Converters
             return new InstaStorySliderItemConverter { SourceObject = response };
         }
 
-        public IObjectConverter<InstaStoryPollVoterItem, InstaStoryPollVoterItemResponse> GetStoryPollVoterItemConverter(
-            InstaStoryPollVoterItemResponse response)
+        public IObjectConverter<InstaStoryVoterItem, InstaStoryVoterItemResponse> GetStoryPollVoterItemConverter(
+            InstaStoryVoterItemResponse response)
         {
             return new InstaStoryPollVoterItemConverter { SourceObject = response };
         }
@@ -718,6 +718,12 @@ namespace InstagramApiSharp.Converters
             InstaStoryPollVotersListResponse response)
         {
             return new InstaStoryPollVotersListConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaStorySliderVoterInfoItem, InstaStorySliderVoterInfoItemResponse> GetStorySliderVoterInfoItemConverter(
+            InstaStorySliderVoterInfoItemResponse response)
+        {
+            return new InstaStorySliderVoterInfoItemConverter { SourceObject = response };
         }
     }
 }

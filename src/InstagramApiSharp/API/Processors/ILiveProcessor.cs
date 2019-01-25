@@ -104,7 +104,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <returns></returns>
-        Task<IResult<BroadcastInfoResponse>> GetInfoAsync(string broadcastId);
+        Task<IResult<InstaBroadcastInfoResponse>> GetInfoAsync(string broadcastId);
 
         /// <summary>
         ///     Get join requests to current live broadcast

@@ -48,17 +48,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="userIds">User ids (pk)</param>
         public async Task<IResult<bool>> BlockUserCommentingAsync(params long[] userIds)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-
-                return await BlockUnblockCommenting(true, userIds);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception, false);
-            }
+            return await BlockUnblockCommenting(true, userIds);
         }
 
         /// <summary>
@@ -95,6 +85,11 @@ namespace InstagramApiSharp.API.Processors
                 var converter = ConvertersFabric.Instance.GetCommentConverter(commentResponse);
                 return Result.Success(converter.Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaComment), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -126,6 +121,11 @@ namespace InstagramApiSharp.API.Processors
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -160,6 +160,11 @@ namespace InstagramApiSharp.API.Processors
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -192,6 +197,11 @@ namespace InstagramApiSharp.API.Processors
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -223,6 +233,11 @@ namespace InstagramApiSharp.API.Processors
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -248,6 +263,11 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaBlockedCommentersResponse>(json);
                 
                 return Result.Success(ConvertersFabric.Instance.GetBlockedCommentersConverter(obj).Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaUserShortList), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -280,6 +300,11 @@ namespace InstagramApiSharp.API.Processors
                     likersResponse.Users.Select(ConvertersFabric.Instance.GetUserShortConverter)
                         .Select(converter => converter.Convert()));
                 return Result.Success(likers);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaLikersList), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -348,6 +373,11 @@ namespace InstagramApiSharp.API.Processors
                 var converter = ConvertersFabric.Instance.GetCommentListConverter(commentListResponse);
                 return Result.Success(converter.Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaCommentList), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -415,6 +445,11 @@ namespace InstagramApiSharp.API.Processors
                 var comments = ConvertersFabric.Instance.GetInlineCommentsConverter(commentListResponse).Convert();
                 return Result.Success(comments);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaInlineCommentList), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -445,6 +480,11 @@ namespace InstagramApiSharp.API.Processors
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -489,6 +529,11 @@ namespace InstagramApiSharp.API.Processors
                 var converter = ConvertersFabric.Instance.GetCommentConverter(commentResponse);
                 return Result.Success(converter.Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaComment), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -524,6 +569,11 @@ namespace InstagramApiSharp.API.Processors
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -537,17 +587,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="userIds">User ids (pk)</param>
         public async Task<IResult<bool>> UnblockUserCommentingAsync(params long[] userIds)
         {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-
-                return await BlockUnblockCommenting(false, userIds);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail(exception, false);
-            }
+            return await BlockUnblockCommenting(false, userIds);
         }
 
         /// <summary>
@@ -574,6 +614,11 @@ namespace InstagramApiSharp.API.Processors
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
@@ -607,6 +652,11 @@ namespace InstagramApiSharp.API.Processors
 
                 return Result.Success(ConvertersFabric.Instance.GetTranslateContainerConverter(obj).Convert());
             }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaTranslateList), ResponseType.NetworkProblem);
+            }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
@@ -617,40 +667,67 @@ namespace InstagramApiSharp.API.Processors
         private async Task<IResult<InstaCommentListResponse>> GetCommentListWithMaxIdAsync(string mediaId,
                             string nextMaxId, string nextMinId)
         {
-            var commentsUri = UriCreator.GetMediaCommentsUri(mediaId, nextMaxId);
-            if(!string.IsNullOrEmpty(nextMinId))
-                commentsUri = UriCreator.GetMediaCommentsMinIdUri(mediaId, nextMinId);
-              
-            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
-            var response = await _httpRequestProcessor.SendAsync(request);
-            var json = await response.Content.ReadAsStringAsync();
-                       
-            if (response.StatusCode != HttpStatusCode.OK)
-                return Result.UnExpectedResponse<InstaCommentListResponse>(response, json);
-            var comments = JsonConvert.DeserializeObject<InstaCommentListResponse>(json);
-            return Result.Success(comments);
+            try
+            {
+                var commentsUri = UriCreator.GetMediaCommentsUri(mediaId, nextMaxId);
+                if (!string.IsNullOrEmpty(nextMinId))
+                    commentsUri = UriCreator.GetMediaCommentsMinIdUri(mediaId, nextMinId);
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaCommentListResponse>(response, json);
+                var comments = JsonConvert.DeserializeObject<InstaCommentListResponse>(json);
+                return Result.Success(comments);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaCommentListResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaCommentListResponse>(exception);
+            }
         }
 
         private async Task<IResult<InstaInlineCommentListResponse>> GetInlineCommentListWithMaxIdAsync(string mediaId,
     string targetCommandId,
     string nextMaxId, string nextMinId)
         {
-            var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommandId, nextMaxId);
-            if (!string.IsNullOrEmpty(nextMinId))
-                commentsUri = UriCreator.GetMediaInlineCommentsWithMinIdUri(mediaId, targetCommandId, nextMinId);
+            try
+            {
+                var commentsUri = UriCreator.GetMediaInlineCommentsUri(mediaId, targetCommandId, nextMaxId);
+                if (!string.IsNullOrEmpty(nextMinId))
+                    commentsUri = UriCreator.GetMediaInlineCommentsWithMinIdUri(mediaId, targetCommandId, nextMinId);
 
-            var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
-            var response = await _httpRequestProcessor.SendAsync(request);
-            var json = await response.Content.ReadAsStringAsync();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, commentsUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
 
-            if (response.StatusCode != HttpStatusCode.OK)
-                return Result.UnExpectedResponse<InstaInlineCommentListResponse>(response, json);
-            var commentListResponse = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
-            return Result.Success(commentListResponse);
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaInlineCommentListResponse>(response, json);
+                var commentListResponse = JsonConvert.DeserializeObject<InstaInlineCommentListResponse>(json);
+                return Result.Success(commentListResponse);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaInlineCommentListResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaInlineCommentListResponse>(exception);
+            }
         }
 
         private async Task<IResult<bool>> BlockUnblockCommenting(bool block, long[] userIds)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 if (userIds == null || userIds?.Length == 0)
@@ -703,6 +780,11 @@ namespace InstagramApiSharp.API.Processors
                 return response.StatusCode == HttpStatusCode.OK
                     ? Result.Success(true)
                     : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
