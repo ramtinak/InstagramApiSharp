@@ -18,7 +18,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
     public class InstaBlockedUsersResponse : InstaDefault
     {
         [JsonProperty("blocked_list")]
-        public List<InstaUserShortResponse> BlockedList { get; set; }
+        public List<InstaBlockedUserInfoResponse> BlockedList { get; set; }
         [JsonProperty("big_list")]
         public bool? BigList { get; set; }
         [JsonProperty("page_size")]

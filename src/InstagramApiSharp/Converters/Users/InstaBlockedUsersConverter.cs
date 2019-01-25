@@ -14,23 +14,23 @@ using System.Linq;
 
 namespace InstagramApiSharp.Converters
 {
-    internal class InstaBlockedUsersConverter : IObjectConverter<InstaUserShortList, InstaBlockedUsersResponse>
+    internal class InstaBlockedUsersConverter : IObjectConverter<InstaBlockedUsers, InstaBlockedUsersResponse>
     {
         public InstaBlockedUsersResponse SourceObject { get; set; }
 
-        public InstaUserShortList Convert()
+        public InstaBlockedUsers Convert()
         {
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
 
-            var blockedUsers = new InstaUserShortList
+            var blockedUsers = new InstaBlockedUsers
             {
-                NextMaxId = SourceObject.MaxId
+                MaxId = SourceObject.MaxId
             };
 
             if (SourceObject.BlockedList != null && SourceObject.BlockedList.Any())
             {
                 foreach (var user in SourceObject.BlockedList)
-                    blockedUsers.Add(ConvertersFabric.Instance.GetUserShortConverter(user).Convert());
+                    blockedUsers.BlockedList.Add(ConvertersFabric.Instance.GetBlockedUserInfoConverter(user).Convert());
             }
 
             return blockedUsers;

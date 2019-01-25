@@ -23,6 +23,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaUserShortConverter {SourceObject = instaresponse};
         }
+        public IObjectConverter<InstaBlockedUserInfo, InstaBlockedUserInfoResponse> GetBlockedUserInfoConverter(
+           InstaBlockedUserInfoResponse instaresponse)
+        {
+            return new InstaBlockedUserInfoConverter { SourceObject = instaresponse };
+        }
 
         public IObjectConverter<InstaCurrentUser, InstaCurrentUserResponse> GetCurrentUserConverter(
             InstaCurrentUserResponse instaresponse)
@@ -590,7 +595,7 @@ namespace InstagramApiSharp.Converters
             return new InstaProductInfoConverter { SourceObject = response };
         }
 
-        public IObjectConverter<InstaUserShortList, InstaBlockedUsersResponse> GetBlockedUsersConverter(
+        public IObjectConverter<InstaBlockedUsers, InstaBlockedUsersResponse> GetBlockedUsersConverter(
             InstaBlockedUsersResponse response)
         {
             return new InstaBlockedUsersConverter { SourceObject = response };

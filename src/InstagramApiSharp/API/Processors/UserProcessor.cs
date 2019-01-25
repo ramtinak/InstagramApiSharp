@@ -123,7 +123,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="InstaUserShortList" />
         /// </returns>
-        public async Task<IResult<InstaUserShortList>> GetBlockedUsersAsync(PaginationParameters paginationParameters)
+        public async Task<IResult<InstaBlockedUsers>> GetBlockedUsersAsync(PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -131,7 +131,7 @@ namespace InstagramApiSharp.API.Processors
                 if (paginationParameters == null)
                     paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                InstaUserShortList Convert(InstaBlockedUsersResponse instaBlockedUsers)
+                InstaBlockedUsers Convert(InstaBlockedUsersResponse instaBlockedUsers)
                 {
                     return ConvertersFabric.Instance.GetBlockedUsersConverter(instaBlockedUsers).Convert();
                 }
@@ -160,7 +160,7 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaUserShortList>(exception);
+                return Result.Fail<InstaBlockedUsers>(exception);
             }
         }
 

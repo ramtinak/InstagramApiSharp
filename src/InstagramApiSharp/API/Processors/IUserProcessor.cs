@@ -48,7 +48,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="InstaUserShortList" />
         /// </returns>
-        Task<IResult<InstaUserShortList>> GetBlockedUsersAsync(PaginationParameters paginationParameters);
+        Task<IResult<InstaBlockedUsers>> GetBlockedUsersAsync(PaginationParameters paginationParameters);
 
         /// <summary>
         ///     Get currently logged in user info asynchronously
