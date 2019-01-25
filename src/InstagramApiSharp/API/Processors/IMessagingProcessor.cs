@@ -277,6 +277,13 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> SendDirectProfileAsync(long userIdToSend, params string[] threadIds);
 
         /// <summary>
+        ///     Send profile to direct thrad
+        /// </summary>
+        /// <param name="userIdToSend">User id to send</param>
+        /// <param name="recipients">Recipients (user ids/pk)</param>
+        Task<IResult<bool>> SendDirectProfileToRecipientsAsync(long userIdToSend, string recipients);
+
+        /// <summary>
         ///     Send direct text message to provided users and threads
         /// </summary>
         /// <param name="recipients">Comma-separated users PK</param>

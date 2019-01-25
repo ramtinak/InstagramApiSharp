@@ -146,7 +146,7 @@ namespace InstagramApiSharp.API.Processors
                     if (blockedUsersResponse.Value != null)
                         return Result.Fail(blockedUsersResponse.Info, Convert(blockedUsersResponse.Value));
                     else
-                        return Result.Fail(blockedUsersResponse.Info, default(InstaUserShortList));
+                        return Result.Fail(blockedUsersResponse.Info, default(InstaBlockedUsers));
                 }
                 paginationParameters.NextMaxId = blockedUsersResponse.Value.MaxId;
 
@@ -169,7 +169,7 @@ namespace InstagramApiSharp.API.Processors
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaUserShortList), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBlockedUsers), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
