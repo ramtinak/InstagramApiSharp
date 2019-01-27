@@ -170,6 +170,18 @@ namespace InstagramApiSharp.API.Processors
             PaginationParameters paginationParameters, string searchQuery = "");
 
         /// <summary>
+        ///     Get following list by user id(pk) asynchronously
+        /// </summary>
+        /// <param name="userId">User id(pk)</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="searchQuery">Search string to locate specific followings</param>
+        /// <returns>
+        ///     <see cref="InstaUserShortList" />
+        /// </returns>
+        Task<IResult<InstaUserShortList>> GetUserFollowingByIdAsync(long userId,
+            PaginationParameters paginationParameters, string searchQuery = "");
+
+        /// <summary>
         ///     Gets the user extended information (followers count, following count, bio, etc) by user identifier.
         /// </summary>
         /// <param name="pk">User Id, like "123123123"</param>
