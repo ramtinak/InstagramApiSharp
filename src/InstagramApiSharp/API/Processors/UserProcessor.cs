@@ -610,6 +610,43 @@ namespace InstagramApiSharp.API.Processors
         public async Task<IResult<InstaUserShortList>> GetUserFollowersAsync(string username,
             PaginationParameters paginationParameters, string searchQuery, bool mutualsfirst = false)
         {
+            try
+            {
+                var user = await GetUserAsync(username);
+                if (user.Succeeded)
+                {
+                    if (user.Value.FriendshipStatus.IsPrivate && !user.Value.FriendshipStatus.Following)
+                        return Result.Fail("You must be a follower of private accounts to be able to get user's followers", default(InstaUserShortList));
+
+                    return await GetUserFollowersByIdAsync(user.Value.Pk, paginationParameters, searchQuery, mutualsfirst);
+                }
+                else
+                    return Result.Fail(user.Info, default(InstaUserShortList));
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaUserShortList), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, default(InstaUserShortList));
+            }
+        }
+
+        /// <summary>
+        ///     Get followers list by user id(pk) asynchronously
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="searchQuery">Search string to locate specific followers</param>
+        /// <returns>
+        ///     <see cref="InstaUserShortList" />
+        /// </returns>
+        public async Task<IResult<InstaUserShortList>> GetUserFollowersByIdAsync(long userId,
+            PaginationParameters paginationParameters, string searchQuery, bool mutualsfirst = false)
+        {
             UserAuthValidator.Validate(_userAuthValidate);
             var followers = new InstaUserShortList();
             try
@@ -617,13 +654,8 @@ namespace InstagramApiSharp.API.Processors
                 if (paginationParameters == null)
                     paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                var user = await GetUserAsync(username);
-                if(user.Value.FriendshipStatus.IsPrivate && !user.Value.FriendshipStatus.Following)
-                {
-                    return Result.Fail("You must be a follower of private accounts to be able to get user's followers", followers);
-                }
                 var userFollowersUri =
-                    UriCreator.GetUserFollowersUri(user.Value.Pk, _user.RankToken, searchQuery, mutualsfirst,
+                    UriCreator.GetUserFollowersUri(userId, _user.RankToken, searchQuery, mutualsfirst,
                         paginationParameters.NextMaxId);
                 var followersResponse = await GetUserListByUriAsync(userFollowersUri);
                 if (!followersResponse.Succeeded)
@@ -638,7 +670,7 @@ namespace InstagramApiSharp.API.Processors
                        && pagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
                     var nextFollowersUri =
-                        UriCreator.GetUserFollowersUri(user.Value.Pk, _user.RankToken, searchQuery, mutualsfirst,
+                        UriCreator.GetUserFollowersUri(userId, _user.RankToken, searchQuery, mutualsfirst,
                             followersResponse.Value.NextMaxId);
                     followersResponse = await GetUserListByUriAsync(nextFollowersUri);
                     if (!followersResponse.Succeeded)

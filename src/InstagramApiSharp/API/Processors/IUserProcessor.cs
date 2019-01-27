@@ -146,6 +146,18 @@ namespace InstagramApiSharp.API.Processors
             PaginationParameters paginationParameters, string searchQuery = "", bool mutualsfirst = false);
 
         /// <summary>
+        ///     Get followers list by user id(pk) asynchronously
+        /// </summary>
+        /// <param name="userId">User id(pk)</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="searchQuery">Search string to locate specific followers</param>
+        /// <returns>
+        ///     <see cref="InstaUserShortList" />
+        /// </returns>
+        Task<IResult<InstaUserShortList>> GetUserFollowersByIdAsync(long userId,
+            PaginationParameters paginationParameters, string searchQuery = "", bool mutualsfirst = false);
+
+        /// <summary>
         ///     Get following list by username asynchronously
         /// </summary>
         /// <param name="username">Username</param>
