@@ -1542,12 +1542,13 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var fields = new Dictionary<string, string>
-            {
-                {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                {"_uid", _user.LoggedInUser.Pk.ToString()},
-                {"_csrftoken", _user.CsrfToken},
-                {"media_id", mediaId}
-            };
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"media_id", mediaId},
+                    {"radio_type", "wifi-none"}
+                };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
                 var response = await _httpRequestProcessor.SendAsync(request);
