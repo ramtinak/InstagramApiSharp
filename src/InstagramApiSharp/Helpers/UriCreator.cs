@@ -2111,5 +2111,14 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetSavedFeedUri(string maxId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FEED_SAVED, out var instaUri))
+                throw new Exception("Cant create URI for get saved feed");
+            return !string.IsNullOrEmpty(maxId)
+                ? new UriBuilder(instaUri) { Query = $"max_id={maxId}" }.Uri
+                : instaUri;
+        }
+
     }
 }

@@ -202,6 +202,71 @@ namespace InstagramApiSharp.API.Processors
             return await GetRecentActivityInternalAsync(uri, paginationParameters);
         }
 
+
+        /// <summary>
+        ///     Get saved media feeds asynchronously
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        public async Task<IResult<InstaMediaList>> GetSavedFeedAsync(PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                InstaMediaList Convert(InstaMediaListResponse mediaListResponse)
+                {
+                    return ConvertersFabric.Instance.GetMediaListConverter(mediaListResponse).Convert();
+                }
+
+                var mediaFeedsResult = await GetSavedFeed(paginationParameters);
+                if (!mediaFeedsResult.Succeeded)
+                {
+                    if (mediaFeedsResult.Value != null)
+                        return Result.Fail(mediaFeedsResult.Info, Convert(mediaFeedsResult.Value));
+                    else
+                        return Result.Fail(mediaFeedsResult.Info, default(InstaMediaList));
+                }
+                var mediaResponse = mediaFeedsResult.Value;
+                paginationParameters.NextMaxId = mediaResponse.NextMaxId;
+                paginationParameters.PagesLoaded++;
+                while (mediaResponse.MoreAvailable
+                       && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                       && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var result = await GetSavedFeed(paginationParameters);
+                    if (!result.Succeeded)
+                        return Result.Fail(result.Info, Convert(mediaResponse));
+
+                    mediaResponse.NextMaxId = paginationParameters.NextMaxId = result.Value.NextMaxId;
+                    mediaResponse.MoreAvailable = result.Value.MoreAvailable;
+                    mediaResponse.AutoLoadMoreEnabled = result.Value.AutoLoadMoreEnabled;
+                    mediaResponse.ResultsCount += result.Value.ResultsCount;
+                    mediaResponse.TotalCount += result.Value.TotalCount;
+                    mediaResponse.Medias.AddRange(result.Value.Medias);
+                    paginationParameters.PagesLoaded++;
+                }
+                var mediaList = Convert(mediaResponse);
+                mediaList.PageSize = mediaResponse.ResultsCount;
+                mediaList.Pages = paginationParameters.PagesLoaded;
+                return Result.Success(mediaList);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMediaList), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMediaList>(exception);
+            }
+        }
+
         /// <summary>
         ///     Get tag feed by tag value asynchronously
         /// </summary>
@@ -436,6 +501,35 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaExploreFeedResponse>(exception);
+            }
+        }
+
+
+        private async Task<IResult<InstaMediaListResponse>> GetSavedFeed(PaginationParameters paginationParameters)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetSavedFeedUri(paginationParameters?.NextMaxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaMediaListResponse>(response, json);
+
+                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
+                    new InstaMediaListDataConverter());
+                
+                return Result.Success(mediaResponse);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMediaListResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMediaListResponse>(exception);
             }
         }
     }

@@ -44,6 +44,15 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaActivityFeed>> GetRecentActivityFeedAsync(PaginationParameters paginationParameters);
 
         /// <summary>
+        ///     Get saved media feeds asynchronously
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        Task<IResult<InstaMediaList>> GetSavedFeedAsync(PaginationParameters paginationParameters);
+
+        /// <summary>
         ///     Get tag feed by tag value asynchronously
         /// </summary>
         /// <param name="tag">Tag value</param>

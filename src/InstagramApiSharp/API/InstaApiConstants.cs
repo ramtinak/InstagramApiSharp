@@ -301,11 +301,7 @@ namespace InstagramApiSharp.API
 
         public const string FEED_PROMOTABLE_MEDIA = API_SUFFIX + "/feed/promotable_media/";
         public const string FEED_REEL_MEDIA = API_SUFFIX + "/feed/reels_media/";
-        /// <summary>
-        /// get
-        /// </summary>
         public const string FEED_SAVED = API_SUFFIX + "/feed/saved/";
-
         public const string GET_COLLECTION = API_SUFFIX + "/feed/collection/{0}/";
         public const string GET_STORY_TRAY = API_SUFFIX + "/feed/reels_tray/";
         public const string GET_TAG_FEED = API_SUFFIX + "/feed/tag/{0}";
