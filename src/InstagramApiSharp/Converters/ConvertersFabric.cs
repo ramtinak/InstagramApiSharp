@@ -673,6 +673,12 @@ namespace InstagramApiSharp.Converters
             return new InstaStoryTalliesItemConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaStoryQuestionStickerItem, InstaStoryQuestionStickerItemResponse> GetStoryQuestionStickerItemConverter(
+            InstaStoryQuestionStickerItemResponse response)
+        {
+            return new InstaStoryQuestionStickerItemConverter { SourceObject = response };
+        }
+
         public IObjectConverter<InstaStoryPollStickerItem, InstaStoryPollStickerItemResponse> GetStoryPollStickerItemConverter(
             InstaStoryPollStickerItemResponse response)
         {
@@ -685,11 +691,18 @@ namespace InstagramApiSharp.Converters
             return new InstaStorySliderStickerItemConverter { SourceObject = response };
         }
 
+        public IObjectConverter<InstaStoryQuestionItem, InstaStoryQuestionItemResponse> GetStoryQuestionItemConverter(
+            InstaStoryQuestionItemResponse response)
+        {
+            return new InstaStoryQuestionItemConverter { SourceObject = response };
+        }
+
         public IObjectConverter<InstaStoryPollItem, InstaStoryPollItemResponse> GetStoryPollItemConverter(
             InstaStoryPollItemResponse response)
         {
             return new InstaStoryPollItemConverter { SourceObject = response };
         }
+
         public IObjectConverter<InstaStorySliderItem, InstaStorySliderItemResponse> GetStorySliderItemConverter(
             InstaStorySliderItemResponse response)
         {
