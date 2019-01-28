@@ -2054,7 +2054,7 @@ namespace InstagramApiSharp.API
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<string>(response, json);
 
-                return Result.Success(JsonConvert.DeserializeObject<string>(json));
+                return Result.Success(json);
             }
             catch (HttpRequestException httpException)
             {
