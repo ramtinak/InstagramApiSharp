@@ -142,7 +142,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="InstaMediaList" />
         /// </returns>
-        public async Task<IResult<InstaMediaList>> GetLikedFeedAsync(PaginationParameters paginationParameters)
+        public async Task<IResult<InstaMediaList>> GetLikedFeedsAsync(PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -162,7 +162,7 @@ namespace InstagramApiSharp.API.Processors
                        && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var result = await GetLikedFeedAsync(paginationParameters);
+                    var result = await GetLikedFeedsAsync(paginationParameters);
                     if (!result.Succeeded)
                         return Result.Fail(result.Info, mediaList);
 
