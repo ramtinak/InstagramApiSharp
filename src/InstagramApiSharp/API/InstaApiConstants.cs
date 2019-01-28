@@ -461,12 +461,7 @@ namespace InstagramApiSharp.API
         public const string MEDIA_LIKERS = API_SUFFIX + "/media/{0}/likers/";
         public const string MEDIA_REPORT = API_SUFFIX + "/media/{0}/flag_media/";
         public const string MEDIA_REPORT_COMMENT = API_SUFFIX + "/media/{0}/comment/{1}/flag/";
-        /// <summary>
-        /// {0} media id, {1} user pk
-        /// <para>post data:</para>
-        /// <para>module_name=single_feed_profile</para>
-        /// </summary>
-        public const string MEDIA_SAVE = API_SUFFIX + "/media/{0}_{1}/save/";
+        public const string MEDIA_SAVE = API_SUFFIX + "/media/{0}/save/";
 
         /// <summary>
         /// {0} media id, {1} user pk

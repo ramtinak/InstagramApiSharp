@@ -2095,5 +2095,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetSaveMediaUri(string mediaId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.MEDIA_SAVE, mediaId), out var instaUri))
+                throw new Exception("Cant create URI for save media");
+            return instaUri;
+        }
+
     }
 }

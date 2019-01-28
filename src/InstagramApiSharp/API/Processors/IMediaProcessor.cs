@@ -98,6 +98,12 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="mediaId">Media id</param>
         Task<IResult<bool>> ReportMediaAsync(string mediaId);
+        
+        /// <summary>
+        ///     Save media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        Task<IResult<bool>> SaveMediaAsync(string mediaId);
 
         /// <summary>
         /// <summary>
