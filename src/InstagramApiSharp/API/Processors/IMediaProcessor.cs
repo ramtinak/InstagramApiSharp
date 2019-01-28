@@ -120,6 +120,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> UnLikeMediaAsync(string mediaId);
 
         /// <summary>
+        ///     Unsave media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        Task<IResult<bool>> UnSaveMediaAsync(string mediaId);
+
+        /// <summary>
         ///     Upload album (videos and photos)
         /// </summary>
         /// <param name="images">Array of photos to upload</param>

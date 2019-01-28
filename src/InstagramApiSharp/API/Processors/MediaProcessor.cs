@@ -591,6 +591,41 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Unsave media
+        /// </summary>
+        /// <param name="mediaId">Media id</param>
+        public async Task<IResult<bool>> UnSaveMediaAsync(string mediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetUnSaveMediaUri(mediaId);
+                var fields = new Dictionary<string, string>
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                return response.StatusCode == HttpStatusCode.OK
+                    ? Result.Success(true)
+                    : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, false);
+            }
+        }
+
+        /// <summary>
         ///     Upload album (videos and photos)
         /// </summary>
         /// <param name="images">Array of photos to upload</param>

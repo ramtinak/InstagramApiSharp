@@ -2103,5 +2103,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetUnSaveMediaUri(string mediaId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.MEDIA_UNSAVE, mediaId), out var instaUri))
+                throw new Exception("Cant create URI for unsave media");
+            return instaUri;
+        }
+
     }
 }
