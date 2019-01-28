@@ -32,7 +32,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="InstaMediaList" />
         /// </returns>
-        Task<IResult<InstaMediaList>> GetLikeFeedAsync(PaginationParameters paginationParameters);
+        Task<IResult<InstaMediaList>> GetLikedFeedAsync(PaginationParameters paginationParameters);
 
         /// <summary>
         ///     Get recent activity info asynchronously
