@@ -222,8 +222,7 @@ namespace InstagramApiSharp.API.Processors
                 {
                     return ConvertersFabric.Instance.GetMediaListConverter(mediaListResponse).Convert();
                 }
-
-                var mediaFeedsResult = await GetSavedFeed(paginationParameters);
+                var mediaFeedsResult = await GetAnyFeeds(UriCreator.GetSavedFeedUri(paginationParameters?.NextMaxId));
                 if (!mediaFeedsResult.Succeeded)
                 {
                     if (mediaFeedsResult.Value != null)
@@ -238,7 +237,7 @@ namespace InstagramApiSharp.API.Processors
                        && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var result = await GetSavedFeed(paginationParameters);
+                    var result = await GetAnyFeeds(UriCreator.GetSavedFeedUri(paginationParameters?.NextMaxId));
                     if (!result.Succeeded)
                         return Result.Fail(result.Info, Convert(mediaResponse));
 
@@ -547,8 +546,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, default(InstaFeedResponse));
             }
         }
-
-
+        
         private async Task<IResult<InstaTagFeedResponse>> GetTagFeed(string tag, PaginationParameters paginationParameters)
         {
             try
@@ -576,11 +574,10 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaMediaListResponse>> GetSavedFeed(PaginationParameters paginationParameters)
+        private async Task<IResult<InstaMediaListResponse>> GetAnyFeeds(Uri instaUri)
         {
             try
             {
-                var instaUri = UriCreator.GetSavedFeedUri(paginationParameters?.NextMaxId);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
