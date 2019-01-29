@@ -51,6 +51,15 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaUserShortList>> GetBestFriendsAsync(PaginationParameters paginationParameters);
 
         /// <summary>
+        ///     Get best friends (besties) suggestions
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaUserShortList" />
+        /// </returns>
+        Task<IResult<InstaUserShortList>> GetBestFriendsSuggestionsAsync(PaginationParameters paginationParameters);
+
+        /// <summary>
         ///     Get blocked users
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>

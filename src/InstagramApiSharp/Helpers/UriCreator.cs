@@ -2129,5 +2129,14 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
+        public static Uri GetBestiesSuggestionUri(string maxId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FRIENDSHIPS_BESTIES_SUGGESTIONS, out var instaUri))
+                throw new Exception("Cant create URI for user besties suggestions");
+            return !string.IsNullOrEmpty(maxId)
+                ? new UriBuilder(instaUri) { Query = $"max_id={maxId}" }.Uri
+                : instaUri;
+        }
+
     }
 }
