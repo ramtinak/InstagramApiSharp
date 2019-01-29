@@ -235,6 +235,8 @@ namespace InstagramApiSharp.API.Processors
                     mediaResponse.Value.AutoLoadMoreEnabled = moreMedias.Value.AutoLoadMoreEnabled;
                     mediaResponse.Value.NextMediaIds = moreMedias.Value.NextMediaIds;
                     mediaResponse.Value.NextPage = moreMedias.Value.NextPage;
+                    mediaResponse.Value.Sections.AddRange(moreMedias.Value.Sections);
+                    paginationParameters.PagesLoaded++;
                 }
 
                 return Result.Success(ConvertersFabric.Instance.GetHashtagMediaListConverter(mediaResponse.Value).Convert());

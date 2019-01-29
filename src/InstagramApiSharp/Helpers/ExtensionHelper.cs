@@ -89,6 +89,11 @@ namespace InstagramApiSharp
                 list.Add($"[{item}]");
             return string.Join(",", list);
         }
+
+        public static string EncodeUri(this string data)
+        {
+            return System.Net.WebUtility.UrlEncode(data);
+        }
         public static string GetJson(this InstaLocationShort location)
         {
             if (location == null)

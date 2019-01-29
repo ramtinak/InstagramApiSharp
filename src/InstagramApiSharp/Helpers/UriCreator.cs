@@ -732,7 +732,7 @@ namespace InstagramApiSharp.Helpers
             string nextId = null, int? page = null)
         {
             if (
-                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_RANKED, hashtag),
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_RANKED, hashtag.EncodeUri()),
                     out var instaUri))
                 throw new Exception("Cant create URI for hashtag ranked(top) media");
             if (!string.IsNullOrEmpty(rankToken))
@@ -754,13 +754,13 @@ namespace InstagramApiSharp.Helpers
             string nextId = null, int? page = null, IEnumerable<long> nextMediaIds = null)
         {
             if (
-                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_RECENT, hashtag),
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_RECENT, hashtag.EncodeUri()),
                     out var instaUri))
                 throw new Exception("Cant create URI for hashtag recent media");
             if (!string.IsNullOrEmpty(nextId))
             {
                 instaUri = instaUri
-                    .AddQueryParameter("max_id", nextId);
+                    .AddQueryParameter("max_id", nextId.EncodeUri());
             }
             if (page != null && page > 0)
             {
@@ -778,7 +778,7 @@ namespace InstagramApiSharp.Helpers
             {
                 var mediaIds = $"[{string.Join(",", nextMediaIds)}]";
                 instaUri = instaUri
-                     .AddQueryParameter("next_media_ids", mediaIds);
+                     .AddQueryParameter("next_media_ids", mediaIds.EncodeUri());
             }
             return instaUri;
         }
