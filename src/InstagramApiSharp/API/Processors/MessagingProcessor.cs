@@ -134,7 +134,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
                 if (obj.IsSucceed)
                     return Result.Success(true);
-                return Result.Fail("Error: " + obj.Message, false);
+                return Result.UnExpectedResponse<bool>(response, json);
             }
             catch (HttpRequestException httpException)
             {
