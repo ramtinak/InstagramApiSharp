@@ -147,28 +147,40 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetUserLikeFeedUri(paginationParameters.NextMaxId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaMediaList>(response, json);
-                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
-                    new InstaMediaListDataConverter());
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                var mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();
+                InstaMediaList Convert(InstaMediaListResponse mediaListResponse)
+                {
+                    return ConvertersFabric.Instance.GetMediaListConverter(mediaListResponse).Convert();
+                }
+                var mediaResult = await GetAnyFeeds(UriCreator.GetUserLikeFeedUri(paginationParameters.NextMaxId));
+                if (!mediaResult.Succeeded)
+                {
+                    if (mediaResult.Value != null)
+                        return Result.Fail(mediaResult.Info, Convert(mediaResult.Value));
+                    else
+                        return Result.Fail(mediaResult.Info, default(InstaMediaList));
+                }
+                var mediaResponse = mediaResult.Value;
+                var mediaList = Convert(mediaResponse);
                 mediaList.NextMaxId = paginationParameters.NextMaxId = mediaResponse.NextMaxId;
+                paginationParameters.PagesLoaded++;
                 while (mediaResponse.MoreAvailable
                        && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var result = await GetLikedFeedAsync(paginationParameters);
+                    var result = await GetAnyFeeds(UriCreator.GetUserLikeFeedUri(paginationParameters.NextMaxId));
                     if (!result.Succeeded)
                         return Result.Fail(result.Info, mediaList);
 
+                    var convertedResult = Convert(result.Value);
                     paginationParameters.PagesLoaded++;
                     mediaList.NextMaxId = paginationParameters.NextMaxId = result.Value.NextMaxId;
-                    mediaList.AddRange(result.Value);
+                    mediaResponse.MoreAvailable = result.Value.MoreAvailable;
+                    mediaResponse.ResultsCount += result.Value.ResultsCount;
+                    mediaResponse.TotalCount += result.Value.TotalCount;
+                    mediaList.AddRange(convertedResult);
                 }
 
                 mediaList.PageSize = mediaResponse.ResultsCount;

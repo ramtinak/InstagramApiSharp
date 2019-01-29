@@ -946,8 +946,8 @@ namespace InstagramApiSharp.API.Processors
                     mediaResponse.AutoLoadMoreEnabled = nextMedia.Value.AutoLoadMoreEnabled;
                     mediaResponse.MoreAvailable = nextMedia.Value.MoreAvailable;
                     mediaResponse.RankToken = nextMedia.Value.RankToken;
-                    mediaResponse.TotalCount = nextMedia.Value.TotalCount;
-                    mediaResponse.ResultsCount = nextMedia.Value.ResultsCount;
+                    mediaResponse.TotalCount += nextMedia.Value.TotalCount;
+                    mediaResponse.ResultsCount += nextMedia.Value.ResultsCount;
                 }
                 userTags.PageSize = mediaResponse.ResultsCount;
                 userTags.Pages = paginationParameters.PagesLoaded;
