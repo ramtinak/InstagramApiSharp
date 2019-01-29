@@ -404,7 +404,7 @@ namespace InstagramApiSharp.API.Processors
                 var storyMediaViewersResult = await GetStoryMediaViewers(storyMediaId, paginationParameters?.NextMaxId);
 
                 if (!storyMediaViewersResult.Succeeded)
-                    return Result.Fail<InstaReelStoryMediaViewers>(storyMediaViewersResult.Info, default(InstaReelStoryMediaViewers));
+                    return Result.Fail(storyMediaViewersResult.Info, default(InstaReelStoryMediaViewers));
 
                 var storyMediaViewersResponse = storyMediaViewersResult.Value;
                 paginationParameters.NextMaxId = storyMediaViewersResponse.NextMaxId;
@@ -456,7 +456,7 @@ namespace InstagramApiSharp.API.Processors
                 var votersResult = await GetStoryPollVoters(storyMediaId, pollId, paginationParameters?.NextMaxId);
 
                 if (!votersResult.Succeeded)
-                    return Result.Fail<InstaStoryPollVotersList>(votersResult.Info, default(InstaStoryPollVotersList));
+                    return Result.Fail(votersResult.Info, default(InstaStoryPollVotersList));
 
                 var votersResponse = votersResult.Value;
                 paginationParameters.NextMaxId = votersResponse.MaxId;
