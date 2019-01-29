@@ -347,41 +347,20 @@ namespace InstagramApiSharp.API.Processors
             var feed = new InstaFeed();
             try
             {
-                var userFeedUri = UriCreator.GetUserFeedUri(paginationParameters.NextMaxId);
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                var data = new Dictionary<string, string>
+                InstaFeed Convert(InstaFeedResponse instaFeedResponse)
                 {
-                    {"is_prefetch", "0"},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"device_id", _deviceInfo.PhoneGuid.ToString()},
-                    {"phone_id", _deviceInfo.RankToken.ToString()},
-                    {"client_session_id",  _deviceInfo.AdId.ToString()}
-                };
-
-                if (seenMediaIds != null)
-                    data.Add("seen_posts", seenMediaIds.EncodeList(false));
-
-                if (refreshRequest)
-                {
-                    data.Add("reason", "pull_to_refresh");
-                    data.Add("is_pull_to_refresh", "1");
+                    return ConvertersFabric.Instance.GetFeedConverter(instaFeedResponse).Convert();
                 }
+                var timelineFeeds = await GetUserTimelineFeed(paginationParameters, seenMediaIds, refreshRequest);
+                if (!timelineFeeds.Succeeded)
+                    return Result.Fail(timelineFeeds.Info, feed);
 
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, userFeedUri, _deviceInfo, data);
-                request.Headers.Add("X-Ads-Opt-Out", "0");
-                request.Headers.Add("X-Google-AD-ID", _deviceInfo.GoogleAdId.ToString());
-                request.Headers.Add("X-DEVICE-ID", _deviceInfo.DeviceGuid.ToString());
+                var feedResponse = timelineFeeds.Value;
 
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaFeed>(response, json);
-
-                var feedResponse = JsonConvert.DeserializeObject<InstaFeedResponse>(json,
-                    new InstaFeedResponseDataConverter());
-                feed = ConvertersFabric.Instance.GetFeedConverter(feedResponse).Convert();
+                feed = Convert(feedResponse);
                 paginationParameters.NextMaxId = feed.NextMaxId;
                 paginationParameters.PagesLoaded++;
 
@@ -389,17 +368,18 @@ namespace InstagramApiSharp.API.Processors
                        && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var nextFeed = await GetUserTimelineFeedAsync(paginationParameters);
+                    var nextFeed = await GetUserTimelineFeed(paginationParameters);
                     if (!nextFeed.Succeeded)
                         return Result.Fail(nextFeed.Info, feed);
 
-                    feed.Medias.AddRange(nextFeed.Value.Medias);
-                    feed.Stories.AddRange(nextFeed.Value.Stories);
-
+                    var convertedFeed = Convert(nextFeed.Value);
+                    feed.Medias.AddRange(convertedFeed.Medias);
+                    feed.Stories.AddRange(convertedFeed.Stories);
+                    feedResponse.MoreAvailable = nextFeed.Value.MoreAvailable;
                     paginationParameters.NextMaxId = nextFeed.Value.NextMaxId;
                     paginationParameters.PagesLoaded++;
                 }
-
+                
                 return Result.Success(feed);
             }
             catch (HttpRequestException httpException)
@@ -515,6 +495,59 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaExploreFeedResponse>(exception);
             }
         }
+
+        private async Task<IResult<InstaFeedResponse>> GetUserTimelineFeed(PaginationParameters paginationParameters, string[] seenMediaIds = null, bool refreshRequest = false)
+        {
+            try
+            {
+                var userFeedUri = UriCreator.GetUserFeedUri(paginationParameters?.NextMaxId);
+
+                var data = new Dictionary<string, string>
+                {
+                    {"is_prefetch", "0"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id", _deviceInfo.PhoneGuid.ToString()},
+                    {"phone_id", _deviceInfo.RankToken.ToString()},
+                    {"client_session_id",  _deviceInfo.AdId.ToString()}
+                };
+
+                if (seenMediaIds != null)
+                    data.Add("seen_posts", seenMediaIds.EncodeList(false));
+
+                if (refreshRequest)
+                {
+                    data.Add("reason", "pull_to_refresh");
+                    data.Add("is_pull_to_refresh", "1");
+                }
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, userFeedUri, _deviceInfo, data);
+                request.Headers.Add("X-Ads-Opt-Out", "0");
+                request.Headers.Add("X-Google-AD-ID", _deviceInfo.GoogleAdId.ToString());
+                request.Headers.Add("X-DEVICE-ID", _deviceInfo.DeviceGuid.ToString());
+
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaFeedResponse>(response, json);
+
+                var feedResponse = JsonConvert.DeserializeObject<InstaFeedResponse>(json,
+                    new InstaFeedResponseDataConverter());
+                return Result.Success(feedResponse);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaFeedResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, default(InstaFeedResponse));
+            }
+        }
+
 
         private async Task<IResult<InstaTagFeedResponse>> GetTagFeed(string tag, PaginationParameters paginationParameters)
         {
