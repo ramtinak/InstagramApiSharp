@@ -251,6 +251,8 @@ namespace InstagramApiSharp.API.Processors
                     if (!nextMedia.Succeeded)
                         return Result.Fail(nextMedia.Info, mediaList);
                     mediaList.NextMaxId = paginationParameters.NextMaxId = nextMedia.Value.NextMaxId;
+                    archivedResponse.MoreAvailable = nextMedia.Value.MoreAvailable;
+                    archivedResponse.ResultsCount += nextMedia.Value.ResultsCount;
                     mediaList.AddRange(Convert(nextMedia.Value));
                     paginationParameters.PagesLoaded++;
                 }
