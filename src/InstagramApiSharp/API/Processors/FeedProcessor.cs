@@ -281,16 +281,25 @@ namespace InstagramApiSharp.API.Processors
             var tagFeed = new InstaTagFeed();
             try
             {
-                var userFeedUri = UriCreator.GetTagFeedUri(tag, paginationParameters.NextMaxId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
                 
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaTagFeed>(response, json);
-                var feedResponse = JsonConvert.DeserializeObject<InstaTagFeedResponse>(json,
-                    new InstaTagFeedDataConverter());
-                tagFeed = ConvertersFabric.Instance.GetTagFeedConverter(feedResponse).Convert();
+                InstaTagFeed Convert(InstaTagFeedResponse instaTagFeedResponse)
+                {
+                    return ConvertersFabric.Instance.GetTagFeedConverter(instaTagFeedResponse).Convert();
+                }
+
+                var tags = await GetTagFeed(tag, paginationParameters);
+                if (!tags.Succeeded)
+                {
+                    if (tags.Value != null)
+                        return Result.Fail(tags.Info, Convert(tags.Value));
+                    else
+                        return Result.Fail(tags.Info, default(InstaTagFeed));
+                }
+                var feedResponse = tags.Value;
+
+                tagFeed = Convert(feedResponse);
 
                 paginationParameters.NextMaxId = feedResponse.NextMaxId;
                 paginationParameters.PagesLoaded++;
@@ -299,14 +308,17 @@ namespace InstagramApiSharp.API.Processors
                        && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var nextFeed = await GetTagFeedAsync(tag, paginationParameters);
+                    var nextFeed = await GetTagFeed(tag, paginationParameters);
                     if (!nextFeed.Succeeded)
                         return Result.Fail(nextFeed.Info, tagFeed);
-                    tagFeed.NextMaxId = paginationParameters.NextMaxId = nextFeed.Value.NextMaxId;
-                    tagFeed.Medias.AddRange(nextFeed.Value.Medias);
-                    tagFeed.Stories.AddRange(nextFeed.Value.Stories);
-                }
 
+                    var convertedFeeds = Convert(nextFeed.Value);
+                    tagFeed.NextMaxId = paginationParameters.NextMaxId = nextFeed.Value.NextMaxId;
+                    tagFeed.Medias.AddRange(convertedFeeds.Medias);
+                    tagFeed.Stories.AddRange(convertedFeeds.Stories);
+                    feedResponse.MoreAvailable = nextFeed.Value.MoreAvailable;
+                    paginationParameters.PagesLoaded++;
+                }
                 return Result.Success(tagFeed);
             }
             catch (HttpRequestException httpException)
@@ -504,6 +516,32 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        public async Task<IResult<InstaTagFeedResponse>> GetTagFeed(string tag, PaginationParameters paginationParameters)
+        {
+            try
+            {
+                var userFeedUri = UriCreator.GetTagFeedUri(tag, paginationParameters?.NextMaxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userFeedUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaTagFeedResponse>(response, json);
+                var feedResponse = JsonConvert.DeserializeObject<InstaTagFeedResponse>(json,
+                    new InstaTagFeedDataConverter());
+                return Result.Success(feedResponse);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaTagFeedResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, default(InstaTagFeedResponse));
+            }
+        }
 
         private async Task<IResult<InstaMediaListResponse>> GetSavedFeed(PaginationParameters paginationParameters)
         {
