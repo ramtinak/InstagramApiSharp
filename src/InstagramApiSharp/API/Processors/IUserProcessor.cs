@@ -48,7 +48,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns>
         ///     <see cref="InstaUserShortList" />
         /// </returns>
-        Task<IResult<InstaUserShortList>> GetBestFriendsUsersAsync(PaginationParameters paginationParameters);
+        Task<IResult<InstaUserShortList>> GetBestFriendsAsync(PaginationParameters paginationParameters);
 
         /// <summary>
         ///     Get blocked users
