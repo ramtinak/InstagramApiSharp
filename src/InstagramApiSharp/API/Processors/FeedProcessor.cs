@@ -516,7 +516,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        public async Task<IResult<InstaTagFeedResponse>> GetTagFeed(string tag, PaginationParameters paginationParameters)
+        private async Task<IResult<InstaTagFeedResponse>> GetTagFeed(string tag, PaginationParameters paginationParameters)
         {
             try
             {
