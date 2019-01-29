@@ -444,6 +444,9 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
                 InstaSuggestions Convert(InstaSuggestionUserContainerResponse suggestResponse)
                 {
                     return ConvertersFabric.Instance.GetSuggestionsConverter(suggestResponse).Convert();
@@ -858,7 +861,74 @@ namespace InstagramApiSharp.API.Processors
             var user = await GetUserAsync(username);
             if (!user.Succeeded)
                 return Result.Fail<InstaMediaList>("Unable to get user to load media");
-            return await GetUserMediaAsync(user.Value.Pk, paginationParameters);
+            return await GetUserMediaByIdAsync(user.Value.Pk, paginationParameters);
+        }
+
+        /// <summary>
+        ///     Get all user media by user id (pk) asynchronously
+        /// </summary>
+        /// <param name="userId">User id (pk)</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaMediaList" />
+        /// </returns>
+        public async Task<IResult<InstaMediaList>> GetUserMediaByIdAsync(long userId,
+                                                    PaginationParameters paginationParameters)
+        {
+            var mediaList = new InstaMediaList();
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                InstaMediaList Convert(InstaMediaListResponse mediaListResponse)
+                {
+                    return ConvertersFabric.Instance.GetMediaListConverter(mediaListResponse).Convert();
+                }
+
+                var mediaResult = await GetUserMedia(userId, paginationParameters);
+                if (!mediaResult.Succeeded)
+                {
+                    if (mediaResult.Value != null)
+                        return Result.Fail(mediaResult.Info, Convert(mediaResult.Value));
+                    else
+                        return Result.Fail(mediaResult.Info, default(InstaMediaList));
+                }
+                var mediaResponse = mediaResult.Value;
+
+                mediaList = Convert(mediaResponse);
+                mediaList.NextMaxId = paginationParameters.NextMaxId = mediaResponse.NextMaxId;
+                paginationParameters.PagesLoaded++;
+
+                while (mediaResponse.MoreAvailable
+                       && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                       && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+
+                    var nextMedia = await GetUserMedia(userId, paginationParameters);
+                    if (!nextMedia.Succeeded)
+                        return Result.Fail(nextMedia.Info, mediaList);
+                    mediaResponse.MoreAvailable = nextMedia.Value.MoreAvailable;
+                    mediaResponse.ResultsCount += nextMedia.Value.ResultsCount;
+                    mediaList.NextMaxId = mediaResponse.NextMaxId = paginationParameters.NextMaxId = nextMedia.Value.NextMaxId;
+                    mediaList.AddRange(Convert(nextMedia.Value));
+                    paginationParameters.PagesLoaded++;
+                }
+
+                mediaList.Pages = paginationParameters.PagesLoaded;
+                mediaList.PageSize = mediaResponse.ResultsCount;
+                return Result.Success(mediaList);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMediaList), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, mediaList);
+            }
         }
 
         /// <summary>
@@ -1518,10 +1588,9 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaMediaList>> GetUserMediaAsync(long userId,
-                                                    PaginationParameters paginationParameters)
+        private async Task<IResult<InstaMediaListResponse>> GetUserMedia(long userId,
+                                             PaginationParameters paginationParameters)
         {
-            var mediaList = new InstaMediaList();
             try
             {
                 var instaUri = UriCreator.GetUserMediaListUri(userId, paginationParameters.NextMaxId);
@@ -1530,42 +1599,23 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaMediaList>(response, json);
+                    return Result.UnExpectedResponse<InstaMediaListResponse>(response, json);
                 var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
                     new InstaMediaListDataConverter());
 
-                mediaList = ConvertersFabric.Instance.GetMediaListConverter(mediaResponse).Convert();
-                mediaList.NextMaxId = paginationParameters.NextMaxId = mediaResponse.NextMaxId;
-
-
-                while (mediaResponse.MoreAvailable
-                       && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
-                       && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
-                {
-                    paginationParameters.PagesLoaded++;
-                    var nextMedia = await GetUserMediaAsync(userId, paginationParameters);
-                    if (!nextMedia.Succeeded)
-                        return Result.Fail(nextMedia.Info, mediaList);
-                    mediaList.NextMaxId = paginationParameters.NextMaxId = nextMedia.Value.NextMaxId;
-                    mediaList.AddRange(nextMedia.Value);
-                }
-
-                mediaList.Pages = paginationParameters.PagesLoaded;
-                mediaList.PageSize = mediaResponse.ResultsCount;
-                return Result.Success(mediaList);
+                return Result.Success(mediaResponse);
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaMediaList), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaMediaListResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception, mediaList);
+                return Result.Fail(exception, default(InstaMediaListResponse));
             }
         }
-
         private async Task<IResult<bool>> FavoriteUnfavoriteUser(Uri instaUri, long userId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
