@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.2.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.3.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -89,6 +89,42 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.3.0
+- [Bugfix] for followers and followings get functions
+- [Bugfix] for SendGetRequestAsync
+- [Bugfix] for GetTopHashtagMediaListAsync (thx to [@huseyinkarael](https://github.com/huseyinkarael) for report)
+- [Bugfix] for GetRecentHashtagMediaListAsync (thx to [@huseyinkarael](https://github.com/huseyinkarael) for report)
+- [Bugfix] for GetArchivedMediaAsync pagination
+- [Bugfix] for GetUserTagsAsync (thx to [@hamidrh](https://github.com/hamidrh) for bugfix)
+- [Rename] GetLikeFeedAsync to GetLikedFeedAsync
+- [Rename] SendLikeAsync to SendDirectLikeAsync
+- [Add] GetUserFollowersByIdAsync to UserProcessor
+- [Add] GetUserFollowingByIdAsync to UserProcessor 
+- [Add] SaveMediaAsync to MediaProcessor
+- [Add] UnSaveMediaAsync to MediaProcessor
+- [Add] GetSavedFeedAsync to FeedProcessor
+- [Add] support story question in InstaStoryItem
+- [Add] GetUserShoppableMediaByIdAsync to ShoppingProcessor
+- [Add] GetUserMediaByIdAsync to UserProcessor
+- [Add] GetBestFriendsAsync to UserProcessor
+- [Add] GetBestFriendsSuggestionsAsync to UserProcessor
+- [Add] AddBestFriendsAsync to UserProcessor
+- [Add] DeleteBestFriendsAsync to UserProcessor
+- [Update] GetUserTagsAsync pagination
+- [Update] GetTagFeedAsync pagination
+- [Update] GetUserTimelineFeedAsync pagination
+- [Update] GetSavedFeedAsync
+- [Update] GetLikedFeedAsync pagination
+- [Update] GetRecentHashtagMediaListAsync pagination
+- [Update] GetTopHashtagMediaListAsync pagination
+- [Update] ApproveDirectPendingRequestAsync
+- [Update] GetUserShoppableMediaAsync pagination
+- [Update] GetUserShoppableMediaAsync pagination
+
+v1.3.2.3
+- [Bugfix] for Blocked users
+- [Add] SendDirectProfileToRecipientsAsync
+
 v1.3.2.2
 - [Bugfix] for user activities timespan
 - [Add] support for story sliders
@@ -123,47 +159,6 @@ v1.3.2.0
 - [Add] ShareLiveToDirectThreadAsync to LiveProcessor
 - [Add] ShareLiveToDirectRecipientAsync to LiveProcessor
 - [Update] GetUserTimelineFeedAsync
-
-v1.3.1.8
-- [Add] refresh to timeline feed
-- [Bugfix] for LoginWithCookiesAsync
-
-v1.3.1.7
-- [Add] support for postlives
-- [Add] like in directs
-- [Add] Challenge support in 2FALogin
-
-v1.3.1.6
-- [Add] timespan for InstaAudio
-- [Add] support for dynamically setting httphandler
-
-v1.3.1.3
-- [Add] top searches in discover processor
-- [Add] LoginWithCookiesAsync to IInstaApi
-- [Bugfix] for live comments get
-- [Bugfix] for SearchPlacesAsync
-
-v1.3.1.1
-- [Bugfix] fix for hashtags deserialize on api version 64
-- [Add] RichText support in API Version 64 for Activities
-
-v1.3.1.0
-- [Add] set/get timezone and timezone offset  (thx to [@burak1000](https://github.com/burak1000) for report)
-- [Bugfix] for MarkDirectThreadAsSeenAsync
-- [Add] PaginationParameters to SearchPlacesAsync
-
-v1.3.0.0
-- [Add] SendDirectLinks with recipients and threadId to MessagingProcessor (thx to [@estgold](https://github.com/estgold) for PR)
-- [Add] ArchiveMediaAsync to MediaProcessor
-- [Add] UnArchiveMediaAsync to MediaProcessor
-- [Add] GetArchivedMediaAsync to MediaProcessor
-- [Add] GetPresenceOptionsAsync to AccountProcessor
-- [Add] EnablePresenceAsync to AccountProcessor
-- [Add] DisablePresenceAsync to AccountProcessor
-- [Add] BlockUserCommentingAsync to CommentProcessor
-- [Add] UnblockUserCommentingAsync to CommentProcessor
-- [Add] GetBlockedCommentersAsync to CommentProcessor
-- [Update] FriendshipStatus property in GetUserAsync
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452;uap10.0;netstandard1.3</TargetFrameworks>
-    <VersionPrefix>1.3.2</VersionPrefix>
+    <VersionPrefix>1.3.3</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.2.3</Version>
-    <AssemblyVersion>1.3.2.3</AssemblyVersion>
-    <FileVersion>1.3.2.3</FileVersion>
+    <Version>1.3.3.0</Version>
+    <AssemblyVersion>1.3.3.0</AssemblyVersion>
+    <FileVersion>1.3.3.0</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,9 +38,41 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.3.2.3
--Blocked users fixes
--SendDirectProfileToRecipientsAsync Added
+    <PackageReleaseNotes>v1.3.3.0
+- [Bugfix] for followers and followings get functions
+- [Bugfix] for SendGetRequestAsync
+- [Bugfix] for GetTopHashtagMediaListAsync (thx to @huseyinkarael for report)
+- [Bugfix] for GetRecentHashtagMediaListAsync (thx to @huseyinkarael for report)
+- [Bugfix] for GetArchivedMediaAsync pagination
+- [Bugfix] for GetUserTagsAsync (thx to @hamidrh for bugfix)
+- [Rename] GetLikeFeedAsync to GetLikedFeedAsync
+- [Rename] SendLikeAsync to SendDirectLikeAsync
+- [Add] GetUserFollowersByIdAsync to UserProcessor
+- [Add] GetUserFollowingByIdAsync to UserProcessor 
+- [Add] SaveMediaAsync to MediaProcessor
+- [Add] UnSaveMediaAsync to MediaProcessor
+- [Add] GetSavedFeedAsync to FeedProcessor
+- [Add] support story question in InstaStoryItem
+- [Add] GetUserShoppableMediaByIdAsync to ShoppingProcessor
+- [Add] GetUserMediaByIdAsync to UserProcessor
+- [Add] GetBestFriendsAsync to UserProcessor
+- [Add] GetBestFriendsSuggestionsAsync to UserProcessor
+- [Add] AddBestFriendsAsync to UserProcessor
+- [Add] DeleteBestFriendsAsync to UserProcessor
+- [Update] GetUserTagsAsync pagination
+- [Update] GetTagFeedAsync pagination
+- [Update] GetUserTimelineFeedAsync pagination
+- [Update] GetSavedFeedAsync
+- [Update] GetLikedFeedAsync pagination
+- [Update] GetRecentHashtagMediaListAsync pagination
+- [Update] GetTopHashtagMediaListAsync pagination
+- [Update] ApproveDirectPendingRequestAsync
+- [Update] GetUserShoppableMediaAsync pagination
+- [Update] GetUserShoppableMediaAsync pagination
+
+v1.3.2.3
+- [Bugfix] for Blocked users
+- [Add] SendDirectProfileToRecipientsAsync
 
 v1.3.2.2
 - [Bugfix] for user activities timespan
