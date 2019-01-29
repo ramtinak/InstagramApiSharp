@@ -909,16 +909,27 @@ namespace InstagramApiSharp.API.Processors
             var userTags = new InstaMediaList();
             try
             {
-                var uri = UriCreator.GetUserTagsUri(userId, _user.RankToken, paginationParameters.NextMaxId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK) return Result.Fail("", (InstaMediaList)null);
-                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
-                    new InstaMediaListDataConverter());
-                userTags.AddRange(
-                    mediaResponse.Medias.Select(ConvertersFabric.Instance.GetSingleMediaConverter)
-                        .Select(converter => converter.Convert()));
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                IEnumerable<InstaMedia> Convert(InstaMediaListResponse mediaListResponse)
+                {
+                    return mediaListResponse.Medias.Select(ConvertersFabric.Instance.GetSingleMediaConverter)
+                        .Select(converter => converter.Convert());
+                }
+                var mediaTags = await GetUserTags(userId, paginationParameters);
+                if (!mediaTags.Succeeded)
+                {
+                    if (mediaTags.Value != null)
+                    {
+                        userTags.AddRange(Convert(mediaTags.Value));
+                        return Result.Fail(mediaTags.Info, userTags);
+                    }
+                    else
+                        return Result.Fail(mediaTags.Info, default(InstaMediaList));
+                }
+                var mediaResponse = mediaTags.Value;
+                userTags.AddRange(Convert(mediaResponse));
                 userTags.NextMaxId = paginationParameters.NextMaxId = mediaResponse.NextMaxId;
                 paginationParameters.PagesLoaded++;
 
@@ -926,14 +937,20 @@ namespace InstagramApiSharp.API.Processors
                        && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var nextMedia = await GetUserTagsAsync(userId, paginationParameters);
+                    var nextMedia = await GetUserTags(userId, paginationParameters);
                     if (!nextMedia.Succeeded)
                         return Result.Fail(nextMedia.Info, userTags);
 
-                    userTags.AddRange(nextMedia.Value);
-                    userTags.NextMaxId = paginationParameters.NextMaxId = nextMedia.Value.NextMaxId;
+                    userTags.AddRange(Convert(nextMedia.Value));
+                    userTags.NextMaxId = paginationParameters.NextMaxId = mediaResponse.NextMaxId = nextMedia.Value.NextMaxId;
+                    mediaResponse.AutoLoadMoreEnabled = nextMedia.Value.AutoLoadMoreEnabled;
+                    mediaResponse.MoreAvailable = nextMedia.Value.MoreAvailable;
+                    mediaResponse.RankToken = nextMedia.Value.RankToken;
+                    mediaResponse.TotalCount = nextMedia.Value.TotalCount;
+                    mediaResponse.ResultsCount = nextMedia.Value.ResultsCount;
                 }
-
+                userTags.PageSize = mediaResponse.ResultsCount;
+                userTags.Pages = paginationParameters.PagesLoaded;
                 return Result.Success(userTags);
             }
             catch (HttpRequestException httpException)
@@ -1704,6 +1721,33 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception ex)
             {
                 return Result.Fail<InstaFriendshipStatus>(ex);
+            }
+        }
+
+        private async Task<IResult<InstaMediaListResponse>> GetUserTags(long userId,
+            PaginationParameters paginationParameters)
+        {
+            try
+            {
+                var uri = UriCreator.GetUserTagsUri(userId, _user.RankToken, paginationParameters?.NextMaxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaMediaListResponse>(response, json);
+                var mediaResponse = JsonConvert.DeserializeObject<InstaMediaListResponse>(json,
+                    new InstaMediaListDataConverter());
+
+                return Result.Success(mediaResponse);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMediaListResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, default(InstaMediaListResponse));
             }
         }
         #endregion private parts
