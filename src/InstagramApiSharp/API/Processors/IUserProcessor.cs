@@ -30,6 +30,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaFriendshipStatus>> BlockUserAsync(long userId);
 
         /// <summary>
+        ///     Delete an user from your best friend (besties) lists
+        /// </summary>
+        /// <param name="userIds">User ids (pk) to add</param>
+        Task<IResult<InstaFriendshipShortStatusList>> DeleteBestFriendsAsync(params long[] userIds);
+
+        /// <summary>
         ///     Favorite user (user must be in your following list)
         /// </summary>
         /// <param name="userId">User id (pk)</param>

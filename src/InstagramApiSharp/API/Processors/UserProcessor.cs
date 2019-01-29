@@ -97,6 +97,18 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Delete an user from your best friend (besties) lists
+        /// </summary>
+        /// <param name="userIds">User ids (pk) to add</param>
+        public async Task<IResult<InstaFriendshipShortStatusList>> DeleteBestFriendsAsync(params long[] userIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            if (userIds?.Length == 0)
+                return Result.Fail<InstaFriendshipShortStatusList>("At least 1 user id is require");
+
+            return await AddBestFriends(null, userIds);
+        }
+        /// <summary>
         ///     Block user
         /// </summary>
         /// <param name="userId">User id</param>
