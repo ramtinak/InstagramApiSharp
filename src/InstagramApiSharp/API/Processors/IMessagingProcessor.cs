@@ -372,6 +372,6 @@ namespace InstagramApiSharp.API.Processors
         ///     Send a like to the conversation
         /// </summary>
         /// <param name="threadId">Thread id</param>
-        Task<IResult<bool>> SendLikeAsync(string threadId);
+        Task<IResult<bool>> SendDirectLikeAsync(string threadId);
     }
 }

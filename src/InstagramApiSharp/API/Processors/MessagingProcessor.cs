@@ -1502,8 +1502,12 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
-
-        public async Task<IResult<bool>> SendLikeAsync(string threadId)
+        
+        /// <summary>
+        ///     Send a like to the conversation
+        /// </summary>
+        /// <param name="threadId">Thread id</param>
+        public async Task<IResult<bool>> SendDirectLikeAsync(string threadId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
