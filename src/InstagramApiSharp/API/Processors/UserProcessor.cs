@@ -84,6 +84,19 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Add new best friend (besties)
+        /// </summary>
+        /// <param name="userIds">User ids (pk) to add</param>
+        public async Task<IResult<InstaFriendshipShortStatusList>> AddBestFriendsAsync(params long[] userIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            if (userIds?.Length == 0)
+                return Result.Fail<InstaFriendshipShortStatusList>("At least 1 user id is require");
+
+            return await AddBestFriends(userIds, null);
+        }
+
+        /// <summary>
         ///     Block user
         /// </summary>
         /// <param name="userId">User id</param>
@@ -1346,6 +1359,64 @@ namespace InstagramApiSharp.API.Processors
         #endregion public parts
 
         #region private parts
+
+        private async Task<IResult<InstaFriendshipShortStatusList>> AddBestFriends(long[] userIdsToAdd, long[] userIdsToRemove)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetSetBestFriendsUri();
+
+                var data = new JObject
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"module", "favorites_home_list"},
+                    {"source", "audience_manager"}
+                };
+                if (userIdsToAdd?.Length > 0)
+                {
+                    var jArr = new JArray
+                    {
+                        userIdsToAdd
+                    };
+                    data.Add("add", jArr);
+                    data.Add("remove", new JArray());
+                }
+                else
+                {
+                    var jArr = new JArray
+                    {
+                        userIdsToRemove
+                    };
+                    data.Add("add", new JArray());
+                    data.Add("remove", jArr);
+                }
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaFriendshipShortStatusList>(response, json);
+
+                var friendshipStatusesResponse = JsonConvert.DeserializeObject<InstaFriendshipShortStatusListResponse>(json,
+                    new InstaFriendShipShortDataConverter());
+                var converter = ConvertersFabric.Instance.GetFriendshipShortStatusListConverter(friendshipStatusesResponse);
+
+                return Result.Success(converter.Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaFriendshipShortStatusList), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaFriendshipShortStatusList>(exception);
+            }
+        }
         private async Task<IResult<InstaFriendshipStatus>> BlockUnblockUserInternal(long userId, Uri instaUri)
         {
             try

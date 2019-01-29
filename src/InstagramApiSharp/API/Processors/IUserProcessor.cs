@@ -18,6 +18,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaFriendshipStatus>> AcceptFriendshipRequestAsync(long userId);
 
         /// <summary>
+        ///     Add new best friend (besties)
+        /// </summary>
+        /// <param name="userIds">User ids (pk) to add</param>
+        Task<IResult<InstaFriendshipShortStatusList>> AddBestFriendsAsync(params long[] userIds);
+
+        /// <summary>
         ///     Block user
         /// </summary>
         /// <param name="userId">User id</param>

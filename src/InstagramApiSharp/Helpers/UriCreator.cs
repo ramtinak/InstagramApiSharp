@@ -2138,5 +2138,13 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
+        public static Uri GetSetBestFriendsUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                InstaApiConstants.FRIENDSHIPS_SET_BESTIES, out var instaUri))
+                throw new Exception("Cant create URI for set best friends");
+            return instaUri;
+        }
+
     }
 }

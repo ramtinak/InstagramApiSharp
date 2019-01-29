@@ -356,6 +356,7 @@ namespace InstagramApiSharp.API
         public const string FRIENDSHIPS_BLOCKED_REEL = API_SUFFIX + "/friendships/blocked_reels/";
         public const string FRIENDSHIPS_BESTIES = API_SUFFIX + "/friendships/besties/";
         public const string FRIENDSHIPS_BESTIES_SUGGESTIONS = API_SUFFIX + "/friendships/bestie_suggestions/";
+        public const string FRIENDSHIPS_SET_BESTIES = API_SUFFIX + "/friendships/set_besties/";
 
         #endregion Friendships endpoints constants
 
