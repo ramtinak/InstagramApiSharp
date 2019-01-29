@@ -2095,9 +2095,19 @@ namespace InstagramApiSharp.API
 
                 HttpRequestMessage request;
                 if (JData != null)
+                {
+                    JData.Add("_uuid", _deviceInfo.DeviceGuid.ToString());
+                    JData.Add("_uid", _user.LoggedInUser.Pk.ToString());
+                    JData.Add("_csrftoken", _user.CsrfToken);
                     request = _httpHelper.GetSignedRequest(HttpMethod.Post, uri, _deviceInfo, JData);
+                }
                 else
+                {
+                    DicData.Add("_uuid", _deviceInfo.DeviceGuid.ToString());
+                    DicData.Add("_uid", _user.LoggedInUser.Pk.ToString());
+                    DicData.Add("_csrftoken", _user.CsrfToken);
                     request = _httpHelper.GetSignedRequest(HttpMethod.Post, uri, _deviceInfo, DicData);
+                }
 
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -2130,6 +2140,9 @@ namespace InstagramApiSharp.API
                 if (uri == null)
                     return Result.Fail("Uri cannot be null!", default(string));
 
+                data.Add("_uuid", _deviceInfo.DeviceGuid.ToString());
+                data.Add("_uid", _user.LoggedInUser.Pk.ToString());
+                data.Add("_csrftoken", _user.CsrfToken);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, uri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();

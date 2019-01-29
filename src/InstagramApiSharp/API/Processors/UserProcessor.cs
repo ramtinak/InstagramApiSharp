@@ -179,6 +179,61 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get self best friends (besties)
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaUserShortList" />
+        /// </returns>
+        public async Task<IResult<InstaUserShortList>> GetBestFriendsUsersAsync(PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var besties = new InstaUserShortList();
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                var bestiesUri = UriCreator.GetBestFriendsUri(paginationParameters.NextMaxId);
+                var bestiesResponse = await GetUserListByUriAsync(bestiesUri);
+                if (!bestiesResponse.Succeeded)
+                    return Result.Fail(bestiesResponse.Info, (InstaUserShortList)null);
+                besties.AddRange(
+                    bestiesResponse.Value.Items?.Select(ConvertersFabric.Instance.GetUserShortConverter)
+                        .Select(converter => converter.Convert()));
+                paginationParameters.NextMaxId = besties.NextMaxId = bestiesResponse.Value.NextMaxId;
+
+                var pagesLoaded = 1;
+                while (!string.IsNullOrEmpty(bestiesResponse.Value.NextMaxId)
+                       && pagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var nextBestiesUri = UriCreator.GetBestFriendsUri(bestiesResponse.Value.NextMaxId);
+                    bestiesResponse = await GetUserListByUriAsync(nextBestiesUri);
+                    if (!bestiesResponse.Succeeded)
+                        return Result.Fail(bestiesResponse.Info, besties);
+                    besties.AddRange(
+                        bestiesResponse.Value.Items?.Select(ConvertersFabric.Instance.GetUserShortConverter)
+                            .Select(converter => converter.Convert()));
+                    pagesLoaded++;
+                    paginationParameters.PagesLoaded = pagesLoaded;
+                    paginationParameters.NextMaxId = besties.NextMaxId = bestiesResponse.Value.NextMaxId;
+                }
+
+                return Result.Success(besties);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, besties, ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, besties);
+            }
+        }
+
+        /// <summary>
         ///     Get currently logged in user info asynchronously
         /// </summary>
         /// <returns>

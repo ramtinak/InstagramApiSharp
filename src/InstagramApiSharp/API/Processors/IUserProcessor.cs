@@ -42,11 +42,20 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaFriendshipStatus>> FollowUserAsync(long userId);
 
         /// <summary>
-        ///     Get blocked users
+        ///     Get self best friends (besties)
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         /// <returns>
         ///     <see cref="InstaUserShortList" />
+        /// </returns>
+        Task<IResult<InstaUserShortList>> GetBestFriendsUsersAsync(PaginationParameters paginationParameters);
+
+        /// <summary>
+        ///     Get blocked users
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <returns>
+        ///     <see cref="InstaBlockedUsers" />
         /// </returns>
         Task<IResult<InstaBlockedUsers>> GetBlockedUsersAsync(PaginationParameters paginationParameters);
 
