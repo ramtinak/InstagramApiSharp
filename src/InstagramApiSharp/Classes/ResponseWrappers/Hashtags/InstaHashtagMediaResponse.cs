@@ -16,7 +16,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
     public class InstaHashtagMediaListResponse
     {
         [JsonProperty("sections")]
-        public List<InstaHashtagMediaResponse> Sections { get; set; }
+        public List<InstaHashtagMediaResponse> Sections { get; set; } = new List<InstaHashtagMediaResponse>();
         [JsonProperty("more_available")]
         public bool MoreAvailable { get; set; }
         [JsonProperty("next_max_id")]
