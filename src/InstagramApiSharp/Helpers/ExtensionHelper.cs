@@ -252,11 +252,25 @@ namespace InstagramApiSharp
                 {"question", slider.Question},
                 {"viewer_can_vote", true},
                 {"viewer_vote", -1.0},
-                {"slider_vote_average",0.0},
+                {"slider_vote_average", 0.0},
                 {"background_color", slider.BackgroundColor},
                 {"emoji", slider.Emoji},
                 {"text_color", slider.TextColor},
                 {"is_sticker", slider.IsSticker},
+            };
+        }
+
+        public static JObject ConvertToJson(this InstaMediaStoryUpload mediaStory)
+        {
+            return new JObject
+            {
+                {"x", mediaStory.X},
+                {"y", mediaStory.Y},
+                {"width", mediaStory.Width},
+                {"height", mediaStory.Height},
+                {"rotation", mediaStory.Rotation},
+                {"media_id", mediaStory.MediaPk},
+                {"is_sticker", mediaStory.IsSticker},
             };
         }
     }

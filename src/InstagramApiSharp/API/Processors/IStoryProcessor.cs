@@ -111,6 +111,54 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> MarkHighlightAsSeenAsync(string mediaId, string highlightId, long takenAtUnix);
 
         /// <summary>
+        ///     Share an media to story
+        ///     <para>
+        ///     Note 1: You must draw whatever you want in your image first! 
+        ///     Also it's on you to calculate clickable media
+        ///     </para>
+        ///     <para>
+        ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
+        ///     </para>
+        /// </summary>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="mediaStoryUpload">
+        ///     Media options
+        ///     <para>
+        ///     Note 1: You must draw whatever you want in your image first! 
+        ///     Also it's on you to calculate clickable media
+        ///     </para>
+        ///     <para>
+        ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
+        ///     </para>
+        /// </param>
+        Task<IResult<InstaStoryMedia>> ShareMediaAsStoryAsync(InstaImage image, InstaMediaStoryUpload mediaStoryUpload);
+
+        /// <summary>
+        ///     Share an media to story with progress
+        ///     <para>
+        ///     Note 1: You must draw whatever you want in your image first! 
+        ///     Also it's on you to calculate clickable media
+        ///     </para>
+        ///     <para>
+        ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
+        ///     </para>
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="mediaStoryUpload">
+        ///     Media options
+        ///     <para>
+        ///     Note 1: You must draw whatever you want in your image first! 
+        ///     Also it's on you to calculate clickable media
+        ///     </para>
+        ///     <para>
+        ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
+        ///     </para>
+        /// </param>
+        Task<IResult<InstaStoryMedia>> ShareMediaAsStoryAsync(Action<InstaUploaderProgress> progress, InstaImage image, 
+            InstaMediaStoryUpload mediaStoryUpload);
+
+        /// <summary>
         ///     Share story to someone
         /// </summary>
         /// <param name="reelId">Reel id</param>

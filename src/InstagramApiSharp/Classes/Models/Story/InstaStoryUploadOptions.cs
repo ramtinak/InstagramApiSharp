@@ -20,5 +20,7 @@ namespace InstagramApiSharp.Classes.Models
         public List<InstaStoryPollUpload> Polls { get; set; } = new List<InstaStoryPollUpload>();
 
         public InstaStorySliderUpload Slider { get; set; }
+
+        internal InstaMediaStoryUpload MediaStory { get; set; }
     }
 }

@@ -659,6 +659,66 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Share an media to story
+        ///     <para>
+        ///     Note 1: You must draw whatever you want in your image first! 
+        ///     Also it's on you to calculate clickable media
+        ///     </para>
+        ///     <para>
+        ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
+        ///     </para>
+        /// </summary>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="mediaStoryUpload">
+        ///     Media options
+        ///     <para>
+        ///     Note 1: You must draw whatever you want in your image first! 
+        ///     Also it's on you to calculate clickable media
+        ///     </para>
+        ///     <para>
+        ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
+        ///     </para>
+        /// </param>
+        public async Task<IResult<InstaStoryMedia>> ShareMediaAsStoryAsync(InstaImage image, InstaMediaStoryUpload mediaStoryUpload)
+        {
+            return await ShareMediaAsStoryAsync(null, image, mediaStoryUpload);
+        }
+
+        /// <summary>
+        ///     Share an media to story with progress
+        ///     <para>
+        ///     Note 1: You must draw whatever you want in your image first! 
+        ///     Also it's on you to calculate clickable media
+        ///     </para>
+        ///     <para>
+        ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
+        ///     </para>
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="image">Photo to upload</param>
+        /// <param name="mediaStoryUpload">
+        ///     Media options
+        ///     <para>
+        ///     Note 1: You must draw whatever you want in your image first! 
+        ///     Also it's on you to calculate clickable media
+        ///     </para>
+        ///     <para>
+        ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
+        ///     </para>
+        /// </param>
+        public async Task<IResult<InstaStoryMedia>> ShareMediaAsStoryAsync(Action<InstaUploaderProgress> progress, InstaImage image,
+            InstaMediaStoryUpload mediaStoryUpload)
+        {
+            if (image == null)
+                return Result.Fail<InstaStoryMedia>("Image cannot be null");
+
+            if (mediaStoryUpload == null)
+                return Result.Fail<InstaStoryMedia>("Media story upload option cannot be null");
+
+            return await UploadStoryPhotoWithUrlAsync(progress, image, string.Empty, null, new InstaStoryUploadOptions { MediaStory = mediaStoryUpload });
+        }
+
+        /// <summary>
         ///     Share story to someone
         /// </summary>
         /// <param name="reelId">Reel id</param>
@@ -1399,6 +1459,15 @@ namespace InstagramApiSharp.API.Processors
 
                             data.Add("story_polls", pollArr.ToString(Formatting.None));
                         }
+                    }
+                    if (uploadOptions.MediaStory != null)
+                    {
+                        var mediaStory = new JArray
+                        {
+                            uploadOptions.MediaStory.ConvertToJson()
+                        };
+
+                        data.Add("attached_media", mediaStory.ToString(Formatting.None));
                     }
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
