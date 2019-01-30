@@ -662,7 +662,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Share an media to story
         ///     <para>
         ///     Note 1: You must draw whatever you want in your image first! 
-        ///     Also it's on you to calculate clickable media
+        ///     Also it's on you to calculate clickable media but mostly is 0.5 for width and height
         ///     </para>
         ///     <para>
         ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
@@ -673,7 +673,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Media options
         ///     <para>
         ///     Note 1: You must draw whatever you want in your image first! 
-        ///     Also it's on you to calculate clickable media
+        ///     Also it's on you to calculate clickable media but mostly is 0.5 for width and height
         ///     </para>
         ///     <para>
         ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
@@ -688,7 +688,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Share an media to story with progress
         ///     <para>
         ///     Note 1: You must draw whatever you want in your image first! 
-        ///     Also it's on you to calculate clickable media
+        ///     Also it's on you to calculate clickable media but mostly is 0.5 for width and height
         ///     </para>
         ///     <para>
         ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>
@@ -700,7 +700,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Media options
         ///     <para>
         ///     Note 1: You must draw whatever you want in your image first! 
-        ///     Also it's on you to calculate clickable media
+        ///     Also it's on you to calculate clickable media but mostly is 0.5 for width and height
         ///     </para>
         ///     <para>
         ///     Note 2: Get media pk from <see cref="InstaMedia.Pk"/>

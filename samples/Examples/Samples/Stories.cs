@@ -124,7 +124,7 @@ namespace Examples.Samples
         {
             // You can share an media to an story (photo, video and album)
             // Note that you must draw whatever(photo, video and album) you want in your image first! 
-            // Also it's on you to calculate clickable media
+            // Also it's on you to calculate clickable media but mostly is 0.5 for width and height
 
 
             long mediaPk = 1912406543385492359; // Get it from InstaMedia.Pk, you can use video or album pk too!
@@ -132,7 +132,7 @@ namespace Examples.Samples
             var mediaStory = new InstaMediaStoryUpload
             {
                 X = 0.5, // center of photo
-                Y = .05, // center of photo
+                Y = 0.5, // center of photo
                 Width = 0.5, // height of clickable media, it's an square in center of photo
                 Height = 0.5, // width of clickable media, it's an square in center of photo
                 Rotation = 0, // don't change this
