@@ -56,7 +56,7 @@ Some of features:
 | Delete media (photo/video/album) | Upload story (photo/video/album) | Change password | Send direct message |
 | Search location | Get location feed | Collection create/get by id/get all/add items | Support challenge required |
 | Upload album (videos/photo) | Highlight support | Share story | Send direct photo/video/ stories/profile/ link/location like/live |
-| IG TV support | Share media to direct thread | Business account support |
+| IG TV support | Share media to direct thread | Business account support | Share media as story |
 
 ## Usage
 #### Use builder to get Insta API instance:
