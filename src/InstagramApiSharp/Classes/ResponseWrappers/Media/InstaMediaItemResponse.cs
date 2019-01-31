@@ -90,6 +90,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("can_viewer_save")] public bool CanViewerSave { get; set; }
 
+        [JsonProperty("has_viewer_saved")] public bool HasViewerSaved { get; set; }
 
         [JsonProperty("title")] public string Title { get; set; }
 

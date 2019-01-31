@@ -44,7 +44,8 @@ namespace InstagramApiSharp.Converters
                 ProductType = SourceObject.ProductType,
                 NearlyCompleteCopyrightMatch = SourceObject.NearlyCompleteCopyrightMatch ?? false,
                 NumberOfQualities = SourceObject.NumberOfQualities ?? 0,
-                VideoDuration = SourceObject.VideoDuration ?? 0
+                VideoDuration = SourceObject.VideoDuration ?? 0,
+                HasViewerSaved = SourceObject.HasViewerSaved
             };
             if (!string.IsNullOrEmpty(SourceObject.TakenAtUnixLike))
                 media.TakenAt = DateTimeHelper.UnixTimestampToDateTime(SourceObject.TakenAtUnixLike);
