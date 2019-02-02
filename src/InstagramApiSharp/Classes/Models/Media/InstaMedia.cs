@@ -85,6 +85,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public bool CanViewerSave { get; set; }
 
+        private bool _hasviewersaved;
+        public bool HasViewerSaved { get => _hasviewersaved; set { _hasviewersaved = value;PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("HasViewerSaved")); } }
 
         public string Title { get; set; }
 
