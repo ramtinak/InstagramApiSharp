@@ -2161,7 +2161,6 @@ namespace InstagramApiSharp.Helpers
             if (!Uri.TryCreate(BaseInstagramUri,
                 string.Format(InstaApiConstants.LOCATION_SECTION, locationId), out var instaUri))
                 throw new Exception("Cant create URI for get location section");
-            instaUri.PrintInDebug();
             return instaUri;
         }
 
@@ -2170,7 +2169,6 @@ namespace InstagramApiSharp.Helpers
             if (!Uri.TryCreate(BaseInstagramUri, 
                 InstaApiConstants.LOCATION_SEARCH, out var instaUri))
                 throw new Exception("Cant create URI for location search");
-            instaUri.PrintInDebug();
             return instaUri;
         }
     }
