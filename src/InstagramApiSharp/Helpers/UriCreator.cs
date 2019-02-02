@@ -2146,5 +2146,32 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetLocationFeedUri(string locationId, string maxId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.LOCATION_FEED, locationId), out var instaUri))
+                throw new Exception("Cant create URI for get location feed");
+
+            return instaUri
+                .AddQueryParameterIfNotEmpty("max_id", maxId);
+        }
+
+        public static Uri GetLocationSectionUri(string locationId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.LOCATION_SECTION, locationId), out var instaUri))
+                throw new Exception("Cant create URI for get location section");
+            instaUri.PrintInDebug();
+            return instaUri;
+        }
+
+        public static Uri GetLocationSearchUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, 
+                InstaApiConstants.LOCATION_SEARCH, out var instaUri))
+                throw new Exception("Cant create URI for location search");
+            instaUri.PrintInDebug();
+            return instaUri;
+        }
     }
 }

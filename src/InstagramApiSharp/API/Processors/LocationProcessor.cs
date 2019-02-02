@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using InstagramApiSharp.API.UriCreators;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Classes.Models;
@@ -13,6 +12,7 @@ using InstagramApiSharp.Converters;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -22,12 +22,10 @@ namespace InstagramApiSharp.API.Processors
     internal class LocationProcessor : ILocationProcessor
     {
         private readonly AndroidDevice _deviceInfo;
-        private readonly IUriCreatorNextId _getFeedUriCreator = new GetLocationFeedUriCreator();
         private readonly HttpHelper _httpHelper;
         private readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly InstaApi _instaApi;
         private readonly IInstaLogger _logger;
-        private readonly IUriCreator _searchLocationUriCreator = new SearchLocationUriCreator();
         private readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
         public LocationProcessor(AndroidDevice deviceInfo, UserSessionData user,
@@ -56,8 +54,8 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var uri = _getFeedUriCreator.GetUri(locationId, paginationParameters.NextMaxId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+                var uri = UriCreator.GetLocationFeedUri(locationId.ToString(), paginationParameters.NextMaxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, uri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -149,7 +147,7 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var uri = _searchLocationUriCreator.GetUri();
+                var uri = UriCreator.GetLocationSearchUri();
 
                 var fields = new Dictionary<string, string>
                 {
