@@ -7,17 +7,17 @@
  * IRANIAN DEVELOPERS
  */
 
-using System.Collections.Generic;
-
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaFriendshipShortStatusList : List<InstaFriendshipShortStatus> { }
-
-    public class InstaFriendshipShortStatus
+    public class InstaFriendshipFullStatus
     {
-        public long Pk { get; set; }
-
         public bool Following { get; set; }
+
+        public bool FollowedBy { get; set; }
+
+        public bool Blocking { get; set; }
+
+        public bool Muting { get; set; }
 
         public bool IsPrivate { get; set; }
 

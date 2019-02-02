@@ -7,6 +7,7 @@
  * IRANIAN DEVELOPERS
  */
 
+using InstagramApiSharp.Classes.ResponseWrappers;
 using System;
 using System.Collections.Generic;
 
@@ -29,7 +30,7 @@ namespace InstagramApiSharp.Classes.Models
     {
         public InstaFullUserInfoUserStoryReel Reel { get; set; }
 
-        public InstaBroadcastSuggestedResponse Broadcast { get; set; }
+        public InstaBroadcastList Broadcast { get; set; }
     }
 
     public class InstaFullUserInfoUserFeed

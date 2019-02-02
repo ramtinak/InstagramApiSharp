@@ -7,17 +7,16 @@
  * IRANIAN DEVELOPERS
  */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-
-    public class InstaBroadcastStartResponse
+    public class InstaBroadcastSuggestedResponse
     {
-        [JsonProperty("media_id")]
-        public string MediaId { get; set; }
-
+        [JsonProperty("broadcasts")]
+        public List<InstaBroadcastResponse> Broadcasts { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
     }
-
 }

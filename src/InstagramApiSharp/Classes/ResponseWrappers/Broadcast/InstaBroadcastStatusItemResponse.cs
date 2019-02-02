@@ -7,19 +7,10 @@
  * IRANIAN DEVELOPERS
  */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    public class InstaBroadcastTopLiveStatusResponse
-    {
-        [JsonProperty("broadcast_status_items")]
-        public List<InstaBroadcastStatusItem> BroadcastStatusItems { get; set; }
-        [JsonProperty("status")]
-        public string Status { get; set; }
-    }
-
-    public class InstaBroadcastStatusItem
+    public class InstaBroadcastStatusItemResponse
     {
         [JsonProperty("id")]
         public long Id { get; set; }
@@ -32,5 +23,4 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("cover_frame_url")]
         public string CoverFrameUrl { get; set; }
     }
-
 }

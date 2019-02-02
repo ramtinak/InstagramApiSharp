@@ -8,23 +8,24 @@
  */
 
 using System;
+
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaBroadcast
+    public class InstaBroadcastInfo
     {
-        public string Id { get; set; }
-
-        public string RtmpPlaybackUrl { get; set; }
-
-        public string DashPlaybackUrl { get; set; }
-
-        public string DashAbrPlaybackUrl { get; set; }
+        public long Id { get; set; }
 
         public string BroadcastStatus { get; set; }
 
-        public long ViewerCount { get; set; }
+        public string DashManifest { get; set; }
+
+        public DateTime ExpireAt { get; set; }
+
+        public string EncodingTag { get; set; }
 
         public bool InternalOnly { get; set; }
+
+        public int NumberOfQualities { get; set; }
 
         public string CoverFrameUrl { get; set; }
 
@@ -37,5 +38,7 @@ namespace InstagramApiSharp.Classes.Models
         public string BroadcastMessage { get; set; }
 
         public string OrganicTrackingToken { get; set; }
+
+        public int TotalUniqueViewerCount { get; set; }
     }
 }

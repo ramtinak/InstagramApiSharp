@@ -8,6 +8,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("ranked_position")] public int RankedPosition { get; set; }
 
         [JsonProperty("broadcast_owners")]
-        public List<InstaUserShortResponse> BroadcastOwners { get; set; } = new List<InstaUserShortResponse>();
+        public List<InstaUserShortFriendshipFullResponse> BroadcastOwners { get; set; } = new List<InstaUserShortFriendshipFullResponse>();
     }
 }

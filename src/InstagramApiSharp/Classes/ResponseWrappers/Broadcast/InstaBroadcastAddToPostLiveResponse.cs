@@ -8,20 +8,20 @@
  */
 
 using System.Collections.Generic;
-using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaBroadcastAddToPostLiveResponse
     {
         [JsonProperty("pk")]
         public string Pk { get; set; }
         [JsonProperty("user")]
-        public InstaBroadcastUser User { get; set; }
+        public InstaUserShortFriendshipFullResponse User { get; set; }
         [JsonProperty("broadcasts")]
-        public List<InstaBroadcast> Broadcasts { get; set; }
+        public List<InstaBroadcastResponse> Broadcasts { get; set; } = new List<InstaBroadcastResponse>();
         [JsonProperty("last_seen_broadcast_ts")]
-        public int LastSeenBroadcastTs { get; set; }
+        public double? LastSeenBroadcastTs { get; set; }
         [JsonProperty("can_reply")]
         public bool CanReply { get; set; }
         [JsonProperty("status")]

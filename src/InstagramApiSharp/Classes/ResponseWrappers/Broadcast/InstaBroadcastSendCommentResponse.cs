@@ -6,27 +6,16 @@
  * 
  * IRANIAN DEVELOPERS
  */
-using InstagramApiSharp.Classes.Models;
+
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-
-    public class BroadcastSendCommentResponse
-    {
-        [JsonProperty("comment")]
-        public InstaBroadcastSendComment Comment { get; set; }
-        [JsonProperty("status")]
-        public string Status { get; set; }
-        [JsonProperty("message")]
-        public string Message { get; set; }
-    }
-
-    public class InstaBroadcastSendComment
+    public class InstaBroadcastSendCommentResponse
     {
         [JsonProperty("content_type")]
         public string ContentType { get; set; }
         [JsonProperty("user")]
-        public InstaBroadcastUser User { get; set; }
+        public InstaUserShortFriendshipFullResponse User { get; set; }
         [JsonProperty("pk")]
         public long Pk { get; set; }
         [JsonProperty("text")]
@@ -34,15 +23,12 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("type")]
         public int Type { get; set; }
         [JsonProperty("created_at")]
-        public float CreatedAt { get; set; }
+        public long? CreatedAt { get; set; }
         [JsonProperty("created_at_utc")]
-        public int CreatedAtUtc { get; set; }
+        public long? CreatedAtUtc { get; set; }
         [JsonProperty("media_id")]
         public long MediaId { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
     }
-
-
-
 }

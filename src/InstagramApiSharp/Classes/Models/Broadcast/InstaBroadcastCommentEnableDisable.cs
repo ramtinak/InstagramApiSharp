@@ -7,9 +7,10 @@
  * IRANIAN DEVELOPERS
  */
 
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaBroadcastInfoResponse: InstaBroadcastInfo
+    public class InstaBroadcastCommentEnableDisable
     {
+        public int CommentMuted { get; set; }
     }
 }

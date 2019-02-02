@@ -8,7 +8,8 @@
  */
 
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaBroadcastLikeResponse
     {
@@ -19,7 +20,6 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("status")]
         public string Status { get; set; }
         [JsonProperty("like_ts")]
-        public string LikeTs { get; set; }
+        public long? LikeTs { get; set; }
     }
-
 }

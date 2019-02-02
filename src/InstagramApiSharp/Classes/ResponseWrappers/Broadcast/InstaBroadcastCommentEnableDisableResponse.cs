@@ -8,9 +8,9 @@
  */
 
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
-{
 
+namespace InstagramApiSharp.Classes.ResponseWrappers
+{
     public class InstaBroadcastCommentEnableDisableResponse
     {
         [JsonProperty("comment_muted")]
@@ -18,5 +18,4 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("status")]
         public string Status { get; set; }
     }
-
 }

@@ -100,7 +100,8 @@ namespace InstagramApiSharp.Converters
                 {
                     try
                     {
-                        fullUserInfo.UserStory.Broadcast = SourceObject.UserStory.Broadcast;
+                        fullUserInfo.UserStory.Broadcast = ConvertersFabric.Instance
+                            .GetBroadcastListConverter(SourceObject.UserStory.Broadcast?.Broadcasts).Convert();
                     }
                     catch { }
                 }

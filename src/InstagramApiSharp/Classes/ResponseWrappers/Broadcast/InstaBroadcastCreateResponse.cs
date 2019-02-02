@@ -8,7 +8,7 @@
  */
 
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaBroadcastCreateResponse
     {
@@ -75,5 +75,4 @@ namespace InstagramApiSharp.Classes
         [JsonProperty("status")]
         public string Status { get; set; }
     }
-
 }

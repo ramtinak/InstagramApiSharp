@@ -8,14 +8,13 @@
  */
 
 using System.Collections.Generic;
-using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    public class InstaBroadcastSuggestedResponse
+    public class InstaBroadcastTopLiveStatusResponse
     {
-        [JsonProperty("broadcasts")]
-        public List<InstaBroadcast> Broadcasts { get; set; }
+        [JsonProperty("broadcast_status_items")]
+        public List<InstaBroadcastStatusItemResponse> BroadcastStatusItems { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
     }

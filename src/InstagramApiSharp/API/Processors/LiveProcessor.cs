@@ -17,6 +17,7 @@ using InstagramApiSharp.Helpers;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.Net;
+using System.Linq;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Converters;
@@ -51,11 +52,10 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
-        /// Add an broadcast to post live.
+        ///     Add an broadcast to post live.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastAddToPostLiveResponse>> AddToPostLiveAsync(string broadcastId)
+        public async Task<IResult<InstaBroadcastAddToPostLive>> AddToPostLiveAsync(string broadcastId)
         {
             try
             {
@@ -71,28 +71,29 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastAddToPostLiveResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastAddToPostLive>(response, json);
+
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastAddToPostLiveResponse>(json);
-                return Result.Success(obj);
+
+                return Result.Success(ConvertersFabric.Instance.GetAddToPostLiveConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastAddToPostLiveResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastAddToPostLive), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastAddToPostLiveResponse>(exception);
+                return Result.Fail<InstaBroadcastAddToPostLive>(exception);
             }
         }
 
         /// <summary>
-        /// Post a new comment to broadcast.
+        ///     Post a new comment to broadcast.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="commentText">Comment text</param>
-        /// <returns></returns>
         public async Task<IResult<InstaComment>> CommentAsync(string broadcastId, string commentText)
         {
             try
@@ -135,13 +136,12 @@ namespace InstagramApiSharp.API.Processors
 
         // create, start, end broadcast
         /// <summary>
-        /// Create live broadcast. After create an live broadcast you must call StartAsync.
+        ///     Create live broadcast. After create an live broadcast you must call StartAsync.
         /// </summary>
         /// <param name="previewWidth">Preview width</param>
         /// <param name="previewHeight">Preview height</param>
         /// <param name="broadcastMessage">Broadcast start message</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastCreateResponse>> CreateAsync(int previewWidth = 720, int previewHeight = 1184, string broadcastMessage = "")
+        public async Task<IResult<InstaBroadcastCreate>> CreateAsync(int previewWidth = 720, int previewHeight = 1184, string broadcastMessage = "")
         {
             try
             {
@@ -161,27 +161,27 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastCreateResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastCreate>(response, json);
+
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastCreateResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastCreateConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastCreateResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastCreate), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastCreateResponse>(exception);
+                return Result.Fail<InstaBroadcastCreate>(exception);
             }
         }
 
         /// <summary>
-        /// Delete an broadcast from post live.
+        ///     Delete an broadcast from post live.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
-        /// <returns></returns>
         public async Task<IResult<bool>> DeletePostLiveAsync(string broadcastId)
         {
             try
@@ -215,11 +215,10 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
-        /// Disable broadcast comments.
+        ///     Disable broadcast comments.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastCommentEnableDisableResponse>> DisableCommentsAsync(string broadcastId)
+        public async Task<IResult<InstaBroadcastCommentEnableDisable>> DisableCommentsAsync(string broadcastId)
         {
             try
             {
@@ -235,28 +234,27 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastCommentEnableDisableResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastCommentEnableDisable>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastCommentEnableDisableResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastCommentEnableDisableConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastCommentEnableDisableResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastCommentEnableDisable), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastCommentEnableDisableResponse>(exception);
+                return Result.Fail<InstaBroadcastCommentEnableDisable>(exception);
             }
         }
 
         /// <summary>
-        /// Enable broadcast comments.
+        ///     Enable broadcast comments.
         /// </summary>
         /// <param name="broadcastId"></param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastCommentEnableDisableResponse>> EnableCommentsAsync(string broadcastId)
+        public async Task<IResult<InstaBroadcastCommentEnableDisable>> EnableCommentsAsync(string broadcastId)
         {
             try
             {
@@ -272,28 +270,27 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastCommentEnableDisableResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastCommentEnableDisable>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastCommentEnableDisableResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastCommentEnableDisableConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastCommentEnableDisableResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastCommentEnableDisable), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastCommentEnableDisableResponse>(exception);
+                return Result.Fail<InstaBroadcastCommentEnableDisable>(exception);
             }
         }
 
         /// <summary>
-        /// End live broadcast
+        ///     End live broadcast
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="endAfterCopyrightWarning">Copyright warning</param>
-        /// <returns></returns>
         public async Task<IResult<bool>> EndAsync(string broadcastId, bool endAfterCopyrightWarning = false)
         {
             try
@@ -327,13 +324,12 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
-        /// Get broadcast comments.
+        ///     Get broadcast comments.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="lastCommentTs">Last comment time stamp</param>
         /// <param name="commentsRequested">Comments requested count</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastCommentResponse>> GetCommentsAsync(string broadcastId, string lastCommentTs = "", int commentsRequested = 4)
+        public async Task<IResult<InstaBroadcastCommentList>> GetCommentsAsync(string broadcastId, string lastCommentTs = "", int commentsRequested = 4)
         {
             try
             {
@@ -342,27 +338,26 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastCommentResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaBroadcastCommentResponse>(json);
-                return Result.Success(obj);
+                    return Result.UnExpectedResponse<InstaBroadcastCommentList>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaBroadcastCommentListResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastCommentListConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastCommentResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastCommentList), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastCommentResponse>(exception);
+                return Result.Fail<InstaBroadcastCommentList>(exception);
             }
         }
 
         /// <summary>
-        /// Get discover top live.
+        ///     Get discover top live.
         /// </summary>
-        /// <returns></returns>
-        public async Task<IResult<InstaDiscoverTopLiveResponse>> GetDiscoverTopLiveAsync()
+        public async Task<IResult<InstaDiscoverTopLive>> GetDiscoverTopLiveAsync()
         {
             try
             {
@@ -371,29 +366,29 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaDiscoverTopLiveResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaDiscoverTopLive>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaDiscoverTopLiveResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetDiscoverTopLiveConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaDiscoverTopLiveResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaDiscoverTopLive), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDiscoverTopLiveResponse>(exception);
+                return Result.Fail<InstaDiscoverTopLive>(exception);
             }
         }
 
         /// <summary>
-        /// Get final viewer list.
+        ///     Get final viewer list.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastFinalViewerListResponse>> GetFinalViewerListAsync(string broadcastId)
+        public async Task<IResult<InstaUserShortList>> GetFinalViewerListAsync(string broadcastId)
         {
+            var viewers = new InstaUserShortList();
             try
             {
                 var instaUri = UriCreator.GetLiveFinalViewerListUri(broadcastId);
@@ -401,28 +396,31 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastFinalViewerListResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaBroadcastFinalViewerListResponse>(json);
-                return Result.Success(obj);
+                    return Result.UnExpectedResponse<InstaUserShortList>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaUserListShortResponse>(json);
+                viewers.AddRange(
+                   obj.Items?.Select(ConvertersFabric.Instance.GetUserShortConverter)
+                       .Select(converter => converter.Convert()));
+
+                return Result.Success(viewers);
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastFinalViewerListResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, viewers, ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastFinalViewerListResponse>(exception);
+                return Result.Fail(exception, viewers);
             }
         }
 
         /// <summary>
-        /// Get heart beat and viewer count.
+        ///     Get heart beat and viewer count.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastLiveHeartBeatViewerCountResponse>> GetHeartBeatAndViewerCountAsync(string broadcastId)
+        public async Task<IResult<InstaBroadcastLiveHeartBeatViewerCount>> GetHeartBeatAndViewerCountAsync(string broadcastId)
         {
             try
             {
@@ -439,27 +437,26 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastLiveHeartBeatViewerCountResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastLiveHeartBeatViewerCount>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastLiveHeartBeatViewerCountResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastLiveHeartBeatViewerCountConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastLiveHeartBeatViewerCountResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastLiveHeartBeatViewerCount), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastLiveHeartBeatViewerCountResponse>(exception);
+                return Result.Fail<InstaBroadcastLiveHeartBeatViewerCount>(exception);
             }
         }
         /// <summary>
-        /// Get broadcast information.
+        ///     Get broadcast information.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastInfoResponse>> GetInfoAsync(string broadcastId)
+        public async Task<IResult<InstaBroadcastInfo>> GetInfoAsync(string broadcastId)
         {
             try
             {
@@ -468,19 +465,19 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastInfoResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastInfo>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastInfoResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastInfoConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastInfoResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastInfo), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastInfoResponse>(exception);
+                return Result.Fail<InstaBroadcastInfo>(exception);
             }
         }
 
@@ -488,8 +485,9 @@ namespace InstagramApiSharp.API.Processors
         ///     Get join requests to current live broadcast
         /// </summary>
         /// <param name="broadcastId">Broadcast</param>
-        public async Task<IResult<InstaBroadcastFinalViewerListResponse>> GetJoinRequestsAsync(string broadcastId)
+        public async Task<IResult<InstaUserShortList>> GetJoinRequestsAsync(string broadcastId)
         {
+            var viewers = new InstaUserShortList();
             try
             {
                 var instaUri = UriCreator.GetBroadcastJoinRequestsUri(broadcastId);
@@ -497,29 +495,31 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastFinalViewerListResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaBroadcastFinalViewerListResponse>(json);
-                return Result.Success(obj);
+                    return Result.UnExpectedResponse<InstaUserShortList>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaUserListShortResponse>(json);
+                viewers.AddRange(
+                   obj.Items?.Select(ConvertersFabric.Instance.GetUserShortConverter)
+                       .Select(converter => converter.Convert()));
+                return Result.Success(viewers);
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastFinalViewerListResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, viewers, ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastFinalViewerListResponse>(exception);
+                return Result.Fail(exception, viewers);
             }
         }
 
         /// <summary>
-        /// Get broadcast like count.
+        ///     Get broadcast like count.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="likeTs">Like time stamp</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastLikeResponse>> GetLikeCountAsync(string broadcastId, int likeTs = 0)
+        public async Task<IResult<InstaBroadcastLike>> GetLikeCountAsync(string broadcastId, int likeTs = 0)
         {
             try
             {
@@ -528,19 +528,19 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastLikeResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastLike>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastLikeResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastLikeConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastLikeResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastLike), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastLikeResponse>(exception);
+                return Result.Fail<InstaBroadcastLike>(exception);
             }
         }
 
@@ -558,8 +558,8 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastViewerListResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaBroadCastNotifyFriendsResponse>(json);
+                    return Result.UnExpectedResponse<object>(response, json);
+                var obj = JsonConvert.DeserializeObject<object>(json);
                 return Result.Success(json);
             }
             catch (HttpRequestException httpException)
@@ -587,8 +587,8 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastViewerListResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaBroadCastNotifyFriendsResponse>(json);
+                    return Result.UnExpectedResponse<object>(response, json);
+                var obj = JsonConvert.DeserializeObject<object>(json);
                 return Result.Success(json);
             }
             catch (HttpRequestException httpException)
@@ -604,13 +604,13 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
-        /// Get post live viewer list.
+        ///     Get post live viewer list.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="maxId">Max id</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastViewerListResponse>> GetPostLiveViewerListAsync(string broadcastId, int? maxId = null)
+        public async Task<IResult<InstaUserShortList>> GetPostLiveViewerListAsync(string broadcastId, int? maxId = null)
         {
+            var viewers = new InstaUserShortList();
             try
             {
                 var instaUri = UriCreator.GetPostLiveViewersListUri(broadcastId);
@@ -618,27 +618,29 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastViewerListResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaBroadcastViewerListResponse>(json);
-                return Result.Success(obj);
+                    return Result.UnExpectedResponse<InstaUserShortList>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaUserListShortResponse>(json);
+                viewers.AddRange(
+                    obj.Items?.Select(ConvertersFabric.Instance.GetUserShortConverter)
+                    .Select(converter => converter.Convert()));
+                return Result.Success(viewers);
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastViewerListResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, viewers, ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastViewerListResponse>(exception);
+                return Result.Fail(exception, viewers);
             }
         }
 
         /// <summary>
-        /// Get suggested broadcasts
+        ///     Get suggested broadcasts
         /// </summary>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastSuggestedResponse>> GetSuggestedBroadcastsAsync()
+        public async Task<IResult<InstaBroadcastList>> GetSuggestedBroadcastsAsync()
         {
             try
             {
@@ -647,30 +649,30 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastSuggestedResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastList>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastSuggestedResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastListConverter(obj?.Broadcasts).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastSuggestedResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastList), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastSuggestedResponse>(exception);
+                return Result.Fail<InstaBroadcastList>(exception);
             }
         }
+
         /// <summary>
-        /// Get top live status.
+        ///     Get top live status.
         /// </summary>
         /// <param name="broadcastIds">Broadcast ids</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastTopLiveStatusResponse>> GetTopLiveStatusAsync(params string[] broadcastIds)
+        public async Task<IResult<InstaBroadcastTopLiveStatusList>> GetTopLiveStatusAsync(params string[] broadcastIds)
         {
             if(broadcastIds == null)
-                return Result.Fail<InstaBroadcastTopLiveStatusResponse>("broadcast ids must be set");
+                return Result.Fail<InstaBroadcastTopLiveStatusList>("broadcast ids must be set");
             try
             {
                 var instaUri = UriCreator.GetDiscoverTopLiveStatusUri();
@@ -683,28 +685,29 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastTopLiveStatusResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastTopLiveStatusList>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastTopLiveStatusResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastTopLiveStatusListConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastTopLiveStatusResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastTopLiveStatusList), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastTopLiveStatusResponse>(exception);
+                return Result.Fail<InstaBroadcastTopLiveStatusList>(exception);
             }
         }
+        
         /// <summary>
-        /// Get broadcast viewer list.
+        ///     Get broadcast viewer list.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastViewerListResponse>> GetViewerListAsync(string broadcastId)
+        public async Task<IResult<InstaUserShortList>> GetViewerListAsync(string broadcastId)
         {
+            var viewers = new InstaUserShortList();
             try
             {
                 var instaUri = UriCreator.GetBroadcastViewerListUri(broadcastId);
@@ -712,28 +715,31 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastViewerListResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaBroadcastViewerListResponse>(json);
-                return Result.Success(obj);
+                    return Result.UnExpectedResponse<InstaUserShortList>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaUserListShortResponse>(json);
+                viewers.AddRange(
+                    obj.Items?.Select(ConvertersFabric.Instance.GetUserShortConverter)
+                    .Select(converter => converter.Convert()));
+                return Result.Success(viewers);
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastViewerListResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, viewers, ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastViewerListResponse>(exception);
+                return Result.Fail(exception, viewers);
             }
         }
+        
         /// <summary>
-        /// Like broadcast.
+        ///     Like broadcast.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="likeCount">Like count (from 1 to 6)</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastLikeResponse>> LikeAsync(string broadcastId, int likeCount = 1)
+        public async Task<IResult<InstaBroadcastLike>> LikeAsync(string broadcastId, int likeCount = 1)
         {
             try
             {
@@ -750,19 +756,19 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastLikeResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastLike>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastLikeResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastLikeConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastLikeResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastLike), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastLikeResponse>(exception);
+                return Result.Fail<InstaBroadcastLike>(exception);
             }
         }
 
@@ -779,29 +785,28 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastViewerListResponse>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaBroadCastNotifyFriendsResponse>(json);
+                    return Result.UnExpectedResponse<object>(response, json);
+                var obj = JsonConvert.DeserializeObject<object>(json);
                 return Result.Success(obj);
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadCastNotifyFriendsResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(object), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadCastNotifyFriendsResponse>(exception);
+                return Result.Fail<object>(exception);
             }
         }
 
         /// <summary>
-        /// Pin comment from broadcast.
+        ///     Pin comment from broadcast.
         /// </summary>
         /// <param name="broadcastId"></param>
         /// <param name="commentId"></param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastPinUnpinResponse>> PinCommentAsync(string broadcastId, string commentId)
+        public async Task<IResult<InstaBroadcastPinUnpin>> PinCommentAsync(string broadcastId, string commentId)
         {
             try
             {
@@ -819,19 +824,19 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastPinUnpinResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastPinUnpin>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastPinUnpinResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastPinUnpinConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastPinUnpinResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastPinUnpin), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastPinUnpinResponse>(exception);
+                return Result.Fail<InstaBroadcastPinUnpin>(exception);
             }
         }
         /// <summary>
@@ -863,7 +868,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastViewerListResponse>(response, json);
+                    return Result.UnExpectedResponse<object>(response, json);
                 return Result.Success(json);
             }
             catch (HttpRequestException httpException)
@@ -880,12 +885,11 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
-        /// Start live broadcast. NOTE: YOU MUST CREATE AN BROADCAST FIRST(CreateAsync) AND THEN CALL THIS METHOD. 
+        ///     Start live broadcast. NOTE: YOU MUST CREATE AN BROADCAST FIRST(CreateAsync) AND THEN CALL THIS METHOD. 
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
         /// <param name="sendNotifications">Send notifications</param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastStartResponse>> StartAsync(string broadcastId, bool sendNotifications)
+        public async Task<IResult<InstaBroadcastStart>> StartAsync(string broadcastId, bool sendNotifications)
         {
             try
             {
@@ -902,18 +906,18 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastStartResponse>(json);
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastStartResponse>(response, json);
-                return Result.Success(obj);
+                    return Result.UnExpectedResponse<InstaBroadcastStart>(response, json);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastStartConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastStartResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastStart), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastStartResponse>(exception);
+                return Result.Fail<InstaBroadcastStart>(exception);
             }
         }
 
@@ -991,12 +995,11 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
-        /// Unpin comment from broadcast.
+        ///     Unpin comment from broadcast.
         /// </summary>
         /// <param name="broadcastId"></param>
         /// <param name="commentId"></param>
-        /// <returns></returns>
-        public async Task<IResult<InstaBroadcastPinUnpinResponse>> UnPinCommentAsync(string broadcastId, string commentId)
+        public async Task<IResult<InstaBroadcastPinUnpin>> UnPinCommentAsync(string broadcastId, string commentId)
         {
             try
             {
@@ -1014,19 +1017,19 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastPinUnpinResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaBroadcastPinUnpin>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastPinUnpinResponse>(json);
-                return Result.Success(obj);
+                return Result.Success(ConvertersFabric.Instance.GetBroadcastPinUnpinConverter(obj).Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastPinUnpinResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaBroadcastPinUnpin), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastPinUnpinResponse>(exception);
+                return Result.Fail<InstaBroadcastPinUnpin>(exception);
             }
         }
     }

@@ -435,7 +435,7 @@ namespace InstagramApiSharp.API
 
         public const string LOCATIONS_INFO = API_SUFFIX + "/locations/{0}/info/";
         /// <summary>
-        /// {0} => external id
+        /// {0} => external id, NOT WORKING
         /// </summary>
         public const string LOCATIONS_RELEATED = API_SUFFIX + "/locations/{0}/related/";
 

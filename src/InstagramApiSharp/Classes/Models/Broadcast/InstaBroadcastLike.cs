@@ -7,16 +7,16 @@
  * IRANIAN DEVELOPERS
  */
 
-using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+using System;
+
+namespace InstagramApiSharp.Classes.Models
 {
-
-    public class InstaBroadcastPinUnpinResponse
+    public class InstaBroadcastLike
     {
-        [JsonProperty("comment_id")]
-        public long CommentId { get; set; }
-        [JsonProperty("status")]
-        public string Status { get; set; }
-    }
+        public int Likes { get; set; }
 
+        public int BurstLikes { get; set; }
+
+        public DateTime LikeTime { get; set; }
+    }
 }

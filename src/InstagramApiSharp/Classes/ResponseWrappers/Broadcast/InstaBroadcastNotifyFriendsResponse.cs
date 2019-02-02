@@ -8,16 +8,18 @@
  */
 
 using Newtonsoft.Json;
-namespace InstagramApiSharp.Classes
+using System.Collections.Generic;
+
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    public class InstaBroadCastNotifyFriendsResponse
+    public class InstaBroadcastNotifyFriendsResponse
     {
         [JsonProperty("text")]
         public string Text { get; set; }
         [JsonProperty("friends")]
-        public object[] Friends { get; set; }
+        public List<InstaUserShortFriendshipFullResponse> Friends { get; set; }
         [JsonProperty("online_friends_count")]
-        public int OnlineFriendsCount { get; set; }
+        public int? OnlineFriendsCount { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
     }

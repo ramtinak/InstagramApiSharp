@@ -6,6 +6,6 @@ namespace InstagramApiSharp.Classes.Models
     {
         public int RankedPosition { get; set; }
 
-        public List<InstaUserShort> BroadcastOwners { get; set; } = new List<InstaUserShort>();
+        public List<InstaUserShortFriendshipFull> BroadcastOwners { get; set; } = new List<InstaUserShortFriendshipFull>();
     }
 }
