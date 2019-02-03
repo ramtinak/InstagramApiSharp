@@ -357,28 +357,55 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get discover top live.
         /// </summary>
-        public async Task<IResult<InstaDiscoverTopLive>> GetDiscoverTopLiveAsync()
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaDiscoverTopLive>> GetDiscoverTopLiveAsync(PaginationParameters paginationParameters)
         {
+            var topLive = new InstaDiscoverTopLive();
             try
             {
-                var instaUri = UriCreator.GetDiscoverTopLiveUri();
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaDiscoverTopLive>(response, json);
-                var obj = JsonConvert.DeserializeObject<InstaDiscoverTopLiveResponse>(json);
-                return Result.Success(ConvertersFabric.Instance.GetDiscoverTopLiveConverter(obj).Convert());
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+                InstaDiscoverTopLive Convert(InstaDiscoverTopLiveResponse instaDiscoverTop)
+                {
+                    return ConvertersFabric.Instance.GetDiscoverTopLiveConverter(instaDiscoverTop).Convert();
+                }
+
+                var topLiveResult = await GetDiscoverTopLive(paginationParameters.NextMaxId);
+                if (!topLiveResult.Succeeded)
+                    return Result.Fail(topLiveResult.Info, topLive);
+                var topLiveResponse = topLiveResult.Value;
+                topLive = Convert(topLiveResponse);
+                topLive.NextMaxId = paginationParameters.NextMaxId = topLiveResponse.NextMaxId;
+                paginationParameters.PagesLoaded++;
+
+                while (topLiveResponse.MoreAvailable
+                      && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                      && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    paginationParameters.PagesLoaded++;
+                    var nextTop = await GetDiscoverTopLive(paginationParameters.NextMaxId);
+                    if (!nextTop.Succeeded)
+                        return Result.Fail(nextTop.Info, topLive);
+
+                    var convertedTopLive = Convert(nextTop.Value);
+                    topLive.NextMaxId = paginationParameters.NextMaxId = nextTop.Value.NextMaxId;
+                    topLive.MoreAvailable = topLiveResponse.MoreAvailable = nextTop.Value.MoreAvailable;
+                    topLive.AutoLoadMoreEnabled = nextTop.Value.AutoLoadMoreEnabled;
+                    topLive.Broadcasts.AddRange(convertedTopLive.Broadcasts);
+                    topLive.PostLiveBroadcasts.AddRange(convertedTopLive.PostLiveBroadcasts);
+                    paginationParameters.PagesLoaded++;
+                }
+                return Result.Success(topLive);
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaDiscoverTopLive), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, topLive, ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaDiscoverTopLive>(exception);
+                return Result.Fail(exception, topLive);
             }
         }
 
@@ -1030,6 +1057,31 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaBroadcastPinUnpin>(exception);
+            }
+        }
+
+        private async Task<IResult<InstaDiscoverTopLiveResponse>> GetDiscoverTopLive(string maxId)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetDiscoverTopLiveUri(maxId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaDiscoverTopLiveResponse>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDiscoverTopLiveResponse>(json);
+                return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaDiscoverTopLiveResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaDiscoverTopLiveResponse>(exception);
             }
         }
     }

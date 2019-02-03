@@ -75,7 +75,8 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Get discover top live.
         /// </summary>
-        Task<IResult<InstaDiscoverTopLive>> GetDiscoverTopLiveAsync();
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        Task<IResult<InstaDiscoverTopLive>> GetDiscoverTopLiveAsync(PaginationParameters paginationParameters);
 
         /// <summary>
         ///     Get final viewer list.

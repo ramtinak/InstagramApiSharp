@@ -604,11 +604,11 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetDiscoverTopLiveUri()
+        public static Uri GetDiscoverTopLiveUri(string maxId)
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DISCOVER_TOP_LIVE, out var instaUri))
                 throw new Exception("Cant create URI for discover top live");
-            return instaUri;
+            return instaUri.AddQueryParameterIfNotEmpty("max_id", maxId);
         }
 
         public static Uri GetEditCollectionUri(long collectionId)
