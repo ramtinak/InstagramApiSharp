@@ -903,6 +903,7 @@ namespace InstagramApiSharp.API
         ///     BadPassword --> Password is wrong
         ///     InvalidUser --> User/phone number is wrong
         ///     Exception --> Something wrong happened
+        ///     ChallengeRequired --> You need to pass Instagram challenge
         /// </returns>
         public async Task<IResult<InstaLoginResult>> LoginAsync(bool isNewLogin = true)
         {
@@ -1753,6 +1754,14 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="fbAccessToken">Facebook access token</param>
         /// <param name="cookiesContainer">Cookies</param>
+        /// <returns>
+        ///     Success --> is succeed
+        ///     TwoFactorRequired --> requires 2FA login.
+        ///     BadPassword --> Password is wrong
+        ///     InvalidUser --> User/phone number is wrong
+        ///     Exception --> Something wrong happened
+        ///     ChallengeRequired --> You need to pass Instagram challenge
+        /// </returns>
         public async Task<IResult<InstaLoginResult>> LoginWithFacebookAsync(string fbAccessToken, string cookiesContainer)
         {
             try

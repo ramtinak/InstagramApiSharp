@@ -367,7 +367,7 @@ namespace InstagramApiSharp.API
         /// <param name="email">Email</param>
         /// <param name="firstName">First name (optional)</param>
         /// <param name="delay">Delay between requests. null = 2.5 seconds</param>
-        Task<IResult<InstaAccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName = ""/*, TimeSpan? delay = null*/);        
+        Task<IResult<InstaAccountCreation>> CreateNewAccountAsync(string username, string password, string email, string firstName = ""/*, TimeSpan? delay = null*/);
         /// <summary>
         ///     Login using given credentials asynchronously
         /// </summary>
@@ -378,6 +378,7 @@ namespace InstagramApiSharp.API
         ///     BadPassword --> Password is wrong
         ///     InvalidUser --> User/phone number is wrong
         ///     Exception --> Something wrong happened
+        ///     ChallengeRequired --> You need to pass Instagram challenge
         /// </returns>
         Task<IResult<InstaLoginResult>> LoginAsync(bool isNewLogin = true);
         /// <summary>
@@ -386,12 +387,20 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="cookies">Cookies</param>
         Task<IResult<bool>> LoginWithCookiesAsync(string cookies);
-        
+
         /// <summary>
         ///     Login with Facebook access token
         /// </summary>
         /// <param name="fbAccessToken">Facebook access token</param>
         /// <param name="cookiesContainer">Cookies</param>
+        /// <returns>
+        ///     Success --> is succeed
+        ///     TwoFactorRequired --> requires 2FA login.
+        ///     BadPassword --> Password is wrong
+        ///     InvalidUser --> User/phone number is wrong
+        ///     Exception --> Something wrong happened
+        ///     ChallengeRequired --> You need to pass Instagram challenge
+        /// </returns>
         Task<IResult<InstaLoginResult>> LoginWithFacebookAsync(string fbAccessToken, string cookiesContainer);
 
         /// <summary>
