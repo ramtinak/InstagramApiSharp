@@ -386,8 +386,14 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="cookies">Cookies</param>
         Task<IResult<bool>> LoginWithCookiesAsync(string cookies);
-
+        
+        /// <summary>
+        ///     Login with Facebook access token
+        /// </summary>
+        /// <param name="fbAccessToken">Facebook access token</param>
+        /// <param name="cookiesContainer">Cookies</param>
         Task<IResult<InstaLoginResult>> LoginWithFacebookAsync(string fbAccessToken, string cookiesContainer);
+
         /// <summary>
         ///     2-Factor Authentication Login using a verification code
         ///     Before call this method, please run LoginAsync first.

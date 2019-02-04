@@ -1748,6 +1748,11 @@ namespace InstagramApiSharp.API
         #region ORIGINAL FACEBOOK LOGIN
 
         string _facebookAccessToken = null;
+        /// <summary>
+        ///     Login with Facebook access token
+        /// </summary>
+        /// <param name="fbAccessToken">Facebook access token</param>
+        /// <param name="cookiesContainer">Cookies</param>
         public async Task<IResult<InstaLoginResult>> LoginWithFacebookAsync(string fbAccessToken, string cookiesContainer)
         {
             try
@@ -1841,6 +1846,11 @@ namespace InstagramApiSharp.API
                     _user.CsrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 }
                 return Result.Success(InstaLoginResult.Success);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, InstaLoginResult.Exception, ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
