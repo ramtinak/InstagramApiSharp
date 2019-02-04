@@ -33,7 +33,6 @@ namespace InstagramApiSharp.API
         public const string BASE_INSTAGRAM_API_URL = INSTAGRAM_URL + API_SUFFIX + "/";
         public const string COMMENT_BREADCRUMB_KEY = "iN4$aGr0m";
         public const string CSRFTOKEN = "csrftoken";
-        public const string FB_ACCESS_TOKEN = "EAABwzLixnjYBADcFesqNbHwRoDFmpBpEVZB2hcOAhMh1A3gGyxoW82CZBXKUEAYDAfNrA2Ntt4Pf21mXIT5Bv2CYIY3OhWJZCChIxAopXyOYQq4KkZBUsRL3deG7550cL9qiJaPEwlnK9pTQCWSUok5ZBZBNaUyW78eiQeTJCfBOQxYbjNG8CU";
         public const string HEADER_ACCEPT_ENCODING = "gzip, deflate, sdch";
         public const string HEADER_ACCEPT_LANGUAGE = "Accept-Language";
         public const string HEADER_COUNT = "count";

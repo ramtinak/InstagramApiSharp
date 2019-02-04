@@ -318,21 +318,6 @@ namespace InstagramApiSharp.API
         /// <param name="verifyCode">Verification code</param>
         Task<IResult<InstaLoginResult>> VerifyCodeForChallengeRequireAsync(string verifyCode);
         #endregion Challenge part
-
-        /// <summary>
-        ///     Set cookie and html document to verify login information.
-        /// </summary>
-        /// <param name="htmlDocument">Html document source</param>
-        /// <param name="cookies">Cookies from webview or webbrowser control</param>
-        /// <returns>True if logged in, False if not</returns>
-        Task<IResult<bool>> SetCookiesAndHtmlForFacebookLoginAsync(string htmlDocument, string cookies,bool validate = true);
-        /// <summary>
-        ///     Set cookie and web browser response object to verify login information.
-        /// </summary>
-        /// <param name="webBrowserResponse">Web browser response object</param>
-        /// <param name="cookies">Cookies from webview or webbrowser control</param>
-        /// <returns>True if logged in, False if not</returns>
-        Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaWebBrowserResponse webBrowserResponse, string cookies, bool validate = true);
         
         /// <summary>
         ///     Check email availability
@@ -401,6 +386,8 @@ namespace InstagramApiSharp.API
         /// </summary>
         /// <param name="cookies">Cookies</param>
         Task<IResult<bool>> LoginWithCookiesAsync(string cookies);
+
+        Task<IResult<InstaLoginResult>> LoginWithFacebookAsync(string fbAccessToken, string cookiesContainer);
         /// <summary>
         ///     2-Factor Authentication Login using a verification code
         ///     Before call this method, please run LoginAsync first.

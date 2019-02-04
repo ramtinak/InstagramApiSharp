@@ -1743,122 +1743,113 @@ namespace InstagramApiSharp.API
         }
         #endregion Challenge part
 
-        /// <summary>
-        ///     Set cookie and html document to verify login information.
-        /// </summary>
-        /// <param name="htmlDocument">Html document source</param>
-        /// <param name="cookies">Cookies from webview or webbrowser control</param>
-        /// <returns>True if logged in, False if not</returns>
-        public async Task<IResult<bool>> SetCookiesAndHtmlForFacebookLoginAsync(string htmlDocument, string cookie, bool facebookLogin = true)
-        {
-            if (!string.IsNullOrEmpty(cookie) && !string.IsNullOrEmpty(htmlDocument))
-            {
-                try
-                {
-                    var start = "<script type=\"text/javascript\">window._sharedData";
-                    var end = ";</script>";
-
-                    var str = htmlDocument.Substring(htmlDocument.IndexOf(start) + start.Length);
-                    str = str.Substring(0, str.IndexOf(end));
-                    str = str.Substring(str.IndexOf("=") + 2);
-                    var o = JsonConvert.DeserializeObject<InstaWebBrowserResponse>(str);
-                    return await SetCookiesAndHtmlForFacebookLogin(o, cookie, facebookLogin);
-                }
-                catch (Exception ex)
-                {
-                    return Result.Fail(ex.Message, false);
-                }
-            }
-            return Result.Fail("", false);
-        }
-        /// <summary>
-        ///     Set cookie and web browser response object to verify login information.
-        /// </summary>
-        /// <param name="webBrowserResponse">Web browser response object</param>
-        /// <param name="cookies">Cookies from webview or webbrowser control</param>
-        /// <returns>True if logged in, False if not</returns>
-        public async Task<IResult<bool>> SetCookiesAndHtmlForFacebookLogin(InstaWebBrowserResponse webBrowserResponse, string cookie, bool facebookLogin = true)
-        {
-            if (webBrowserResponse == null)
-                return Result.Fail("", false);
-            if (webBrowserResponse.Config == null)
-                return Result.Fail("", false);
-            if (webBrowserResponse.Config.Viewer == null)
-                return Result.Fail("", false);
-
-            if (!string.IsNullOrEmpty(cookie))
-            {
-                try
-                {
-                    var uri = new Uri(InstaApiConstants.INSTAGRAM_URL);
-                    //if (cookie.Contains("urlgen"))
-                    //{
-                    //    var removeStart = "urlgen=";
-                    //    var removeEnd = ";";
-                    //    var t = cookie.Substring(cookie.IndexOf(removeStart) + 0);
-                    //    t = t.Substring(0, t.IndexOf(removeEnd) + 2);
-                    //    cookie = cookie.Replace(t, "");
-                    //}
-                    cookie = cookie.Replace(';', ',');
-                    _httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(uri, cookie);
-
-                    var user = new InstaUserShort
-                    {
-                        Pk = long.Parse(webBrowserResponse.Config.Viewer.Id),
-                        UserName = _user.UserName,
-                        ProfilePictureId = "unknown",
-                        FullName = webBrowserResponse.Config.Viewer.FullName,
-                        ProfilePicture = webBrowserResponse.Config.Viewer.ProfilePicUrl
-                    };
-                    _user.LoggedInUser = user;
-                    _user.CsrfToken = webBrowserResponse.Config.CsrfToken;
-                    _user.RankToken = $"{webBrowserResponse.Config.Viewer.Id}_{_httpRequestProcessor.RequestMessage.PhoneId}";
-                    IsUserAuthenticated = true;
-                    if (facebookLogin)
-                    {
-                        try
-                        {
-                            var instaUri = UriCreator.GetFacebookSignUpUri();
-                            var data = new JObject
-                            {
-                                {"dryrun", "true"},
-                                {"phone_id", _deviceInfo.DeviceGuid.ToString()},
-                                {"_csrftoken", _user.CsrfToken},
-                                {"adid", Guid.NewGuid().ToString()},
-                                {"guid", Guid.NewGuid().ToString()},
-                                {"device_id", ApiRequestMessage.GenerateDeviceId()},
-                                {"waterfall_id", Guid.NewGuid().ToString()},
-                                {"fb_access_token", InstaApiConstants.FB_ACCESS_TOKEN},
-                            };
-                            var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                            request.Headers.Add("Host", "i.instagram.com");
-                            var response = await _httpRequestProcessor.SendAsync(request);
-                            var json = await response.Content.ReadAsStringAsync();
-                            var obj = JsonConvert.DeserializeObject<InstaFacebookLoginResponse>(json);
-                            _user.FacebookUserId = obj.FbUserId;
-                        }
-                        catch (Exception)
-                        {
-                        }
-                        InvalidateProcessors();
-                    }
-                    return Result.Success(true);
-                }
-                catch (HttpRequestException httpException)
-                {
-                    _logger?.LogException(httpException);
-                    return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
-                }
-                catch (Exception ex)
-                {
-                    return Result.Fail(ex.Message, false);
-                }
-            }
-            return Result.Fail("", false);
-        }
-
-
         #endregion Authentication and challenge functions
+
+        #region ORIGINAL FACEBOOK LOGIN
+
+        string _facebookAccessToken = null;
+        public async Task<IResult<InstaLoginResult>> LoginWithFacebookAsync(string fbAccessToken, string cookiesContainer)
+        {
+            try
+            {
+                _facebookAccessToken = null;
+                var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                await firstResponse.Content.ReadAsStringAsync();
+                _logger?.LogResponse(firstResponse);
+
+                var cookies =
+                _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
+                var uri = new Uri(InstaApiConstants.INSTAGRAM_URL);
+
+                cookiesContainer = cookiesContainer.Replace(';', ',');
+                _httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(uri, cookiesContainer);
+
+                var instaUri = UriCreator.GetFacebookSignUpUri();
+
+                var data = new JObject
+                {
+                    {"dryrun", "true"},
+                    {"phone_id", _deviceInfo.PhoneGuid.ToString()},
+                    {"_csrftoken", csrftoken},
+                    {"adid", Guid.NewGuid().ToString()},
+                    {"guid",  _deviceInfo.DeviceGuid.ToString()},
+                    {"_uuid",  _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id", _deviceInfo.DeviceId},
+                    {"waterfall_id", Guid.NewGuid().ToString()},
+                    {"fb_access_token", fbAccessToken},
+                };
+                _facebookAccessToken = fbAccessToken;
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var loginFailReason = JsonConvert.DeserializeObject<InstaLoginBaseResponse>(json);
+
+                    if (loginFailReason.InvalidCredentials)
+                        return Result.Fail("Invalid Credentials",
+                            loginFailReason.ErrorType == "bad_password"
+                                ? InstaLoginResult.BadPassword
+                                : InstaLoginResult.InvalidUser);
+                    if (loginFailReason.TwoFactorRequired)
+                    {
+                        _twoFactorInfo = loginFailReason.TwoFactorLoginInfo;
+                        _httpRequestProcessor.RequestMessage.Username = _twoFactorInfo.Username;
+                        _httpRequestProcessor.RequestMessage.DeviceId = _deviceInfo.DeviceId;
+                        return Result.Fail("Two Factor Authentication is required", InstaLoginResult.TwoFactorRequired);
+                    }
+                    if (loginFailReason.ErrorType == "checkpoint_challenge_required")
+                    {
+                        _challengeinfo = loginFailReason.Challenge;
+
+                        return Result.Fail("Challenge is required", InstaLoginResult.ChallengeRequired);
+                    }
+                    if (loginFailReason.ErrorType == "rate_limit_error")
+                    {
+                        return Result.Fail("Please wait a few minutes before you try again.", InstaLoginResult.LimitError);
+                    }
+                    if (loginFailReason.ErrorType == "inactive user" || loginFailReason.ErrorType == "inactive_user")
+                    {
+                        return Result.Fail($"{loginFailReason.Message}\r\nHelp url: {loginFailReason.HelpUrl}", InstaLoginResult.InactiveUser);
+                    }
+                    return Result.UnExpectedResponse<InstaLoginResult>(response, json);
+                }
+
+                var obj = JsonConvert.DeserializeObject<InstaFacebookLoginResponse>(json);
+                var loginInfo = JsonConvert.DeserializeObject<InstaLoginResponse>(json);
+                IsUserAuthenticated = true;
+                var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
+                _user.LoggedInUser = converter.Convert();
+                _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
+                _user.CsrfToken = csrftoken;
+                _user.FacebookUserId = obj.FbUserId;
+                _user.UserName = _user.LoggedInUser.UserName;
+                _user.FacebookAccessToken = fbAccessToken;
+                _user.Password = "ALAKIMASALAN";
+
+                InvalidateProcessors();
+
+                _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
+                if (string.IsNullOrEmpty(_user.CsrfToken))
+                {
+                    cookies =
+                      _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                          .BaseAddress);
+                    _user.CsrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
+                }
+                return Result.Success(InstaLoginResult.Success);
+            }
+            catch (Exception exception)
+            {
+                LogException(exception);
+                return Result.Fail(exception, InstaLoginResult.Exception);
+            }
+        }
+
+        #endregion ORIGINAL FACEBOOK LOGIN
 
         #region Other public functions
         /// <summary>
