@@ -1829,6 +1829,9 @@ namespace InstagramApiSharp.API
                     {
                         return Result.Fail($"{loginFailReason.Message}\r\nHelp url: {loginFailReason.HelpUrl}", InstaLoginResult.InactiveUser);
                     }
+                    if (loginFailReason.ErrorType == "checkpoint_logged_out")
+                        return Result.Fail($"{loginFailReason.ErrorType} {loginFailReason.CheckpointUrl}", InstaLoginResult.CheckpointLoggedOut);
+                    
                     return Result.UnExpectedResponse<InstaLoginResult>(response, json);
                 }
 
