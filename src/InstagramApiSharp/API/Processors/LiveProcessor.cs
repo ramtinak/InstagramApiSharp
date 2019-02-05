@@ -57,6 +57,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         public async Task<IResult<InstaBroadcastAddToPostLive>> AddToPostLiveAsync(string broadcastId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastAddToPostLiveUri(broadcastId);
@@ -96,6 +97,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="commentText">Comment text</param>
         public async Task<IResult<InstaComment>> CommentAsync(string broadcastId, string commentText)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastPostCommentUri(broadcastId);
@@ -143,6 +145,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastMessage">Broadcast start message</param>
         public async Task<IResult<InstaBroadcastCreate>> CreateAsync(int previewWidth = 720, int previewHeight = 1184, string broadcastMessage = "")
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastCreateUri();
@@ -184,6 +187,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         public async Task<IResult<bool>> DeletePostLiveAsync(string broadcastId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastDeletePostLiveUri(broadcastId);
@@ -220,6 +224,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         public async Task<IResult<InstaBroadcastCommentEnableDisable>> DisableCommentsAsync(string broadcastId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastDisableCommenstUri(broadcastId);
@@ -256,6 +261,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId"></param>
         public async Task<IResult<InstaBroadcastCommentEnableDisable>> EnableCommentsAsync(string broadcastId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastEnableCommenstUri(broadcastId);
@@ -293,6 +299,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="endAfterCopyrightWarning">Copyright warning</param>
         public async Task<IResult<bool>> EndAsync(string broadcastId, bool endAfterCopyrightWarning = false)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastEndUri(broadcastId);
@@ -331,6 +338,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="commentsRequested">Comments requested count</param>
         public async Task<IResult<InstaBroadcastCommentList>> GetCommentsAsync(string broadcastId, string lastCommentTs = "", int commentsRequested = 4)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastCommentUri(broadcastId, lastCommentTs);
@@ -360,6 +368,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         public async Task<IResult<InstaDiscoverTopLive>> GetDiscoverTopLiveAsync(PaginationParameters paginationParameters)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var topLive = new InstaDiscoverTopLive();
             try
             {
@@ -415,6 +424,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         public async Task<IResult<InstaUserShortList>> GetFinalViewerListAsync(string broadcastId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var viewers = new InstaUserShortList();
             try
             {
@@ -449,6 +459,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         public async Task<IResult<InstaBroadcastLiveHeartBeatViewerCount>> GetHeartBeatAndViewerCountAsync(string broadcastId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetLiveHeartbeatAndViewerCountUri(broadcastId);
@@ -485,6 +496,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         public async Task<IResult<InstaBroadcastInfo>> GetInfoAsync(string broadcastId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastInfoUri(broadcastId);
@@ -514,6 +526,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast</param>
         public async Task<IResult<InstaUserShortList>> GetJoinRequestsAsync(string broadcastId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var viewers = new InstaUserShortList();
             try
             {
@@ -548,6 +561,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="likeTs">Like time stamp</param>
         public async Task<IResult<InstaBroadcastLike>> GetLikeCountAsync(string broadcastId, int likeTs = 0)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetLiveLikeCountUri(broadcastId);
@@ -577,6 +591,7 @@ namespace InstagramApiSharp.API.Processors
         /// <returns></returns>
         public async Task<IResult<object>> GetPostLiveCommentsAsync(string broadcastId, int startingOffset = 0, string encodingTag = "instagram_dash_remuxed")
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 // kamel nist
@@ -637,6 +652,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="maxId">Max id</param>
         public async Task<IResult<InstaUserShortList>> GetPostLiveViewerListAsync(string broadcastId, int? maxId = null)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var viewers = new InstaUserShortList();
             try
             {
@@ -669,6 +685,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         public async Task<IResult<InstaBroadcastList>> GetSuggestedBroadcastsAsync()
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetSuggestedBroadcastsUri();
@@ -698,7 +715,8 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastIds">Broadcast ids</param>
         public async Task<IResult<InstaBroadcastTopLiveStatusList>> GetTopLiveStatusAsync(params string[] broadcastIds)
         {
-            if(broadcastIds == null)
+            UserAuthValidator.Validate(_userAuthValidate);
+            if (broadcastIds == null)
                 return Result.Fail<InstaBroadcastTopLiveStatusList>("broadcast ids must be set");
             try
             {
@@ -734,6 +752,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="broadcastId">Broadcast id</param>
         public async Task<IResult<InstaUserShortList>> GetViewerListAsync(string broadcastId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             var viewers = new InstaUserShortList();
             try
             {
@@ -768,6 +787,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="likeCount">Like count (from 1 to 6)</param>
         public async Task<IResult<InstaBroadcastLike>> LikeAsync(string broadcastId, int likeCount = 1)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetLikeLiveUri(broadcastId);
@@ -835,6 +855,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="commentId"></param>
         public async Task<IResult<InstaBroadcastPinUnpin>> PinCommentAsync(string broadcastId, string commentId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastPinCommentUri(broadcastId);
@@ -918,6 +939,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="sendNotifications">Send notifications</param>
         public async Task<IResult<InstaBroadcastStart>> StartAsync(string broadcastId, bool sendNotifications)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastStartUri(broadcastId);
@@ -1028,6 +1050,7 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="commentId"></param>
         public async Task<IResult<InstaBroadcastPinUnpin>> UnPinCommentAsync(string broadcastId, string commentId)
         {
+            UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var instaUri = UriCreator.GetBroadcastUnPinCommentUri(broadcastId);
