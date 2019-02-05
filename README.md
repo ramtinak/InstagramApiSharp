@@ -14,7 +14,7 @@ Supports almost every features that Instagram app has!
 This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharper) with more features and new cool things.
 
 ## Install
-Use this library as dll or reference it from [NuGet](https://www.nuget.org/packages/InstagramApiSharp/).
+Use this library as dll (download from [release page](https://github.com/ramtinak/InstagramApiSharp/releases)) or reference it from [NuGet](https://www.nuget.org/packages/InstagramApiSharp/).
 
 Nuget package manager command:
 ```
