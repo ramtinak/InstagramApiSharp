@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.3.0</Version>
-    <AssemblyVersion>1.3.3.0</AssemblyVersion>
-    <FileVersion>1.3.3.0</FileVersion>
+    <Version>1.3.3.1</Version>
+    <AssemblyVersion>1.3.3.1</AssemblyVersion>
+    <FileVersion>1.3.3.1</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,14 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.3.3.0
+    <PackageReleaseNotes>v1.3.3.1
+- [Add] ShareMediaAsStoryAsync to StoryProcessor
+- [Add] HasViewerSaved property to InstaMedia
+- [Add] converters for all live broadcast classes
+- [Add] pagination to GetDiscoverTopLiveAsync
+- [Add] LoginWithFacebookAsync to IInstaApi
+
+v1.3.3.0
 - [Bugfix] for followers and followings get functions
 - [Bugfix] for SendGetRequestAsync
 - [Bugfix] for GetTopHashtagMediaListAsync (thx to @huseyinkarael for report)
@@ -148,37 +155,7 @@ v1.3.0.0
 - [Add] BlockUserCommentingAsync to CommentProcessor
 - [Add] UnblockUserCommentingAsync to CommentProcessor
 - [Add] GetBlockedCommentersAsync to CommentProcessor
-- [Update] FriendshipStatus property in GetUserAsync
-
-v1.2.0.1
-- [Bugfix] for recent activities return following activities
-
-v1.2.0
-- [Add] ISessionHandler for save/load session to IInstaApiBuilder (thx to @estgold for PR)
-- [Bugfix] for GetSecuritySettingsInfoAsync
-- [Add] GetBlockedUsersAsync to UserProcessor
-- [Add] SwitchToPersonalAccountAsync to AccountProcessor
-- [Add] SetHttpRequestProccesor in IInstaApiBuilder (thx to @estgold for PR)
-- [Add] GetRecoveryOptionsAsync to IInstaApi
-- [Bugfix] for VerifyCodeForChallengeRequireAsync
-- [Rename] GetBlockedStorySharingUsersStory to GetBlockedUsersFromStoriesAsync
-- [Add] voice message support to direct thread item (Api version v74 or newer is required)
-- [Add] animated image (gif) message support to direct thread item (Api version v74 or newer is required)
-
-v1.1.6.2
-- [Update] A change in builder to made it IoC/DI compatible
-
-v1.1.6.1
-- [Bugfix] for GetFollowingRecentActivityFeedAsync pagination [now works correctly]
-- [Add] new UploadAlbumAsync (check #95 issue)
-- [Add] GetBlockedMediasAsync to MediaProcessor
-- [Add] GetMediaByIdsAsync to MediaProcessor for getting multiple medias
-
-v1.1.6.0
-- [Bugfix] for GetFollowingRecentActivityFeedAsync pagination
-- [Add] InstaImageUpload class (use this for uploading photo/album from now)
-- [Add] User tags support to UploadAlbumAsync (see album wiki page)
-- [Update] UploadPhotoAsync (you should use InstaImageUpload instead)</PackageReleaseNotes>
+- [Update] FriendshipStatus property in GetUserAsync</PackageReleaseNotes>
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo, igtv</PackageTags>
