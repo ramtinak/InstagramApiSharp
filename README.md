@@ -78,6 +78,9 @@ var api = InstaApiBuilder.CreateBuilder()
 ```
 ##### Note: every API method has synchronous implementation as well.
 
+## Important note about me (@ramtinak)
+I don't use Instagram at all and I don't like it either, so when you across to an issue or wanna new feature, describe it as much as you can!
+
 ## Contract, warning, note
 Every method returns object IS NOT COMPLETED YET!
 For example:
