@@ -12,6 +12,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("is_pinned")] public int IsPinned { get; set; }
 
+        [JsonProperty("is_hidden")] public int IsHidden { get; set; }
+
         [JsonProperty("width")] public double Width { get; set; }
 
         [JsonProperty("user")] public InstaUserShortResponse User { get; set; }

@@ -10,6 +10,8 @@
 
         public bool IsPinned { get; set; }
 
+        public bool IsHidden { get; set; }
+
         public double Width { get; set; }
 
         public InstaUserShort User { get; set; }

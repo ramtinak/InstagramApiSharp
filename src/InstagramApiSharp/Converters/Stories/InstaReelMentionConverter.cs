@@ -15,6 +15,7 @@ namespace InstagramApiSharp.Converters
             {
                 Height = SourceObject.Height,
                 IsPinned = System.Convert.ToBoolean(SourceObject.IsPinned),
+                IsHidden = System.Convert.ToBoolean(SourceObject.IsHidden),
                 Rotation = SourceObject.Rotation,
                 Width = SourceObject.Width,
                 X = SourceObject.X,
