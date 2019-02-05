@@ -859,5 +859,17 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaDiscoverTopLiveConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaStoryFriendshipStatus, InstaStoryFriendshipStatusResponse> GetStoryFriendshipStatusConverter(
+            InstaStoryFriendshipStatusResponse response)
+        {
+            return new InstaStoryFriendshipStatusConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaStoryFriendshipStatusShort, InstaStoryFriendshipStatusShortResponse> GetStoryFriendshipStatusShortConverter(
+            InstaStoryFriendshipStatusShortResponse response)
+        {
+            return new InstaStoryFriendshipStatusShortConverter { SourceObject = response };
+        }
     }
 }

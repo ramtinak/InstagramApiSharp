@@ -112,7 +112,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Block user
         /// </summary>
         /// <param name="userId">User id</param>
-        public async Task<IResult<InstaFriendshipStatus>> BlockUserAsync(long userId)
+        public async Task<IResult<InstaFriendshipFullStatus>> BlockUserAsync(long userId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             return await BlockUnblockUserInternal(userId, UriCreator.GetBlockUserUri(userId));
@@ -140,7 +140,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Follow user
         /// </summary>
         /// <param name="userId">User id</param>
-        public async Task<IResult<InstaFriendshipStatus>> FollowUserAsync(long userId)
+        public async Task<IResult<InstaFriendshipFullStatus>> FollowUserAsync(long userId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             return await FollowUnfollowUserInternal(userId, UriCreator.GetFollowUserUri(userId));
@@ -297,9 +297,9 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User identifier (PK)</param>
         /// <returns>
-        ///     <see cref="InstaFriendshipStatus" />
+        ///     <see cref="InstaStoryFriendshipStatus" />
         /// </returns>
-        public async Task<IResult<InstaFriendshipStatus>> GetFriendshipStatusAsync(long userId)
+        public async Task<IResult<InstaStoryFriendshipStatus>> GetFriendshipStatusAsync(long userId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -309,20 +309,20 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, json);
-                var friendshipStatusResponse = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json);
-                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatusResponse);
+                    return Result.UnExpectedResponse<InstaStoryFriendshipStatus>(response, json);
+                var friendshipStatusResponse = JsonConvert.DeserializeObject<InstaStoryFriendshipStatusResponse>(json);
+                var converter = ConvertersFabric.Instance.GetStoryFriendshipStatusConverter(friendshipStatusResponse);
                 return Result.Success(converter.Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaFriendshipStatus), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaStoryFriendshipStatus), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaFriendshipStatus>(exception);
+                return Result.Fail<InstaStoryFriendshipStatus>(exception);
             }
         }
         /// <summary>
@@ -1087,7 +1087,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Ignore user friendship requst.
         /// </summary>
         /// <param name="userId">User id (pk)</param>
-        public async Task<IResult<InstaFriendshipStatus>> IgnoreFriendshipRequestAsync(long userId)
+        public async Task<IResult<InstaFriendshipFullStatus>> IgnoreFriendshipRequestAsync(long userId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -1105,20 +1105,19 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, json);
-                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
-                    new InstaFriendShipDataConverter());
-                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+                    return Result.UnExpectedResponse<InstaFriendshipFullStatus>(response, json);
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipFullStatusContainerResponse>(json);
+                var converter = ConvertersFabric.Instance.GetFriendshipFullStatusConverter(friendshipStatus.FriendshipStatus);
                 return Result.Success(converter.Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaFriendshipStatus), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaFriendshipFullStatus), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
-                return Result.Fail<InstaFriendshipStatus>(exception);
+                return Result.Fail<InstaFriendshipFullStatus>(exception);
             }
         }
 
@@ -1126,7 +1125,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Hide my story from specific user
         /// </summary>
         /// <param name="userId">User id</param>
-        public async Task<IResult<InstaFriendshipStatus>> HideMyStoryFromUserAsync(long userId)
+        public async Task<IResult<InstaStoryFriendshipStatus>> HideMyStoryFromUserAsync(long userId)
         {
             return await HideUnhideMyStoryFromUser(UriCreator.GetHideMyStoryFromUserUri(userId));
         }
@@ -1175,7 +1174,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Mute friend's stories, so you won't see their stories in latest stories tab
         /// </summary>
         /// <param name="userId">User id (pk)</param>
-        public async Task<IResult<InstaFriendshipStatus>> MuteFriendStoryAsync(long userId)
+        public async Task<IResult<InstaStoryFriendshipStatus>> MuteFriendStoryAsync(long userId)
         {
             return await MuteUnMuteFriendStory(UriCreator.GetMuteFriendStoryUri(userId));
         }
@@ -1185,7 +1184,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User id (pk)</param>
         /// <param name="unmuteOption">Unmute option</param>
-        public async Task<IResult<InstaFriendshipStatus>> MuteUserMediaAsync(long userId, InstaMuteOption unmuteOption)
+        public async Task<IResult<InstaStoryFriendshipStatus>> MuteUserMediaAsync(long userId, InstaMuteOption unmuteOption)
         {
             return await MuteUnMuteUserMedia(UriCreator.GetMuteUserMediaStoryUri(userId), userId, unmuteOption);
         }
@@ -1233,7 +1232,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Stop block user
         /// </summary>
         /// <param name="userId">User id</param>
-        public async Task<IResult<InstaFriendshipStatus>> UnBlockUserAsync(long userId)
+        public async Task<IResult<InstaFriendshipFullStatus>> UnBlockUserAsync(long userId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             return await BlockUnblockUserInternal(userId, UriCreator.GetUnBlockUserUri(userId));
@@ -1261,7 +1260,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Stop follow user
         /// </summary>
         /// <param name="userId">User id</param>
-        public async Task<IResult<InstaFriendshipStatus>> UnFollowUserAsync(long userId)
+        public async Task<IResult<InstaFriendshipFullStatus>> UnFollowUserAsync(long userId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             return await FollowUnfollowUserInternal(userId, UriCreator.GetUnFollowUserUri(userId));
@@ -1271,7 +1270,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Unhide my story from specific user
         /// </summary>
         /// <param name="userId">User id</param>
-        public async Task<IResult<InstaFriendshipStatus>> UnHideMyStoryFromUserAsync(long userId)
+        public async Task<IResult<InstaStoryFriendshipStatus>> UnHideMyStoryFromUserAsync(long userId)
         {
             return await HideUnhideMyStoryFromUser(UriCreator.GetUnHideMyStoryFromUserUri(userId));
         }
@@ -1280,7 +1279,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Unmute friend's stories, so you will be able to see their stories in latest stories tab once again
         /// </summary>
         /// <param name="userId">User id (pk)</param>
-        public async Task<IResult<InstaFriendshipStatus>> UnMuteFriendStoryAsync(long userId)
+        public async Task<IResult<InstaStoryFriendshipStatus>> UnMuteFriendStoryAsync(long userId)
         {
             return await MuteUnMuteFriendStory(UriCreator.GetUnMuteFriendStoryUri(userId));
         }
@@ -1290,7 +1289,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User id (pk)</param>
         /// <param name="unmuteOption">Unmute option</param>
-        public async Task<IResult<InstaFriendshipStatus>> UnMuteUserMediaAsync(long userId, InstaMuteOption unmuteOption)
+        public async Task<IResult<InstaStoryFriendshipStatus>> UnMuteUserMediaAsync(long userId, InstaMuteOption unmuteOption)
         {
             return await MuteUnMuteUserMedia(UriCreator.GetUnMuteUserMediaStoryUri(userId), userId, unmuteOption);
         }
@@ -1429,7 +1428,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaFriendshipShortStatusList>(exception);
             }
         }
-        private async Task<IResult<InstaFriendshipStatus>> BlockUnblockUserInternal(long userId, Uri instaUri)
+        private async Task<IResult<InstaFriendshipFullStatus>> BlockUnblockUserInternal(long userId, Uri instaUri)
         {
             try
             {
@@ -1446,25 +1445,24 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(json))
-                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, json);
-                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
-                    new InstaFriendShipDataConverter());
-                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+                    return Result.UnExpectedResponse<InstaFriendshipFullStatus>(response, json);
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipFullStatusContainerResponse>(json);
+                var converter = ConvertersFabric.Instance.GetFriendshipFullStatusConverter(friendshipStatus.FriendshipStatus);
                 return Result.Success(converter.Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaFriendshipStatus), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaFriendshipFullStatus), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaFriendshipStatus>(exception);
+                return Result.Fail<InstaFriendshipFullStatus>(exception);
             }
         }
 
-        private async Task<IResult<InstaFriendshipStatus>> FollowUnfollowUserInternal(long userId, Uri instaUri)
+        private async Task<IResult<InstaFriendshipFullStatus>> FollowUnfollowUserInternal(long userId, Uri instaUri)
         {
             try
             {
@@ -1481,21 +1479,20 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(json))
-                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, json);
-                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
-                    new InstaFriendShipDataConverter());
-                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+                    return Result.UnExpectedResponse<InstaFriendshipFullStatus>(response, json);
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipFullStatusContainerResponse>(json);
+                var converter = ConvertersFabric.Instance.GetFriendshipFullStatusConverter(friendshipStatus.FriendshipStatus);
                 return Result.Success(converter.Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaFriendshipStatus), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaFriendshipFullStatus), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaFriendshipStatus>(exception);
+                return Result.Fail<InstaFriendshipFullStatus>(exception);
             }
         }
 
@@ -1810,7 +1807,7 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaFriendshipStatus>> MuteUnMuteUserMedia(Uri instaUri, long userId, InstaMuteOption muteUnmuteOption)
+        private async Task<IResult<InstaStoryFriendshipStatus>> MuteUnMuteUserMedia(Uri instaUri, long userId, InstaMuteOption muteUnmuteOption)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -1841,25 +1838,24 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, obj.Message, null);
+                    return Result.UnExpectedResponse<InstaStoryFriendshipStatus>(response, obj.Message, null);
 
-                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
-                     new InstaFriendShipDataConverter());
-                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaStoryFriendshipStatusContainerResponse>(json);
+                var converter = ConvertersFabric.Instance.GetStoryFriendshipStatusConverter(friendshipStatus.FriendshipStatus);
 
                 return Result.Success(converter.Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaFriendshipStatus), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaStoryFriendshipStatus), ResponseType.NetworkProblem);
             }
             catch (Exception ex)
             {
-                return Result.Fail<InstaFriendshipStatus>(ex);
+                return Result.Fail<InstaStoryFriendshipStatus>(ex);
             }
         }
-        private async Task<IResult<InstaFriendshipStatus>> HideUnhideMyStoryFromUser(Uri instaUri)
+        private async Task<IResult<InstaStoryFriendshipStatus>> HideUnhideMyStoryFromUser(Uri instaUri)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -1878,26 +1874,25 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, obj.Message, null);
+                    return Result.UnExpectedResponse<InstaStoryFriendshipStatus>(response, obj.Message, null);
 
-                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
-                     new InstaFriendShipDataConverter());
-                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaStoryFriendshipStatusContainerResponse>(json);
+                var converter = ConvertersFabric.Instance.GetStoryFriendshipStatusConverter(friendshipStatus.FriendshipStatus);
 
                 return Result.Success(converter.Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaFriendshipStatus), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaStoryFriendshipStatus), ResponseType.NetworkProblem);
             }
             catch (Exception ex)
             {
-                return Result.Fail<InstaFriendshipStatus>(ex);
+                return Result.Fail<InstaStoryFriendshipStatus>(ex);
             }
         }
 
-        private async Task<IResult<InstaFriendshipStatus>> MuteUnMuteFriendStory(Uri instaUri)
+        private async Task<IResult<InstaStoryFriendshipStatus>> MuteUnMuteFriendStory(Uri instaUri)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -1915,22 +1910,21 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaFriendshipStatus>(response, obj.Message, null);
+                    return Result.UnExpectedResponse<InstaStoryFriendshipStatus>(response, obj.Message, null);
 
-                var friendshipStatus = JsonConvert.DeserializeObject<InstaFriendshipStatusResponse>(json,
-                     new InstaFriendShipDataConverter());
-                var converter = ConvertersFabric.Instance.GetFriendShipStatusConverter(friendshipStatus);
+                var friendshipStatus = JsonConvert.DeserializeObject<InstaStoryFriendshipStatusContainerResponse>(json);
+                var converter = ConvertersFabric.Instance.GetStoryFriendshipStatusConverter(friendshipStatus.FriendshipStatus);
 
                 return Result.Success(converter.Convert());
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaFriendshipStatus), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaStoryFriendshipStatus), ResponseType.NetworkProblem);
             }
             catch (Exception ex)
             {
-                return Result.Fail<InstaFriendshipStatus>(ex);
+                return Result.Fail<InstaStoryFriendshipStatus>(ex);
             }
         }
 

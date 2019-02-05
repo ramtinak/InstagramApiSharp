@@ -12,7 +12,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("expiring_at")] public long ExpiringAt { get; set; }
 
-        [JsonProperty("user")] public InstaUserShortResponse User { get; set; }
+        [JsonProperty("user")] public InstaUserShortFriendshipFullResponse User { get; set; }
 
         [JsonProperty("owner")] public InstaUserShortResponse Owner { get; set; }
 

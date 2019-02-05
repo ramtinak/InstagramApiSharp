@@ -11,7 +11,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public DateTime ExpiringAt { get; set; }
 
-        public InstaUserShort User { get; set; }
+        public InstaUserShortFriendshipFull User { get; set; }
 
         public InstaUserShort Owner { get; set; }
 

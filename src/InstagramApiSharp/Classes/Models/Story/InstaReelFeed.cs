@@ -23,6 +23,6 @@ namespace InstagramApiSharp.Classes.Models
 
         public long Seen { get; set; }
 
-        public InstaUserShort User { get; set; }
+        public InstaUserShortFriendshipFull User { get; set; }
     }
 }

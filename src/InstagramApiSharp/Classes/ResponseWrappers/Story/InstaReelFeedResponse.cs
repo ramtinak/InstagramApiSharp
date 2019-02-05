@@ -23,6 +23,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("seen")] public long? Seen { get; set; }
 
-        [JsonProperty("user")] public InstaUserShortResponse User { get; set; }
+        [JsonProperty("user")] public InstaUserShortFriendshipFullResponse User { get; set; }
     }
 }

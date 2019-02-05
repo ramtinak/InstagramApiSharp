@@ -122,7 +122,7 @@ namespace InstagramApiSharp.Converters
             {
                 try
                 {
-                    userInfo.FriendshipStatus = ConvertersFabric.Instance.GetFriendShipStatusConverter(SourceObject.User.FriendshipStatus).Convert();
+                    userInfo.FriendshipStatus = ConvertersFabric.Instance.GetStoryFriendshipStatusConverter(SourceObject.User.FriendshipStatus).Convert();
                 }
                 catch { }
             }

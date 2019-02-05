@@ -65,7 +65,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("profile_context_links_with_user_ids")] public List<InstaUserContextResponse> ProfileContextIds { get; set; }
 
-        [JsonProperty("friendship_status")] public InstaFriendshipStatusResponse FriendshipStatus { get; set; }
+        [JsonProperty("friendship_status")] public InstaStoryFriendshipStatusResponse FriendshipStatus { get; set; }
 
         // Business accounts
 

@@ -49,7 +49,7 @@ namespace InstagramApiSharp.Converters
                 story.Owner = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.Owner).Convert();
 
             if (SourceObject.User != null)
-                story.User = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.User).Convert();
+                story.User = ConvertersFabric.Instance.GetUserShortFriendshipFullConverter(SourceObject.User).Convert();
 
             if (SourceObject.Items != null)
                 foreach (var item in SourceObject.Items)

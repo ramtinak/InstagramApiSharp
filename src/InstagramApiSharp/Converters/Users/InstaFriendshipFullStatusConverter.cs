@@ -20,15 +20,15 @@ namespace InstagramApiSharp.Converters
         {
             var friendShip = new InstaFriendshipFullStatus
             {
-                Following = SourceObject.Following,
-                Blocking = SourceObject.Blocking,
-                FollowedBy = SourceObject.FollowedBy,
-                OutgoingRequest = SourceObject.OutgoingRequest,
-                IsBestie = SourceObject.IsBestie,
-                Muting = SourceObject.Muting
+                Following = SourceObject.Following ?? false,
+                Blocking = SourceObject.Blocking ?? false,
+                FollowedBy = SourceObject.FollowedBy ?? false,
+                OutgoingRequest = SourceObject.OutgoingRequest ?? false,
+                IsBestie = SourceObject.IsBestie ?? false,
+                Muting = SourceObject.Muting ?? false
             };
-            friendShip.IncomingRequest = SourceObject.IncomingRequest;
-            friendShip.IsPrivate = SourceObject.IsPrivate;
+            friendShip.IncomingRequest = SourceObject.IncomingRequest ?? false;
+            friendShip.IsPrivate = SourceObject.IsPrivate ?? false;
             return friendShip;
         }
     }

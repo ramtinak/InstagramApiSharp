@@ -27,7 +27,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Block user
         /// </summary>
         /// <param name="userId">User id</param>
-        Task<IResult<InstaFriendshipStatus>> BlockUserAsync(long userId);
+        Task<IResult<InstaFriendshipFullStatus>> BlockUserAsync(long userId);
 
         /// <summary>
         ///     Delete an user from your best friend (besties) lists
@@ -51,7 +51,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Follow user
         /// </summary>
         /// <param name="userId">User id</param>
-        Task<IResult<InstaFriendshipStatus>> FollowUserAsync(long userId);
+        Task<IResult<InstaFriendshipFullStatus>> FollowUserAsync(long userId);
 
         /// <summary>
         ///     Get self best friends (besties)
@@ -108,9 +108,9 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="userId">User identifier (PK)</param>
         /// <returns>
-        ///     <see cref="InstaFriendshipStatus" />
+        ///     <see cref="InstaStoryFriendshipStatus" />
         /// </returns>
-        Task<IResult<InstaFriendshipStatus>> GetFriendshipStatusAsync(long userId);
+        Task<IResult<InstaStoryFriendshipStatus>> GetFriendshipStatusAsync(long userId);
         /// <summary>
         ///     Get friendship status for multiple user ids.
         /// </summary>
@@ -279,13 +279,13 @@ namespace InstagramApiSharp.API.Processors
         ///     Ignore user friendship requst.
         /// </summary>
         /// <param name="userId">User id (pk)</param>
-        Task<IResult<InstaFriendshipStatus>> IgnoreFriendshipRequestAsync(long userId);
+        Task<IResult<InstaFriendshipFullStatus>> IgnoreFriendshipRequestAsync(long userId);
 
         /// <summary>
         ///     Hide my story from specific user
         /// </summary>
         /// <param name="userId">User id</param>
-        Task<IResult<InstaFriendshipStatus>> HideMyStoryFromUserAsync(long userId);
+        Task<IResult<InstaStoryFriendshipStatus>> HideMyStoryFromUserAsync(long userId);
 
         /// <summary>
         ///     Mark user as overage
@@ -297,14 +297,14 @@ namespace InstagramApiSharp.API.Processors
         ///     Mute friend's stories, so you won't see their stories in latest stories tab
         /// </summary>
         /// <param name="userId">User id (pk)</param>
-        Task<IResult<InstaFriendshipStatus>> MuteFriendStoryAsync(long userId);
+        Task<IResult<InstaStoryFriendshipStatus>> MuteFriendStoryAsync(long userId);
 
         /// <summary>
         ///     Mute user media (story, post or all)
         /// </summary>
         /// <param name="userId">User id (pk)</param>
         /// <param name="unmuteOption">Unmute option</param>
-        Task<IResult<InstaFriendshipStatus>> MuteUserMediaAsync(long userId, InstaMuteOption muteOption);
+        Task<IResult<InstaStoryFriendshipStatus>> MuteUserMediaAsync(long userId, InstaMuteOption muteOption);
 
         /// <summary>
         ///     Report user
@@ -316,7 +316,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Stop block user
         /// </summary>
         /// <param name="userId">User id</param>
-        Task<IResult<InstaFriendshipStatus>> UnBlockUserAsync(long userId);
+        Task<IResult<InstaFriendshipFullStatus>> UnBlockUserAsync(long userId);
 
         /// <summary>
         ///     Unfavorite user (user must be in your following list)
@@ -334,26 +334,26 @@ namespace InstagramApiSharp.API.Processors
         ///     Stop follow user
         /// </summary>
         /// <param name="userId">User id</param>
-        Task<IResult<InstaFriendshipStatus>> UnFollowUserAsync(long userId);
+        Task<IResult<InstaFriendshipFullStatus>> UnFollowUserAsync(long userId);
         
         /// <summary>
         ///     Unhide my story from specific user
         /// </summary>
         /// <param name="userId">User id</param>
-        Task<IResult<InstaFriendshipStatus>> UnHideMyStoryFromUserAsync(long userId);
+        Task<IResult<InstaStoryFriendshipStatus>> UnHideMyStoryFromUserAsync(long userId);
 
         /// <summary>
         ///     Unmute friend's stories, so you will be able to see their stories in latest stories tab once again
         /// </summary>
         /// <param name="userId">User id (pk)</param>
-        Task<IResult<InstaFriendshipStatus>> UnMuteFriendStoryAsync(long userId);
+        Task<IResult<InstaStoryFriendshipStatus>> UnMuteFriendStoryAsync(long userId);
 
         /// <summary>
         ///     Unmute user media (story, post or all)
         /// </summary>
         /// <param name="userId">User id (pk)</param>
         /// <param name="unmuteOption">Unmute option</param>
-        Task<IResult<InstaFriendshipStatus>> UnMuteUserMediaAsync(long userId, InstaMuteOption unmuteOption);
+        Task<IResult<InstaStoryFriendshipStatus>> UnMuteUserMediaAsync(long userId, InstaMuteOption unmuteOption);
 
         /// <summary>
         ///     Remove an follower from your followers

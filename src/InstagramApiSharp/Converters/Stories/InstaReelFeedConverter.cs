@@ -22,7 +22,7 @@ namespace InstagramApiSharp.Converters
                 LatestReelMedia = SourceObject.LatestReelMedia ?? 0,
                 PrefetchCount = SourceObject.PrefetchCount,
                 Seen = SourceObject.Seen ?? 0,
-                User = ConvertersFabric.Instance.GetUserShortConverter(SourceObject.User).Convert()
+                User = ConvertersFabric.Instance.GetUserShortFriendshipFullConverter(SourceObject.User).Convert()
             };
             try
             {
