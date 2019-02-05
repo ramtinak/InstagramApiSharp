@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.3.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.3.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -92,6 +92,24 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.3.2
+- [Add] InstaStoryFriendshipStatus class
+- [Update] GetStoryFeedAsync
+- [Update] GetUserStoryAsync
+- [Update] GetFullUserInfoAsync
+- [Update] GetFriendshipStatusAsync
+- [Update] BlockUserAsync/UnBlockUserAsync
+- [Update] IgnoreFriendshipRequestAsync
+- [Update] HideMyStoryFromUserAsync/UnHideMyStoryFromUserAsync
+- [Update] MuteFriendStoryAsync/UnMuteFriendStoryAsync
+- [Update] MuteUserMediaAsync/UnMuteUserMediaAsync
+- [Update] FollowUserAsync/UnFollowUserAsync
+- [Update] InstaStory.FriendshipStatus (support muting)
+- [Update] InstaFullUserInfo.UserDetail.FriendshipStatus
+- [Update] InstaStoryFeed.Broadcasts
+- [Update] InstaStoryFeed.PostLives
+- [Update] InstaReelFeed.FriendshipStatus
+
 v1.3.3.1
 - [Add] ShareMediaAsStoryAsync to StoryProcessor
 - [Add] HasViewerSaved property to InstaMedia
