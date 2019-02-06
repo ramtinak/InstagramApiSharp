@@ -667,7 +667,7 @@ namespace InstagramApiSharp.API.Processors
                 var user = await GetUserAsync(username);
                 if (user.Succeeded)
                 {
-                    if (user.Value.FriendshipStatus.IsPrivate && !user.Value.FriendshipStatus.Following)
+                    if (user.Value.FriendshipStatus.IsPrivate && user.Value.UserName != _user.LoggedInUser.UserName && !user.Value.FriendshipStatus.Following)
                         return Result.Fail("You must be a follower of private accounts to be able to get user's followers", default(InstaUserShortList));
 
                     return await GetUserFollowersByIdAsync(user.Value.Pk, paginationParameters, searchQuery, mutualsfirst);
@@ -766,7 +766,7 @@ namespace InstagramApiSharp.API.Processors
                 var user = await GetUserAsync(username);
                 if (user.Succeeded)
                 {
-                    if (user.Value.FriendshipStatus.IsPrivate && !user.Value.FriendshipStatus.Following)
+                    if (user.Value.FriendshipStatus.IsPrivate && user.Value.UserName != _user.LoggedInUser.UserName && !user.Value.FriendshipStatus.Following)
                         return Result.Fail("You must be a follower of private accounts to be able to get user's followings", default(InstaUserShortList));
 
                     return await GetUserFollowingByIdAsync(user.Value.Pk, paginationParameters, searchQuery);
