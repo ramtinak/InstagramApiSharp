@@ -360,12 +360,6 @@ namespace ChallengeRequireExample
                 MessageBox.Show("Login first.");
                 return;
             }
-            var user = await InstaApi.UserProcessor.GetUserAsync("hosseinejati");
-            var aaaa = await InstaApi.StoryProcessor.GetUserStoryAsync(user.Value.Pk);
-
-
-
-            return;
             var x = await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
             if (x.Succeeded)
