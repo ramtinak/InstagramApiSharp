@@ -520,7 +520,9 @@ namespace InstagramApiSharp.API.Processors
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"device_id", _deviceInfo.PhoneGuid.ToString()},
                     {"phone_id", _deviceInfo.RankToken.ToString()},
-                    {"client_session_id",  _deviceInfo.AdId.ToString()}
+                    {"client_session_id", Guid.NewGuid().ToString()},
+                    {"timezone_offset", _instaApi.GetTimezoneOffset().ToString()},
+                    {"rti_delivery_backend", "0"}
                 };
 
                 if (seenMediaIds != null)
@@ -531,6 +533,8 @@ namespace InstagramApiSharp.API.Processors
                     data.Add("reason", "pull_to_refresh");
                     data.Add("is_pull_to_refresh", "1");
                 }
+                else
+                    data.Add("reason", "warm_start_fetch");
 
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, userFeedUri, _deviceInfo, data);
                 request.Headers.Add("X-Ads-Opt-Out", "0");
