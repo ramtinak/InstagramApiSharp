@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace InstagramApiSharp.Classes.Models.Hashtags
+namespace InstagramApiSharp.Classes.Models
 {
     public class InstaSectionMedia
     {

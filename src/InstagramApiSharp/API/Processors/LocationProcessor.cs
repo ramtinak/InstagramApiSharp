@@ -117,6 +117,17 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get top (ranked) location media feeds.
+        ///     <para>Important note: Be careful of using this function, because it's an POST request</para>
+        /// </summary>
+        /// <param name="locationId">Location identifier (location pk, external id, facebook id)</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaSectionMedia>> GetTopLocationFeedsAsync(long locationId, PaginationParameters paginationParameters)
+        {
+            return await GetSectionAsync(locationId, paginationParameters, InstaSectionType.Ranked);
+        }
+
+        /// <summary>
         ///     Searches for specific location by provided geo-data or search query.
         /// </summary>
         /// <param name="latitude">Latitude</param>
@@ -335,21 +346,99 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        private async Task<IResult<InstaSectionMedia>> GetSectionAsync(long locationId,
+            PaginationParameters paginationParameters, InstaSectionType sectionType)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                InstaSectionMedia Convert(InstaSectionMediaListResponse sectionMediaListResponse)
+                {
+                    return ConvertersFabric.Instance.GetHashtagMediaListConverter(sectionMediaListResponse).Convert();
+                }
+                var mediaResponse = await GetSectionMedia(sectionType, 
+                    locationId,
+                    paginationParameters.NextMaxId,
+                    paginationParameters.NextPage, 
+                    paginationParameters.NextMediaIds);
+
+                if (!mediaResponse.Succeeded)
+                {
+                    if (mediaResponse.Value != null)
+                        Result.Fail(mediaResponse.Info, Convert(mediaResponse.Value));
+                    else
+                        Result.Fail(mediaResponse.Info, default(InstaSectionMedia));
+                }
+                paginationParameters.NextMediaIds = mediaResponse.Value.NextMediaIds;
+                paginationParameters.NextPage = mediaResponse.Value.NextPage;
+                paginationParameters.NextMaxId = mediaResponse.Value.NextMaxId;
+                while (mediaResponse.Value.MoreAvailable
+                    && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                    && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var moreMedias = await GetSectionMedia(sectionType,
+                        locationId,
+                        paginationParameters.NextMaxId, 
+                        mediaResponse.Value.NextPage, 
+                        mediaResponse.Value.NextMediaIds);
+                    if (!moreMedias.Succeeded)
+                        return Result.Fail(moreMedias.Info, Convert(moreMedias.Value));
+
+                    mediaResponse.Value.MoreAvailable = moreMedias.Value.MoreAvailable;
+                    mediaResponse.Value.NextMaxId = paginationParameters.NextMaxId = moreMedias.Value.NextMaxId;
+                    mediaResponse.Value.AutoLoadMoreEnabled = moreMedias.Value.AutoLoadMoreEnabled;
+                    mediaResponse.Value.NextMediaIds = paginationParameters.NextMediaIds = moreMedias.Value.NextMediaIds;
+                    mediaResponse.Value.NextPage = paginationParameters.NextPage = moreMedias.Value.NextPage;
+                    mediaResponse.Value.Sections.AddRange(moreMedias.Value.Sections);
+                    paginationParameters.PagesLoaded++;
+                }
+
+                return Result.Success(ConvertersFabric.Instance.GetHashtagMediaListConverter(mediaResponse.Value).Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaSectionMedia), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaSectionMedia>(exception);
+            }
+        }
+
         private async Task<IResult<InstaSectionMediaListResponse>> GetSectionMedia(InstaSectionType sectionType, 
-            long locationId, string maxId = null, int? nextPage = null, List<long> nextMediaIds = null)
+            long locationId,
+            string maxId = null,
+            int? page = null,
+            List<long> nextMediaIds = null)
         {
             try
             {
                 var instaUri = UriCreator.GetLocationSectionUri(locationId.ToString());
                 var data = new Dictionary<string, string>
                 {
-                    {"rank_token", _user.RankToken ?? _deviceInfo.DeviceGuid.ToString()},
+                    {"rank_token", _deviceInfo.DeviceGuid.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_csrftoken", _user.CsrfToken},
                     {"session_id", Guid.NewGuid().ToString()},
                     {"tab", sectionType.ToString().ToLower()}
                 };
 
+                if (!string.IsNullOrEmpty(maxId))
+                    data.Add("max_id", maxId);
+
+                if (page != null && page > 0)
+                    data.Add("page", page.ToString());
+
+                if (nextMediaIds?.Count > 0)
+                {
+                    var mediaIds = $"[{string.Join(",", nextMediaIds)}]";
+                    data.Add("next_media_ids", mediaIds.EncodeUri());
+                }
 
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);

@@ -219,7 +219,6 @@ namespace InstagramApiSharp.API.Processors
                 paginationParameters.NextMediaIds = mediaResponse.Value.NextMediaIds;
                 paginationParameters.NextPage = mediaResponse.Value.NextPage;
                 paginationParameters.NextMaxId = mediaResponse.Value.NextMaxId;
-                paginationParameters.PagesLoaded++;
                 while (mediaResponse.Value.MoreAvailable
                     && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
@@ -327,7 +326,6 @@ namespace InstagramApiSharp.API.Processors
                 paginationParameters.NextMediaIds = mediaResponse.Value.NextMediaIds;
                 paginationParameters.NextPage = mediaResponse.Value.NextPage;
                 paginationParameters.NextMaxId = mediaResponse.Value.NextMaxId;
-                paginationParameters.PagesLoaded++;
                 while (mediaResponse.Value.MoreAvailable
                     && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
