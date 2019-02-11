@@ -428,7 +428,7 @@ namespace InstagramApiSharp.API
         /// It seems deprecated and can't get feeds, only stories will recieve
         /// </summary>
         public const string LOCATION_FEED = API_SUFFIX + "/feed/location/{0}/";
-        public const string LOCATION_SECTION = API_SUFFIX + "/locations/{0}/sections";
+        public const string LOCATION_SECTION = API_SUFFIX + "/locations/{0}/sections/";
 
         public const string LOCATION_SEARCH = API_SUFFIX + "/location_search/";
 

@@ -41,56 +41,38 @@ namespace InstagramApiSharp.API.Processors
             _httpHelper = httpHelper;
         }
         /// <summary>
-        ///     Gets the feed of particular location.
+        ///     Gets the stories of particular location.
         /// </summary>
-        /// <param name="locationId">Location identifier</param>
-        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="locationId">Location identifier (location pk, external id, facebook id)</param>
         /// <returns>
-        ///     Location feed
+        ///     Location stories
         /// </returns>
-        public async Task<IResult<InstaLocationFeed>> GetLocationFeedAsync(long locationId,
-            PaginationParameters paginationParameters)
+        public async Task<IResult<InstaStory>> GetLocationStoriesAsync(long locationId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var uri = UriCreator.GetLocationFeedUri(locationId.ToString(), paginationParameters.NextMaxId);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, uri, _deviceInfo);
+                var uri = UriCreator.GetLocationFeedUri(locationId.ToString());
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaLocationFeed>(response, json);
+                    return Result.UnExpectedResponse<InstaStory>(response, json);
 
                 var feedResponse = JsonConvert.DeserializeObject<InstaLocationFeedResponse>(json);
                 var feed = ConvertersFabric.Instance.GetLocationFeedConverter(feedResponse).Convert();
-                paginationParameters.PagesLoaded++;
-                paginationParameters.NextMaxId = feed.NextMaxId;
 
-                while (feedResponse.MoreAvailable
-                       && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
-                       && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
-                {
-                    var nextFeed = await GetLocationFeedAsync(locationId, paginationParameters);
-                    if (!nextFeed.Succeeded)
-                        return nextFeed;
-                    paginationParameters.StartFromMaxId(nextFeed.Value.NextMaxId);
-                    paginationParameters.PagesLoaded++;
-                    feed.NextMaxId = nextFeed.Value.NextMaxId;
-                    feed.Medias.AddRange(nextFeed.Value.Medias);
-                    feed.RankedMedias.AddRange(nextFeed.Value.RankedMedias);
-                }
-
-                return Result.Success(feed);
+                return Result.Success(feed.Story);
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaLocationFeed), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaStory), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaLocationFeed>(exception);
+                return Result.Fail<InstaStory>(exception);
             }
         }
 

@@ -10,14 +10,13 @@ namespace InstagramApiSharp.API.Processors
     public interface ILocationProcessor
     {
         /// <summary>
-        ///     Gets the feed of particular location.
+        ///     Gets the stories of particular location.
         /// </summary>
-        /// <param name="locationId">Location identifier</param>
-        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="locationId">Location identifier (location pk, external id, facebook id)</param>
         /// <returns>
-        ///     Location feed
+        ///     Location stories
         /// </returns>
-        Task<IResult<InstaLocationFeed>> GetLocationFeedAsync(long locationId, PaginationParameters paginationParameters);
+        Task<IResult<InstaStory>> GetLocationStoriesAsync(long locationId);
 
         /// <summary>
         ///     Get location(place) information by external id or facebook places id

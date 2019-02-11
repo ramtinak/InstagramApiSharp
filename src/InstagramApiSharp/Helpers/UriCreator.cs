@@ -2146,7 +2146,7 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetLocationFeedUri(string locationId, string maxId)
+        public static Uri GetLocationFeedUri(string locationId, string maxId = null)
         {
             if (!Uri.TryCreate(BaseInstagramUri,
                 string.Format(InstaApiConstants.LOCATION_FEED, locationId), out var instaUri))
