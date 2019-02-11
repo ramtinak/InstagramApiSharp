@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.3.2</Version>
-    <AssemblyVersion>1.3.3.2</AssemblyVersion>
-    <FileVersion>1.3.3.2</FileVersion>
+    <Version>1.3.3.3</Version>
+    <AssemblyVersion>1.3.3.3</AssemblyVersion>
+    <FileVersion>1.3.3.3</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,19 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.3.3.2
+    <PackageReleaseNotes>v1.3.3.3
+- [Bugfix] for GetUserFollowersAsync
+- [Bugfix] for GetUserFollowingAsync
+- [Rename] GetLocationFeedAsync to GetLocationStoriesAsync
+- [Rename] InstaHashtagMediaList to InstaSectionMediaList
+- [Add] some new properties to PaginationParameters
+- [Add] GetTopLocationFeedsAsync to LocationProcessor 
+- [Add] GetRecentLocationFeedsAsync to LocationProcessor
+- [Add] GetAccountDetailsAsync to BusinessProcessor
+- [Update] GetRecentHashtagMediaListAsync pagination 
+- [Update] GetUserTimelineFeedAsync pull refresh
+
+v1.3.3.2
 - [Add] InstaStoryFriendshipStatus class
 - [Update] GetStoryFeedAsync
 - [Update] GetUserStoryAsync

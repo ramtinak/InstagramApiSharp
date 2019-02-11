@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.3.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.3.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -92,6 +92,18 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.3.3
+- [Bugfix] for GetUserFollowersAsync
+- [Bugfix] for GetUserFollowingAsync
+- [Rename] GetLocationFeedAsync to GetLocationStoriesAsync
+- [Rename] InstaHashtagMediaList to InstaSectionMediaList
+- [Add] some new properties to PaginationParameters
+- [Add] GetTopLocationFeedsAsync to LocationProcessor 
+- [Add] GetRecentLocationFeedsAsync to LocationProcessor
+- [Add] GetAccountDetailsAsync to BusinessProcessor
+- [Update] GetRecentHashtagMediaListAsync pagination 
+- [Update] GetUserTimelineFeedAsync pull refresh
+
 v1.3.3.2
 - [Add] InstaStoryFriendshipStatus class
 - [Update] GetStoryFeedAsync
@@ -148,20 +160,6 @@ v1.3.3.0
 - [Update] ApproveDirectPendingRequestAsync
 - [Update] GetUserShoppableMediaAsync pagination
 - [Update] GetUserShoppableMediaAsync pagination
-
-v1.3.2.3
-- [Bugfix] for Blocked users
-- [Add] SendDirectProfileToRecipientsAsync
-
-v1.3.2.2
-- [Bugfix] for user activities timespan
-- [Add] support for story sliders
-- [Add] VoteStorySliderAsync to StoryProcessor
-- [Add] some new properties to InstaStoryItem
-- [Add] StorySliderVoters to InstaStoryItem
-- [Add] Slider to InstaStoryUploadOptions
-- [Add] Fail<T>(Exception, T, ResponseType) to Result
-- [Add] NetworkProblem to ResponseType
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
