@@ -2177,5 +2177,13 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for location search");
             return instaUri;
         }
+
+        public static Uri GetAccountDetailsUri(long userId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.USERS_ACCOUNT_DETAILS, userId), out var instaUri))
+                throw new Exception("Cant create URI for account details");
+            return instaUri;
+        }
     }
 }

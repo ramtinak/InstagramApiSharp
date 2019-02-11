@@ -184,6 +184,39 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get account details for an business account ( like it's joined date )
+        ///     <param name="userId">User id (pk)</param>
+        /// </summary>
+        public async Task<IResult<InstaAccountDetails>> GetAccountDetailsAsync(long userId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetAccountDetailsUri(userId);
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaAccountDetails>(response, "Can't find account details for this user pk", json);
+
+                var obj = JsonConvert.DeserializeObject<InstaAccountDetailsResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetAccountDetailsConverter(obj).Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaAccountDetails), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaAccountDetails>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Get logged in business account information
         /// </summary>
         public async Task<IResult<InstaUserInfo>> GetBusinessAccountInformationAsync()

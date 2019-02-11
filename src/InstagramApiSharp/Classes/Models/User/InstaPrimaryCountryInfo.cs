@@ -6,14 +6,15 @@
  * 
  * IRANIAN DEVELOPERS
  */
-using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaBrandedContent
+    public class InstaPrimaryCountryInfo
     {
-        public bool RequireApproval { get; set; }
+        public bool IsVisible { get; set; }
 
-        public List<InstaUserShort> WhitelistedUsers { get; set; } = new List<InstaUserShort>();
+        public bool HasCountry { get; set; }
+
+        public string CountryName { get; set; }
     }
 }

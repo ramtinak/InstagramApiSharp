@@ -6,7 +6,7 @@ using System.Text;
 
 namespace InstagramApiSharp.Converters
 {
-    public class InstaBlockedUserInfoConverter : IObjectConverter<InstaBlockedUserInfo, InstaBlockedUserInfoResponse>
+    internal class InstaBlockedUserInfoConverter : IObjectConverter<InstaBlockedUserInfo, InstaBlockedUserInfoResponse>
     {
         public InstaBlockedUserInfoResponse SourceObject { get; set; }
 

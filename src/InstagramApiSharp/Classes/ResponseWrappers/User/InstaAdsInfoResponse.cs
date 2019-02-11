@@ -6,14 +6,16 @@
  * 
  * IRANIAN DEVELOPERS
  */
-using System.Collections.Generic;
 
-namespace InstagramApiSharp.Classes.Models
+using Newtonsoft.Json;
+
+namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    public class InstaBrandedContent
+    public class InstaAdsInfoResponse
     {
-        public bool RequireApproval { get; set; }
-
-        public List<InstaUserShort> WhitelistedUsers { get; set; } = new List<InstaUserShort>();
+        [JsonProperty("has_ads")]
+        public bool? HasAds { get; set; }
+        [JsonProperty("ads_url")]
+        public string AdsUrl { get; set; }
     }
 }

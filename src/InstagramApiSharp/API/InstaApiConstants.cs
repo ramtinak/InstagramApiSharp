@@ -552,6 +552,7 @@ namespace InstagramApiSharp.API
         public const string USERS_FULL_DETAIL_INFO = API_SUFFIX + "/users/{0}/full_detail_info/";
         public const string USERS_NAMETAG_LOOKUP = API_SUFFIX + "/users/nametag_lookup/";
         public const string USERS_BLOCKED_LIST = API_SUFFIX + "/users/blocked_list/";
+        public const string USERS_ACCOUNT_DETAILS = API_SUFFIX + "/users/{0}/account_details/";
 
         #endregion Users endpoints constants
 

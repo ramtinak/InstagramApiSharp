@@ -9,8 +9,6 @@
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.Models.Business;
-using InstagramApiSharp.Classes.ResponseWrappers;
-using InstagramApiSharp.Classes.ResponseWrappers.Business;
 using InstagramApiSharp.Enums;
 using System;
 using System.Threading.Tasks;
@@ -53,6 +51,12 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="subCategoryId">Sub category id (Get it from <see cref="IBusinessProcessor.GetSubCategoriesAsync(string)"/>)
         /// </param>
         Task<IResult<InstaBusinessUser>> ChangeBusinessCategoryAsync(string subCategoryId);
+
+        /// <summary>
+        ///     Get account details for an business account ( like it's joined date )
+        ///     <param name="userId">User id (pk)</param>
+        /// </summary>
+        Task<IResult<InstaAccountDetails>> GetAccountDetailsAsync(long userId);
 
         /// <summary>
         ///     Get logged in business account information
