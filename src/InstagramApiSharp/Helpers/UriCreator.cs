@@ -729,7 +729,7 @@ namespace InstagramApiSharp.Helpers
         }
 
         public static Uri GetHashtagRankedMediaUri(string hashtag, string rankToken = null,
-            string nextId = null, int? page = null)
+            string nextId = null, int? page = null, IEnumerable<long> nextMediaIds = null)
         {
             if (
                 !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_RANKED, hashtag.EncodeUri()),
@@ -746,6 +746,12 @@ namespace InstagramApiSharp.Helpers
             {
                 instaUri = instaUri
                     .AddQueryParameter("page", page.ToString());
+            }
+            if (nextMediaIds != null && nextMediaIds.Any())
+            {
+                var mediaIds = $"[{string.Join(",", nextMediaIds)}]";
+                instaUri = instaUri
+                     .AddQueryParameter("next_media_ids", mediaIds.EncodeUri());
             }
             return instaUri;
         }

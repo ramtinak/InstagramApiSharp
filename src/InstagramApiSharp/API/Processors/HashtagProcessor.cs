@@ -207,8 +207,8 @@ namespace InstagramApiSharp.API.Processors
                     return ConvertersFabric.Instance.GetHashtagMediaListConverter(hashtagMediaListResponse).Convert();
                 }
                 var mediaResponse = await GetHashtagRecentMedia(tagname,
-                    _user.RankToken ?? Guid.NewGuid().ToString(),
-                    paginationParameters.NextMaxId);
+                    _user.RankToken ?? _deviceInfo.DeviceGuid.ToString(),
+                    paginationParameters.NextMaxId, paginationParameters.NextPage, paginationParameters.NextMediaIds);
                 if (!mediaResponse.Succeeded)
                 {
                     if (mediaResponse.Value != null)
@@ -216,14 +216,15 @@ namespace InstagramApiSharp.API.Processors
                     else
                         Result.Fail(mediaResponse.Info, default(InstaSectionMedia));
                 }
-
+                paginationParameters.NextMediaIds = mediaResponse.Value.NextMediaIds;
+                paginationParameters.NextPage = mediaResponse.Value.NextPage;
                 paginationParameters.NextMaxId = mediaResponse.Value.NextMaxId;
                 paginationParameters.PagesLoaded++;
                 while (mediaResponse.Value.MoreAvailable
                     && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var moreMedias = await GetHashtagRecentMedia(tagname, _user.RankToken ?? Guid.NewGuid().ToString(),
+                    var moreMedias = await GetHashtagRecentMedia(tagname, _user.RankToken ?? _deviceInfo.DeviceGuid.ToString(),
                         paginationParameters.NextMaxId, mediaResponse.Value.NextPage, mediaResponse.Value.NextMediaIds);
                     if (!moreMedias.Succeeded)
                     {
@@ -236,8 +237,8 @@ namespace InstagramApiSharp.API.Processors
                     mediaResponse.Value.MoreAvailable = moreMedias.Value.MoreAvailable;
                     mediaResponse.Value.NextMaxId = paginationParameters.NextMaxId = moreMedias.Value.NextMaxId;
                     mediaResponse.Value.AutoLoadMoreEnabled = moreMedias.Value.AutoLoadMoreEnabled;
-                    mediaResponse.Value.NextMediaIds = moreMedias.Value.NextMediaIds;
-                    mediaResponse.Value.NextPage = moreMedias.Value.NextPage;
+                    mediaResponse.Value.NextMediaIds = paginationParameters.NextMediaIds = moreMedias.Value.NextMediaIds;
+                    mediaResponse.Value.NextPage = paginationParameters.NextPage = moreMedias.Value.NextPage;
                     mediaResponse.Value.Sections.AddRange(moreMedias.Value.Sections);
                     paginationParameters.PagesLoaded++;
                 }
@@ -313,8 +314,8 @@ namespace InstagramApiSharp.API.Processors
                     return ConvertersFabric.Instance.GetHashtagMediaListConverter(hashtagMediaListResponse).Convert();
                 }
                 var mediaResponse = await GetHashtagTopMedia(tagname,
-                    _user.RankToken ?? Guid.NewGuid().ToString(),
-                    paginationParameters.NextMaxId);
+                    _user.RankToken ?? _deviceInfo.DeviceGuid.ToString(),
+                    paginationParameters.NextMaxId, paginationParameters.NextPage, paginationParameters.NextMediaIds);
 
                 if (!mediaResponse.Succeeded)
                 {
@@ -323,23 +324,24 @@ namespace InstagramApiSharp.API.Processors
                     else
                         Result.Fail(mediaResponse.Info, default(InstaSectionMedia));
                 }
-
+                paginationParameters.NextMediaIds = mediaResponse.Value.NextMediaIds;
+                paginationParameters.NextPage = mediaResponse.Value.NextPage;
                 paginationParameters.NextMaxId = mediaResponse.Value.NextMaxId;
                 paginationParameters.PagesLoaded++;
                 while (mediaResponse.Value.MoreAvailable
                     && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var moreMedias = await GetHashtagTopMedia(tagname, _user.RankToken ?? Guid.NewGuid().ToString(),
-                        paginationParameters.NextMaxId, mediaResponse.Value.NextPage);
+                    var moreMedias = await GetHashtagTopMedia(tagname, _user.RankToken ?? _deviceInfo.DeviceGuid.ToString(),
+                        paginationParameters.NextMaxId, mediaResponse.Value.NextPage, mediaResponse.Value.NextMediaIds);
                     if (!moreMedias.Succeeded)
                         return Result.Fail(moreMedias.Info, Convert(moreMedias.Value));
 
                     mediaResponse.Value.MoreAvailable = moreMedias.Value.MoreAvailable;
                     mediaResponse.Value.NextMaxId = paginationParameters.NextMaxId = moreMedias.Value.NextMaxId;
                     mediaResponse.Value.AutoLoadMoreEnabled = moreMedias.Value.AutoLoadMoreEnabled;
-                    mediaResponse.Value.NextMediaIds = moreMedias.Value.NextMediaIds;
-                    mediaResponse.Value.NextPage = moreMedias.Value.NextPage;
+                    mediaResponse.Value.NextMediaIds = paginationParameters.NextMediaIds = moreMedias.Value.NextMediaIds;
+                    mediaResponse.Value.NextPage = paginationParameters.NextPage = moreMedias.Value.NextPage;
                     mediaResponse.Value.Sections.AddRange(moreMedias.Value.Sections);
                     paginationParameters.PagesLoaded++;
                 }
@@ -482,14 +484,15 @@ namespace InstagramApiSharp.API.Processors
         }
 
         private async Task<IResult<InstaSectionMediaListResponse>> GetHashtagTopMedia(string tagname,
-                 string rankToken = null,
-         string maxId = null,
-         int? page = null)
+            string rankToken = null,
+            string maxId = null,
+            int? page = null,
+            List<long> nextMediaIds = null)
         {
             try
             {
                 var instaUri = UriCreator.GetHashtagRankedMediaUri(tagname, rankToken,
-                    maxId, page);
+                    maxId, page, nextMediaIds);
 
                 var request =
                     _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
