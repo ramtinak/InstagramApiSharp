@@ -11,6 +11,7 @@ using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Converters;
 using InstagramApiSharp.Helpers;
 using InstagramApiSharp.Logger;
+using InstagramApiSharp.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -331,6 +332,45 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaPlaceListResponse>(exception);
+            }
+        }
+
+        private async Task<IResult<InstaSectionMediaListResponse>> GetSectionMedia(InstaSectionType sectionType, 
+            long locationId, string maxId = null, int? nextPage = null, List<long> nextMediaIds = null)
+        {
+            try
+            {
+                var instaUri = UriCreator.GetLocationSectionUri(locationId.ToString());
+                var data = new Dictionary<string, string>
+                {
+                    {"rank_token", _user.RankToken ?? _deviceInfo.DeviceGuid.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"session_id", Guid.NewGuid().ToString()},
+                    {"tab", sectionType.ToString().ToLower()}
+                };
+
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaSectionMediaListResponse>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaSectionMediaListResponse>(json);
+
+                return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaSectionMediaListResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaSectionMediaListResponse>(exception);
             }
         }
     }
