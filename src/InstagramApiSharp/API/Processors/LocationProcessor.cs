@@ -117,6 +117,17 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get recent location media feeds.
+        ///     <para>Important note: Be careful of using this function, because it's an POST request</para>
+        /// </summary>
+        /// <param name="locationId">Location identifier (location pk, external id, facebook id)</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaSectionMedia>> GetRecentLocationFeedsAsync(long locationId, PaginationParameters paginationParameters)
+        {
+            return await GetSectionAsync(locationId, paginationParameters, InstaSectionType.Recent);
+        }
+
+        /// <summary>
         ///     Get top (ranked) location media feeds.
         ///     <para>Important note: Be careful of using this function, because it's an POST request</para>
         /// </summary>
@@ -385,7 +396,12 @@ namespace InstagramApiSharp.API.Processors
                         mediaResponse.Value.NextPage, 
                         mediaResponse.Value.NextMediaIds);
                     if (!moreMedias.Succeeded)
-                        return Result.Fail(moreMedias.Info, Convert(moreMedias.Value));
+                    {
+                        if (mediaResponse.Value.Sections?.Count > 0)
+                            return Result.Success(Convert(mediaResponse.Value));
+                        else
+                            return Result.Fail(moreMedias.Info, Convert(mediaResponse.Value));
+                    }
 
                     mediaResponse.Value.MoreAvailable = moreMedias.Value.MoreAvailable;
                     mediaResponse.Value.NextMaxId = paginationParameters.NextMaxId = moreMedias.Value.NextMaxId;
@@ -437,7 +453,10 @@ namespace InstagramApiSharp.API.Processors
                 if (nextMediaIds?.Count > 0)
                 {
                     var mediaIds = $"[{string.Join(",", nextMediaIds)}]";
-                    data.Add("next_media_ids", mediaIds.EncodeUri());
+                    if (sectionType == InstaSectionType.Ranked)
+                        data.Add("next_media_ids", mediaIds.EncodeUri());
+                    else
+                        data.Add("next_media_ids", mediaIds);
                 }
 
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);

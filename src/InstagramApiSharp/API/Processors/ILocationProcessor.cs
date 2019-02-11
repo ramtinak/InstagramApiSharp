@@ -31,6 +31,14 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaPlaceShort>> GetLocationInfoAsync(string externalIdOrFacebookPlacesId);
 
         /// <summary>
+        ///     Get recent location media feeds.
+        ///     <para>Important note: Be careful of using this function, because it's an POST request</para>
+        /// </summary>
+        /// <param name="locationId">Location identifier (location pk, external id, facebook id)</param>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        Task<IResult<InstaSectionMedia>> GetRecentLocationFeedsAsync(long locationId, PaginationParameters paginationParameters);
+
+        /// <summary>
         ///     Get top (ranked) location media feeds.
         ///     <para>Important note: Be careful of using this function, because it's an POST request</para>
         /// </summary>
