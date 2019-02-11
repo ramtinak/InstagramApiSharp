@@ -15,15 +15,15 @@ using InstagramApiSharp.Classes.ResponseWrappers;
 
 namespace InstagramApiSharp.Converters.Hashtags
 {
-    internal class InstaHashtagMediaConverter : IObjectConverter<InstaHashtagMedia, InstaHashtagMediaListResponse>
+    internal class InstaHashtagMediaConverter : IObjectConverter<InstaSectionMedia, InstaSectionMediaListResponse>
     {
-        public InstaHashtagMediaListResponse SourceObject { get; set; }
+        public InstaSectionMediaListResponse SourceObject { get; set; }
 
-        public InstaHashtagMedia Convert()
+        public InstaSectionMedia Convert()
         {
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
 
-            var media = new InstaHashtagMedia
+            var media = new InstaSectionMedia
             {
                 AutoLoadMoreEnabled = SourceObject.AutoLoadMoreEnabled ?? false,
                 MoreAvailable = SourceObject.MoreAvailable,

@@ -44,7 +44,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="tagname">Tag name</param>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        Task<IResult<InstaHashtagMedia>> GetRecentHashtagMediaListAsync(string tagname, PaginationParameters paginationParameters);
+        Task<IResult<InstaSectionMedia>> GetRecentHashtagMediaListAsync(string tagname, PaginationParameters paginationParameters);
 
         /// <summary>
         ///     Get suggested hashtags
@@ -59,7 +59,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="tagname">Tag name</param>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        Task<IResult<InstaHashtagMedia>> GetTopHashtagMediaListAsync(string tagname, PaginationParameters paginationParameters);
+        Task<IResult<InstaSectionMedia>> GetTopHashtagMediaListAsync(string tagname, PaginationParameters paginationParameters);
 
         /// <summary>
         ///     Searches for specific hashtag by search query.

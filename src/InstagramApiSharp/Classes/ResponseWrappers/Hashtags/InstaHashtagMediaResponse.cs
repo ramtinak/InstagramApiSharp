@@ -13,10 +13,10 @@ using System.Text;
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
-    public class InstaHashtagMediaListResponse
+    public class InstaSectionMediaListResponse
     {
         [JsonProperty("sections")]
-        public List<InstaHashtagMediaResponse> Sections { get; set; } = new List<InstaHashtagMediaResponse>();
+        public List<InstaSectionMediaResponse> Sections { get; set; } = new List<InstaSectionMediaResponse>();
         [JsonProperty("more_available")]
         public bool MoreAvailable { get; set; }
         [JsonProperty("next_max_id")]
@@ -31,18 +31,18 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public string Status { get; set; }
     }
 
-    public class InstaHashtagMediaResponse
+    public class InstaSectionMediaResponse
     {
         [JsonProperty("layout_type")]
         public string LayoutType { get; set; }
         [JsonProperty("layout_content")]
-        public InstaHashtagMediaLayoutContentResponse LayoutContent { get; set; }
+        public InstaSectionMediaLayoutContentResponse LayoutContent { get; set; }
         [JsonProperty("feed_type")]
         public string FeedType { get; set; }
         [JsonProperty("explore_item_info")]
-        public InstaHashtagMediaExploreItemInfoResponse ExploreItemInfo { get; set; }
+        public InstaSectionMediaExploreItemInfoResponse ExploreItemInfo { get; set; }
     }
-    public class InstaHashtagMediaExploreItemInfoResponse
+    public class InstaSectionMediaExploreItemInfoResponse
     {
         [JsonProperty("num_columns")]
         public int NumBolumns { get; set; }
@@ -54,7 +54,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public bool Autoplay { get; set; }
     }
 
-    public class InstaHashtagMediaLayoutContentResponse
+    public class InstaSectionMediaLayoutContentResponse
     {
         [JsonProperty("medias")]
         public List<InstaMediaAlbumResponse> Medias { get; set; }

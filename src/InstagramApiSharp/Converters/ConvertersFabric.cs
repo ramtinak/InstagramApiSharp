@@ -392,8 +392,8 @@ namespace InstagramApiSharp.Converters
             return new InstaHashtagStoryConverter { SourceObject = response };
         }
 
-        public IObjectConverter<InstaHashtagMedia, InstaHashtagMediaListResponse> GetHashtagMediaListConverter(
-            InstaHashtagMediaListResponse response)
+        public IObjectConverter<InstaSectionMedia, InstaSectionMediaListResponse> GetHashtagMediaListConverter(
+            InstaSectionMediaListResponse response)
         {
             return new InstaHashtagMediaConverter { SourceObject = response };
         }

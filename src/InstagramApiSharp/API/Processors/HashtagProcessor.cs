@@ -193,7 +193,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="tagname">Tag name</param>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        public async Task<IResult<InstaHashtagMedia>> GetRecentHashtagMediaListAsync(string tagname,
+        public async Task<IResult<InstaSectionMedia>> GetRecentHashtagMediaListAsync(string tagname,
             PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -202,7 +202,7 @@ namespace InstagramApiSharp.API.Processors
                 if (paginationParameters == null)
                     paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                InstaHashtagMedia Convert(InstaHashtagMediaListResponse hashtagMediaListResponse)
+                InstaSectionMedia Convert(InstaSectionMediaListResponse hashtagMediaListResponse)
                 {
                     return ConvertersFabric.Instance.GetHashtagMediaListConverter(hashtagMediaListResponse).Convert();
                 }
@@ -214,7 +214,7 @@ namespace InstagramApiSharp.API.Processors
                     if (mediaResponse.Value != null)
                         Result.Fail(mediaResponse.Info, Convert(mediaResponse.Value));
                     else
-                        Result.Fail(mediaResponse.Info, default(InstaHashtagMedia));
+                        Result.Fail(mediaResponse.Info, default(InstaSectionMedia));
                 }
 
                 paginationParameters.NextMaxId = mediaResponse.Value.NextMaxId;
@@ -247,12 +247,12 @@ namespace InstagramApiSharp.API.Processors
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaHashtagMedia), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaSectionMedia), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaHashtagMedia>(exception);
+                return Result.Fail<InstaSectionMedia>(exception);
             }
         }
 
@@ -299,7 +299,7 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="tagname">Tag name</param>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        public async Task<IResult<InstaHashtagMedia>> GetTopHashtagMediaListAsync(string tagname,
+        public async Task<IResult<InstaSectionMedia>> GetTopHashtagMediaListAsync(string tagname,
             PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -308,7 +308,7 @@ namespace InstagramApiSharp.API.Processors
                 if (paginationParameters == null)
                     paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                InstaHashtagMedia Convert(InstaHashtagMediaListResponse hashtagMediaListResponse)
+                InstaSectionMedia Convert(InstaSectionMediaListResponse hashtagMediaListResponse)
                 {
                     return ConvertersFabric.Instance.GetHashtagMediaListConverter(hashtagMediaListResponse).Convert();
                 }
@@ -321,7 +321,7 @@ namespace InstagramApiSharp.API.Processors
                     if (mediaResponse.Value != null)
                         Result.Fail(mediaResponse.Info, Convert(mediaResponse.Value));
                     else
-                        Result.Fail(mediaResponse.Info, default(InstaHashtagMedia));
+                        Result.Fail(mediaResponse.Info, default(InstaSectionMedia));
                 }
 
                 paginationParameters.NextMaxId = mediaResponse.Value.NextMaxId;
@@ -349,12 +349,12 @@ namespace InstagramApiSharp.API.Processors
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaHashtagMedia), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaSectionMedia), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaHashtagMedia>(exception);
+                return Result.Fail<InstaSectionMedia>(exception);
             }
         }
 
@@ -446,7 +446,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
-        private async Task<IResult<InstaHashtagMediaListResponse>> GetHashtagRecentMedia(string tagname,
+        private async Task<IResult<InstaSectionMediaListResponse>> GetHashtagRecentMedia(string tagname,
             string rankToken = null,
             string maxId = null,
             int? page = null,
@@ -463,25 +463,25 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaHashtagMediaListResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaSectionMediaListResponse>(response, json);
 
-                var obj = JsonConvert.DeserializeObject<InstaHashtagMediaListResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaSectionMediaListResponse>(json);
 
                 return Result.Success(obj);
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaHashtagMediaListResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaSectionMediaListResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaHashtagMediaListResponse>(exception);
+                return Result.Fail<InstaSectionMediaListResponse>(exception);
             }
         }
 
-        private async Task<IResult<InstaHashtagMediaListResponse>> GetHashtagTopMedia(string tagname,
+        private async Task<IResult<InstaSectionMediaListResponse>> GetHashtagTopMedia(string tagname,
                  string rankToken = null,
          string maxId = null,
          int? page = null)
@@ -497,21 +497,21 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaHashtagMediaListResponse>(response, json);
+                    return Result.UnExpectedResponse<InstaSectionMediaListResponse>(response, json);
 
-                var obj = JsonConvert.DeserializeObject<InstaHashtagMediaListResponse>(json);
+                var obj = JsonConvert.DeserializeObject<InstaSectionMediaListResponse>(json);
 
                 return Result.Success(obj);
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaHashtagMediaListResponse), ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaSectionMediaListResponse), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail<InstaHashtagMediaListResponse>(exception);
+                return Result.Fail<InstaSectionMediaListResponse>(exception);
             }
         }
     }
