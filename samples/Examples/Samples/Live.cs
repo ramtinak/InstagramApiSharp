@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using InstagramApiSharp;
 using InstagramApiSharp.API;
 using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
@@ -69,9 +70,9 @@ EndAsync");
             var result = await InstaApi.LiveProcessor.GetSuggestedBroadcastsAsync();
             if (result.Succeeded)
             {
-                Console.WriteLine("Suggested broadcast count: " + result.Value.Broadcasts?.Count);
-                if (result.Value.Broadcasts?.Count > 0)
-                    Console.WriteLine("First suggested broadcast message: " + result.Value.Broadcasts?.FirstOrDefault()?.BroadcastMessage);
+                Console.WriteLine("Suggested broadcast count: " + result.Value?.Count);
+                if (result.Value?.Count > 0)
+                    Console.WriteLine("First suggested broadcast message: " + result.Value?.FirstOrDefault()?.BroadcastMessage);
             }
             else
                 Console.WriteLine("Error while suggested broadcasts: " + result.Info.Message);
@@ -79,7 +80,7 @@ EndAsync");
 
         public async void DiscoverTopLive()
         {
-            var result = await InstaApi.LiveProcessor.GetDiscoverTopLiveAsync();
+            var result = await InstaApi.LiveProcessor.GetDiscoverTopLiveAsync(PaginationParameters.MaxPagesToLoad(1));
             if (result.Succeeded)
             {
                 Console.WriteLine("Discover top lives count: " + result.Value.Broadcasts?.Count);
@@ -95,9 +96,9 @@ EndAsync");
             var result = await InstaApi.LiveProcessor.GetTopLiveStatusAsync("broadcastsID1", "broadcastID2");
             if (result.Succeeded)
             {
-                Console.WriteLine("Discover top lives count: " + result.Value.BroadcastStatusItems?.Count);
-                if (result.Value.BroadcastStatusItems?.Count > 0)
-                    Console.WriteLine("First top live broadcast status: " + result.Value.BroadcastStatusItems?.FirstOrDefault()?.BroadcastStatus);
+                Console.WriteLine("Discover top lives count: " + result.Value?.Count);
+                if (result.Value?.Count > 0)
+                    Console.WriteLine("First top live broadcast status: " + result.Value?.FirstOrDefault()?.BroadcastStatus);
             }
             else
                 Console.WriteLine("Error while top live status: " + result.Info.Message);
