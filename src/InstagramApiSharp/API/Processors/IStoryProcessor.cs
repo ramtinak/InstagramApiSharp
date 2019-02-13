@@ -12,6 +12,14 @@ namespace InstagramApiSharp.API.Processors
     public interface IStoryProcessor
     {
         /// <summary>
+        ///     Respond to an story question
+        /// </summary>
+        /// <param name="storyId">Story id (<see cref="InstaStoryItem.Id"/>)</param>
+        /// <param name="questionId">Question id (<see cref="InstaStoryQuestionStickerItem.QuestionId"/>)</param>
+        /// <param name="responseText">Text to respond</param>
+        Task<IResult<bool>> AnswerToStoryQuestionAsync(string storyId, long questionId, string responseText);
+
+        /// <summary>
         ///     Create new highlight
         /// </summary>
         /// <param name="mediaId">Story media id</param>

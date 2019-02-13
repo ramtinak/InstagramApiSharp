@@ -2185,5 +2185,13 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for account details");
             return instaUri;
         }
+
+        public static Uri GetStoryQuestionResponseUri(string storyId, long questionid)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                string.Format(InstaApiConstants.MEDIA_STORY_QUESTION_RESPONSE, storyId, questionid), out var instaUri))
+                throw new Exception("Cant create URI for story question answer");
+            return instaUri;
+        }
     }
 }
