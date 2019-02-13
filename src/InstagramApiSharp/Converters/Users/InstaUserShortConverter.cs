@@ -29,7 +29,14 @@ namespace InstagramApiSharp.Converters
                 IsUnpublished = SourceObject.IsUnpublished,
                 AllowedCommenterType = SourceObject.AllowedCommenterType,
                 LatestReelMedia = SourceObject.LatestReelMedia,
-                IsFavorite = SourceObject.IsFavorite
+                IsFavorite = SourceObject.IsFavorite,
+
+                AccountType = SourceObject.AccountType,
+                AllowContactsSync = SourceObject.AllowContactsSync,
+                IsCallToActionEnabled = SourceObject.IsCallToActionEnabled,
+                HasPlacedOrders = SourceObject.HasPlacedOrders,
+                IsBusiness = SourceObject.IsBusiness,
+                PhoneNumber = SourceObject.PhoneNumber
             };
             return user;
         }

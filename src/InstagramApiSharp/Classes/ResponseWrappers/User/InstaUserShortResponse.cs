@@ -35,5 +35,17 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("latest_reel_media")] public int LatestReelMedia { get; set; }
 
         [JsonProperty("is_favorite")] public bool IsFavorite { get; set; }
+
+        [JsonProperty("is_business")] public bool IsBusiness { get; set; }
+
+        [JsonProperty("is_call_to_action_enabled")] public object IsCallToActionEnabled { get; set; }
+
+        [JsonProperty("account_type")] public int AccountType { get; set; }
+
+        [JsonProperty("has_placed_orders")] public bool HasPlacedOrders { get; set; }
+
+        [JsonProperty("allow_contacts_sync")] public bool AllowContactsSync { get; set; }
+
+        [JsonProperty("phone_number")] public string PhoneNumber { get; set; }
     }
 }

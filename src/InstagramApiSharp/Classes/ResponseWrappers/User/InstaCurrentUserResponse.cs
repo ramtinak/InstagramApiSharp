@@ -12,7 +12,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("biography")] public string Biography { get; set; }
 
-        [JsonProperty("phone_number")] public string PhoneNumber { get; set; }
+      // [JsonProperty("phone_number")] public string PhoneNumber { get; set; }
 
         [JsonProperty("country_code")] public int CountryCode { get; set; }
 

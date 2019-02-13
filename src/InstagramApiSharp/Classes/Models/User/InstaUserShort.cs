@@ -22,8 +22,14 @@ namespace InstagramApiSharp.Classes.Models
         public string AllowedCommenterType { get; set; }
         public int LatestReelMedia { get; set; }
         public bool IsFavorite { get; set; }
+        public bool IsBusiness { get; set; }
+        public object IsCallToActionEnabled { get; set; }
+        public int AccountType { get; set; }
+        public bool HasPlacedOrders { get; set; }
+        public bool AllowContactsSync { get; set; }
+        public string PhoneNumber { get; set; }
 
-        public static InstaUserShort Empty => new InstaUserShort {FullName = string.Empty, UserName = string.Empty};
+        public static InstaUserShort Empty => new InstaUserShort { FullName = string.Empty, UserName = string.Empty };
 
         public bool Equals(InstaUserShort user)
         {

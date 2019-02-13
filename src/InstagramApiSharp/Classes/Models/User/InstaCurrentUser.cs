@@ -23,6 +23,12 @@ namespace InstagramApiSharp.Classes.Models
             AllowedCommenterType = instaUserShort.AllowedCommenterType;
             LatestReelMedia = instaUserShort.LatestReelMedia;
             IsFavorite = instaUserShort.IsFavorite;
+            PhoneNumber = instaUserShort.PhoneNumber;
+            AccountType = instaUserShort.AccountType;
+            AllowContactsSync = instaUserShort.AllowContactsSync;
+            IsCallToActionEnabled = instaUserShort.IsCallToActionEnabled;
+            HasPlacedOrders = instaUserShort.HasPlacedOrders;
+            IsBusiness = instaUserShort.IsBusiness;
         }
 
         public string Biography { get; set; }
@@ -31,7 +37,7 @@ namespace InstagramApiSharp.Classes.Models
         public InstaImage HdProfilePicture { get; set; }
         public bool ShowConversionEditEntry { get; set; }
         public string Birthday { get; set; }
-        public string PhoneNumber { get; set; }
+      //  public string PhoneNumber { get; set; }
         public int CountryCode { get; set; }
         public long NationalNumber { get; set; }
         public InstaGenderType Gender { get; set; }

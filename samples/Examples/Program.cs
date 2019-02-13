@@ -97,7 +97,7 @@ namespace Examples
                     state.Seek(0, SeekOrigin.Begin);
                     state.CopyTo(fileStream);
                 }
-
+               
                 Console.WriteLine("Press 1 to start basic demo samples");
                 Console.WriteLine("Press 2 to start upload photo demo sample");
                 Console.WriteLine("Press 3 to start comment media demo sample");
