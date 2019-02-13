@@ -22,5 +22,7 @@ namespace InstagramApiSharp.Classes.Models
         public InstaStorySliderUpload Slider { get; set; }
 
         internal InstaMediaStoryUpload MediaStory { get; set; }
+
+        public List<InstaStoryMentionUpload> Mentions { get; set; } = new List<InstaStoryMentionUpload>();
     }
 }

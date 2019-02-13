@@ -273,5 +273,19 @@ namespace InstagramApiSharp
                 {"is_sticker", mediaStory.IsSticker},
             };
         }
+
+        public static JObject ConvertToJson(this InstaStoryMentionUpload storyMention)
+        {
+            return new JObject
+            {
+                {"x", storyMention.X},
+                {"y", storyMention.Y},
+                {"z", storyMention.Z},
+                {"width", storyMention.Width},
+                {"height", storyMention.Height},
+                {"rotation", storyMention.Rotation},
+                {"user_id", storyMention.Pk}
+            };
+        }
     }
 }

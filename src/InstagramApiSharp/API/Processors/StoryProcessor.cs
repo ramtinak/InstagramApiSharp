@@ -912,6 +912,32 @@ namespace InstagramApiSharp.API.Processors
             };
             try
             {
+                if (uploadOptions.Mentions?.Count > 0)
+                {
+                    var currentDelay = _instaApi.GetRequestDelay();
+                    _instaApi.SetRequestDelay(RequestDelay.FromSeconds(1, 2));
+                    foreach (var t in uploadOptions.Mentions)
+                    {
+                        try
+                        {
+                            bool tried = false;
+                        TryLabel:
+                            var u = await _instaApi.UserProcessor.GetUserAsync(t.Username);
+                            if (!u.Succeeded)
+                            {
+                                if (!tried)
+                                {
+                                    tried = true;
+                                    goto TryLabel;
+                                }
+                            }
+                            else
+                                t.Pk = u.Value.Pk;
+                        }
+                        catch { }
+                    }
+                    _instaApi.SetRequestDelay(currentDelay);
+                }
                 var instaUri = UriCreator.GetUploadPhotoUri();
                 var uploadId = ApiRequestMessage.GenerateUploadId();
                 upProgress.UploadId = uploadId;
@@ -1510,6 +1536,15 @@ namespace InstagramApiSharp.API.Processors
                         };
 
                         data.Add("attached_media", mediaStory.ToString(Formatting.None));
+                    }
+
+                    if (uploadOptions.Mentions?.Count > 0)
+                    {
+                        var mentionArr = new JArray();
+                        foreach (var item in uploadOptions.Mentions)
+                            mentionArr.Add(item.ConvertToJson());
+
+                        data.Add("reel_mentions", mentionArr.ToString(Formatting.None));
                     }
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
