@@ -14,6 +14,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public string ProfilePicUrl { get; set; }
 
+        public string ProfilePicId { get; set; }
+
         public bool IsVerified { get; set; }
 
         public bool HasAnonymousProfilePicture { get; set; }
@@ -26,19 +28,69 @@ namespace InstagramApiSharp.Classes.Models
 
         public long FollowingCount { get; set; }
 
+        public long FollowingTagCount { get; set; }
+
         public string Biography { get; set; }
+
+        public bool CanLinkEntitiesInBio { get; set; }
 
         public string ExternalUrl { get; set; }
 
         public string ExternalLynxUrl { get; set; }
 
+        public bool HasBiographyTranslation { get; set; }
+
+        public bool CanBoostPost { get; set; }
+
+        public bool CanSeeOrganicInsights { get; set; }
+
+        public bool ShowInsightsTerms { get; set; }
+
+        public bool CanConvertToBusiness { get; set; }
+
+        public bool CanCreateSponsorTags { get; set; }
+
+        public bool CanBeTaggedAsSponsor { get; set; }
+        public int TotalIGTVVideos { get; set; }
+        public int TotalArEffects { get; set; }
+
         public string ReelAutoArchive { get; set; }
 
+        public bool IsProfileActionNeeded { get; set; }
+
         public long UsertagsCount { get; set; }
+
+        public bool UsertagReviewEnabled { get; set; }
+
+        public bool IsNeedy { get; set; }
+
+        public bool HasRecommendAccounts { get; set; }
 
         public bool IsFavorite { get; set; }
 
         public bool HasChaining { get; set; }
+
+        public bool HasPlacedOrders { get; set; }
+
+        public bool CanTagProductsFromMerchants { get; set; }
+
+        public bool ShowBusinessConversionIcon { get; set; }
+
+        public bool ShowConversionEditEntry { get; set; }
+
+        public bool AggregatePromoteEngagement { get; set; }
+
+        public string AllowedCommenterType { get; set; }
+
+        public bool IsVideoCreator { get; set; }
+
+        public bool HasProfileVideoFeed { get; set; }
+
+        public bool IsEligibleToShowFBCrossSharingNux { get; set; }
+
+        public object PageIdForNewSumaBizAccount { get; set; }
+
+        public int AccountType { get; set; }
 
         public string ProfileContext { get; set; }
 
@@ -51,12 +103,10 @@ namespace InstagramApiSharp.Classes.Models
         public bool HasUnseenBestiesMedia { get; set; }
 
         public bool AutoExpandChaining { get; set; }
-        
+
         public InstaBiographyEntities BiographyWithEntities { get; set; }
 
         public bool IsEligibleForSchool { get; set; }
-
-        public int FollowingTagCount { get; set; }
 
         public bool IsFavoriteForStories { get; set; }
 
