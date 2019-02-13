@@ -30,7 +30,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("seen_ranked_position")] public int SeenRankedPosition { get; set; }
 
-        [JsonProperty("items")] public List<InstaMediaItemResponse> Items { get; set; }
+        [JsonProperty("items")] public List<InstaStoryItemResponse> Items { get; set; }
 
         [JsonProperty("prefetch_count")] public int PrefetchCount { get; set; }
 

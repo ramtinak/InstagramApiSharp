@@ -53,7 +53,7 @@ namespace InstagramApiSharp.Converters
 
             if (SourceObject.Items != null)
                 foreach (var item in SourceObject.Items)
-                    story.Items.Add(ConvertersFabric.Instance.GetSingleMediaConverter(item).Convert());
+                    story.Items.Add(ConvertersFabric.Instance.GetStoryItemConverter(item).Convert());
             return story;
         }
     }

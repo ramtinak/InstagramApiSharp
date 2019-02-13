@@ -29,7 +29,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public int SeenRankedPosition { get; set; }
 
-        public List<InstaMedia> Items { get; set; } = new InstaMediaList();
+        public List<InstaStoryItem> Items { get; set; } = new List<InstaStoryItem>();
 
         public int PrefetchCount { get; set; }
 
