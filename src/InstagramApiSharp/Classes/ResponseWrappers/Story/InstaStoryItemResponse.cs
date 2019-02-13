@@ -107,6 +107,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("taken_at")] public long TakenAt { get; set; }
 
+        [JsonProperty("imported_taken_at")] public long? ImportedTakenAt { get; set; }
+
         [JsonProperty("video_dash_manifest")] public string VideoDashManifest { get; set; }
 
         [JsonProperty("supports_reel_reactions")] public bool SupportsReelReactions { get; set; }

@@ -87,6 +87,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public DateTime TakenAt { get; set; }
 
+        public DateTime ImportedTakenAt { get; set; }
+
         public string VideoDashManifest { get; set; }
 
         public bool SupportsReelReactions { get; set; }
