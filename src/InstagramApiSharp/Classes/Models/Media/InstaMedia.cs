@@ -6,6 +6,36 @@ namespace InstagramApiSharp.Classes.Models
 {
     public class InstaMedia : INotifyPropertyChanged
     {
+        public long CommentsCount { get; set; }
+        public string InlineComposerDisplayCondition { get; set; }
+        public int InlineComposerImpTriggerTime { get; set; }
+        public string MainFeedCarouselStartingMediaId { get; set; }
+        public bool? MainFeedCarouselHasUnseenCoverMedia { get; set; }
+        public bool? ForceOverlay { get; set; }
+        public bool? HideNuxText { get; set; }
+        public string OverlayText { get; set; }
+        public string OverlayTitle { get; set; }
+        public string OverlaySubtitle { get; set; }
+        public string DominantColor { get; set; }
+        public int? FollowerCount { get; set; }
+        public int? PostCount { get; set; }
+        public string FBPageUrl { get; set; }
+        public int? ExpiringAt { get; set; }
+        public int? CarouselMediaCount { get; set; }
+        public string Link { get; set; }
+        public string LinkText { get; set; }
+        public string AdAction { get; set; }
+        public string LinkHintText { get; set; }
+        public object iTunesItem { get; set; }
+        public int? AdLinkType { get; set; }
+        public int? AdHeaderStyle { get; set; }
+        public int? DrAdType { get; set; }
+        public string OrganicTrackingToken { get; set; }
+        public string Preview { get; set; }
+        public string InventorySource { get; set; }
+        public bool IsSeen { get; set; }
+        public bool IsEof { get; set; }
+        public bool? CollapseComments { get; set; }
         public long TakenAtUnix { get; set; }
         public DateTime TakenAt { get; set; }
         public string Pk { get; set; }
@@ -37,8 +67,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public InstaCaption Caption { get; set; }
 
-        private string _cmcount;
-        public string CommentsCount { get => _cmcount; set { _cmcount = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CommentsCount")); } }
+      //  private string _cmcount;
+     //   public string CommentsCount { get => _cmcount; set { _cmcount = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CommentsCount")); } }
 
         public bool IsCommentsDisabled { get; set; }
 

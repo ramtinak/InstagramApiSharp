@@ -15,11 +15,44 @@ namespace InstagramApiSharp.Converters
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
             var media = new InstaMedia
             {
+                CommentsCount = SourceObject.CommentsCount, 
+                InlineComposerDisplayCondition = SourceObject.InlineComposerDisplayCondition,
+                InlineComposerImpTriggerTime = SourceObject.InlineComposerImpTriggerTime,
+                MainFeedCarouselStartingMediaId = SourceObject.MainFeedCarouselStartingMediaId,
+                MainFeedCarouselHasUnseenCoverMedia = SourceObject.MainFeedCarouselHasUnseenCoverMedia,
+                ForceOverlay = SourceObject.ForceOverlay,
+                HideNuxText = SourceObject.HideNuxText,
+                OverlayText = SourceObject.OverlayText,
+                OverlayTitle = SourceObject.OverlayTitle,
+                OverlaySubtitle = SourceObject.OverlaySubtitle,
+                DominantColor = SourceObject.DominantColor,
+                FollowerCount = SourceObject.FollowerCount,
+                PostCount = SourceObject.PostCount,
+                FBPageUrl = SourceObject.FBPageUrl,
+                ExpiringAt = SourceObject.ExpiringAt,
+                CarouselMediaCount = SourceObject.CarouselMediaCount,
+                Link = SourceObject.Link,
+                LinkText = SourceObject.LinkText,
+                AdAction = SourceObject.AdAction,
+                LinkHintText = SourceObject.LinkHintText,
+                iTunesItem = SourceObject.iTunesItem,
+                AdLinkType = SourceObject.AdLinkType,
+                AdHeaderStyle = SourceObject.AdHeaderStyle,
+                DrAdType = SourceObject.DrAdType,
+                Preview = SourceObject.Preview,
+                InventorySource = SourceObject.InventorySource,
+                IsSeen = SourceObject.IsSeen,
+                IsEof = SourceObject.IsEof,
+                CollapseComments = SourceObject.CollapseComments,
+
+
+
+
                 InstaIdentifier = SourceObject.InstaIdentifier,
                 Code = SourceObject.Code,
                 Pk = SourceObject.Pk,
                 ClientCacheKey = SourceObject.ClientCacheKey,
-                CommentsCount = SourceObject.CommentsCount,
+
                 HasLiked = SourceObject.HasLiked,
                 PhotoOfYou = SourceObject.PhotoOfYou,
                 TrackingToken = SourceObject.TrackingToken,

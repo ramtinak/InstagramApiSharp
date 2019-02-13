@@ -14,6 +14,38 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
     }
     public class InstaMediaItemResponse
     {
+        [JsonProperty("comment_count")] public long CommentsCount { get; set; }
+        [JsonProperty("inline_composer_display_condition")] public string InlineComposerDisplayCondition { get; set; }
+        [JsonProperty("inline_composer_imp_trigger_time")] public int InlineComposerImpTriggerTime { get; set; }
+        [JsonProperty("main_feed_carousel_starting_media_id")] public string MainFeedCarouselStartingMediaId { get; set; }
+        [JsonProperty("main_feed_carousel_has_unseen_cover_media")] public bool? MainFeedCarouselHasUnseenCoverMedia { get; set; }
+        [JsonProperty("force_overlay")] public bool? ForceOverlay { get; set; }
+        [JsonProperty("hide_nux_text")] public bool? HideNuxText { get; set; }
+        [JsonProperty("overlay_text")] public string OverlayText { get; set; }
+        [JsonProperty("overlay_title")] public string OverlayTitle { get; set; }
+        [JsonProperty("overlay_subtitle")] public string OverlaySubtitle { get; set; }
+        [JsonProperty("dominant_color")] public string DominantColor { get; set; }
+        [JsonProperty("follower_count")] public int? FollowerCount { get; set; }
+        [JsonProperty("post_count")] public int? PostCount { get; set; }
+        [JsonProperty("fb_page_url")] public string FBPageUrl { get; set; }
+        [JsonProperty("expiring_at")] public int? ExpiringAt { get; set; }
+        [JsonProperty("carousel_media_count")] public int? CarouselMediaCount { get; set; }
+        [JsonProperty("link")] public string Link { get; set; }
+        [JsonProperty("link_text")] public string LinkText { get; set; }
+        [JsonProperty("ad_action")] public string AdAction { get; set; }
+        [JsonProperty("link_hint_text")] public string LinkHintText { get; set; }
+        [JsonProperty("iTunesItem")] public object iTunesItem { get; set; }
+        [JsonProperty("ad_link_type")] public int? AdLinkType { get; set; }
+        [JsonProperty("ad_header_style")] public int? AdHeaderStyle { get; set; }
+        [JsonProperty("dr_ad_type")] public int? DrAdType { get; set; }
+        [JsonProperty("preview")] public string Preview { get; set; }
+        [JsonProperty("inventory_source")] public string InventorySource { get; set; }
+        [JsonProperty("is_seen")] public bool IsSeen { get; set; }
+        [JsonProperty("is_eof")] public bool IsEof { get; set; }
+        [JsonProperty("collapse_comments")] public bool? CollapseComments { get; set; }
+
+
+
         [JsonProperty("taken_at")] public string TakenAtUnixLike { get; set; }
 
         [JsonProperty("pk")] public string Pk { get; set; }
@@ -48,7 +80,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("caption")] public InstaCaptionResponse Caption { get; set; }
 
-        [JsonProperty("comment_count")] public string CommentsCount { get; set; }
+      //  [JsonProperty("comment_count")] public string CommentsCount { get; set; }
 
         [JsonProperty("comments_disabled")] public bool IsCommentsDisabled { get; set; }
 
