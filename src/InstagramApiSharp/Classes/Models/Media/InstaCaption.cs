@@ -16,5 +16,15 @@ namespace InstagramApiSharp.Classes.Models
         public string MediaId { get; set; }
 
         public string Pk { get; set; }
+
+        public int Type { get; set; }
+
+        public int BitFlags { get; set; }
+
+        public bool DidReportAsSpam { get; set; }
+
+        public bool ShareEnabled { get; set; }
+
+        public bool HasTranslation { get; set; }
     }
 }

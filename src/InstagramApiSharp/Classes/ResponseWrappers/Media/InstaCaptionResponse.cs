@@ -20,5 +20,15 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("media_id")] public string MediaId { get; set; }
 
         [JsonProperty("pk")] public string Pk { get; set; }
+
+        [JsonProperty("type")] public int Type { get; set; }
+
+        [JsonProperty("bit_flags")] public int BitFlags { get; set; }
+
+        [JsonProperty("did_report_as_spam")] public bool DidReportAsSpam { get; set; }
+
+        [JsonProperty("share_enabled")] public bool ShareEnabled { get; set; }
+
+        [JsonProperty("has_translation")] public bool HasTranslation { get; set; }
     }
 }
