@@ -16,6 +16,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("profile_pic_url")] public string ProfilePicUrl { get; set; }
 
+        [JsonProperty("profile_pic_id")] public string ProfilePicId { get; set; }
+
         [JsonProperty("is_verified")] public bool IsVerified { get; set; }
 
         [JsonProperty("has_anonymous_profile_picture")] public bool HasAnonymousProfilePicture { get; set; }
@@ -30,13 +32,63 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("biography")] public string Biography { get; set; }
 
+        [JsonProperty("can_link_entities_in_bio")] public bool CanLinkEntitiesInBio { get; set; }
+
         [JsonProperty("external_url")] public string ExternalUrl { get; set; }
 
         [JsonProperty("external_lynx_url")] public string ExternalLynxUrl { get; set; }
 
+        [JsonProperty("has_biography_translation")] public bool HasBiographyTranslation { get; set; }
+
+        [JsonProperty("can_boost_post")] public bool CanBoostPost { get; set; }
+
+        [JsonProperty("can_see_organic_insights")] public bool CanSeeOrganicInsights { get; set; }
+
+        [JsonProperty("show_insights_terms")] public bool ShowInsightsTerms { get; set; }
+
+        [JsonProperty("can_convert_to_business")] public bool CanConvertToBusiness { get; set; }
+
+        [JsonProperty("can_create_sponsor_tags")] public bool CanCreateSponsorTags { get; set; }
+
+        [JsonProperty("can_be_tagged_as_sponsor")] public bool CanBeTaggedAsSponsor { get; set; }
+
+        [JsonProperty("total_igtv_videos")] public int TotalIGTVVideos { get; set; }
+
+        [JsonProperty("total_ar_effects")] public int TotalArEffects { get; set; }
+
         [JsonProperty("reel_auto_archive")] public string ReelAutoArchive { get; set; }
 
+        [JsonProperty("is_profile_action_needed")] public bool IsProfileActionNeeded { get; set; }
+
         [JsonProperty("usertags_count")] public long UsertagsCount { get; set; }
+
+        [JsonProperty("usertag_review_enabled")] public bool UsertagReviewEnabled { get; set; }
+
+        [JsonProperty("is_needy")] public bool IsNeedy { get; set; }
+
+        [JsonProperty("has_recommend_accounts")] public bool HasRecommendAccounts { get; set; }
+
+        [JsonProperty("has_placed_orders")] public bool HasPlacedOrders { get; set; }
+
+        [JsonProperty("can_tag_products_from_merchants")] public bool CanTagProductsFromMerchants { get; set; }
+
+        [JsonProperty("show_business_conversion_icon")] public bool ShowBusinessConversionIcon { get; set; }
+
+        [JsonProperty("show_conversion_edit_entry")] public bool ShowConversionEditEntry { get; set; }
+
+        [JsonProperty("aggregate_promote_engagement")] public bool AggregatePromoteEngagement { get; set; }
+
+        [JsonProperty("allowed_commenter_type")] public string AllowedCommenterType { get; set; }
+
+        [JsonProperty("is_video_creator")] public bool IsVideoCreator { get; set; }
+
+        [JsonProperty("has_profile_video_feed")] public bool HasProfileVideoFeed { get; set; }
+
+        [JsonProperty("is_eligible_to_show_fb_cross_sharing_nux")] public bool IsEligibleToShowFBCrossSharingNux { get; set; }
+
+        [JsonProperty("page_id_for_new_suma_biz_account")] public object PageIdForNewSumaBizAccount { get; set; }
+
+        [JsonProperty("account_type")] public int AccountType { get; set; }
 
         [JsonProperty("is_favorite")] public bool IsFavorite { get; set; }
 

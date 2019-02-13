@@ -32,12 +32,12 @@ namespace Examples.Samples
                 return;
             Console.WriteLine($"Loading feed for location: name={firstLocation.Name}; id={firstLocation.ExternalId}.");
 
-            var locationFeed =
-                await InstaApi.LocationProcessor.GetLocationFeedAsync(long.Parse(firstLocation.ExternalId), PaginationParameters.MaxPagesToLoad(5));
+            //var locationFeed =
+            //    await InstaApi.LocationProcessor.GetLocationFeedAsync(long.Parse(firstLocation.ExternalId), PaginationParameters.MaxPagesToLoad(5));
 
-            Console.WriteLine(locationFeed.Succeeded
-                ? $"Loaded {locationFeed.Value.Medias?.Count} medias for location, total location medias: {locationFeed.Value.MediaCount}"
-                : $"Unable to load location '{firstLocation.Name}' feed");
+            //Console.WriteLine(locationFeed.Succeeded
+            //    ? $"Loaded {locationFeed.Value.Medias?.Count} medias for location, total location medias: {locationFeed.Value.MediaCount}"
+            //    : $"Unable to load location '{firstLocation.Name}' feed");
         }
     }
 }
