@@ -4,8 +4,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 {
     public class InstaCurrentUserResponse : InstaUserShortResponse
     {
-        [JsonProperty("has_anonymous_profile_picture")]
-        public bool HasAnonymousProfilePicture { get; set; }
 
         [JsonProperty("show_conversion_edit_entry")]
         public bool ShowConversationEditEntry { get; set; }

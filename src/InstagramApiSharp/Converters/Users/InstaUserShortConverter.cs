@@ -20,7 +20,16 @@ namespace InstagramApiSharp.Converters
                 ProfilePicture = SourceObject.ProfilePicture,
                 ProfilePictureId = SourceObject.ProfilePictureId,
                 IsVerified = SourceObject.IsVerified,
-                ProfilePicUrl = SourceObject.ProfilePicture
+                ProfilePicUrl = SourceObject.ProfilePicture,
+                HasAnonymousProfilePicture = SourceObject.HasAnonymousProfilePicture,
+                CanBoostPost = SourceObject.CanBoostPost,
+                CanSeeOrganicInsights = SourceObject.CanSeeOrganicInsights,
+                ShowInsightsTerms = SourceObject.ShowInsightsTerms,
+                ReelAutoArchive = SourceObject.ReelAutoArchive,
+                IsUnpublished = SourceObject.IsUnpublished,
+                AllowedCommenterType = SourceObject.AllowedCommenterType,
+                LatestReelMedia = SourceObject.LatestReelMedia,
+                IsFavorite = SourceObject.IsFavorite
             };
             return user;
         }

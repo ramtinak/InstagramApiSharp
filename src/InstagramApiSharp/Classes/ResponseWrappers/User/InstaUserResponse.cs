@@ -20,8 +20,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
     {
         [JsonProperty("friendship_status")] public InstaFriendshipShortStatusResponse FriendshipStatus { get; set; }
 
-        [JsonProperty("has_anonymous_profile_picture")] public bool HasAnonymousProfilePicture { get; set; }
-
         [JsonProperty("follower_count")] public int FollowersCount { get; set; }
 
         [JsonProperty("byline")] public string FollowersCountByLine { get; set; }

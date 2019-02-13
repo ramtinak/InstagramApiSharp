@@ -14,9 +14,17 @@ namespace InstagramApiSharp.Classes.Models
             ProfilePicture = instaUserShort.ProfilePicture;
             ProfilePictureId = instaUserShort.ProfilePictureId;
             IsVerified = instaUserShort.IsVerified;
+            HasAnonymousProfilePicture = instaUserShort.HasAnonymousProfilePicture;
+            CanBoostPost = instaUserShort.CanBoostPost;
+            CanSeeOrganicInsights = instaUserShort.CanSeeOrganicInsights;
+            ShowInsightsTerms = instaUserShort.ShowInsightsTerms;
+            ReelAutoArchive = instaUserShort.ReelAutoArchive;
+            IsUnpublished = instaUserShort.IsUnpublished;
+            AllowedCommenterType = instaUserShort.AllowedCommenterType;
+            LatestReelMedia = instaUserShort.LatestReelMedia;
+            IsFavorite = instaUserShort.IsFavorite;
         }
 
-        public bool HasAnonymousProfilePicture { get; set; }
         public string Biography { get; set; }
         public string ExternalUrl { get; set; }
         public List<InstaImage> HdProfileImages { get; set; } = new List<InstaImage>();
