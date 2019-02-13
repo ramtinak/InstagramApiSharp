@@ -4,7 +4,7 @@ using System;
 
 namespace InstagramApiSharp.Converters
 {
-    public class InstaStoryQuestionItemConverter : IObjectConverter<InstaStoryQuestionItem, InstaStoryQuestionItemResponse>
+    internal class InstaStoryQuestionItemConverter : IObjectConverter<InstaStoryQuestionItem, InstaStoryQuestionItemResponse>
     {
         public InstaStoryQuestionItemResponse SourceObject { get; set; }
 

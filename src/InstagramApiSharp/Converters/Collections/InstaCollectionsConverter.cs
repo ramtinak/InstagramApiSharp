@@ -5,7 +5,7 @@ using InstagramApiSharp.Classes.ResponseWrappers;
 
 namespace InstagramApiSharp.Converters
 {
-    public class InstaCollectionsConverter : IObjectConverter<InstaCollections, InstaCollectionsResponse>
+    internal class InstaCollectionsConverter : IObjectConverter<InstaCollections, InstaCollectionsResponse>
     {
         public InstaCollectionsResponse SourceObject { get; set; }
 
