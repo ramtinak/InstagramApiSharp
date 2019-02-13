@@ -110,6 +110,19 @@ namespace Examples.Samples
                 LocationId = locationId
             });
 
+
+            // Mention people
+            storyOptions.Mentions.Add(new InstaStoryMentionUpload
+            {
+                X = 0.5, // center of image
+                Y = 0.5, // center of image
+                Z = 0,
+                Width = 0.7972222,
+                Height = 0.21962096,
+                Rotation = 0,
+                Username = "rmt4006"
+            });
+
             var image = new InstaImage { Uri = @"c:\someawesomepicture.jpg" };
 
             var result = await InstaApi.StoryProcessor.UploadStoryPhotoAsync(image, "someawesomepicture", storyOptions);
