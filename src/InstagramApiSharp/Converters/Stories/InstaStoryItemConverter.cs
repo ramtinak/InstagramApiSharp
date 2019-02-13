@@ -126,6 +126,10 @@ namespace InstagramApiSharp.Converters
                 foreach (var responderInfo in SourceObject.StoryQuestionsResponderInfos)
                     instaStory.StoryQuestionsResponderInfos.Add(ConvertersFabric.Instance.GetStoryQuestionInfoConverter(responderInfo).Convert());
 
+            if(SourceObject.Countdowns?.Count > 0)
+                foreach (var countdown in SourceObject.Countdowns)
+                    instaStory.Countdowns.Add(ConvertersFabric.Instance.GetStoryCountdownItemConverter(countdown).Convert());
+
             return instaStory;
         }
     }

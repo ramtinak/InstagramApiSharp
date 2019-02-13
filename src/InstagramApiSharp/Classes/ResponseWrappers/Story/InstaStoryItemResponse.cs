@@ -124,5 +124,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("story_slider_voter_infos")] public List<InstaStorySliderVoterInfoItemResponse> StorySliderVoters { get; set; }
 
         [JsonProperty("viewers")] public List<InstaUserShortResponse> Viewers { get; set; }
+
+        [JsonProperty("story_countdowns")] public List<InstaStoryCountdownItemResponse> Countdowns { get; set; }
     }
 }

@@ -901,5 +901,17 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaStoryQuestionInfoConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaStoryCountdownStickerItem, InstaStoryCountdownStickerItemResponse> GetStoryCountdownStickerItemConverter(
+            InstaStoryCountdownStickerItemResponse response)
+        {
+            return new InstaStoryCountdownStickerItemConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaStoryCountdownItem, InstaStoryCountdownItemResponse> GetStoryCountdownItemConverter(
+            InstaStoryCountdownItemResponse response)
+        {
+            return new InstaStoryCountdownItemConverter { SourceObject = response };
+        }
     }
 }
