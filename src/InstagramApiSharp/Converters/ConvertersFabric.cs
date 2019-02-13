@@ -889,5 +889,17 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaAccountDetailsConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaStoryQuestionResponder, InstaStoryQuestionResponderResponse> GetStoryQuestionResponderConverter(
+            InstaStoryQuestionResponderResponse response)
+        {
+            return new InstaStoryQuestionResponderConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaStoryQuestionInfo, InstaStoryQuestionInfoResponse> GetStoryQuestionInfoConverter(
+            InstaStoryQuestionInfoResponse response)
+        {
+            return new InstaStoryQuestionInfoConverter { SourceObject = response };
+        }
     }
 }

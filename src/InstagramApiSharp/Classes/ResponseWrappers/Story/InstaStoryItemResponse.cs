@@ -93,6 +93,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("story_questions")] public List<InstaStoryQuestionItemResponse> StoryQuestions { get; set; }
 
+        [JsonProperty("story_question_responder_infos")] public List<InstaStoryQuestionInfoResponse> StoryQuestionsResponderInfos { get; set; }
+
         [JsonProperty("reel_mentions")] public List<InstaReelMentionResponse> ReelMentions { get; set; }
 
         [JsonProperty("preview_comments")] public List<InstaCommentResponse> PreviewComments { get; set; }

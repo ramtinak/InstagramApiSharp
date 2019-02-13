@@ -1,5 +1,4 @@
-﻿using InstagramApiSharp.Classes.ResponseWrappers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models
@@ -107,6 +106,8 @@ namespace InstagramApiSharp.Classes.Models
         public List<InstaStorySliderItem> StorySliders { get; set; } = new List<InstaStorySliderItem>();
 
         public List<InstaStoryQuestionItem> StoryQuestions { get; set; } = new List<InstaStoryQuestionItem>();
+
+        public List<InstaStoryQuestionInfo> StoryQuestionsResponderInfos { get; set; } = new List<InstaStoryQuestionInfo>();
 
         public List<InstaStoryPollVoterInfoItem> StoryPollVoters { get; set; } = new List<InstaStoryPollVoterInfoItem>();
 

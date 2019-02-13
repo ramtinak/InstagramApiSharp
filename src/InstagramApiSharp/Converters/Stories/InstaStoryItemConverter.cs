@@ -122,6 +122,10 @@ namespace InstagramApiSharp.Converters
                 foreach (var voter in SourceObject.StorySliderVoters)
                     instaStory.StorySliderVoters.Add(ConvertersFabric.Instance.GetStorySliderVoterInfoItemConverter(voter).Convert());
 
+            if (SourceObject.StoryQuestionsResponderInfos?.Count > 0)
+                foreach (var responderInfo in SourceObject.StoryQuestionsResponderInfos)
+                    instaStory.StoryQuestionsResponderInfos.Add(ConvertersFabric.Instance.GetStoryQuestionInfoConverter(responderInfo).Convert());
+
             return instaStory;
         }
     }
