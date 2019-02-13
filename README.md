@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.3.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.3.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -92,6 +92,15 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.3.4
+- [Update] InstaUserInfo (thx to [@RowanFazio](https://github.com/rowanFazio) for PR)
+- [Change] InstaStory.Items to InstaStoryItem
+- [Add] StoryQuestionsResponderInfos property to InstaStoryItem
+- [Add] Countdowns property to InstaStoryItem
+- [Add] ImportedTakenAt property to InstaStoryItem
+- [Add] AnswerToStoryQuestionAsync to StoryProcessor
+- [Add] support for Mentions in InstaStoryUploadOptions
+
 v1.3.3.3
 - [Bugfix] for GetUserFollowersAsync
 - [Bugfix] for GetUserFollowingAsync
