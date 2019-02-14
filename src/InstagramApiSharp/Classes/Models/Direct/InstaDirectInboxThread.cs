@@ -62,5 +62,7 @@ namespace InstagramApiSharp.Classes.Models
         public List<InstaUserShort> LeftUsers { get; set; } = new List<InstaUserShort>();
 
         public string NewestCursor { get; set; }
+
+        public bool MentionsMuted { get; set; }
     }
 }

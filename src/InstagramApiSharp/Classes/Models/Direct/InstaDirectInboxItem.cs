@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InstagramApiSharp.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models
@@ -23,12 +24,14 @@ namespace InstagramApiSharp.Classes.Models
 
         public InstaStoryShare StoryShare { get; set; }
 
-        public InstaMedia RavenMedia { get; set; }
+        public InstaVisualMedia RavenMedia { get; set; }
+
+        public InstaVisualMediaContainer VisualMedia { get; set; }
 
         // raven media properties
-        public string RavenViewMode { get; set; }
+        public InstaViewMode? RavenViewMode { get; set; }
 
-        public List<long> RavenSeenUserIds { get; set; }
+        public List<long> RavenSeenUserIds { get; set; } = new List<long>();
 
         public int RavenReplayChainCount { get; set; }
 

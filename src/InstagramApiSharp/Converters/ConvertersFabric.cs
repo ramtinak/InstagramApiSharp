@@ -913,5 +913,17 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaStoryCountdownItemConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaVisualMedia, InstaVisualMediaResponse> GetVisualMediaConverter(
+            InstaVisualMediaResponse response)
+        {
+            return new InstaVisualMediaConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaVisualMediaContainer, InstaVisualMediaContainerResponse> GetVisualMediaContainerConverter(
+            InstaVisualMediaContainerResponse response)
+        {
+            return new InstaVisualMediaContainerConverter { SourceObject = response };
+        }
     }
 }

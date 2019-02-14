@@ -28,7 +28,9 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("story_share")] public InstaStoryShareResponse StoryShare { get; set; }
 
-        [JsonProperty("raven_media")] public InstaMediaItemResponse RavenMedia { get; set; }
+        [JsonProperty("raven_media")] public InstaVisualMediaResponse RavenMedia { get; set; }
+
+        [JsonProperty("visual_media")] public InstaVisualMediaContainerResponse VisualMedia { get; set; }
         // raven media properties
         [JsonProperty("view_mode")] public string RavenViewMode { get; set; }
 

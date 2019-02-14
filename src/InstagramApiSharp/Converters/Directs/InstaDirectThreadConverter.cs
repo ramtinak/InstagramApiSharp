@@ -36,7 +36,8 @@ namespace InstagramApiSharp.Converters
                 ExpiringMediaSendCount = SourceObject.ExpiringMediaSendCount,
                 NewestCursor = SourceObject.NewestCursor,
                 ThreadType = SourceObject.ThreadType,
-                Title = SourceObject.Title
+                Title = SourceObject.Title,
+                MentionsMuted = SourceObject.MentionsMuted ?? false
             };
 
             if (SourceObject.Inviter != null)
