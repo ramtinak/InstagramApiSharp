@@ -1,5 +1,6 @@
 ﻿using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.ResponseWrappers
 {
@@ -12,5 +13,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("original_height")] public long OriginalHeight { get; set; }
 
         [JsonProperty("media_type")] public InstaMediaType MediaType { get; set; }
+
+        [JsonProperty("video_versions")] public List<InstaVideoResponse> Videos { get; set; }
     }
 }

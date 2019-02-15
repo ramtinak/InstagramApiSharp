@@ -8,5 +8,6 @@ namespace InstagramApiSharp.Classes.Models
         public long OriginalWidth { get; set; }
         public long OriginalHeight { get; set; }
         public InstaMediaType MediaType { get; set; }
+        public List<InstaVideo> Videos { get; set; } = new List<InstaVideo>();
     }
 }
