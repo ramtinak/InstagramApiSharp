@@ -1,5 +1,6 @@
 using InstagramApiSharp.Classes.ResponseWrappers;
 using System;
+using System.Text.RegularExpressions;
 
 namespace InstagramApiSharp.Classes
 {
@@ -38,6 +39,29 @@ namespace InstagramApiSharp.Classes
             Message = status?.Message;
             ResponseType = responseType;
             HandleMessages(Message);
+            switch (ResponseType)
+            {
+                case ResponseType.ActionBlocked:
+                case ResponseType.Spam:
+                    if (status != null && (!string.IsNullOrEmpty(status.FeedbackMessage) && (status.FeedbackMessage.ToLower().Contains("this block will expire on"))))
+                    {
+                        var dateRegex = new Regex(@"(\d+)[-.\/](\d+)[-.\/](\d+)");
+                        var dateMatch = dateRegex.Match(status.FeedbackMessage);
+                        if (DateTime.TryParse(dateMatch.ToString(), out var parsedDate))
+                        {
+                            ActionBlockEnd = parsedDate;
+                        }
+                    }
+                    else
+                    {
+                        ActionBlockEnd = null;
+                    }
+
+                    break;
+                default:
+                    ActionBlockEnd = null;
+                    break;
+            }
         }
         public void HandleMessages(string errorMessage)
         {
@@ -46,6 +70,7 @@ namespace InstagramApiSharp.Classes
             if (errorMessage.ToLower().Contains("challenge"))
                 NeedsChallenge = true;
         }
+
         public Exception Exception { get; }
 
         public string Message { get; }
@@ -55,6 +80,8 @@ namespace InstagramApiSharp.Classes
         public bool Timeout { get; internal set; }
 
         public bool NeedsChallenge { get; internal set; }
+
+        public DateTime? ActionBlockEnd { get; internal set; }
 
         public override string ToString()
         {
