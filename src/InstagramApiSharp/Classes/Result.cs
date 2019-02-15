@@ -91,7 +91,7 @@ namespace InstagramApiSharp.Classes
                 var status = ErrorHandlingHelper.GetBadStatusFromJsonString(json);
                 var responseType = GetResponseType(status);
 
-                var resultInfo = new ResultInfo(responseType, status.Message);
+                var resultInfo = new ResultInfo(responseType, status);
                 return new Result<T>(false, default(T), resultInfo);
             }
         }
