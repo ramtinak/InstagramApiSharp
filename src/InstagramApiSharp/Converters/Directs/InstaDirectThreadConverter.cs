@@ -58,20 +58,18 @@ namespace InstagramApiSharp.Converters
 
             if (SourceObject.Users != null && SourceObject.Users.Count > 0)
             {
-                thread.Users = new InstaUserShortList();
                 foreach (var user in SourceObject.Users)
                 {
-                    var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
+                    var converter = ConvertersFabric.Instance.GetUserShortFriendshipConverter(user);
                     thread.Users.Add(converter.Convert());
                 }
             }
 
             if (SourceObject.LeftUsers != null && SourceObject.LeftUsers.Count > 0)
             {
-                thread.LeftUsers = new InstaUserShortList();
                 foreach (var user in SourceObject.LeftUsers)
                 {
-                    var converter = ConvertersFabric.Instance.GetUserShortConverter(user);
+                    var converter = ConvertersFabric.Instance.GetUserShortFriendshipConverter(user);
                     thread.LeftUsers.Add(converter.Convert());
                 }
             }

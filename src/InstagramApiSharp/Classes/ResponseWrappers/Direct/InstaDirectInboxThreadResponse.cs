@@ -9,7 +9,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
     {
         [JsonProperty("muted")] public bool Muted { get; set; }
 
-        [JsonProperty("users")] public List<InstaUserShortResponse> Users { get; set; }
+        [JsonProperty("users")] public List<InstaUserShortFriendshipResponse> Users { get; set; }
 
         [JsonProperty("thread_title")] public string Title { get; set; }
 
@@ -60,7 +60,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("expiring_media_receive_count")] public int ExpiringMediaReceiveCount { get; set; }
 
-        [JsonProperty("left_users")] public List<InstaUserShortResponse> LeftUsers { get; set; }
+        [JsonProperty("left_users")] public List<InstaUserShortFriendshipResponse> LeftUsers { get; set; }
 
         [JsonProperty("newest_cursor")] public string NewestCursor { get; set; }
 

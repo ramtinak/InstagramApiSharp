@@ -7,7 +7,7 @@ namespace InstagramApiSharp.Classes.Models
     {
         public bool Muted { get; set; }
 
-        public List<InstaUserShort> Users { get; set; } = new List<InstaUserShort>();
+        public List<InstaUserShortFriendship> Users { get; set; } = new List<InstaUserShortFriendship>();
 
         public string Title { get; set; }
 
@@ -59,7 +59,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public List<InstaLastSeen> LastSeenAt { get; set; }
 
-        public List<InstaUserShort> LeftUsers { get; set; } = new List<InstaUserShort>();
+        public List<InstaUserShortFriendship> LeftUsers { get; set; } = new List<InstaUserShortFriendship>();
 
         public string NewestCursor { get; set; }
 
