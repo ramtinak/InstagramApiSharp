@@ -94,7 +94,7 @@ Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for docum
 ## Version changes
 v1.3.3.5
 - [Bugfix] for GetDirectInboxThreadAsync pagination (thx to [@Hoaas](https://github.com/hoaas) for report)
-- [Add] VisualMedia support in direct thread item (check #174 issue) (thx to [@aspmaker](https://github.com/aspmaker) for report)
+- [Add] VisualMedia support in direct thread item (check [#174](https://github.com/ramtinak/InstagramApiSharp/issues/174) issue) (thx to [@aspmaker](https://github.com/aspmaker) for report)
 - [Add] ActionBlockEnd to ResultInfo (Displaying ActionBlock end date. Used For awaiting liking etc.) (thx to [@mihey8800](https://github.com/mihey8800) for PR)
 - [Add] Videos property to InstaInboxMedia (direct media item)
 - [Update] direct item Users and LeftUsers models class
