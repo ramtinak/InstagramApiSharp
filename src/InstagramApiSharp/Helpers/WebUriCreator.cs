@@ -24,8 +24,19 @@ namespace InstagramApiSharp.Helpers
         public static Uri GetAccountsDataUri()
         {
             if (!Uri.TryCreate(InstaApiConstants.InstagramWebUri, InstaApiConstants.WEB_ACCOUNT_DATA, out var instaUri))
-                throw new Exception("Cant create URI for accounts page");
+                throw new Exception("Cant create URI for accounts data page");
             return instaUri;
+        }
+
+        public static Uri GetCurrentFollowRequestsUri(string cursor = null)
+        {
+            if (!Uri.TryCreate(InstaApiConstants.InstagramWebUri, InstaApiConstants.WEB_CURRENT_FOLLOW_REQUEST, out var instaUri))
+                throw new Exception("Cant create URI for current follow requests");
+            string query = string.Empty;
+            if (cursor.IsNotEmpty())
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+
+            return new UriBuilder(instaUri) { Query = query }.Uri;
         }
     }
 }

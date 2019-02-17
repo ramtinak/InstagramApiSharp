@@ -25,6 +25,7 @@ using InstagramApiSharp.Converters;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.Web;
 using System.Collections.Generic;
+using InstagramApiSharp.Classes.Models.Web;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -50,6 +51,7 @@ namespace InstagramApiSharp.API.Processors
             _instaApi = instaApi;
             _httpHelper = httpHelper;
         }
+
         /// <summary>
         ///     Get self account information like joined date or switched to business account date.
         /// </summary>
@@ -58,8 +60,8 @@ namespace InstagramApiSharp.API.Processors
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var mediaUri = WebUriCreator.GetAccountsDataUri();
-                var request = _httpHelper.GetWebRequest(HttpMethod.Get, mediaUri, _deviceInfo);
+                var instaUri = WebUriCreator.GetAccountsDataUri();
+                var request = _httpHelper.GetWebRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var html = await response.Content.ReadAsStringAsync();
 
@@ -67,7 +69,7 @@ namespace InstagramApiSharp.API.Processors
                     return Result.Fail($"Error! Status code: {response.StatusCode}", default(InstaWebAccountInfo));
 
                 var json = html.GetJson();
-                if (json == null)
+                if (json.IsEmpty())
                     return Result.Fail($"Json response isn't available.", default(InstaWebAccountInfo));
 
                 var obj = JsonConvert.DeserializeObject<InstaWebContainer>(json);
@@ -92,7 +94,113 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        /// <summary>
+        ///     Get self account follow requests
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaWebTextDataList>> GetFollowRequestsAsync(PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var textDataList = new InstaWebTextDataList();
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
+                InstaWebTextDataList Convert(InstaWebSettingsPageResponse settingsPageResponse)
+                {
+                    return ConvertersFabric.Instance.GetWebTextDataListConverter(settingsPageResponse).Convert();
+                }
+                Uri CreateUri(string cursor = null)
+                {
+                    return WebUriCreator.GetCurrentFollowRequestsUri(cursor);
+                }
+                var request = await GetRequest(CreateUri(paginationParameters?.NextMaxId));
+                if (!request.Succeeded)
+                {
+                    if (request.Value != null)
+                        return Result.Fail(request.Info, Convert(request.Value));
+                    else
+                        return Result.Fail(request.Info, textDataList);
+                }
+
+                var response = request.Value;
+
+                paginationParameters.NextMaxId = response.Data.Cursor;
+
+                while (!string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var nextRequest = await GetRequest(CreateUri(paginationParameters?.NextMaxId));
+                    if (!nextRequest.Succeeded)
+                        return Result.Fail(nextRequest.Info, Convert(response));
+                    var nextResponse = nextRequest.Value;
+
+                    if (nextResponse.Data != null)
+                        response.Data.Data.AddRange(nextResponse.Data.Data);
+
+                    response.Data.Cursor = paginationParameters.NextMaxId = nextResponse.Data?.Cursor;
+                    paginationParameters.PagesLoaded++;
+                }
+                return Result.Success(Convert(response));
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, textDataList, ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, textDataList);
+            }
+        }
+
+
+        private async Task<IResult<InstaWebSettingsPageResponse>> GetRequest(Uri instaUri)
+        {
+            try
+            {
+                var request = _httpHelper.GetWebRequest(HttpMethod.Get, instaUri, _deviceInfo);
+
+                request.Headers.Add("upgrade-insecure-requests", "1");
+                request.Headers.Add("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var html = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.Fail($"Error! Status code: {response.StatusCode}", default(InstaWebSettingsPageResponse));
+
+                if (instaUri.ToString().ToLower().Contains("a=1&cursor="))
+                    return Result.Success(JsonConvert.DeserializeObject<InstaWebSettingsPageResponse>(html));
+                else
+                {
+                    var json = html.GetJson();
+                    if (json.IsEmpty())
+                        return Result.Fail($"Json response isn't available.", default(InstaWebSettingsPageResponse));
+
+                    var obj = JsonConvert.DeserializeObject<InstaWebContainer>(json);
+
+                    if (obj.Entry?.SettingsPages != null)
+                    {
+                        var first = obj.Entry.SettingsPages.FirstOrDefault();
+                        if (first != null)
+                            return Result.Success(first);
+                    }
+                    return Result.Fail($"Data isn't available.", default(InstaWebSettingsPageResponse));
+                }
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaWebSettingsPageResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, default(InstaWebSettingsPageResponse));
+            }
+        }
 
     }
 }

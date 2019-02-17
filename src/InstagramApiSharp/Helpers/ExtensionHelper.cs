@@ -42,7 +42,14 @@ namespace InstagramApiSharp
               deviceInfo.AndroidVer.VersionNumber,deviceInfo.DeviceModelIdentifier,
               $"{deviceInfo.AndroidBoardName}{deviceInfo.DeviceModel}");
         }
-
+        public static bool IsEmpty(this string content)
+        {
+            return string.IsNullOrEmpty(content);
+        }
+        public static bool IsNotEmpty(this string content)
+        {
+            return !string.IsNullOrEmpty(content);
+        }
         public static string EncodeList(this long[] listOfValues, bool appendQuotation = true)
         {
             return EncodeList(listOfValues.ToList(), appendQuotation);

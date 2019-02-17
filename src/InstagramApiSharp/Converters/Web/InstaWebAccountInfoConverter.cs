@@ -21,6 +21,8 @@ namespace InstagramApiSharp.Converters
 
         public InstaWebAccountInfo Convert()
         {
+            if (SourceObject == null) throw new ArgumentNullException($"Source object");
+
             var info = new InstaWebAccountInfo();
             if (SourceObject.DateJoined?.Data?.Timestamp != null)
                 info.JoinedDate = SourceObject.DateJoined?.Data?.Timestamp.Value.FromUnixTimeSeconds();

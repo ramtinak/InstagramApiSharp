@@ -48,7 +48,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.Web
         public bool? IsBlocked { get; set; }
         [JsonProperty("page_name")]
         public string PageName { get; set; }
-
         internal InstaWebType PageType
         {
             get
@@ -69,6 +68,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.Web
         public InstaWebData DateJoined { get; set; }
         [JsonProperty("switched_to_business")]
         public InstaWebData SwitchedToBusiness { get; set; }
+        [JsonProperty("data")]
+        public InstaWebDataList Data { get; set; }
     }
     
     public class InstaWebData
@@ -81,6 +82,15 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.Web
         public string Cursor { get; set; }
     }
 
+    public class InstaWebDataList
+    {
+        [JsonProperty("link")]
+        public object Link { get; set; }
+        [JsonProperty("data")]
+        public List<InstaWebDataItem> Data { get; set; } = new List<InstaWebDataItem>();
+        [JsonProperty("cursor")]
+        public string Cursor { get; set; }
+    }
     public class InstaWebDataItem
     {
         [JsonProperty("text")]
