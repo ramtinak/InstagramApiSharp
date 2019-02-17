@@ -939,5 +939,17 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaWebTextDataConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaWebDataItem, InstaWebDataItemResponse> GetWebDataItemConverter(
+            InstaWebDataItemResponse response)
+        {
+            return new InstaWebDataItemConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaWebData, InstaWebSettingsPageResponse> GetWebDataConverter(
+            InstaWebSettingsPageResponse response)
+        {
+            return new InstaWebDataConverter { SourceObject = response };
+        }
     }
 }

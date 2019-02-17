@@ -53,7 +53,7 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
-        ///     Get self account information like joined date or switched to business account date.
+        ///     Get self account information like joined date or switched to business account date
         /// </summary>
         public async Task<IResult<InstaWebAccountInfo>> GetAccountInfoAsync()
         {
@@ -156,7 +156,67 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        /// <summary>
+        ///     Get former biography texts
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaWebData>> GetFormerBiographyTextsAsync(PaginationParameters paginationParameters)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var webData = new InstaWebData();
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
+                InstaWebData Convert(InstaWebSettingsPageResponse settingsPageResponse)
+                {
+                    return ConvertersFabric.Instance.GetWebDataConverter(settingsPageResponse).Convert();
+                }
+                Uri CreateUri(string cursor = null)
+                {
+                    return WebUriCreator.GetFormerBiographyTextsUri(cursor);
+                }
+                var request = await GetRequest(CreateUri(paginationParameters?.NextMaxId));
+                if (!request.Succeeded)
+                {
+                    if (request.Value != null)
+                        return Result.Fail(request.Info, Convert(request.Value));
+                    else
+                        return Result.Fail(request.Info, webData);
+                }
+
+                var response = request.Value;
+
+                paginationParameters.NextMaxId = response.Data.Cursor;
+
+                while (!string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var nextRequest = await GetRequest(CreateUri(paginationParameters?.NextMaxId));
+                    if (!nextRequest.Succeeded)
+                        return Result.Fail(nextRequest.Info, Convert(response));
+                    var nextResponse = nextRequest.Value;
+
+                    if (nextResponse.Data != null)
+                        response.Data.Data.AddRange(nextResponse.Data.Data);
+
+                    response.Data.Cursor = paginationParameters.NextMaxId = nextResponse.Data?.Cursor;
+                    paginationParameters.PagesLoaded++;
+                }
+                return Result.Success(Convert(response));
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, webData, ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, webData);
+            }
+        }
         private async Task<IResult<InstaWebSettingsPageResponse>> GetRequest(Uri instaUri)
         {
             try

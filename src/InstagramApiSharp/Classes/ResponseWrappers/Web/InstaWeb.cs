@@ -65,19 +65,19 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.Web
             }
         }
         [JsonProperty("date_joined")]
-        public InstaWebData DateJoined { get; set; }
+        public InstaWebDataResponse DateJoined { get; set; }
         [JsonProperty("switched_to_business")]
-        public InstaWebData SwitchedToBusiness { get; set; }
+        public InstaWebDataResponse SwitchedToBusiness { get; set; }
         [JsonProperty("data")]
         public InstaWebDataList Data { get; set; }
     }
     
-    public class InstaWebData
+    public class InstaWebDataResponse
     {
         [JsonProperty("link")]
         public object Link { get; set; }
         [JsonProperty("data")]
-        public InstaWebDataItem Data { get; set; }
+        public InstaWebDataItemResponse Data { get; set; }
         [JsonProperty("cursor")]
         public string Cursor { get; set; }
     }
@@ -87,11 +87,11 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.Web
         [JsonProperty("link")]
         public object Link { get; set; }
         [JsonProperty("data")]
-        public List<InstaWebDataItem> Data { get; set; } = new List<InstaWebDataItem>();
+        public List<InstaWebDataItemResponse> Data { get; set; } = new List<InstaWebDataItemResponse>();
         [JsonProperty("cursor")]
         public string Cursor { get; set; }
     }
-    public class InstaWebDataItem
+    public class InstaWebDataItemResponse
     {
         [JsonProperty("text")]
         public string Text { get; set; }
