@@ -9,22 +9,21 @@
 
 using System;
 using InstagramApiSharp.Classes.Models;
-using InstagramApiSharp.Classes.Models.Web;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.Web;
 using InstagramApiSharp.Helpers;
 
 namespace InstagramApiSharp.Converters
 {
-    internal class InstaWebTextDataConverter : IObjectConverter<InstaWebTextDataList, InstaWebSettingsPageResponse>
+    internal class InstaWebTextDataConverter : IObjectConverter<InstaWebTextData, InstaWebSettingsPageResponse>
     {
         public InstaWebSettingsPageResponse SourceObject { get; set; }
 
-        public InstaWebTextDataList Convert()
+        public InstaWebTextData Convert()
         {
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
 
-            var list = new InstaWebTextDataList();
+            var list = new InstaWebTextData();
             if (SourceObject.Data.Data?.Count > 0)
             {
                 foreach (var item in SourceObject.Data.Data)
@@ -32,7 +31,7 @@ namespace InstagramApiSharp.Converters
                     if (item.Text.IsNotEmpty())
                         list.Items.Add(item.Text);
                 }
-                list.CursorId = SourceObject.Data.Cursor;
+                list.MaxId = SourceObject.Data.Cursor;
             }
             return list;
         }

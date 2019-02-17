@@ -23,7 +23,6 @@ using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Converters;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using System.Collections.Generic;
-using InstagramApiSharp.Classes.Models.Web;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -37,7 +36,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Get self account follow requests
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        Task<IResult<InstaWebTextDataList>> GetFollowRequestsAsync(PaginationParameters paginationParameters);
+        Task<IResult<InstaWebTextData>> GetFollowRequestsAsync(PaginationParameters paginationParameters);
         /// <summary>
         ///     Get former biography texts
         /// </summary>
@@ -63,7 +62,11 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         Task<IResult<InstaWebData>> GetFormerPhoneNumbersAsync(PaginationParameters paginationParameters);
-
+        /// <summary>
+        ///     Get former emails
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        Task<IResult<InstaWebData>> GetFormerEmailsAsync(PaginationParameters paginationParameters);
 
 
 

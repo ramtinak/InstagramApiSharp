@@ -9,14 +9,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
-using InstagramApiSharp.Classes.ResponseWrappers;
-using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Enums;
+
 namespace InstagramApiSharp.Classes.ResponseWrappers.Web
 {
-    public class InstaWebContainer
+    public class InstaWebContainerResponse
     {
         [JsonProperty("country_code")]
         public string CountryCode { get; set; }
@@ -25,18 +23,18 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.Web
         [JsonProperty("locale")]
         public string Locale { get; set; }
         [JsonProperty("config")]
-        public InstaWebConfig Config { get; set; }
+        public InstaWebConfigResponse Config { get; set; }
         [JsonProperty("entry_data")]
-        public InstaWebEntryData Entry { get; set; }
+        public InstaWebEntryDataResponse Entry { get; set; }
     }
 
-    public class InstaWebConfig
+    public class InstaWebConfigResponse
     {
         [JsonProperty("viewer")]
         public InstaUserShortResponse Viewer { get; set; }
     }
 
-    public class InstaWebEntryData
+    public class InstaWebEntryDataResponse
     {
         [JsonProperty("SettingsPages")]
         public List<InstaWebSettingsPageResponse> SettingsPages { get; set; } = new List<InstaWebSettingsPageResponse>();
@@ -69,7 +67,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.Web
         [JsonProperty("switched_to_business")]
         public InstaWebDataResponse SwitchedToBusiness { get; set; }
         [JsonProperty("data")]
-        public InstaWebDataList Data { get; set; }
+        public InstaWebDataListResponse Data { get; set; }
     }
     
     public class InstaWebDataResponse
@@ -82,7 +80,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.Web
         public string Cursor { get; set; }
     }
 
-    public class InstaWebDataList
+    public class InstaWebDataListResponse
     {
         [JsonProperty("link")]
         public object Link { get; set; }
@@ -98,8 +96,4 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.Web
         [JsonProperty("timestamp")]
         public long? Timestamp { get; set; }
     }
-
-
-
-
 }

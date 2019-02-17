@@ -9,7 +9,6 @@
 
 using System;
 using InstagramApiSharp.Classes.Models;
-using InstagramApiSharp.Classes.Models.Web;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.Web;
 using InstagramApiSharp.Helpers;
@@ -31,6 +30,8 @@ namespace InstagramApiSharp.Converters
 
             if (SourceObject.Timestamp != null)
                 data.Time = SourceObject.Timestamp.Value.FromUnixTimeSeconds();
+            else
+                data.Time = DateTime.MinValue;
   
             return data;
         }

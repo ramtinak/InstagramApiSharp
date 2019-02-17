@@ -4,7 +4,6 @@ using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.Models.Business;
 using InstagramApiSharp.Classes.Models.Hashtags;
-using InstagramApiSharp.Classes.Models.Web;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.Business;
 using InstagramApiSharp.Classes.ResponseWrappers.Web;
@@ -934,7 +933,7 @@ namespace InstagramApiSharp.Converters
             return new InstaWebAccountInfoConverter { SourceObject = response };
         }
 
-        public IObjectConverter<InstaWebTextDataList, InstaWebSettingsPageResponse> GetWebTextDataListConverter(
+        public IObjectConverter<InstaWebTextData, InstaWebSettingsPageResponse> GetWebTextDataListConverter(
             InstaWebSettingsPageResponse response)
         {
             return new InstaWebTextDataConverter { SourceObject = response };

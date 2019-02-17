@@ -13,19 +13,13 @@ using InstagramApiSharp.Logger;
 using System;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using InstagramApiSharp.Helpers;
 using System.Net.Http;
-using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Linq;
 using InstagramApiSharp.Classes.Models;
-using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Converters;
-using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.Web;
-using System.Collections.Generic;
-using InstagramApiSharp.Classes.Models.Web;
 using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.API.Processors
@@ -73,7 +67,7 @@ namespace InstagramApiSharp.API.Processors
                 if (json.IsEmpty())
                     return Result.Fail($"Json response isn't available.", default(InstaWebAccountInfo));
 
-                var obj = JsonConvert.DeserializeObject<InstaWebContainer>(json);
+                var obj = JsonConvert.DeserializeObject<InstaWebContainerResponse>(json);
 
                 if (obj.Entry?.SettingsPages != null)
                 {
@@ -99,16 +93,16 @@ namespace InstagramApiSharp.API.Processors
         ///     Get self account follow requests
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        public async Task<IResult<InstaWebTextDataList>> GetFollowRequestsAsync(PaginationParameters paginationParameters)
+        public async Task<IResult<InstaWebTextData>> GetFollowRequestsAsync(PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
-            var textDataList = new InstaWebTextDataList();
+            var textDataList = new InstaWebTextData();
             try
             {
                 if (paginationParameters == null)
                     paginationParameters = PaginationParameters.MaxPagesToLoad(1);
 
-                InstaWebTextDataList Convert(InstaWebSettingsPageResponse settingsPageResponse)
+                InstaWebTextData Convert(InstaWebSettingsPageResponse settingsPageResponse)
                 {
                     return ConvertersFabric.Instance.GetWebTextDataListConverter(settingsPageResponse).Convert();
                 }
@@ -202,6 +196,15 @@ namespace InstagramApiSharp.API.Processors
             return await GetFormerAsync(InstaWebType.FormerPhones, paginationParameters);
         }
 
+        /// <summary>
+        ///     Get former emails
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaWebData>> GetFormerEmailsAsync(PaginationParameters paginationParameters)
+        {
+            return await GetFormerAsync(InstaWebType.FormerEmails, paginationParameters);
+        }
+
         private async Task<IResult<InstaWebData>> GetFormerAsync(InstaWebType type, PaginationParameters paginationParameters)
         {
             UserAuthValidator.Validate(_userAuthValidate);
@@ -229,6 +232,8 @@ namespace InstagramApiSharp.API.Processors
                             return WebUriCreator.GetFormerFullNamesUri(cursor);
                         case InstaWebType.FormerPhones:
                             return WebUriCreator.GetFormerPhoneNumbersUri(cursor);
+                        case InstaWebType.FormerEmails:
+                            return WebUriCreator.GetFormerEmailsUri(cursor);
                         default:
                             return WebUriCreator.GetFormerBiographyLinksUri(cursor);
                     }
@@ -296,7 +301,7 @@ namespace InstagramApiSharp.API.Processors
                     if (json.IsEmpty())
                         return Result.Fail($"Json response isn't available.", default(InstaWebSettingsPageResponse));
 
-                    var obj = JsonConvert.DeserializeObject<InstaWebContainer>(json);
+                    var obj = JsonConvert.DeserializeObject<InstaWebContainerResponse>(json);
 
                     if (obj.Entry?.SettingsPages != null)
                     {

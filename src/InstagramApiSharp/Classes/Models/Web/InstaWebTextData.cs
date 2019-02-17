@@ -9,11 +9,11 @@
 
 using System.Collections.Generic;
 
-namespace InstagramApiSharp.Classes.Models.Web
+namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaWebTextDataList
+    public class InstaWebTextData
     {
-        public string CursorId { get; set; }
+        public string MaxId { get; set; }
 
         public List<string> Items { get; set; } = new List<string>();
     }

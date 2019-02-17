@@ -9,10 +9,7 @@
 
 using System;
 using InstagramApiSharp.Classes.Models;
-using InstagramApiSharp.Classes.Models.Web;
-using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.Web;
-using InstagramApiSharp.Helpers;
 
 namespace InstagramApiSharp.Converters
 {
@@ -31,7 +28,7 @@ namespace InstagramApiSharp.Converters
                 foreach (var item in SourceObject.Data.Data)
                     data.Items.Add(ConvertersFabric.Instance.GetWebDataItemConverter(item).Convert());
 
-                data.CursorId = SourceObject.Data.Cursor;
+                data.MaxId = SourceObject.Data.Cursor;
             }
 
             return data;

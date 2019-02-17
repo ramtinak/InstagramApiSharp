@@ -8,14 +8,8 @@
  */
 
 using InstagramApiSharp.API;
-using InstagramApiSharp.Classes.Models;
-using InstagramApiSharp.Enums;
-using InstagramApiSharp.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using System.Globalization;
+
 
 namespace InstagramApiSharp.Helpers
 {
@@ -30,7 +24,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetCurrentFollowRequestsUri(string cursor = null)
         {
-            if (!Uri.TryCreate(InstaApiConstants.InstagramWebUri, InstaApiConstants.WEB_CURRENT_FOLLOW_REQUEST, out var instaUri))
+            if (!Uri.TryCreate(InstaApiConstants.InstagramWebUri, InstaApiConstants.WEB_CURRENT_FOLLOW_REQUESTS, out var instaUri))
                 throw new Exception("Cant create URI for current follow requests");
             string query = string.Empty;
             if (cursor.IsNotEmpty())
@@ -87,6 +81,17 @@ namespace InstagramApiSharp.Helpers
         {
             if (!Uri.TryCreate(InstaApiConstants.InstagramWebUri, InstaApiConstants.WEB_FORMER_PHONES, out var instaUri))
                 throw new Exception("Cant create URI for former phone numbers");
+            string query = string.Empty;
+            if (cursor.IsNotEmpty())
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+
+            return new UriBuilder(instaUri) { Query = query }.Uri;
+        }
+
+        public static Uri GetFormerEmailsUri(string cursor = null)
+        {
+            if (!Uri.TryCreate(InstaApiConstants.InstagramWebUri, InstaApiConstants.WEB_FORMER_EMAILS, out var instaUri))
+                throw new Exception("Cant create URI for former emails");
             string query = string.Empty;
             if (cursor.IsNotEmpty())
                 query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
