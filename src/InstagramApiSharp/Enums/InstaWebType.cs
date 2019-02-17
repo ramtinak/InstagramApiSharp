@@ -19,6 +19,5 @@ namespace InstagramApiSharp.Enums
         FormerFullNames,
         FormerLinksInBio,
         FormerBioTexts
-
     }
 }
