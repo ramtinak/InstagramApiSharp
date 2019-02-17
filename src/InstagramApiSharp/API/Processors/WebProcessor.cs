@@ -26,6 +26,7 @@ using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.Web;
 using System.Collections.Generic;
 using InstagramApiSharp.Classes.Models.Web;
+using InstagramApiSharp.Enums;
 
 namespace InstagramApiSharp.API.Processors
 {
@@ -162,6 +163,21 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         public async Task<IResult<InstaWebData>> GetFormerBiographyTextsAsync(PaginationParameters paginationParameters)
         {
+            return await GetFormerAsync(InstaWebType.FormerBioTexts, paginationParameters);
+        }
+
+        /// <summary>
+        ///     Get former biography texts
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaWebData>> GetFormerBiographyLinksAsync(PaginationParameters paginationParameters)
+        {
+            return await GetFormerAsync(InstaWebType.FormerLinksInBio, paginationParameters);
+        }
+
+
+        private async Task<IResult<InstaWebData>> GetFormerAsync(InstaWebType type, PaginationParameters paginationParameters)
+        {
             UserAuthValidator.Validate(_userAuthValidate);
             var webData = new InstaWebData();
             try
@@ -175,7 +191,15 @@ namespace InstagramApiSharp.API.Processors
                 }
                 Uri CreateUri(string cursor = null)
                 {
-                    return WebUriCreator.GetFormerBiographyTextsUri(cursor);
+                    switch(type)
+                    {
+                        case InstaWebType.FormerBioTexts:
+                            return WebUriCreator.GetFormerBiographyTextsUri(cursor);
+                        case InstaWebType.FormerLinksInBio:
+                            return WebUriCreator.GetFormerBiographyLinksUri(cursor);
+                        default:
+                            return WebUriCreator.GetFormerBiographyLinksUri(cursor);
+                    }
                 }
                 var request = await GetRequest(CreateUri(paginationParameters?.NextMaxId));
                 if (!request.Succeeded)
@@ -217,6 +241,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, webData);
             }
         }
+
         private async Task<IResult<InstaWebSettingsPageResponse>> GetRequest(Uri instaUri)
         {
             try

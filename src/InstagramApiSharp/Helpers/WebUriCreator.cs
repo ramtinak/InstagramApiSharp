@@ -49,5 +49,16 @@ namespace InstagramApiSharp.Helpers
 
             return new UriBuilder(instaUri) { Query = query }.Uri;
         }
+
+        public static Uri GetFormerBiographyLinksUri(string cursor = null)
+        {
+            if (!Uri.TryCreate(InstaApiConstants.InstagramWebUri, InstaApiConstants.WEB_FORMER_BIO_LINKS, out var instaUri))
+                throw new Exception("Cant create URI for former biography links");
+            string query = string.Empty;
+            if (cursor.IsNotEmpty())
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+
+            return new UriBuilder(instaUri) { Query = query }.Uri;
+        }
     }
 }
