@@ -1,7 +1,6 @@
 ﻿### Important note
-You must fill this form! If you don't fill it, your issue closed immidiately.
-
-Type an X character in between `[ ]`, like `[x]`
+- You must fill this form! If you don't fill it, your issue will be close immediately.
+- Put an X character between `[ ]` that is related to your issue, like `[x]`
 
 #### I've:
  - [ ] {Searched} in [Issues](https://github.com/ramtinak/InstagramApiSharp/search?type=Issues) 
@@ -19,13 +18,22 @@ Type an X character in between `[ ]`, like `[x]`
 - [ ] C#
 - [ ] VB.NET
 
-#### Version Information
-**** Type your version you are using, here, and remove this passage. ***
+#### Usage
+- [ ] Windows Form/Console app
+- [ ] WPF app
+- [ ] Asp .NET MVC
+- [ ] Asp .NET Core
+- [ ] Universal Windows Platform [UWP]
 
-#### Platform
+#### Operating System
 - [ ] Windows
+- [ ] Windows Server
 - [ ] Linux
 - [ ] Mac OS
+- [ ] Other
+
+#### Debug logs
+If your issue has an debug log, post it here, unless remove this section!
 
 #### Describe your issue
 Please type your issue here.
@@ -33,3 +41,4 @@ Please type your issue here.
 
 #### Screenshots
 If you have screenshots, you can post it here. unless remove this section!
+
