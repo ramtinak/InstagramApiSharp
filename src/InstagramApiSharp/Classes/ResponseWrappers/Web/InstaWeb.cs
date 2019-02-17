@@ -13,8 +13,8 @@ using System.Text;
 using Newtonsoft.Json;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.Models;
-
-namespace InstagramApiSharp.Classes.Models.Web
+using InstagramApiSharp.Enums;
+namespace InstagramApiSharp.Classes.ResponseWrappers.Web
 {
     public class InstaWebContainer
     {
@@ -39,17 +39,36 @@ namespace InstagramApiSharp.Classes.Models.Web
     public class InstaWebEntryData
     {
         [JsonProperty("SettingsPages")]
-        public List<InstaWebSettingsPage> SettingsPages { get; set; } = new List<InstaWebSettingsPage>();
+        public List<InstaWebSettingsPageResponse> SettingsPages { get; set; } = new List<InstaWebSettingsPageResponse>();
     }
 
-    public class InstaWebSettingsPage
+    public class InstaWebSettingsPageResponse
     {
         [JsonProperty("is_blocked")]
         public bool? IsBlocked { get; set; }
         [JsonProperty("page_name")]
         public string PageName { get; set; }
+
+        internal InstaWebType PageType
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(PageName))
+                    return InstaWebType.Unknown;
+                try
+                {
+                    var name = PageName.Replace("_", "");
+
+                    return (InstaWebType)Enum.Parse(typeof(InstaWebType), name, true);
+                }
+                catch { }
+                return InstaWebType.Unknown;
+            }
+        }
         [JsonProperty("date_joined")]
         public InstaWebData DateJoined { get; set; }
+        [JsonProperty("switched_to_business")]
+        public InstaWebData SwitchedToBusiness { get; set; }
     }
     
     public class InstaWebData

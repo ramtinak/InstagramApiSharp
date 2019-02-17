@@ -6,6 +6,7 @@ using InstagramApiSharp.Classes.Models.Business;
 using InstagramApiSharp.Classes.Models.Hashtags;
 using InstagramApiSharp.Classes.ResponseWrappers;
 using InstagramApiSharp.Classes.ResponseWrappers.Business;
+using InstagramApiSharp.Classes.ResponseWrappers.Web;
 using InstagramApiSharp.Converters.Business;
 using InstagramApiSharp.Converters.Hashtags;
 using InstagramApiSharp.Converters.Users;
@@ -924,6 +925,12 @@ namespace InstagramApiSharp.Converters
             InstaVisualMediaContainerResponse response)
         {
             return new InstaVisualMediaContainerConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaWebAccountInfo, InstaWebSettingsPageResponse> GetWebAccountInfoConverter(
+            InstaWebSettingsPageResponse response)
+        {
+            return new InstaWebAccountInfoConverter { SourceObject = response };
         }
     }
 }

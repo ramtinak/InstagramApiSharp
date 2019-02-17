@@ -20,10 +20,10 @@ using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Linq;
 using InstagramApiSharp.Classes.Models;
-using InstagramApiSharp.Classes.Models.Web;
 using InstagramApiSharp.Converters.Json;
 using InstagramApiSharp.Converters;
 using InstagramApiSharp.Classes.ResponseWrappers;
+using InstagramApiSharp.Classes.ResponseWrappers.Web;
 using System.Collections.Generic;
 
 namespace InstagramApiSharp.API.Processors
@@ -51,9 +51,9 @@ namespace InstagramApiSharp.API.Processors
             _httpHelper = httpHelper;
         }
         /// <summary>
-        ///     Get joined date for self user
+        ///     Get self account information like joined date or switched to business account date.
         /// </summary>
-        public async Task<IResult<DateTime>> GetJoinedDateAsync()
+        public async Task<IResult<InstaWebAccountInfo>> GetAccountInfoAsync()
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -64,11 +64,11 @@ namespace InstagramApiSharp.API.Processors
                 var html = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail($"Error! Status code: {response.StatusCode}", DateTime.MinValue);
+                    return Result.Fail($"Error! Status code: {response.StatusCode}", default(InstaWebAccountInfo));
 
                 var json = html.GetJson();
                 if (json == null)
-                    return Result.Fail($"Json response isn't available.", DateTime.MinValue);
+                    return Result.Fail($"Json response isn't available.", default(InstaWebAccountInfo));
 
                 var obj = JsonConvert.DeserializeObject<InstaWebContainer>(json);
 
@@ -76,23 +76,19 @@ namespace InstagramApiSharp.API.Processors
                 {
                     var first = obj.Entry.SettingsPages.FirstOrDefault();
                     if (first != null)
-                    {
-                        var date = first.DateJoined?.Data?.Timestamp.Value.FromUnixTimeSeconds();
-                        if (date != null)
-                            return Result.Success(date.Value);
-                    }
+                        return Result.Success(ConvertersFabric.Instance.GetWebAccountInfoConverter(first).Convert());
                 }
-                return Result.Fail($"Date joined isn't available.", DateTime.MinValue);
+                return Result.Fail($"Date joined isn't available.", default(InstaWebAccountInfo));
             }
             catch (HttpRequestException httpException)
             {
                 _logger?.LogException(httpException);
-                return Result.Fail(httpException, DateTime.MinValue, ResponseType.NetworkProblem);
+                return Result.Fail(httpException, default(InstaWebAccountInfo), ResponseType.NetworkProblem);
             }
             catch (Exception exception)
             {
                 _logger?.LogException(exception);
-                return Result.Fail(exception, DateTime.MinValue);
+                return Result.Fail(exception, default(InstaWebAccountInfo));
             }
         }
 

@@ -29,9 +29,9 @@ namespace InstagramApiSharp.API.Processors
     public interface IWebProcessor
     {
         /// <summary>
-        ///     Get joined date for self user
+        ///     Get self account information like joined date or switched to business account date.
         /// </summary>
-        Task<IResult<DateTime>> GetJoinedDateAsync();
+        Task<IResult<InstaWebAccountInfo>> GetAccountInfoAsync();
 
     }
 }
