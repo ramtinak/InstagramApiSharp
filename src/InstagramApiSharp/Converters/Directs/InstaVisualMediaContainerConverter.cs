@@ -32,7 +32,7 @@ namespace InstagramApiSharp.Converters
                 visualMedia.UrlExpireAt = SourceObject.UrlExpireAtSecs.Value.FromUnixTimeSeconds();
 
             if (SourceObject.ReplayExpiringAtUs != null)
-                visualMedia.ReplayExpiringAtUs = SourceObject.ReplayExpiringAtUs.Value.FromUnixTimeMiliSeconds();
+                visualMedia.ReplayExpiringAtUs = DateTime.MinValue/*SourceObject.ReplayExpiringAtUs.Value.FromUnixTimeSeconds()*/;
 
             if (SourceObject.Media != null)
                 visualMedia.Media = ConvertersFabric.Instance.GetVisualMediaConverter(SourceObject.Media).Convert();

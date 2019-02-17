@@ -328,7 +328,7 @@ namespace InstagramApiSharp.API.Processors
                       && !string.IsNullOrEmpty(threadResponse.OldestCursor)
                       && pagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var nextThread = await GetDirectInboxThread(threadResponse.OldestCursor);
+                    var nextThread = await GetDirectInboxThread(threadId, threadResponse.OldestCursor);
 
                     if (!nextThread.Succeeded)
                         return Result.Fail(nextThread.Info, Convert(nextThread.Value));
