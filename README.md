@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.3.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.3.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -92,6 +92,14 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.3.5
+- [Bugfix] for GetDirectInboxThreadAsync pagination (thx to [@Hoaas](https://github.com/hoaas) for report)
+- [Add] VisualMedia support in direct thread item (check #174 issue) (thx to [@aspmaker](https://github.com/aspmaker) for report)
+- [Add] ActionBlockEnd to ResultInfo (Displaying ActionBlock end date. Used For awaiting liking etc.) (thx to [@mihey8800](https://github.com/mihey8800) for PR)
+- [Add] Videos property to InstaInboxMedia (direct media item)
+- [Update] direct item Users and LeftUsers models class
+- [Remove] StartFromId function from PaginationParameters class (use StartFromMaxId instead)
+
 v1.3.3.4
 - [Update] InstaUserInfo (thx to [@RowanFazio](https://github.com/rowanFazio) for PR)
 - [Change] InstaStory.Items to InstaStoryItem
@@ -131,45 +139,6 @@ v1.3.3.2
 - [Update] InstaStoryFeed.PostLives
 - [Update] InstaReelFeed.FriendshipStatus
 
-v1.3.3.1
-- [Add] ShareMediaAsStoryAsync to StoryProcessor
-- [Add] HasViewerSaved property to InstaMedia
-- [Add] converters for all live broadcast classes
-- [Add] pagination to GetDiscoverTopLiveAsync
-- [Add] LoginWithFacebookAsync to IInstaApi
-
-v1.3.3.0
-- [Bugfix] for followers and followings get functions
-- [Bugfix] for SendGetRequestAsync
-- [Bugfix] for GetTopHashtagMediaListAsync (thx to [@huseyinkarael](https://github.com/huseyinkarael) for report)
-- [Bugfix] for GetRecentHashtagMediaListAsync (thx to [@huseyinkarael](https://github.com/huseyinkarael) for report)
-- [Bugfix] for GetArchivedMediaAsync pagination
-- [Bugfix] for GetUserTagsAsync (thx to [@hamidrh](https://github.com/hamidrh) for bugfix)
-- [Rename] GetLikeFeedAsync to GetLikedFeedAsync
-- [Rename] SendLikeAsync to SendDirectLikeAsync
-- [Add] GetUserFollowersByIdAsync to UserProcessor
-- [Add] GetUserFollowingByIdAsync to UserProcessor 
-- [Add] SaveMediaAsync to MediaProcessor
-- [Add] UnSaveMediaAsync to MediaProcessor
-- [Add] GetSavedFeedAsync to FeedProcessor
-- [Add] support story question in InstaStoryItem
-- [Add] GetUserShoppableMediaByIdAsync to ShoppingProcessor
-- [Add] GetUserMediaByIdAsync to UserProcessor
-- [Add] GetBestFriendsAsync to UserProcessor
-- [Add] GetBestFriendsSuggestionsAsync to UserProcessor
-- [Add] AddBestFriendsAsync to UserProcessor
-- [Add] DeleteBestFriendsAsync to UserProcessor
-- [Update] GetUserTagsAsync pagination
-- [Update] GetTagFeedAsync pagination
-- [Update] GetUserTimelineFeedAsync pagination
-- [Update] GetSavedFeedAsync
-- [Update] GetLikedFeedAsync pagination
-- [Update] GetRecentHashtagMediaListAsync pagination
-- [Update] GetTopHashtagMediaListAsync pagination
-- [Update] ApproveDirectPendingRequestAsync
-- [Update] GetUserShoppableMediaAsync pagination
-- [Update] GetUserShoppableMediaAsync pagination
-
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
 ## Known Issues
@@ -179,6 +148,9 @@ Nothing!!!!
 You can download source code or app from [InstaPost](https://github.com/ramtinak/InstaPost/) github page.
 ![InstaPost](http://s9.picofile.com/file/8335529176/sc1.PNG)
 ![InstaPost](http://s8.picofile.com/file/8335529250/sc5.PNG)
+Note: [InstaPost](https://github.com/ramtinak/InstaPost/) app is just an old example that uses [InstagramApiSharp v1.1.5.2](https://www.nuget.org/packages/InstagramApiSharp/1.1.5.2) which is very old version!!! 
+Some of codes may not working well or even deprecated in new [InstagramApiSharp](https://github.com/ramtinak/InstagramApiSharp) versions.
+I suggest you to update library to the latest [nuget version](https://www.nuget.org/packages/InstagramApiSharp) or use latest [release package](https://github.com/ramtinak/InstagramApiSharp/releases) and update [InstaPost](https://github.com/ramtinak/InstaPost/) codes that is not working or deprecated
 
 ## Language
 You can ask questions or report issues in Persian or English language.
