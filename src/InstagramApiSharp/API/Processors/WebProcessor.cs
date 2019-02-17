@@ -47,6 +47,8 @@ namespace InstagramApiSharp.API.Processors
             _httpHelper = httpHelper;
         }
 
+        #region public part
+
         /// <summary>
         ///     Get self account information like joined date or switched to business account date
         /// </summary>
@@ -155,27 +157,26 @@ namespace InstagramApiSharp.API.Processors
         ///     Get former biography texts
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        public async Task<IResult<InstaWebData>> GetFormerBiographyTextsAsync(PaginationParameters paginationParameters)
-        {
-            return await GetFormerAsync(InstaWebType.FormerBioTexts, paginationParameters);
-        }
-
-        /// <summary>
-        ///     Get former biography texts
-        /// </summary>
-        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         public async Task<IResult<InstaWebData>> GetFormerBiographyLinksAsync(PaginationParameters paginationParameters)
         {
             return await GetFormerAsync(InstaWebType.FormerLinksInBio, paginationParameters);
         }
 
         /// <summary>
-        ///     Get former usernames
+        ///     Get former biography texts
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        public async Task<IResult<InstaWebData>> GetFormerUsernamesAsync(PaginationParameters paginationParameters)
+        public async Task<IResult<InstaWebData>> GetFormerBiographyTextsAsync(PaginationParameters paginationParameters)
         {
-            return await GetFormerAsync(InstaWebType.FormerUsernames, paginationParameters);
+            return await GetFormerAsync(InstaWebType.FormerBioTexts, paginationParameters);
+        }
+        /// <summary>
+        ///     Get former emails
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaWebData>> GetFormerEmailsAsync(PaginationParameters paginationParameters)
+        {
+            return await GetFormerAsync(InstaWebType.FormerEmails, paginationParameters);
         }
 
         /// <summary>
@@ -186,7 +187,7 @@ namespace InstagramApiSharp.API.Processors
         {
             return await GetFormerAsync(InstaWebType.FormerFullNames, paginationParameters);
         }
-        
+
         /// <summary>
         ///     Get former phone numbers
         /// </summary>
@@ -197,13 +198,17 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
-        ///     Get former emails
+        ///     Get former usernames
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
-        public async Task<IResult<InstaWebData>> GetFormerEmailsAsync(PaginationParameters paginationParameters)
+        public async Task<IResult<InstaWebData>> GetFormerUsernamesAsync(PaginationParameters paginationParameters)
         {
-            return await GetFormerAsync(InstaWebType.FormerEmails, paginationParameters);
+            return await GetFormerAsync(InstaWebType.FormerUsernames, paginationParameters);
         }
+        
+        #endregion public part
+
+        #region private part
 
         private async Task<IResult<InstaWebData>> GetFormerAsync(InstaWebType type, PaginationParameters paginationParameters)
         {
@@ -323,6 +328,7 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail(exception, default(InstaWebSettingsPageResponse));
             }
         }
-
+        
+        #endregion private part
     }
 }
