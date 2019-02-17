@@ -48,7 +48,11 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         Task<IResult<InstaWebData>> GetFormerBiographyLinksAsync(PaginationParameters paginationParameters);
-
+        /// <summary>
+        ///     Get former usernames
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        Task<IResult<InstaWebData>> GetFormerUsernamesAsync(PaginationParameters paginationParameters);
 
     }
 }
