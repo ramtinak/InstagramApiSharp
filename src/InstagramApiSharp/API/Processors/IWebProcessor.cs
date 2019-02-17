@@ -6,6 +6,7 @@
  * 
  * IRANIAN DEVELOPERS
  */
+
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Logger;
@@ -27,7 +28,10 @@ namespace InstagramApiSharp.API.Processors
 {
     public interface IWebProcessor
     {
-
+        /// <summary>
+        ///     Get joined date for self user
+        /// </summary>
+        Task<IResult<DateTime>> GetJoinedDateAsync();
 
     }
 }

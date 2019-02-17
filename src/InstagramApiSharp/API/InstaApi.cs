@@ -2065,10 +2065,8 @@ namespace InstagramApiSharp.API
             {
                 if (uri == null)
                     return Result.Fail("Uri cannot be null!", default(string));
-                //
+                
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
-                //request.Headers.Remove(InstaApiConstants.HEADER_USER_AGENT);
-                //request.Headers.Add(InstaApiConstants.HEADER_USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 OPR/57.0.3098.116");
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -2450,7 +2448,7 @@ namespace InstagramApiSharp.API
             _tvProcessor = new TVProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
             _businessProcessor = new BusinessProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
             _shoppingProcessor = new ShoppingProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
-
+            _webProcessor = new WebProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
 
         }
 
