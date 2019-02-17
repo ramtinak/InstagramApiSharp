@@ -32,8 +32,7 @@ Note: this library uses [Json.NET v10.0.3 and above](https://www.nuget.org/packa
 | .NET Core(UWP) | 10.0.10240 |
 
 ## Donation
-
-Buy me a coffee if you like this project: https://buymeacoff.ee/rXdVTHQkh
+Paypal: [Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9FVAXHZH2MAKW&source=url)
 
 ## Overview
 There are a lot of features and bug fix me and [NGame1](https://github.com/NGame1) and [other contributors](https://github.com/ramtinak/InstagramApiSharp/graphs/contributors) added to this library.
