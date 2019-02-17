@@ -89,6 +89,7 @@ namespace InstagramApiSharp.API
         HelperProcessor _helperProcessor;
         IBusinessProcessor _businessProcessor;
         IShoppingProcessor _shoppingProcessor;
+        IWebProcessor _webProcessor;
 
         /// <summary>
         ///     Live api functions.
@@ -155,6 +156,11 @@ namespace InstagramApiSharp.API
         ///     Shopping and commerce api functions
         /// </summary>
         public IShoppingProcessor ShoppingProcessor => _shoppingProcessor;
+        /// <summary>
+        ///     Instagram Web api functions.
+        ///     <para>It's related to https://instagram.com/accounts/ </para>
+        /// </summary>
+        public IWebProcessor WebProcessor => _webProcessor;
 
         #endregion Processors
 
@@ -2059,8 +2065,10 @@ namespace InstagramApiSharp.API
             {
                 if (uri == null)
                     return Result.Fail("Uri cannot be null!", default(string));
-
+                //
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, uri, _deviceInfo);
+                //request.Headers.Remove(InstaApiConstants.HEADER_USER_AGENT);
+                //request.Headers.Add(InstaApiConstants.HEADER_USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 OPR/57.0.3098.116");
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 

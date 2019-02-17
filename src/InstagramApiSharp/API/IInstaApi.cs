@@ -99,6 +99,11 @@ namespace InstagramApiSharp.API
         ///     Shopping and commerce api functions
         /// </summary>
         IShoppingProcessor ShoppingProcessor { get; }
+        /// <summary>
+        ///     Instagram Web api functions.
+        ///     <para>It's related to https://instagram.com/accounts/ </para>
+        /// </summary>
+        IWebProcessor WebProcessor { get; }
 
         /// <summary>
         ///     Session handler

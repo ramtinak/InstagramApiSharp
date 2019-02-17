@@ -108,6 +108,8 @@ namespace InstagramApiSharp.API
         public const string FACEBOOK_USER_AGENT = "Mozilla/5.0 (Linux; Android {0}; {1} Build/{2}; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/69.0.3497.100 Mobile Safari/537.36";
         public const string FACEBOOK_USER_AGENT_DEFAULT = "Mozilla/5.0 (Linux; Android 7.0; PRA-LA1 Build/HONORPRA-LA1; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/69.0.3497.100 Mobile Safari/537.36";
 
+        public const string WEB_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 OPR/57.0.3098.116";
+
         public const string ERROR_OCCURRED = "Oops, an error occurred";
 
         public static readonly Uri BaseInstagramUri = new Uri(BASE_INSTAGRAM_API_URL);
@@ -579,5 +581,15 @@ namespace InstagramApiSharp.API
         public const string QE_EXPOSE = API_SUFFIX + "/qe/expose/";
 
         #endregion Other endpoints constants
+
+        #region Web endpoints constants
+
+        public static string WEB_ADDRESS = "https://www.instagram.com";
+        public static string WEB_ACCOUNTS = "/accounts";
+        public static string WEB_ACCOUNT_DATA = WEB_ACCOUNTS + "/access_tool";
+        public static string WEB_CURRENT_FOLLOW_REQUEST = WEB_ACCOUNT_DATA + "/current_follow_requests/";
+
+        public static readonly Uri InstagramWebUri = new Uri(WEB_ADDRESS);
+        #endregion
     }
 }
