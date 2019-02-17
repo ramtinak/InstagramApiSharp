@@ -82,5 +82,16 @@ namespace InstagramApiSharp.Helpers
 
             return new UriBuilder(instaUri) { Query = query }.Uri;
         }
+
+        public static Uri GetFormerPhoneNumbersUri(string cursor = null)
+        {
+            if (!Uri.TryCreate(InstaApiConstants.InstagramWebUri, InstaApiConstants.WEB_FORMER_PHONES, out var instaUri))
+                throw new Exception("Cant create URI for former phone numbers");
+            string query = string.Empty;
+            if (cursor.IsNotEmpty())
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+
+            return new UriBuilder(instaUri) { Query = query }.Uri;
+        }
     }
 }
