@@ -184,6 +184,14 @@ namespace InstagramApiSharp.API.Processors
             return await GetFormerAsync(InstaWebType.FormerUsernames, paginationParameters);
         }
 
+        /// <summary>
+        ///     Get former full names
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        public async Task<IResult<InstaWebData>> GetFormerFullNamesAsync(PaginationParameters paginationParameters)
+        {
+            return await GetFormerAsync(InstaWebType.FormerFullNames, paginationParameters);
+        }
 
         private async Task<IResult<InstaWebData>> GetFormerAsync(InstaWebType type, PaginationParameters paginationParameters)
         {
@@ -208,6 +216,8 @@ namespace InstagramApiSharp.API.Processors
                             return WebUriCreator.GetFormerBiographyLinksUri(cursor);
                         case InstaWebType.FormerUsernames:
                             return WebUriCreator.GetFormerUsernamesUri(cursor);
+                        case InstaWebType.FormerFullNames:
+                            return WebUriCreator.GetFormerFullNamesUri(cursor);
                         default:
                             return WebUriCreator.GetFormerBiographyLinksUri(cursor);
                     }

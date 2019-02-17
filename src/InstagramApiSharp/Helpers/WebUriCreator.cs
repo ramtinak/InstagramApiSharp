@@ -71,5 +71,16 @@ namespace InstagramApiSharp.Helpers
 
             return new UriBuilder(instaUri) { Query = query }.Uri;
         }
+
+        public static Uri GetFormerFullNamesUri(string cursor = null)
+        {
+            if (!Uri.TryCreate(InstaApiConstants.InstagramWebUri, InstaApiConstants.WEB_FORMER_FULL_NAMES, out var instaUri))
+                throw new Exception("Cant create URI for former full names");
+            string query = string.Empty;
+            if (cursor.IsNotEmpty())
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+
+            return new UriBuilder(instaUri) { Query = query }.Uri;
+        }
     }
 }

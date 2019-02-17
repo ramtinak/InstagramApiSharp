@@ -591,7 +591,7 @@ namespace InstagramApiSharp.API
         public static string WEB_FORMER_EMAIL = WEB_ACCOUNT_DATA + "/former_emails";
         public static string WEB_FORMER_PHONES = WEB_ACCOUNT_DATA + "/former_phones";
         public static string WEB_FORMER_USERNAMES = WEB_ACCOUNT_DATA + "/former_usernames";
-        public static string WEB_FORMER_FULL_NAME = WEB_ACCOUNT_DATA + "/former_full_names";
+        public static string WEB_FORMER_FULL_NAMES = WEB_ACCOUNT_DATA + "/former_full_names";
         public static string WEB_FORMER_BIO_TEXTS = WEB_ACCOUNT_DATA + "/former_bio_texts";
         public static string WEB_FORMER_BIO_LINKS = WEB_ACCOUNT_DATA + "/former_links_in_bio";
 

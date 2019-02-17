@@ -30,7 +30,7 @@ namespace InstagramApiSharp.API.Processors
     public interface IWebProcessor
     {
         /// <summary>
-        ///     Get self account information like joined date or switched to business account date.
+        ///     Get self account information like joined date or switched to business account date
         /// </summary>
         Task<IResult<InstaWebAccountInfo>> GetAccountInfoAsync();
         /// <summary>
@@ -53,6 +53,10 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
         Task<IResult<InstaWebData>> GetFormerUsernamesAsync(PaginationParameters paginationParameters);
-
+        /// <summary>
+        ///     Get former full names
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        Task<IResult<InstaWebData>> GetFormerFullNamesAsync(PaginationParameters paginationParameters);
     }
 }
