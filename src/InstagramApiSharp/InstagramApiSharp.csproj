@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452;uap10.0;netstandard1.3</TargetFrameworks>
-    <VersionPrefix>1.3.3</VersionPrefix>
+    <VersionPrefix>1.3.4</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.3.5</Version>
-    <AssemblyVersion>1.3.3.5</AssemblyVersion>
-    <FileVersion>1.3.3.5</FileVersion>
+    <Version>1.3.4.0</Version>
+    <AssemblyVersion>1.3.4.0</AssemblyVersion>
+    <FileVersion>1.3.4.0</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,18 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.3.3.5
+    <PackageReleaseNotes>v1.3.4.0
+- [Add] IWebProcessor to IInstaApi (instagram web api for account data)
+- [Add] GetAccountInfoAsync to WebProcessor
+- [Add] GetFollowRequestsAsync to WebProcessor
+- [Add] GetFormerBiographyTextsAsync to WebProcessor
+- [Add] GetFormerBiographyLinksAsync to WebProcessor
+- [Add] GetFormerUsernamesAsync to WebProcesor
+- [Add] GetFormerFullNamesAsync to WebProcessor
+- [Add] GetFormerPhoneNumbersAsync to WebProcessor
+- [Add] GetFormerEmailsAsync to WebProcessor
+
+v1.3.3.5
 - [Bugfix] for GetDirectInboxThreadAsync pagination (thx to @Hoaas for report)
 - [Add] VisualMedia support in direct thread item (check #174 issue) (thx to @aspmaker for report)
 - [Add] ActionBlockEnd to ResultInfo (Displaying ActionBlock end date. Used For awaiting liking etc.) (thx to @mihey8800 for PR)
@@ -122,87 +133,7 @@ v1.3.3.0
 - [Update] GetTopHashtagMediaListAsync pagination
 - [Update] ApproveDirectPendingRequestAsync
 - [Update] GetUserShoppableMediaAsync pagination
-- [Update] GetUserShoppableMediaAsync pagination
-
-v1.3.2.3
-- [Bugfix] for Blocked users
-- [Add] SendDirectProfileToRecipientsAsync
-
-v1.3.2.2
-- [Bugfix] for user activities timespan
-- [Add] support for story sliders
-- [Add] VoteStorySliderAsync to StoryProcessor
-- [Add] some new properties to InstaStoryItem
-- [Add] StorySliderVoters to InstaStoryItem
-- [Add] Slider to InstaStoryUploadOptions
-- [Add] Fail&lt;T&gt;(Exception, T, ResponseType) to Result
-- [Add] NetworkProblem to ResponseType
-
-v1.3.2.1
-- [Add] support story poll to InstaStoryItem
-- [Add] ViewerVote property to InstaStoryPollStickerItem
-- [Add] story voters support in InstaStoryItem
-- [Add] Viewers property to InstaStoryItem
-- [Add] viewers and voters in GetStoryMediaViewersAsync function
-- [Add] pagination to GetStoryMediaViewersAsync
-- [Add] GetStoryPollVotersAsync to StoryProcessor
-- [Add] VoteStoryPollAsync to StoryProcessor
-- [Add] SetTimeout to IInstaApi
-- [Add] story options (add locations, hashtags or poll questions) to UploadStoryPhotoAsync and UploadStoryVideoAsync
-
-v1.3.2.0
-- [Add] Api Version 76
-- [Set] api version v76 as default (for new logins)
-- [Update] GetStatisticsAsync
-- [Update] highlight values
-- [Add] SendDirectHashtagAsync to MessagingProcessor
-- [Add] SendDirectHashtagToRecipientsAsync to MessagingProcessor
-- [Add] support Hashtag message in direct threads
-- [Add] support LiveViewerInvite in direct message
-- [Add] ShareLiveToDirectThreadAsync to LiveProcessor
-- [Add] ShareLiveToDirectRecipientAsync to LiveProcessor
-- [Update] GetUserTimelineFeedAsync
-
-v1.3.1.8
-- [Add] refresh to timeline feed
-- [Bugfix] for LoginWithCookiesAsync
-
-v1.3.1.7
-- [Add] support for postlives
-- [Add] like in directs
-- [Add] Challenge support in 2FALogin
-
-v1.3.1.6
-- [Add] timespan for InstaAudio
-- [Add] support for dynamically setting httphandler
-
-v1.3.1.3
-- [Add] top searches in discover processor
-- [Add] LoginWithCookiesAsync to IInstaApi
-- [Bugfix] for live comments get
-- [Bugfix] for SearchPlacesAsync
-
-v1.3.1.1
-- [Bugfix] fix for hashtags deserialize on api version 64
-- [Add] RichText support in API Version 64 for Activities 
-
-v1.3.1.0
-- [Add] set/get timezone and timezone offset  (thx to @burak1000 for report)
-- [Bugfix] for MarkDirectThreadAsSeenAsync
-- [Add] PaginationParameters to SearchPlacesAsync
-
-v1.3.0.0
-- [Add] SendDirectLinks with recipients and threadId to MessagingProcessor (thx to @estgold for PR)
-- [Add] ArchiveMediaAsync to MediaProcessor
-- [Add] UnArchiveMediaAsync to MediaProcessor
-- [Add] GetArchivedMediaAsync to MediaProcessor
-- [Add] GetPresenceOptionsAsync to AccountProcessor
-- [Add] EnablePresenceAsync to AccountProcessor
-- [Add] DisablePresenceAsync to AccountProcessor
-- [Add] BlockUserCommentingAsync to CommentProcessor
-- [Add] UnblockUserCommentingAsync to CommentProcessor
-- [Add] GetBlockedCommentersAsync to CommentProcessor
-- [Update] FriendshipStatus property in GetUserAsync</PackageReleaseNotes>
+- [Update] GetUserShoppableMediaAsync pagination</PackageReleaseNotes>
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo, igtv</PackageTags>

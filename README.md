@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.3.5 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.4.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -92,6 +92,17 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.4.0
+- [Add] IWebProcessor to IInstaApi (instagram web api for account data)
+- [Add] GetAccountInfoAsync to WebProcessor
+- [Add] GetFollowRequestsAsync to WebProcessor
+- [Add] GetFormerBiographyTextsAsync to WebProcessor
+- [Add] GetFormerBiographyLinksAsync to WebProcessor
+- [Add] GetFormerUsernamesAsync to WebProcesor
+- [Add] GetFormerFullNamesAsync to WebProcessor
+- [Add] GetFormerPhoneNumbersAsync to WebProcessor
+- [Add] GetFormerEmailsAsync to WebProcessor
+
 v1.3.3.5
 - [Bugfix] for GetDirectInboxThreadAsync pagination (thx to [@Hoaas](https://github.com/hoaas) for report)
 - [Add] VisualMedia support in direct thread item (check [#174](https://github.com/ramtinak/InstagramApiSharp/issues/174) issue) (thx to [@aspmaker](https://github.com/aspmaker) for report)
