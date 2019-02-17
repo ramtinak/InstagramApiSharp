@@ -24,6 +24,8 @@
 - [ ] Asp .NET MVC
 - [ ] Asp .NET Core
 - [ ] Universal Windows Platform [UWP]
+- [ ] Xamarin or Xamarin Forms
+- [ ] Other
 
 #### Operating System
 - [ ] Windows
