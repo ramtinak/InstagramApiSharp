@@ -21,8 +21,12 @@ namespace InstagramApiSharp.Classes
 
         [JsonProperty("two_factor_info")] public InstaTwoFactorLoginInfo TwoFactorLoginInfo { get; set; }
 
-        [JsonProperty("challenge")] public InstaChallengeLoginInfo Challenge { get; set; }
+        #endregion
 
+        #region Challenge
+
+        [JsonProperty("challenge")] public InstaChallengeLoginInfo Challenge { get; set; }
+        
         #endregion
 
         [JsonProperty("lock")] public bool? Lock { get; set; }

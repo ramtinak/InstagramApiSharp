@@ -1770,13 +1770,22 @@ namespace InstagramApiSharp.API
         /// </returns>
         public async Task<IResult<InstaLoginResult>> LoginWithFacebookAsync(string fbAccessToken, string cookiesContainer)
         {
+            return await LoginWithFacebookAsync(fbAccessToken, cookiesContainer, true, null,null,null, true);
+        }
+
+        public async Task<IResult<InstaLoginResult>> LoginWithFacebookAsync(string fbAccessToken, string cookiesContainer, 
+            bool dryrun = true, string username = null, string waterfallId = null, string adId = null, bool newToken = true)
+        {
             try
             {
                 _facebookAccessToken = null;
-                var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
-                await firstResponse.Content.ReadAsStringAsync();
-                _logger?.LogResponse(firstResponse);
-
+                if (newToken)
+                {
+                    var firstResponse = await _httpRequestProcessor.GetAsync(_httpRequestProcessor.Client.BaseAddress);
+                    await firstResponse.Content.ReadAsStringAsync();
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("--------------------RELOGIN-------------------------");
                 var cookies =
                 _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
                     .BaseAddress);
@@ -1786,20 +1795,29 @@ namespace InstagramApiSharp.API
                 cookiesContainer = cookiesContainer.Replace(';', ',');
                 _httpRequestProcessor.HttpHandler.CookieContainer.SetCookies(uri, cookiesContainer);
 
+                if (adId.IsEmpty())
+                    adId = Guid.NewGuid().ToString();
+
+                if (waterfallId.IsEmpty())
+                    waterfallId = Guid.NewGuid().ToString();
+
                 var instaUri = UriCreator.GetFacebookSignUpUri();
 
                 var data = new JObject
                 {
-                    {"dryrun", "true"},
+                    {"dryrun", dryrun.ToString().ToLower()},
                     {"phone_id", _deviceInfo.PhoneGuid.ToString()},
                     {"_csrftoken", csrftoken},
-                    {"adid", Guid.NewGuid().ToString()},
+                    {"adid", adId},
                     {"guid",  _deviceInfo.DeviceGuid.ToString()},
                     {"_uuid",  _deviceInfo.DeviceGuid.ToString()},
                     {"device_id", _deviceInfo.DeviceId},
-                    {"waterfall_id", Guid.NewGuid().ToString()},
+                    {"waterfall_id", waterfallId},
                     {"fb_access_token", fbAccessToken},
                 };
+                if (username.IsNotEmpty())
+                    data.Add("username", username);
+
                 _facebookAccessToken = fbAccessToken;
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -1841,14 +1859,43 @@ namespace InstagramApiSharp.API
                     return Result.UnExpectedResponse<InstaLoginResult>(response, json);
                 }
 
-                var obj = JsonConvert.DeserializeObject<InstaFacebookLoginResponse>(json);
-                var loginInfo = JsonConvert.DeserializeObject<InstaLoginResponse>(json);
+                var fbUserId = string.Empty;
+                InstaUserShortResponse loginInfoUser = null;
+                if (json.Contains("\"account_created\""))
+                {
+                    var rmt = JsonConvert.DeserializeObject<InstaFacebookRegistrationResponse>(json);
+                    if(rmt?.AccountCreated != null)
+                    {
+                        fbUserId = rmt?.FbUserId;
+                        if (rmt.AccountCreated.Value)
+                        {
+                            loginInfoUser = JsonConvert.DeserializeObject<InstaFacebookLoginResponse>(json)?.CreatedUser;
+                        }
+                        else
+                        {
+                            var desireUsername = rmt?.UsernameSuggestionsWithMetadata?.Suggestions?.LastOrDefault()?.Username;
+                            await Task.Delay(4500);
+                            await GetFacebookOnboardingStepsAsync();
+                            await Task.Delay(12000);
+
+                            return await LoginWithFacebookAsync(fbAccessToken, cookiesContainer, false, desireUsername, waterfallId, adId, false);
+                        }
+                    }
+                }
+
+                if(loginInfoUser == null)
+                {
+                    var obj = JsonConvert.DeserializeObject<InstaFacebookLoginResponse>(json);
+                    fbUserId = obj?.FbUserId;
+                    loginInfoUser = obj?.LoggedInUser;
+                }
+                
                 IsUserAuthenticated = true;
-                var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfo.User);
+                var converter = ConvertersFabric.Instance.GetUserShortConverter(loginInfoUser);
                 _user.LoggedInUser = converter.Convert();
                 _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
                 _user.CsrfToken = csrftoken;
-                _user.FacebookUserId = obj.FbUserId;
+                _user.FacebookUserId = fbUserId;
                 _user.UserName = _user.LoggedInUser.UserName;
                 _user.FacebookAccessToken = fbAccessToken;
                 _user.Password = "ALAKIMASALAN";
@@ -1877,6 +1924,161 @@ namespace InstagramApiSharp.API
             }
         }
 
+        private async Task<IResult<object>> GetFacebookOnboardingStepsAsync()
+        {
+            try
+            {
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+                var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
+                _user.CsrfToken = csrftoken;
+
+                //{
+                //  "fb_connected": "true",
+                //  "seen_steps": "[]",
+                //  "phone_id": "d46328c2-01af-4457-9da2-bc60637abde6",
+                //  "fb_installed": "false",
+                //  "locale": "en_US",
+                //  "timezone_offset": "12600",
+                //  "_csrftoken": "2YmsoSkHtIknBA8maAqb1QSk92nrM6xo",
+                //  "network_type": "WIFI-UNKNOWN",
+                //  "_uid": "9013775990",
+                //  "guid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
+                //  "_uuid": "6324ecb2-e663-4dc8-a3a1-289c699cc876",
+                //  "is_ci": "false",
+                //  "android_id": "android-21c311d494a974fe",
+                //  "reg_flow_taken": "facebook",
+                //  "tos_accepted": "false"
+                //}
+
+                var postData = new Dictionary<string, string>
+                {
+                    {"fb_connected",        "true"},
+                    {"seen_steps",          "[]"},
+                    {"phone_id",            _deviceInfo.PhoneGuid.ToString()},
+                    {"fb_installed",        "false"},
+                    {"locale",              InstaApiConstants.ACCEPT_LANGUAGE.Replace("-","_")},
+                    {"timezone_offset",     InstaApiConstants.TIMEZONE_OFFSET.ToString()},
+                    {"_csrftoken",          csrftoken},
+                    {"network_type",        "WIFI-UNKNOWN"},
+                    {"guid",                _deviceInfo.DeviceGuid.ToString()},
+                    {"_uuid",               _deviceInfo.DeviceGuid.ToString()},
+                    {"is_ci",               "false"},
+                    {"android_id",          _deviceInfo.DeviceId},
+                    {"reg_flow_taken",      "facebook"},
+                    {"tos_accepted",        "false"}
+                };
+
+
+                var instaUri = UriCreator.GetOnboardingStepsUri();
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, postData);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var o = JsonConvert.DeserializeObject<InstaAccountRegistrationPhoneNumber>(json);
+
+                    return Result.Fail(o.Message?.Errors?[0], (InstaRegistrationSuggestionResponse)null);
+                }
+
+                var obj = JsonConvert.DeserializeObject<InstaRegistrationSuggestionResponse>(json);
+                return Result.Success(obj);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaRegistrationSuggestionResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaRegistrationSuggestionResponse>(exception);
+            }
+        }
+
+        private async Task<IResult<bool>> AcceptFacebookConsentRequiredAsync(string email, string phone = null)
+        {
+            try
+            {
+                var delay = TimeSpan.FromSeconds(2);
+
+                //{"message": "consent_required", "consent_data": {"headline": "Updates to Our Terms and Data Policy", "content": "We've updated our Terms and made some changes to our Data Policy. Please take a moment to review these changes and let us know that you agree to them.\n\nYou need to finish reviewing this information before you can use Instagram.", "button_text": "Review Now"}, "status": "fail"}
+                await Task.Delay((int)delay.TotalMilliseconds);
+                var instaUri = UriCreator.GetConsentNewUserFlowBeginsUri();
+                var data = new JObject
+                {
+                    {"phone_id", _deviceInfo.PhoneGuid},
+                    {"_csrftoken", _user.CsrfToken}
+                };
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                await Task.Delay((int)delay.TotalMilliseconds);
+
+                instaUri = UriCreator.GetConsentNewUserFlowUri();
+                data = new JObject
+                {
+                    {"phone_id", _deviceInfo.PhoneGuid},
+                    {"gdpr_s", ""},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"guid", _deviceInfo.DeviceGuid},
+                    {"device_id", _deviceInfo.DeviceId}
+                };
+                if (email != null)
+                    data.Add("email", email);
+                else
+                {
+                    if (phone != null && !phone.StartsWith("+"))
+                        phone = $"+{phone}";
+
+                    if (phone == null)
+                        phone = string.Empty;
+                    data.Add("phone", phone);
+                }
+
+                request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                await Task.Delay((int)delay.TotalMilliseconds);
+
+                data = new JObject
+                {
+                    {"current_screen_key", "age_consent_two_button"},
+                    {"phone_id", _deviceInfo.PhoneGuid},
+                    {"gdpr_s", "[0,0,0,null]"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"updates", "{\"age_consent_state\":\"2\"}"},
+                    {"guid", _deviceInfo.DeviceGuid},
+                    {"device_id", _deviceInfo.DeviceId}
+                };
+                request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                return Result.Success(true);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex, false);
+            }
+        }
         #endregion ORIGINAL FACEBOOK LOGIN
 
         #region Other public functions
