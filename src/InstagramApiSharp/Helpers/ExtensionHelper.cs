@@ -261,7 +261,7 @@ namespace InstagramApiSharp
                 {"viewer_vote", -1.0},
                 {"slider_vote_average", 0.0},
                 {"background_color", slider.BackgroundColor},
-                {"emoji", slider.Emoji},
+                {"emoji", $"emoji_slider_{slider.Emoji}"},
                 {"text_color", slider.TextColor},
                 {"is_sticker", slider.IsSticker},
             };
