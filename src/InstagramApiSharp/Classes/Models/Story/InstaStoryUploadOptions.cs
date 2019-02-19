@@ -24,5 +24,7 @@ namespace InstagramApiSharp.Classes.Models
         internal InstaMediaStoryUpload MediaStory { get; set; }
 
         public List<InstaStoryMentionUpload> Mentions { get; set; } = new List<InstaStoryMentionUpload>();
+
+        public List<InstaStoryQuestionUpload> Questions { get; set; } = new List<InstaStoryQuestionUpload>();
     }
 }

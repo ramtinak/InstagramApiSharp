@@ -937,6 +937,35 @@ namespace InstagramApiSharp.API.Processors
                     }
                     _instaApi.SetRequestDelay(currentDelay);
                 }
+                if(uploadOptions?.Questions?.Count > 0)
+                {
+                    try
+                    {
+                        bool tried = false;
+                        var profilePicture = string.Empty;
+                    TryToGetMyUser:
+                        // get latest profile picture
+                        var myUser = await _instaApi.UserProcessor.GetUserAsync(_user.UserName.ToLower());
+                        if (!myUser.Succeeded)
+                        {
+                            if (!tried)
+                            {
+                                tried = true;
+                                goto TryToGetMyUser;
+                            }
+                            else
+                                profilePicture = _user.LoggedInUser.ProfilePicture;
+                        }
+                        else
+                            profilePicture = myUser.Value.ProfilePicture;
+
+
+                        foreach (var question in uploadOptions.Questions)
+                            question.ProfilePicture = profilePicture;
+                    }
+                    catch { }
+                }
+
                 var uploadId = ApiRequestMessage.GenerateRandomUploadId();
                 var photoHashCode = Path.GetFileName(image.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
 
@@ -1562,6 +1591,14 @@ namespace InstagramApiSharp.API.Processors
 
                             data.Add("story_polls", pollArr.ToString(Formatting.None));
                         }
+                        if (uploadOptions.Questions?.Count > 0)
+                        {
+                            var questionArr = new JArray();
+                            foreach (var item in uploadOptions.Questions)
+                                questionArr.Add(item.ConvertToJson());
+
+                            data.Add("story_questions", questionArr.ToString(Formatting.None));
+                        }
                     }
                     if (uploadOptions.MediaStory != null)
                     {
@@ -1723,6 +1760,14 @@ namespace InstagramApiSharp.API.Processors
                                 pollArr.Add(item.ConvertToJson());
 
                             data.Add("story_polls", pollArr.ToString(Formatting.None));
+                        }
+                        if (uploadOptions.Questions?.Count > 0)
+                        {
+                            var questionArr = new JArray();
+                            foreach (var item in uploadOptions.Questions)
+                                questionArr.Add(item.ConvertToJson());
+
+                            data.Add("story_questions", questionArr.ToString(Formatting.None));
                         }
                     }
                 }

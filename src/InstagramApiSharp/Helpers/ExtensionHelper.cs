@@ -294,5 +294,25 @@ namespace InstagramApiSharp
                 {"user_id", storyMention.Pk}
             };
         }
+
+        public static JObject ConvertToJson(this InstaStoryQuestionUpload question)
+        {
+            return new JObject
+            {
+                {"x", question.X},
+                {"y", question.Y},
+                {"z", question.Z},
+                {"width", question.Width},
+                {"height", question.Height},
+                {"rotation", question.Rotation},
+                {"question", question.Question},
+                {"viewer_can_interact", question.ViewerCanInteract},
+                {"profile_pic_url", question.ProfilePicture},
+                {"question_type", question.QuestionType},
+                {"background_color", question.BackgroundColor},
+                {"text_color", question.TextColor},
+                {"is_sticker", question.IsSticker},
+            };
+        }
     }
 }

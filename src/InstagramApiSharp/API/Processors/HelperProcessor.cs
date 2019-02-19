@@ -446,6 +446,14 @@ namespace InstagramApiSharp.API.Processors
 
                                     data.Add("story_polls", pollArr.ToString(Formatting.None));
                                 }
+                                if (uploadOptions.Questions?.Count > 0)
+                                {
+                                    var questionArr = new JArray();
+                                    foreach (var item in uploadOptions.Questions)
+                                        questionArr.Add(item.ConvertToJson());
+
+                                    data.Add("story_questions", questionArr.ToString(Formatting.None));
+                                }
                             }
                         }
                     }
