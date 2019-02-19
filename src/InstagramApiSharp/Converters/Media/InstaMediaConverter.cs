@@ -64,19 +64,19 @@ namespace InstagramApiSharp.Converters
 
             if (SourceObject.NextMaxId != null) media.NextMaxId = SourceObject.NextMaxId;
 
-            if (SourceObject.Likers != null && SourceObject.Likers?.Count > 0)
+            if (SourceObject.Likers?.Count > 0)
                 foreach (var liker in SourceObject.Likers)
                     media.Likers.Add(ConvertersFabric.Instance.GetUserShortConverter(liker).Convert());
 
-            if (SourceObject.UserTagList?.In != null && SourceObject.UserTagList?.In?.Count > 0)
+            if (SourceObject.UserTagList?.In?.Count > 0)
                 foreach (var tag in SourceObject.UserTagList.In)
                     media.UserTags.Add(ConvertersFabric.Instance.GetUserTagConverter(tag).Convert());
 
-            if (SourceObject.ProductTags?.In != null && SourceObject.ProductTags?.In?.Count > 0)
+            if (SourceObject.ProductTags?.In?.Count > 0)
                 foreach (var tag in SourceObject.ProductTags.In)
                     media.ProductTags.Add(ConvertersFabric.Instance.GetProductTagContainerConverter(tag).Convert());
 
-            if (SourceObject.PreviewComments != null)
+            if (SourceObject.PreviewComments?.Count > 0)
                 foreach (var comment in SourceObject.PreviewComments)
                     media.PreviewComments.Add(ConvertersFabric.Instance.GetCommentConverter(comment).Convert());
 

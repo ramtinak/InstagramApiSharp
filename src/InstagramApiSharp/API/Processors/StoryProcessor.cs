@@ -1247,6 +1247,7 @@ namespace InstagramApiSharp.API.Processors
                     //upProgress = progressContent?.UploaderProgress;
                     upProgress.UploadState = InstaUploadState.ThumbnailUploaded;
                     progress?.Invoke(upProgress);
+                    await Task.Delay(30000);
                     return await ConfigureStoryVideoAsync(progress, upProgress, video, uploadId, caption, uri, uploadOptions);
                 }
                 upProgress.UploadState = InstaUploadState.Error;

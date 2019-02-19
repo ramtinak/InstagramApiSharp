@@ -25,9 +25,12 @@ namespace InstagramApiSharp.Converters
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
             var productTag = new InstaProductTag
             {
-                Position = new InstaPosition(SourceObject.Position[0], SourceObject.Position[1]),
                 Product = ConvertersFabric.Instance.GetProductConverter(SourceObject.Product).Convert()
             };
+
+            if (SourceObject.Position != null)
+                productTag.Position = new InstaPosition(SourceObject.Position[0], SourceObject.Position[1]);
+
             return productTag;
         }
     }
