@@ -123,6 +123,20 @@ namespace Examples.Samples
                 Username = "rmt4006"
             });
 
+            // Add story question
+            storyOptions.Questions.Add(new InstaStoryQuestionUpload
+            {
+                X = 0.5, // center of image
+                Y = 0.5, // center of image
+                Z = 0,
+                Width = 0.9507363,
+                Height = 0.32469338000000003,
+                Rotation = 0,
+                Question = "What do you think about InstagramApiSharp?!",
+                BackgroundColor = "#ffffff", // #ffffff is white
+                TextColor = "#000000" // #000000 is black
+            });
+
             var image = new InstaImage { Uri = @"c:\someawesomepicture.jpg" };
 
             var result = await InstaApi.StoryProcessor.UploadStoryPhotoAsync(image, "someawesomepicture", storyOptions);
