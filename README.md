@@ -3,9 +3,9 @@ An complete Private Instagram Api for .NET (C#, VB.NET).
 
 Supports almost every features that Instagram app has!
 
-| Target | Branch | Version | Download link |
-| ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.4.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Target | Branch | Version | Download link | Total downloads |
+| ------ | ------ | ------ | ------ | ------ |
+| Nuget | master | v1.3.4.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
