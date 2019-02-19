@@ -34,7 +34,10 @@ namespace InstagramApiSharp.Converters
                 Name = SourceObject.Name,
                 Price = SourceObject.Price,
                 ProductId = SourceObject.ProductId,
-                ReviewStatus = SourceObject.ReviewStatus
+                ReviewStatus = SourceObject.ReviewStatus,
+                CurrentPriceStripped = SourceObject.CurrentPriceStripped,
+                FullPriceStripped = SourceObject.FullPriceStripped,
+                ProductAppealReviewStatus = SourceObject.ProductAppealReviewStatus
             };
             if (SourceObject.MainImage?.Images?.Candidates?.Count > 0)
             {

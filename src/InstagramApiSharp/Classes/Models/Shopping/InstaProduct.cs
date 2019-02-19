@@ -40,5 +40,11 @@ namespace InstagramApiSharp.Classes.Models
         public string CheckoutStyle { get; set; }
 
         public InstaMerchant Merchant { get; set; }
+
+        public string ProductAppealReviewStatus { get; set; }
+
+        public string FullPriceStripped { get; set; }
+
+        public string CurrentPriceStripped { get; set; }
     }
 }
