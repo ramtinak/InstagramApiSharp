@@ -5,7 +5,7 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.4.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Nuget | master | v1.3.4.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -91,6 +91,14 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.4.1
+- [Bugfix] for UploadStoryPhotoWithUrlAsync
+- [Bugfix] for ProductTags (thx to [@tommasoceschia](https://github.com/tommasoceschia) for report)
+- [Add] some new properties to InstaProduct class
+- [Add] support for Questions in InstaStoryUploadOptions
+- [Update] facebook login function
+- [Update] story slider
+
 v1.3.4.0
 - [Add] IWebProcessor to IInstaApi (instagram web api for account data)
 - [Add] GetAccountInfoAsync to WebProcessor
