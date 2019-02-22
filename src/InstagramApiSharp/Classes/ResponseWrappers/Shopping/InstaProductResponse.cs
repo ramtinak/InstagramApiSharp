@@ -59,7 +59,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public string ProductAppealReviewStatus { get; set; }
         [JsonProperty("full_price_stripped")]
         public string FullPriceStripped { get; set; }
-        [JsonProperty("product_appeal_review_status")]
+        [JsonProperty("current_price_stripped")]
         public string CurrentPriceStripped { get; set; }
     }
 
