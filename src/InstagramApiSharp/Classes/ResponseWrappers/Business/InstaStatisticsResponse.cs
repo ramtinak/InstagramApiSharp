@@ -284,7 +284,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers.Business
         [JsonProperty("followers_unit_state")]
         public string FollowersUnitState { get; set; }
         [JsonProperty("followers_delta_from_last_week")]
-        public int FollowersDeltaFromLastWeek { get; set; }
+        public int? FollowersDeltaFromLastWeek { get; set; } = 0;
         [JsonProperty("gender_graph")]
         public InstaStatisticsDataPointsResponse GenderGraph { get; set; }
         [JsonProperty("all_followers_age_graph")]
