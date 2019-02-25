@@ -24,9 +24,9 @@ namespace InstagramApiSharp.Converters
             var reelViewers = new InstaReelStoryMediaViewers
             {
                 NextMaxId = SourceObject.NextMaxId,
-                TotalScreenshotCount = SourceObject.TotalScreenshotCount,
-                TotalViewerCount = SourceObject.TotalViewerCount,
-                UserCount = SourceObject.UserCount
+                TotalScreenshotCount = (int)(SourceObject.TotalScreenshotCount ?? 0),
+                TotalViewerCount = (int)(SourceObject.TotalViewerCount ?? 0),
+                UserCount = (int)(SourceObject.UserCount ?? 0)
             };
 
             if (SourceObject.Users?.Count > 0)
