@@ -99,5 +99,7 @@ namespace InstagramApiSharp.Classes.Models
         public double VideoDuration { get; set; }
 
         public List<InstaProductTag> ProductTags { get; set; } = new List<InstaProductTag>();
+
+        public bool DirectReplyToAuthorEnabled { get; set; }
     }
 }

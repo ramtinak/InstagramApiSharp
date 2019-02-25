@@ -104,6 +104,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("product_tags")] public InstaProductTagsContainerResponse ProductTags { get; set; }
 
-
+        [JsonProperty("direct_reply_to_author_enabled")] public bool? DirectReplyToAuthorEnabled { get; set; }
     }
 }
