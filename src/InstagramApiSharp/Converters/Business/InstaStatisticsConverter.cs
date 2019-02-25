@@ -123,7 +123,7 @@ namespace InstagramApiSharp.Converters.Business
                     statisfics.BusinessManager.FollowersUnit = new InstaStatisticsFollowersUnit
                     {
                         FollowersUnitState = businessManager.FollowersUnit.FollowersUnitState,
-                        FollowersDeltaFromLastWeek = businessManager.FollowersUnit.FollowersDeltaFromLastWeek
+                        FollowersDeltaFromLastWeek = businessManager.FollowersUnit.FollowersDeltaFromLastWeek ?? default(int)
                     };
                     foreach (var dataPoint in businessManager.FollowersUnit.AllFollowersAgeGraph.DataPoints)
                     {
