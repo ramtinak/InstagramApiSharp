@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.4.2</Version>
-    <AssemblyVersion>1.3.4.2</AssemblyVersion>
-    <FileVersion>1.3.4.2</FileVersion>
+    <Version>1.3.4.3</Version>
+    <AssemblyVersion>1.3.4.3</AssemblyVersion>
+    <FileVersion>1.3.4.3</FileVersion>
     <Description>An complete Private Instagram Api for .NET.
 
 
@@ -38,7 +38,14 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.3.4.2
+    <PackageReleaseNotes>v1.3.4.3
+- [Bugfix] for BusinessProcessor.GetStatisticsAsync [ by @estgold ]
+- [Bugfix] for GetStoryMediaViewersAsync (thx to @tommasoceschia for report)
+- [Add] HttpRequestProcessor to IInstaApi
+- [Add] GetApiVersionInfo to IInstaApi
+- [Add] GetUserAgent to IInstaApi
+
+v1.3.4.2
 - [Bugfix] for InstaRecentActivityConverter timestamp for different cultures [ by @estgold ]
 - [Bugfix] for media products (thx to @tommasoceschia for report)
 
