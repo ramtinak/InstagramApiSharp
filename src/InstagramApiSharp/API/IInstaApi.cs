@@ -23,6 +23,7 @@ using InstagramApiSharp.Classes.SessionHandlers;
 using System.Net.Http;
 using System.Collections.Generic;
 using System;
+using InstagramApiSharp.API.Versions;
 
 namespace InstagramApiSharp.API
 {
@@ -32,6 +33,13 @@ namespace InstagramApiSharp.API
     public interface IInstaApi
     {
         #region Properties
+        /// <summary>
+        ///     Current <see cref="IHttpRequestProcessor"/>
+        /// </summary>
+        IHttpRequestProcessor HttpRequestProcessor { get; }
+        /// <summary>
+        ///     Current HttpClient
+        /// </summary>
         HttpClient HttpClient { get; }
         /// <summary>
         ///     Indicates whether user authenticated or not
@@ -173,6 +181,15 @@ namespace InstagramApiSharp.API
         #endregion State data
 
         #region Other public functions
+
+        /// <summary>
+        ///     Get current API version info (signature key, api version info, app id)
+        /// </summary>
+        InstaApiVersion GetApiVersionInfo();
+        /// <summary>
+        ///     Get user agent of current <see cref="IInstaApi"/>
+        /// </summary>
+        string GetUserAgent();
         /// <summary>
         ///     Set timeout to <see cref="HttpClient"/>
         /// </summary>

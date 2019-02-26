@@ -59,8 +59,14 @@ namespace InstagramApiSharp.API
             get { return _isUserAuthenticated; }
             internal set { _isUserAuthenticated = value; _userAuthValidate.IsUserAuthenticated = value; }
         }
-
+        /// <summary>
+        ///     Current HttpClient
+        /// </summary>
         public HttpClient HttpClient { get => _httpRequestProcessor.Client; }
+        /// <summary>
+        ///     Current <see cref="IHttpRequestProcessor"/>
+        /// </summary>
+        public IHttpRequestProcessor HttpRequestProcessor => _httpRequestProcessor;
 
         #endregion Variables and properties
 
@@ -2082,6 +2088,14 @@ namespace InstagramApiSharp.API
         #endregion ORIGINAL FACEBOOK LOGIN
 
         #region Other public functions
+        /// <summary>
+        ///     Get current API version info (signature key, api version info, app id)
+        /// </summary>
+        public InstaApiVersion GetApiVersionInfo() => _apiVersion;
+        /// <summary>
+        ///     Get user agent of current <see cref="IInstaApi"/>
+        /// </summary>
+        public string GetUserAgent() => _deviceInfo.GenerateUserAgent(_apiVersion);
         /// <summary>
         ///     Set timeout to <see cref="HttpClient"/>
         ///     <para>Note: Set timeout more than 100 seconds!</para>

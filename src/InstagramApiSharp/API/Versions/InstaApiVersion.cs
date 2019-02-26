@@ -9,7 +9,7 @@
 
 namespace InstagramApiSharp.API.Versions
 {
-    internal class InstaApiVersion
+    public class InstaApiVersion
     {
         public string SignatureKey { get; set; }
         public string AppVersion { get; set; }
