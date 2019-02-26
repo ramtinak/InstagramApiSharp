@@ -1,5 +1,5 @@
 # InstagramApiSharp ![InstagramApiSharp](http://s8.picofile.com/file/8336601292/insta50x.png)
-An complete Private Instagram Api for .NET (C#, VB.NET).
+A complete Private Instagram API for .NET (C#, VB.NET).
 
 Supports almost every features that Instagram app has!
 
