@@ -11,6 +11,7 @@
 #### Issue category
  - [ ] Bug
  - [ ] Feature Request
+ - [ ] Missing Feature
  - [ ] Question
  - [ ] Not sure
 
