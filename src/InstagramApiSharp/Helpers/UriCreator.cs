@@ -989,11 +989,18 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetMediaConfigureUri()
+        public static Uri GetMediaConfigureUri(bool video = false)
         {
             if (
-                !Uri.TryCreate(BaseInstagramUri, InstaApiConstants.MEDIA_CONFIGURE, out var instaUri))
+                !Uri.TryCreate(BaseInstagramUri, video ? InstaApiConstants.MEDIA_CONFIGURE_VIDEO : InstaApiConstants.MEDIA_CONFIGURE, out var instaUri))
                 throw new Exception("Cant create URI for configuring media");
+            return instaUri;
+        }
+
+        public static Uri GetMediaUploadFinishUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.MEDIA_UPLOAD_FINISH, out var instaUri))
+                throw new Exception("Cant create URI for media upload finish");
             return instaUri;
         }
 

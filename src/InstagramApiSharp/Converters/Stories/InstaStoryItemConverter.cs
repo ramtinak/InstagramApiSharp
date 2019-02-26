@@ -79,7 +79,7 @@ namespace InstagramApiSharp.Converters
 
             if (SourceObject.StoryLocations != null && SourceObject.StoryLocations.Any())
                 foreach (var location in SourceObject.StoryLocations)
-                    instaStory.StoryLocations.Add(ConvertersFabric.Instance.GetLocationConverter(location).Convert());
+                    instaStory.StoryLocations.Add(ConvertersFabric.Instance.GetStoryLocationConverter(location).Convert());
 
             if (SourceObject.StoryFeedMedia != null && SourceObject.StoryFeedMedia.Any())
                 foreach (var storyFeed in SourceObject.StoryFeedMedia)

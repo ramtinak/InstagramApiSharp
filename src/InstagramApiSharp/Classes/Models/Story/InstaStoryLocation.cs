@@ -1,28 +1,24 @@
-﻿using InstagramApiSharp.Classes.ResponseWrappers;
-using Newtonsoft.Json;
+﻿/*
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * 
+ * Github source: https://github.com/ramtinak/InstagramApiSharp
+ * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
+ * 
+ * IRANIAN DEVELOPERS
+ */
+
 namespace InstagramApiSharp.Classes.Models
 {
     public class InstaStoryLocation
     {
-        [JsonProperty("x")] public float X { get; set; }
-        [JsonProperty("y")] public float Y { get; set; }
-        [JsonProperty("z")] public int Z { get; set; }
-        [JsonProperty("width")] public float Width { get; set; }
-        [JsonProperty("height")] public float Height { get; set; }
-        [JsonProperty("rotation")] public float Rotation { get; set; }
-        [JsonProperty("is_pinned")] public float IsPinned { get; set; }
-        [JsonProperty("is_hidden")] public float IsHidden { get; set; }
-        [JsonProperty("location")] public InstaStoryLocationShort Location { get; set; }
-        
-    }
-    public class InstaStoryLocationShort : InstaLocationShortResponse
-    {
-        [JsonProperty("facebook_places_id")] public long FacebookPlacesId { get; set; }
-
-        [JsonProperty("city")] public string City { get; set; }
-
-        [JsonProperty("pk")] public long Pk { get; set; }
-
-        [JsonProperty("short_name")] public string ShortName { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public double Rotation { get; set; }
+        public double IsPinned { get; set; }
+        public double IsHidden { get; set; }
+        public InstaPlaceShort Location { get; set; }
     }
 }

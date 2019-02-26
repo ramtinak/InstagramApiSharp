@@ -950,5 +950,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaWebDataConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaStoryLocation, InstaStoryLocationResponse> GetStoryLocationConverter(
+            InstaStoryLocationResponse response)
+        {
+            return new InstaStoryLocationConverter { SourceObject = response };
+        }
     }
 }

@@ -103,7 +103,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("story_feed_media")] public List<InstaStoryFeedMediaResponse> StoryFeedMedia { get; set; }
 
-        [JsonProperty("story_locations")] public List<InstaLocationResponse> StoryLocations { get; set; }
+        [JsonProperty("story_locations")] public List<InstaStoryLocationResponse> StoryLocations { get; set; }
 
         [JsonProperty("taken_at")] public long TakenAt { get; set; }
 

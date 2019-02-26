@@ -83,7 +83,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public List<InstaReelMention> StoryHashtags { get; set; } = new List<InstaReelMention>();
 
-        public List<InstaLocation> StoryLocations { get; set; } = new List<InstaLocation>();
+        public List<InstaStoryLocation> StoryLocations { get; set; } = new List<InstaStoryLocation>();
 
         public DateTime TakenAt { get; set; }
 
