@@ -23,6 +23,7 @@ using InstagramApiSharp.Classes;
 using InstagramApiSharp.API.Builder;
 using Windows.Storage.Pickers;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Logger;
 /////////////////////////////////////////////////////////////////////
 ////////////////////// IMPORTANT NOTE ///////////////////////////////
 // Please check wiki pages for more information:
@@ -71,6 +72,7 @@ namespace UwpExample
                 };
                 InstaApi = InstaApiBuilder.CreateBuilder()
                     .SetUser(userSession)
+                    .UseLogger(new DebugLogger(LogLevel.All))
                     .Build();
                 
                 $"Connecting...".ChangeAppTitle();
@@ -192,7 +194,7 @@ namespace UwpExample
             {
                 // album
                 var videos = new List<InstaVideoUpload>();
-                var images = new List<InstaImage>();
+                var images = new List<InstaImageUpload>();
 
                 //// How set videos?
                 //videos.Add(new InstaVideoUpload
@@ -217,7 +219,7 @@ namespace UwpExample
                 foreach (var file in SelectedFiles)
                 {
                     var fileBytes = (await FileIO.ReadBufferAsync(file)).ToArray();
-                    var img = new InstaImage
+                    var img = new InstaImageUpload
                     {
                         // Set image bytes
                         ImageBytes = fileBytes,
@@ -253,6 +255,7 @@ namespace UwpExample
 
                 InstaApi = InstaApiBuilder.CreateBuilder()
                     .SetUser(UserSessionData.Empty)
+                    .UseLogger(new DebugLogger(LogLevel.All))
                     .Build();
                 InstaApi.LoadStateDataFromString(json);
                 if (!InstaApi.IsUserAuthenticated)
