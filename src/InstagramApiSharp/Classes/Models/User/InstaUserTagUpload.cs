@@ -17,6 +17,6 @@ namespace InstagramApiSharp.Classes.Models
 
         public double Y { get; set; }
 
-        internal long Pk { get; set; } = -1;
+        public long Pk { get; set; } = -1;
     }
 }

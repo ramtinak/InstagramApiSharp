@@ -38,5 +38,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public string BroadcastMessage { get; set; }
         [JsonProperty("organic_tracking_token")]
         public string OrganicTrackingToken { get; set; }
+        [JsonProperty("dash_manifest")]
+        public string DashManifest { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace InstagramApiSharp.API
         private readonly IInstaLogger _logger;
         private InstaApiVersionType _apiVersionType;
         private InstaApiVersion _apiVersion;
-        private HttpHelper _httpHelper;
+        public HttpHelper _httpHelper { get; set; }
         private AndroidDevice _deviceInfo;
         private InstaTwoFactorLoginInfo _twoFactorInfo;
         private InstaChallengeLoginInfo _challengeinfo;

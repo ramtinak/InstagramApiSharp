@@ -24,6 +24,7 @@ using System.Net.Http;
 using System.Collections.Generic;
 using System;
 using InstagramApiSharp.API.Versions;
+using InstagramApiSharp.Helpers;
 
 namespace InstagramApiSharp.API
 {
@@ -33,6 +34,7 @@ namespace InstagramApiSharp.API
     public interface IInstaApi
     {
         #region Properties
+        HttpHelper _httpHelper { get; set; }
         /// <summary>
         ///     Current <see cref="IHttpRequestProcessor"/>
         /// </summary>

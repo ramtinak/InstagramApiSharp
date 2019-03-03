@@ -32,7 +32,7 @@ namespace InstagramApiSharp.Converters
 
             if (SourceObject.Broadcasts?.Count > 0)
                 postlive.Broadcasts = ConvertersFabric.Instance.GetBroadcastListConverter(SourceObject.Broadcasts).Convert();
-
+            
             return postlive;
         }
     }

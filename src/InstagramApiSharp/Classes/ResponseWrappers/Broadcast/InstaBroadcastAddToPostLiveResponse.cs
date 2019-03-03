@@ -31,5 +31,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public bool CanReply { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
+        [JsonProperty("dash_manifest")]
+        public string DashManifest { get; set; }
     }
 }

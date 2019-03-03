@@ -9,7 +9,7 @@ using InstagramApiSharp.Enums;
 using InstagramApiSharp.API.Versions;
 namespace InstagramApiSharp.Helpers
 {
-    internal class HttpHelper
+    public class HttpHelper
     {
         public /*readonly*/ InstaApiVersion _apiVersion;
         public HttpHelper(InstaApiVersion apiVersionType)

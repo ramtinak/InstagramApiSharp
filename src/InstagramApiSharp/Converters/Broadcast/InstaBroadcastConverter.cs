@@ -23,6 +23,7 @@ namespace InstagramApiSharp.Converters
             if (SourceObject == null) throw new ArgumentNullException($"Source object");
             var broadcast = new InstaBroadcast
             {
+                DashManifest = SourceObject.DashManifest,
                 BroadcastMessage = SourceObject.BroadcastMessage,
                 BroadcastStatus = SourceObject.BroadcastStatus,
                 CoverFrameUrl = SourceObject.CoverFrameUrl,

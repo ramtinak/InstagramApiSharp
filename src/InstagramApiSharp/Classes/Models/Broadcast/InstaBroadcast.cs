@@ -37,5 +37,7 @@ namespace InstagramApiSharp.Classes.Models
         public string BroadcastMessage { get; set; }
 
         public string OrganicTrackingToken { get; set; }
+
+        public string DashManifest { get; set; }
     }
 }
