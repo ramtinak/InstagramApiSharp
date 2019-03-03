@@ -5,10 +5,10 @@ namespace InstagramApiSharp.Classes
     public class InstaTwoFactorLoginInfo
     {
         [JsonProperty("obfuscated_phone_number")]
-        public short ObfuscatedPhoneNumber { get; set; }
+        public string ObfuscatedPhoneNumber { get; set; }
 
         [JsonProperty("show_messenger_code_option")]
-        public bool ShowMessengerCodeOption { get; set; }
+        public bool? ShowMessengerCodeOption { get; set; }
 
         [JsonProperty("two_factor_identifier")]
         public string TwoFactorIdentifier { get; set; }
