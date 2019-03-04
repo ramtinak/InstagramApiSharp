@@ -47,6 +47,11 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaUserShortList>> GetBlockedUsersFromStoriesAsync();
 
         /// <summary>
+        ///     Get stories countdowns for self accounts
+        /// </summary>
+        Task<IResult<InstaStoryCountdownList>> GetCountdownsStoriesAsync();
+
+        /// <summary>
         ///     Get user highlight feeds by user id (pk)
         /// </summary>
         /// <param name="userId">User id (pk)</param>

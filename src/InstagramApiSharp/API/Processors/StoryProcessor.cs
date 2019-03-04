@@ -242,6 +242,36 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Get stories countdowns for self accounts
+        /// </summary>
+        public async Task<IResult<InstaStoryCountdownList>> GetCountdownsStoriesAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetStoryCountdownMediaUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaStoryCountdownList>(response, json);
+                var countdownListResponse = JsonConvert.DeserializeObject<InstaStoryCountdownListResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetStoryCountdownListConverter(countdownListResponse).Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaStoryCountdownList), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaStoryCountdownList>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Get user highlight feeds by user id (pk)
         /// </summary>
         /// <param name="userId">User id (pk)</param>

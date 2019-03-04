@@ -956,5 +956,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaStoryLocationConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaStoryCountdownList, InstaStoryCountdownListResponse> GetStoryCountdownListConverter(
+            InstaStoryCountdownListResponse response)
+        {
+            return new InstaStoryCountdownListConverter { SourceObject = response };
+        }
     }
 }
