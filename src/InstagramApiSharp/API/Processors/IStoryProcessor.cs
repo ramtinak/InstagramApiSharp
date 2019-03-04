@@ -196,6 +196,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> ReplyToStoryAsync(string storyMediaId, long userId, string text);
 
         /// <summary>
+        ///     UnFollow countdown stories
+        /// </summary>
+        /// <param name="countdownId">Countdown id (<see cref="InstaStoryCountdownStickerItem.CountdownId"/>)</param>
+        Task<IResult<bool>> UnFollowCountdownStoryAsync(long countdownId);
+
+        /// <summary>
         ///     Upload story photo
         /// </summary>
         /// <param name="image">Photo to upload</param>

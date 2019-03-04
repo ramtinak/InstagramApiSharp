@@ -895,6 +895,15 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     UnFollow countdown stories
+        /// </summary>
+        /// <param name="countdownId">Countdown id (<see cref="InstaStoryCountdownStickerItem.CountdownId"/>)</param>
+        public async Task<IResult<bool>> UnFollowCountdownStoryAsync(long countdownId)
+        {
+            return await FollowUnfollowCountdown(UriCreator.GetStoryUnFollowCountdownUri(countdownId));
+        }
+
+        /// <summary>
         ///     Upload story photo
         /// </summary>
         /// <param name="image">Photo to upload</param>

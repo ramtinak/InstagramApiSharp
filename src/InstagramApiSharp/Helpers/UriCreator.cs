@@ -2214,5 +2214,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for story follow countdown");
             return instaUri;
         }
+
+        public static Uri GetStoryUnFollowCountdownUri(long countdownId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_UNFOLLOW_COUNTDOWN, countdownId), out var instaUri))
+                throw new Exception("Cant create URI for story unfollow countdown");
+            return instaUri;
+        }
     }
 }
