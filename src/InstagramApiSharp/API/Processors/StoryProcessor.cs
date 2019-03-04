@@ -1620,6 +1620,16 @@ namespace InstagramApiSharp.API.Processors
 
                         data.Add("reel_mentions", mentionArr.ToString(Formatting.None));
                     }
+                    if (uploadOptions.Countdown != null)
+                    {
+                        var countdownArr = new JArray
+                        {
+                            uploadOptions.Countdown.ConvertToJson()
+                        };
+
+                        data.Add("story_countdowns", countdownArr.ToString(Formatting.None));
+                        data.Add("story_sticker_ids", "countdown_sticker_time");
+                    }
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
@@ -1773,6 +1783,17 @@ namespace InstagramApiSharp.API.Processors
 
                             data.Add("story_questions", questionArr.ToString(Formatting.None));
                         }
+                    }
+
+                    if (uploadOptions.Countdown != null)
+                    {
+                        var countdownArr = new JArray
+                        {
+                            uploadOptions.Countdown.ConvertToJson()
+                        };
+
+                        data.Add("story_countdowns", countdownArr.ToString(Formatting.None));
+                        data.Add("story_sticker_ids", "countdown_sticker_time");
                     }
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
