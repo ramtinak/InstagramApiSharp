@@ -5,8 +5,8 @@ Supports almost every features that Instagram app has!
 
 | Target | Branch | Version | Download link | Total downloads |
 | ------ | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.4.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
-| Release | master | v1.3.4.3 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
+| Nuget | master | v1.3.4.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Release | master | v1.3.4.4 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -92,6 +92,14 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.3.4.4
+- [Bugfix] for login with 2FA enabled (thx to [@vivan-snapretail](https://github.com/vivan-snapretail) for report)
+- [Add] Dashmanifest property for postlive
+- [Add] Support Uploading Story Countdown in InstaStoryUploadOptions
+- [Add] GetCountdownsStoriesAsync to StoryProcessor
+- [Add] FollowCountdownStoryAsync to StoryProcessor
+- [Add] UnFollowCountdownStoryAsync to StoryProcessor
+
 v1.3.4.3
 - [Bugfix] for BusinessProcessor.GetStatisticsAsync [ by [@estgold](https://github.com/estgold) ]
 - [Bugfix] for GetStoryMediaViewersAsync (thx to [@tommasoceschia](https://github.com/tommasoceschia) for report)

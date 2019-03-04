@@ -11,10 +11,10 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.4.3</Version>
-    <AssemblyVersion>1.3.4.3</AssemblyVersion>
-    <FileVersion>1.3.4.3</FileVersion>
-    <Description>An complete Private Instagram Api for .NET.
+    <Version>1.3.4.4</Version>
+    <AssemblyVersion>1.3.4.4</AssemblyVersion>
+    <FileVersion>1.3.4.4</FileVersion>
+    <Description>A complete Private Instagram API for .NET.
 
 
 Support:
@@ -38,7 +38,15 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.3.4.3
+    <PackageReleaseNotes>v1.3.4.4
+- [Bugfix] for login with 2FA enabled (thx to @vivan-snapretail for report)
+- [Add] Dashmanifest property for postlive
+- [Add] Support Uploading Story Countdown in InstaStoryUploadOptions
+- [Add] GetCountdownsStoriesAsync to StoryProcessor
+- [Add] FollowCountdownStoryAsync to StoryProcessor
+- [Add] UnFollowCountdownStoryAsync to StoryProcessor
+
+v1.3.4.3
 - [Bugfix] for BusinessProcessor.GetStatisticsAsync [ by @estgold ]
 - [Bugfix] for GetStoryMediaViewersAsync (thx to @tommasoceschia for report)
 - [Add] HttpRequestProcessor to IInstaApi
