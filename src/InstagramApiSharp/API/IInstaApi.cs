@@ -34,7 +34,6 @@ namespace InstagramApiSharp.API
     public interface IInstaApi
     {
         #region Properties
-        HttpHelper _httpHelper { get; set; }
         /// <summary>
         ///     Current <see cref="IHttpRequestProcessor"/>
         /// </summary>
