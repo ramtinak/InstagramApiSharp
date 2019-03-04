@@ -42,7 +42,7 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> DeleteStoryAsync(string storyMediaId, InstaSharingType sharingType = InstaSharingType.Video);
 
         /// <summary>
-        ///     Follow countdown stories
+        ///     Follow countdown story
         /// </summary>
         /// <param name="countdownId">Countdown id (<see cref="InstaStoryCountdownStickerItem.CountdownId"/>)</param>
         Task<IResult<bool>> FollowCountdownStoryAsync(long countdownId);
@@ -196,7 +196,7 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> ReplyToStoryAsync(string storyMediaId, long userId, string text);
 
         /// <summary>
-        ///     UnFollow countdown stories
+        ///     UnFollow countdown story
         /// </summary>
         /// <param name="countdownId">Countdown id (<see cref="InstaStoryCountdownStickerItem.CountdownId"/>)</param>
         Task<IResult<bool>> UnFollowCountdownStoryAsync(long countdownId);
