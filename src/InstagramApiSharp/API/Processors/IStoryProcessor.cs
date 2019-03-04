@@ -42,6 +42,12 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> DeleteStoryAsync(string storyMediaId, InstaSharingType sharingType = InstaSharingType.Video);
 
         /// <summary>
+        ///     Follow countdown stories
+        /// </summary>
+        /// <param name="countdownId">Countdown id (<see cref="InstaStoryCountdownStickerItem.CountdownId"/>)</param>
+        Task<IResult<bool>> FollowCountdownStoryAsync(long countdownId);
+
+        /// <summary>
         ///     Get list of users that blocked from seeing your stories
         /// </summary>
         Task<IResult<InstaUserShortList>> GetBlockedUsersFromStoriesAsync();

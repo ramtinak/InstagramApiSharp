@@ -198,7 +198,16 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
-        
+
+        /// <summary>
+        ///     Follow countdown stories
+        /// </summary>
+        /// <param name="countdownId">Countdown id (<see cref="InstaStoryCountdownStickerItem.CountdownId"/>)</param>
+        public async Task<IResult<bool>> FollowCountdownStoryAsync(long countdownId)
+        {
+            return await FollowUnfollowCountdown(UriCreator.GetStoryFollowCountdownUri(countdownId));
+        }
+
         /// <summary>
         ///     Get list of users that blocked from seeing your stories
         /// </summary>
@@ -1921,7 +1930,40 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaStoryPollVotersListResponse>(exception);
             }
         }
+        public async Task<IResult<bool>> FollowUnfollowCountdown(Uri instaUri)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var data = new JObject
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_csrftoken", _user.CsrfToken},
+                };
 
+                var request =  _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                var resp = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
+
+                return resp.IsSucceed ? Result.Success(true) : Result.Fail<bool>("");
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
 
         #region Old functions
 

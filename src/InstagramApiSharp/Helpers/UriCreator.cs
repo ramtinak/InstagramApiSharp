@@ -2200,10 +2200,18 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for story question answer");
             return instaUri;
         }
+
         public static Uri GetStoryCountdownMediaUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.MEDIA_STORY_COUNTDOWNS, out var instaUri))
                 throw new Exception("Cant create URI for story countdown media");
+            return instaUri;
+        }
+
+        public static Uri GetStoryFollowCountdownUri(long countdownId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_FOLLOW_COUNTDOWN, countdownId), out var instaUri))
+                throw new Exception("Cant create URI for story follow countdown");
             return instaUri;
         }
     }
