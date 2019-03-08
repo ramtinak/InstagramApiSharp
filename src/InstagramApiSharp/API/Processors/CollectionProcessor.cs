@@ -160,8 +160,7 @@ namespace InstagramApiSharp.API.Processors
                 if (response.StatusCode == HttpStatusCode.OK)
                     return Result.Success(true);
 
-                var error = JsonConvert.DeserializeObject<BadStatusResponse>(json);
-                return Result.Fail(error.Message, false);
+                return Result.UnExpectedResponse<bool>(response, json);
             }
             catch (HttpRequestException httpException)
             {

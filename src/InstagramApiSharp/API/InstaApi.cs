@@ -1457,6 +1457,80 @@ namespace InstagramApiSharp.API
         }
 
         #region Challenge part
+
+        /// <summary>
+        ///     Get challenge data for logged in user
+        ///     <para>This will promp up, if some suspecious login happend</para>
+        /// </summary>
+        public async Task<IResult<InstaLoggedInChallengeDataInfo>> GetLoggedInChallengeDataInfoAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+
+            try
+            {
+                var instaUri = UriCreator.GetChallengeRequireFirstUri("/challenge/", _deviceInfo.DeviceGuid.ToString(), _deviceInfo.DeviceId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaLoggedInChallengeDataInfo>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaLoggedInChallengeDataInfoContainer>(json);
+                return Result.Success(obj?.StepData);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaLoggedInChallengeDataInfo), ResponseType.NetworkProblem);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex, (InstaLoggedInChallengeDataInfo)null);
+            }
+        }
+
+        /// <summary>
+        ///     Accept challlenge, it is THIS IS ME feature!!!!
+        ///     <para>You must call <see cref="GetLoggedInChallengeDataInfoAsync"/> first,
+        ///     if you across to <see cref="ResultInfo.ResponseType"/> equals to <see cref="ResponseType.ChallengeRequired"/> while you logged in!</para>
+        /// </summary>
+        public async Task<IResult<bool>> AcceptChallengeAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetChallengeUri();
+
+                var data = new JObject
+                {
+                    {"choice", "0"},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"guid", _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id", _deviceInfo.DeviceId},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
+
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyCode>(json);
+                return obj.Action.ToLower() == "close" ? Result.Success(true) : Result.Success(false);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, false, ResponseType.NetworkProblem);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<bool>(ex);
+            }
+        }
+
         /// <summary>
         ///     Get challenge require (checkpoint required) options
         /// </summary>
@@ -1472,16 +1546,7 @@ namespace InstagramApiSharp.API
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    var msg = "";
-                    try
-                    {
-                        var j = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyMethod>(json);
-                        msg = j.Message;
-                    }
-                    catch { }
                     return Result.UnExpectedResponse<InstaChallengeRequireVerifyMethod>(response, json);
-                }
 
                 var obj = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyMethod>(json);
                 return Result.Success(obj);

@@ -19,5 +19,6 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("payload")] public InstaPayloadResponse Payload { get; set; }
 
+        [JsonProperty("challenge")] public InstaChallengeLoginInfo Challenge { get; set; }
     }
 }

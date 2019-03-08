@@ -585,6 +585,8 @@ namespace InstagramApiSharp.API
 
         public const string QE_EXPOSE = API_SUFFIX + "/qe/expose/";
 
+        public const string CHALLENGE = API_SUFFIX + "/challenge/";
+
         #endregion Other endpoints constants
 
         #region Web endpoints constants

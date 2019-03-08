@@ -282,6 +282,14 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetChallengeUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CHALLENGE,
+                    out var instaUri))
+                throw new Exception("Cant create URI for challenge url");
+            return instaUri;
+        }
+
         public static Uri GetChallengeRequireUri(string apiPath)
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.API_SUFFIX + apiPath, out var instaUri))

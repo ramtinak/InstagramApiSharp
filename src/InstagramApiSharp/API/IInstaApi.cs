@@ -7,7 +7,7 @@
  *                      IRANIAN DEVELOPERS
  *        
  *        
- *                            2018
+ *                            2019
  *  
  *  
  */
@@ -309,6 +309,32 @@ namespace InstagramApiSharp.API
         #region Authentication, challenge functions
 
         #region Challenge part
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////// Challenge for logged in user /////////////////////////////////
+        
+
+
+        /// <summary>
+        ///     Get challenge data for logged in user
+        ///     <para>This will promp up, if some suspecious login happend</para>
+        /// </summary>
+        Task<IResult<InstaLoggedInChallengeDataInfo>> GetLoggedInChallengeDataInfoAsync();
+
+        /// <summary>
+        ///     Accept challlenge, it is THIS IS ME feature!!!!
+        ///     <para>You must call <see cref="GetLoggedInChallengeDataInfoAsync"/> first,
+        ///     if you across to <see cref="ResultInfo.ResponseType"/> equals to <see cref="ResponseType.ChallengeRequired"/> while you logged in!</para>
+        /// </summary>
+        Task<IResult<bool>> AcceptChallengeAsync();
+
+
+        /////////////////////////////////// Challenge for logged in user /////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
         /// <summary>
         ///     Get challenge require (checkpoint required) options
         /// </summary>

@@ -37,6 +37,7 @@ namespace InstagramApiSharp.Classes
         public ResultInfo(ResponseType responseType, BadStatusResponse status)
         {
             Message = status?.Message;
+            Challenge = status?.Challenge;
             ResponseType = responseType;
             HandleMessages(Message);
             switch (ResponseType)
@@ -82,6 +83,8 @@ namespace InstagramApiSharp.Classes
         public bool NeedsChallenge { get; internal set; }
 
         public DateTime? ActionBlockEnd { get; internal set; }
+
+        public InstaChallengeLoginInfo Challenge { get; internal set; }
 
         public override string ToString()
         {
