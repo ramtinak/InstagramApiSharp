@@ -33,7 +33,7 @@ namespace InstagramApiSharp.Converters.Json
             var reels = token.ToObject<InstaHighlightReelResponse>();
 
             var t = token["reels"];
-            reels.Reel = t.First.First.ToObject<InstaHighlightSingleFeedResponse>();
+            reels.Reel = t?.First?.First?.ToObject<InstaHighlightSingleFeedResponse>();
             return reels;
         }
 
