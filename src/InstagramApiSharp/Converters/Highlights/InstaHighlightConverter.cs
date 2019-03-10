@@ -20,10 +20,10 @@ namespace InstagramApiSharp.Converters
         {
             var highlight = new InstaHighlightFeeds
             {
-                ShowEmptyState = SourceObject.ShowEmptyState,
+                ShowEmptyState = SourceObject.ShowEmptyState ?? false,
                 Status = SourceObject.Status
             };
-            highlight.Items = new List<InstaHighlightFeed>();
+            if(SourceObject.Items?.Count > 0)
             foreach (var item in SourceObject.Items)
             {
                 var hLight = new InstaHighlightFeed

@@ -18,6 +18,8 @@ namespace InstagramApiSharp.Converters
 
         public InstaHighlightSingleFeed Convert()
         {
+            if (SourceObject.Reel == null)
+                return null;
             var hLight = new InstaHighlightSingleFeed
             {
                 CanReply = SourceObject.Reel.CanReply,

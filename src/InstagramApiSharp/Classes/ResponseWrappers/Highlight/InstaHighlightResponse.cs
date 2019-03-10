@@ -15,7 +15,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
     public class InstaHighlightFeedsResponse
     {
         [JsonProperty("show_empty_state")]
-        public bool ShowEmptyState { get; set; }
+        public bool? ShowEmptyState { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
         [JsonProperty("tray")]

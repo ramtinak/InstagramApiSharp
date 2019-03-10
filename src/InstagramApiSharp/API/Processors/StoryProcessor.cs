@@ -375,7 +375,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaHighlightReelResponse>(json,
                     new InstaHighlightReelsListDataConverter());
 
-                return Result.Success(ConvertersFabric.Instance.GetHighlightReelConverter(obj).Convert());
+                return obj?.Reel != null ? Result.Success(ConvertersFabric.Instance.GetHighlightReelConverter(obj).Convert()) : Result.Fail<InstaHighlightSingleFeed>("No reels found");
             }
             catch (HttpRequestException httpException)
             {
@@ -421,7 +421,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaHighlightReelResponse>(json,
                     new InstaHighlightReelsListDataConverter());
 
-                return Result.Success(ConvertersFabric.Instance.GetHighlightReelConverter(obj).Convert());
+                return obj?.Reel != null ? Result.Success(ConvertersFabric.Instance.GetHighlightReelConverter(obj).Convert()) : Result.Fail<InstaHighlightSingleFeed>("No reels found");
             }
             catch (HttpRequestException httpException)
             {
