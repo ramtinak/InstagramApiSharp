@@ -336,7 +336,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaPlaceListResponse>(json);
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail<InstaPlaceListResponse>(obj.Message);
+                    return Result.UnExpectedResponse<InstaPlaceListResponse>(response, json);
                 if (obj.Items?.Count > 0)
                 {
                     foreach (var item in obj.Items)

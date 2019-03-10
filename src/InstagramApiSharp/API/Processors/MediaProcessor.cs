@@ -289,7 +289,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.Fail($"Error! Status code: {response.StatusCode}", mediaIds);
+                    return Result.UnExpectedResponse<InstaMediaIdList>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaMediaIdsResponse>(json);
 
                 return Result.Success(obj.MediaIds);

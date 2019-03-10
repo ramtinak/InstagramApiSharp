@@ -71,7 +71,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<bool>(response, obj.Message, null);
+                    return Result.UnExpectedResponse<bool>(response, json);
 
                 return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, obj.Message, null);
             }
@@ -231,7 +231,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaUserShortList>(response, obj.Message, null);
+                    return Result.UnExpectedResponse<InstaUserShortList>(response, json);
 
                 var usersResponse = JsonConvert.DeserializeObject<InstaUserListShortResponse>(json);
                 list.AddRange(
@@ -448,7 +448,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
-                if (response.StatusCode != HttpStatusCode.OK) return Result.Fail("", (InstaStoryFeed) null);
+                if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaStoryFeed>(response, json);
                 var storyFeedResponse = JsonConvert.DeserializeObject<InstaStoryFeedResponse>(json);
                 var instaStoryFeed = ConvertersFabric.Instance.GetStoryFeedConverter(storyFeedResponse).Convert();
                 return Result.Success(instaStoryFeed);
