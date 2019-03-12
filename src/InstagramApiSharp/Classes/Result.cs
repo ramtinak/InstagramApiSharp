@@ -181,8 +181,8 @@ namespace InstagramApiSharp.Classes
             if (status.Spam)
                 responseType = ResponseType.Spam;
 
-            //if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("challenge_required"))
-            //    responseType = ResponseType.ChallengeRequired;
+            if (status?.Message?.IndexOf("challenge_required") != -1)
+                responseType = ResponseType.ChallengeRequired;
             return responseType;
         }
     }
