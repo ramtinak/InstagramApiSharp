@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.4.4</Version>
-    <AssemblyVersion>1.3.4.4</AssemblyVersion>
-    <FileVersion>1.3.4.4</FileVersion>
+    <Version>1.3.4.5</Version>
+    <AssemblyVersion>1.3.4.5</AssemblyVersion>
+    <FileVersion>1.3.4.5</FileVersion>
     <Description>A complete Private Instagram API for .NET.
 
 
@@ -38,7 +38,13 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.3.4.4
+    <PackageReleaseNotes>v1.3.4.5
+- [Add] GetLoggedInChallengeDataInfoAsync to IInstaApi
+- [Add] AcceptChallengeAsync to IInstaApi [THIS IS ME feature] (check #204)
+- [Bugfix] for highlights media converter
+- [Bugfix] for challenge response for logged in user
+
+v1.3.4.4
 - [Bugfix] for login with 2FA enabled (thx to @vivan-snapretail for report)
 - [Add] Dashmanifest property for postlive
 - [Add] Support Uploading Story Countdown in InstaStoryUploadOptions
