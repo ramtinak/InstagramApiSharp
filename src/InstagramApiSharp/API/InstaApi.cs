@@ -1460,7 +1460,7 @@ namespace InstagramApiSharp.API
 
         /// <summary>
         ///     Get challenge data for logged in user
-        ///     <para>This will promp up, if some suspecious login happend</para>
+        ///     <para>This will pop-on, if some suspecious login happend</para>
         /// </summary>
         public async Task<IResult<InstaLoggedInChallengeDataInfo>> GetLoggedInChallengeDataInfoAsync()
         {
@@ -1491,7 +1491,7 @@ namespace InstagramApiSharp.API
 
         /// <summary>
         ///     Accept challlenge, it is THIS IS ME feature!!!!
-        ///     <para>You must call <see cref="GetLoggedInChallengeDataInfoAsync"/> first,
+        ///     <para>You must call <see cref="IInstaApi.GetLoggedInChallengeDataInfoAsync"/> first,
         ///     if you across to <see cref="ResultInfo.ResponseType"/> equals to <see cref="ResponseType.ChallengeRequired"/> while you logged in!</para>
         /// </summary>
         public async Task<IResult<bool>> AcceptChallengeAsync()

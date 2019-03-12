@@ -318,7 +318,7 @@ namespace InstagramApiSharp.API
 
         /// <summary>
         ///     Get challenge data for logged in user
-        ///     <para>This will promp up, if some suspecious login happend</para>
+        ///     <para>This will pop-on, if some suspecious login happend</para>
         /// </summary>
         Task<IResult<InstaLoggedInChallengeDataInfo>> GetLoggedInChallengeDataInfoAsync();
 
