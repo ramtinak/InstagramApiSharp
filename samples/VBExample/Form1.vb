@@ -30,7 +30,7 @@ Imports InstagramApiSharp.Classes.SessionHandlers
 
 Public Class Form1
 
-    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     '
     ' VBExample project is a port of Challenge Example to Visual Basic.NET
     ' Which supports:
@@ -39,7 +39,53 @@ Public Class Form1
     ' So this is a best path to start using InstagramApiSharp in your VB.NET projects
     '
     '
-    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' There are two different type of challenge is exists!
+    '  - 1. You receive challenge while you already logged in:
+    '       "This is me" or "This is not me" option!
+    '       If some suspecious login happend, this will promp up, and you should accept it to get rid of it
+    ' 
+    '       Use Task<IResult<InstaLoggedInChallengeDataInfo>> GetLoggedInChallengeDataInfoAsync() to get information like coordinate of
+    '       login request and more data info
+    '       Use Task<IResult<bool>> AcceptChallengeAsync() to accept that you are the ONE that requests for login!
+    ' 
+    ' 
+    ' 
+    '  - 2. You receive challenge while you calling LoginAsync
+    ' 
+    ' Note: new challenge require functions is very easy to use.
+    ' there are 5 functions I've added to IInstaApi for challenge require (checkpoint_endpoint)
+    ' 
+    ' 
+    ' here:
+    ' 1. Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync();
+    ' If your login needs challenge, first you should call this function.
+    '
+    ' 
+    ' Note: if you call this and SubmitPhoneRequired was true, you should sumbit phone number
+    ' with this function:
+    ' Task<IResult<ChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync();
+    ' 
+    ' 
+    ' 2. Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
+    ' This function will send you verification code via SMS.
+    ' 
+    ' 
+    ' 3. Task<IResult<ChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync();
+    ' This function will send you verification code via Email.
+    ' 
+    ' 
+    ' 4. Task<IResult<ChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync();
+    ' Reset challenge require.
+    ' Example: if your account has phone number and email, and you request for email(or phone number)
+    ' and now you want to change it to another one, you should first call this function,
+    ' then you have to call GetChallengeRequireVerifyMethodAsync and after that you can change your method!!!
+    ' 
+    ' 
+    ' 5. Task<IResult<ChallengeRequireVerifyCode>> VerifyCodeForChallengeRequireAsync(string verifyCode);
+    ' Verify sms or email verification code for login.
+    ' 
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     Dim AppName As String = "VB.NET Example"
     Dim StateFile As String = "state.bin"
@@ -303,7 +349,15 @@ Public Class Form1
 
         Dim x = Await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1))
 
-        If x.Succeeded Then
+        If x.Succeeded = False Then
+            If (x.Info.ResponseType = ResponseType.ChallengeRequired) Then
+                Dim challengeData = Await InstaApi.GetLoggedInChallengeDataInfoAsync()
+                ' Do something to challenge data, if you want!
+
+                Dim acceptChallenge = Await InstaApi.AcceptChallengeAsync()
+                ' If Succeeded was TRUE, you can continue to your work!
+            End If
+        Else
             Dim sb As StringBuilder = New StringBuilder
             Dim sb2 As StringBuilder = New StringBuilder
 
