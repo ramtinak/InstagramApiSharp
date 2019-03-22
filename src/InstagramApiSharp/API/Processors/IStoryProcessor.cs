@@ -24,7 +24,9 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="mediaId">Story media id</param>
         /// <param name="title">Highlight title</param>
-        Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title);
+        /// <param name="cropWidth">Crop width based on image size, must be in a range of 0-1, i.e: 0.19545822</param>
+        /// <param name="cropHeight">Crop height based on image size, must be in a range of 0-1, i.e: 0.8037307</param>
+        Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title, float cropWidth, float cropHeight);
 
         /// <summary>
         ///     Delete highlight feed

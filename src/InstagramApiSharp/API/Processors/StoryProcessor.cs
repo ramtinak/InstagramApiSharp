@@ -101,7 +101,9 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="mediaId">Story media id</param>
         /// <param name="title">Highlight title</param>
-        public async Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title)
+        /// <param name="cropWidth">Crop width based on image size, must be in a range of 0-1, i.e: 0.19545822</param>
+        /// <param name="cropHeight">Crop height based on image size, must be in a range of 0-1, i.e: 0.8037307</param>
+        public async Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title, float cropWidth, float cropHeight)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -109,7 +111,7 @@ namespace InstagramApiSharp.API.Processors
                 var cover = new JObject
                 {
                     {"media_id", mediaId},
-                    {"crop_rect", new JArray { 0.0, 0.19545822, 1.0, 0.8037307 }.ToString(Formatting.None) }
+                    {"crop_rect", new JArray { 0.0, cropWidth, 1.0, cropHeight }.ToString(Formatting.None) }
                 }.ToString(Formatting.None);
                 var data = new JObject
                 {
