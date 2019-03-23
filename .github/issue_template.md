@@ -5,7 +5,7 @@
 #### I've:
  - [ ] {Searched} in [Issues](https://github.com/ramtinak/InstagramApiSharp/search?type=Issues) 
  - [ ] {Checked} [Example projects](https://github.com/ramtinak/InstagramApiSharp/tree/master/samples)
- - [ ] {Read} [wiki pages](https://github.com/mgp25/Instagram-API/wiki)
+ - [ ] {Read} [wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki)
  - [ ] Not sure
 
 #### Issue category
@@ -40,7 +40,6 @@ If your issue has an debug log, post it here, unless remove this section!
 
 #### Describe your issue
 Please type your issue here.
-
 
 #### Screenshots
 If you have screenshots, you can post it here. unless remove this section!
