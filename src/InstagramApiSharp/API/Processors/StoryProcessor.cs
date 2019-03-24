@@ -1631,7 +1631,7 @@ namespace InstagramApiSharp.API.Processors
 
                         data.Add("story_sliders", sliderArr.ToString(Formatting.None));
                         if (uploadOptions.Slider.IsSticker)
-                            data.Add("story_sticker_ids", $"emoji_slider_{uploadOptions.Slider.Emoji}");
+                            data.Add("story_sticker_ids", $"{uploadOptions.Slider.Emoji}");
                     }
                     else
                     {
