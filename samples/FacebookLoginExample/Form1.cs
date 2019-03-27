@@ -180,7 +180,7 @@ namespace FacebookLoginExample
         IInstaApi BuildApi()
         {
             return InstaApiBuilder.CreateBuilder()
-                .SetUser(UserSessionData.Empty)
+                .SetUser(UserSessionData.ForUsername("FAKEUSERNAME").WithPassword("FAKEPASS"))
                 .UseLogger(new DebugLogger(LogLevel.All))
                 .SetRequestDelay(RequestDelay.FromSeconds(0, 1))
                 // Session handler, set a file path to save/load your state/session data
