@@ -39,6 +39,8 @@ namespace InstagramApiSharp.Classes.Models
 
         public List<InstaDirectInboxItem> Items { get; set; }
         
+        public InstaDirectInboxItem LastPermanentItem { get; set; }
+
         public bool IsPin { get; set; }
 
         public bool ValuedRequest { get; set; }
