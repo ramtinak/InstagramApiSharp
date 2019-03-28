@@ -39,6 +39,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("items")] public List<InstaDirectInboxItemResponse> Items { get; set; }
 
+        [JsonProperty("last_permanent_item")] public InstaDirectInboxItemResponse LastPermanentItem { get; set; }
 
         [JsonProperty("mentions_muted")] public bool? MentionsMuted { get; set; }
 
