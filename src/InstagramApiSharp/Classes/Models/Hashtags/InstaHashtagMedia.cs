@@ -17,6 +17,8 @@ namespace InstagramApiSharp.Classes.Models
     {
         public List<InstaMedia> Medias { get; set; } = new List<InstaMedia>();
 
+        public List<InstaRelatedHashtag> RelatedHashtags { get; set; } = new List<InstaRelatedHashtag>();
+
         public bool MoreAvailable { get; set; }
 
         public string NextMaxId { get; set; }

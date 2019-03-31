@@ -2229,5 +2229,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for story unfollow countdown");
             return instaUri;
         }
+
+        public static Uri GetHashtagSectionUri(string hashtag)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_SECTION, hashtag), out var instaUri))
+                throw new Exception("Cant create URI for hashtag section");
+            return instaUri;
+        }
     }
 }

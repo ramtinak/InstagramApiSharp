@@ -50,7 +50,27 @@ namespace InstagramApiSharp.Converters.Hashtags
                     catch { }
                 }
             }
-
+            if (SourceObject.PersistentSections?.Count > 0)
+            {
+                try
+                {
+                    foreach (var section in SourceObject.PersistentSections)
+                    {
+                        if (section.LayoutContent?.Related?.Count > 0)
+                        {
+                            foreach (var related in section.LayoutContent.Related)
+                            {
+                                try
+                                {
+                                    media.RelatedHashtags.Add(ConvertersFabric.Instance.GetRelatedHashtagConverter(related).Convert());
+                                }
+                                catch { }
+                            }
+                        }
+                    }
+                }
+                catch { }
+            }
             return media;
         }
     }

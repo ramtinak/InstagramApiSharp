@@ -962,5 +962,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaStoryCountdownListConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaRelatedHashtag, InstaRelatedHashtagResponse> GetRelatedHashtagConverter(
+            InstaRelatedHashtagResponse response)
+        {
+            return new InstaRelatedHashtagConverter { SourceObject = response };
+        }
     }
 }

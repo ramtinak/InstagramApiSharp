@@ -17,6 +17,8 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
     {
         [JsonProperty("sections")]
         public List<InstaSectionMediaResponse> Sections { get; set; } = new List<InstaSectionMediaResponse>();
+        [JsonProperty("persistent_sections")]
+        public List<InstaPersistentSectionResponse> PersistentSections { get; set; } = new List<InstaPersistentSectionResponse>();
         [JsonProperty("more_available")]
         public bool MoreAvailable { get; set; }
         [JsonProperty("next_max_id")]
@@ -60,6 +62,35 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         public List<InstaMediaAlbumResponse> Medias { get; set; }
     }
 
-    
+
+
+    public class InstaPersistentSectionResponse
+    {
+        [JsonProperty("layout_type")]
+        public string LayoutType { get; set; }
+        [JsonProperty("layout_content")]
+        public InstaPersistentSectionLayoutContentResponse LayoutContent { get; set; }
+    }
+
+    public class InstaPersistentSectionLayoutContentResponse
+    {
+        [JsonProperty("related_style")]
+        public string RelatedTtyle { get; set; }
+        [JsonProperty("related")]
+        public List<InstaRelatedHashtagResponse> Related { get; set; }
+    }
+
+    public class InstaRelatedHashtagResponse
+    {
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [JsonProperty("id")]
+        public long Id { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        //[JsonProperty("profile_pic_url")]
+        //public string ProfilePictureUrl { get; set; }
+    }
+
 
 }

@@ -206,9 +206,9 @@ namespace InstagramApiSharp.API.Processors
                 {
                     return ConvertersFabric.Instance.GetHashtagMediaListConverter(hashtagMediaListResponse).Convert();
                 }
-                var mediaResponse = await GetHashtagRecentMedia(tagname,
-                    _deviceInfo.DeviceGuid.ToString(),
-                    paginationParameters.NextMaxId, paginationParameters.NextPage, paginationParameters.NextMediaIds);
+                var mediaResponse = await GetHashtagSection(tagname,
+                     Guid.NewGuid().ToString(),
+                    paginationParameters.NextMaxId, true);
                 if (!mediaResponse.Succeeded)
                 {
                     if (mediaResponse.Value != null)
@@ -223,8 +223,8 @@ namespace InstagramApiSharp.API.Processors
                     && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var moreMedias = await GetHashtagRecentMedia(tagname, _deviceInfo.DeviceGuid.ToString(),
-                        paginationParameters.NextMaxId, mediaResponse.Value.NextPage, mediaResponse.Value.NextMediaIds);
+                    var moreMedias = await GetHashtagSection(tagname, Guid.NewGuid().ToString(),
+                        paginationParameters.NextMaxId, true);
                     if (!moreMedias.Succeeded)
                     {
                         if (mediaResponse.Value.Sections != null && mediaResponse.Value.Sections.Any())
@@ -312,9 +312,9 @@ namespace InstagramApiSharp.API.Processors
                 {
                     return ConvertersFabric.Instance.GetHashtagMediaListConverter(hashtagMediaListResponse).Convert();
                 }
-                var mediaResponse = await GetHashtagTopMedia(tagname,
-                    _deviceInfo.DeviceGuid.ToString(),
-                    paginationParameters.NextMaxId, paginationParameters.NextPage, paginationParameters.NextMediaIds);
+                var mediaResponse = await GetHashtagSection(tagname,
+                    Guid.NewGuid().ToString(),
+                    paginationParameters.NextMaxId);
 
                 if (!mediaResponse.Succeeded)
                 {
@@ -330,8 +330,8 @@ namespace InstagramApiSharp.API.Processors
                     && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                     && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-                    var moreMedias = await GetHashtagTopMedia(tagname, _deviceInfo.DeviceGuid.ToString(),
-                        paginationParameters.NextMaxId, mediaResponse.Value.NextPage, mediaResponse.Value.NextMediaIds);
+                    var moreMedias = await GetHashtagSection(tagname, Guid.NewGuid().ToString(),
+                        paginationParameters.NextMaxId);
                     if (!moreMedias.Succeeded)
                     {
                         if (mediaResponse.Value.Sections != null && mediaResponse.Value.Sections.Any())
@@ -486,19 +486,35 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        private async Task<IResult<InstaSectionMediaListResponse>> GetHashtagTopMedia(string tagname,
+        private async Task<IResult<InstaSectionMediaListResponse>> GetHashtagSection(string tagname,
             string rankToken = null,
-            string maxId = null,
-            int? page = null,
-            List<long> nextMediaIds = null)
+            string maxId = null, bool recent = false)
         {
             try
             {
-                var instaUri = UriCreator.GetHashtagRankedMediaUri(tagname, rankToken,
-                    maxId, page, nextMediaIds);
+                var instaUri = UriCreator.GetHashtagSectionUri(tagname);
+                //supported_tabs=["top","recent","places","discover"]&
+                //_csrftoken=SAR8V58g7jORGU1bVykRYoxTkKbHNCoN&
+                //_uuid=6324ecb2-e663-4dc8-a3a1-289c699cc876&
+                //include_persistent=true&
+                //rank_token=576f85da-8be0-4dc6-b000-cb65502870fa
 
+                var data = new Dictionary<string, string>
+                {
+                    {"_csrftoken", _user.CsrfToken},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"include_persistent", !recent ? "true" : "false"},
+                    {"rank_token", rankToken},
+                };
+                if (recent)
+                    data.Add("tab", "recent");
+                else
+                    data.Add("supported_tabs", new JArray("top", "recent", "places", "discover").ToString());
+
+                if (!string.IsNullOrEmpty(maxId))
+                    data.Add("max_id", maxId);
                 var request =
-                    _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                    _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
