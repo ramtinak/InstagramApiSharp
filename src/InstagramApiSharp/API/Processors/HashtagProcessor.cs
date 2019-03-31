@@ -493,11 +493,6 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetHashtagSectionUri(tagname);
-                //supported_tabs=["top","recent","places","discover"]&
-                //_csrftoken=SAR8V58g7jORGU1bVykRYoxTkKbHNCoN&
-                //_uuid=6324ecb2-e663-4dc8-a3a1-289c699cc876&
-                //include_persistent=true&
-                //rank_token=576f85da-8be0-4dc6-b000-cb65502870fa
 
                 var data = new Dictionary<string, string>
                 {
