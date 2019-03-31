@@ -1,6 +1,8 @@
 ﻿### Important note
 - You must fill this form! If you don't fill it, your issue will be close immediately.
 - Put an X character between `[ ]` that is related to your issue, like `[x]`
+- Please remove `Important note` from this form!
+- Don't remove other sections (unless it's unnecessarily, like `Debug logs` and `Screenshots` sections)!
 
 #### I've:
  - [ ] {Searched} in [Issues](https://github.com/ramtinak/InstagramApiSharp/search?type=Issues) 
@@ -26,6 +28,7 @@
 - [ ] Asp .NET Core
 - [ ] Universal Windows Platform [UWP]
 - [ ] Xamarin or Xamarin Forms
+- [ ] Mono
 - [ ] Other
 
 #### Operating System

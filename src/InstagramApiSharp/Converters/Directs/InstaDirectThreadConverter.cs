@@ -37,6 +37,7 @@ namespace InstagramApiSharp.Converters
                 NewestCursor = SourceObject.NewestCursor,
                 ThreadType = SourceObject.ThreadType,
                 Title = SourceObject.Title,
+            
                 MentionsMuted = SourceObject.MentionsMuted ?? false
             };
 
@@ -56,6 +57,11 @@ namespace InstagramApiSharp.Converters
                 }
             }
 
+            if (SourceObject.LastPermanentItem != null)
+            {
+                var converter = ConvertersFabric.Instance.GetDirectThreadItemConverter(SourceObject.LastPermanentItem);
+                thread.LastPermanentItem = converter.Convert();
+            }
             if (SourceObject.Users != null && SourceObject.Users.Count > 0)
             {
                 foreach (var user in SourceObject.Users)
