@@ -1305,7 +1305,7 @@ namespace InstagramApiSharp.API.Processors
 
 
 
-        private string GetRetryContext()
+        internal static string GetRetryContext()
         {
             return new JObject
                 {

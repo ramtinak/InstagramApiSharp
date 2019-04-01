@@ -9,10 +9,10 @@
 
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaUserTagUpload : InstaUserTagVideoUpload
+    public class InstaUserTagVideoUpload
     {
-        public double X { get; set; }
-
-        public double Y { get; set; }
+        public string Username { get; set; }
+        
+        public long Pk { get; set; } = -1;
     }
 }
