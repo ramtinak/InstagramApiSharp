@@ -38,6 +38,11 @@ namespace Examples.Samples
                 Video = new InstaVideo(@"c:\video1.mp4", 0, 0),
                 VideoThumbnail = new InstaImage(@"c:\video thumbnail 1.jpg", 0, 0)
             };
+            // Add user tag (tag people)
+            video.UserTags.Add(new InstaUserTagVideoUpload
+            {
+                Username = "rmt4006"
+            });
             var result = await InstaApi.MediaProcessor.UploadVideoAsync(video, "ramtinak");
             Console.WriteLine(result.Succeeded
                 ? $"Media created: {result.Value.Pk}, {result.Value.Caption}"

@@ -63,7 +63,15 @@ namespace Examples.Samples
                 {
                      // leave zero, if you don't know how height and width is it.
                     Video = new InstaVideo(@"c:\video1.mp4", 0, 0),
-                    VideoThumbnail = new InstaImage(@"c:\video thumbnail 1.jpg", 0, 0)
+                    VideoThumbnail = new InstaImage(@"c:\video thumbnail 1.jpg", 0, 0),
+                    // Add user tag (tag people)
+                    UserTags = new List<InstaUserTagVideoUpload>
+                    {
+                        new InstaUserTagVideoUpload
+                        {
+                            Username = "rmt4006"
+                        }
+                    }
                 },
                 new InstaVideoUpload
                 {
@@ -117,7 +125,15 @@ namespace Examples.Samples
                 {
                     // leave zero, if you don't know how height and width is it.
                     Video = new InstaVideo(@"c:\video1.mp4", 0, 0),
-                    VideoThumbnail = new InstaImage(@"c:\video thumbnail 1.jpg", 0, 0)
+                    VideoThumbnail = new InstaImage(@"c:\video thumbnail 1.jpg", 0, 0),
+                    // Add user tag (tag people)
+                    UserTags = new List<InstaUserTagVideoUpload>
+                    {
+                        new InstaUserTagVideoUpload
+                        {
+                            Username = "rmt4006"
+                        }
+                    }
                 }
             });
 
