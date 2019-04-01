@@ -1179,7 +1179,7 @@ namespace InstagramApiSharp.API.Processors
             return await UploadVideoAsync(null, video, caption, location);
         }
         /// <summary>
-        ///     Upload video with progress
+        ///     Upload video with progress [Supports user tags]
         /// </summary>
         /// <param name="progress">Progress action</param>
         /// <param name="video">Video and thumbnail to upload</param>

@@ -30,8 +30,8 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="mediaId">The media ID</param>
         /// <param name="caption">The new caption</param>
-        /// <param name="location">Location => Optional (get it from <seealso cref="LocationProcessor.SearchLocationAsync"/></param>
-        /// <param name="userTags">User tags => Optional (ONLY FOR PHOTO POSTS!!!)</param>
+        /// <param name="location">Location => Optional (get it from <seealso cref="ILocationProcessor.SearchLocationAsync"/></param>
+        /// <param name="userTags">User tags => Optional</param>
         /// <returns>Return true if everything is ok</returns>
         Task<IResult<InstaMedia>> EditMediaAsync(string mediaId, string caption, InstaLocationShort location = null, InstaUserTagUpload[] userTags = null);
 
@@ -181,14 +181,14 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<InstaMedia>> UploadPhotoAsync(Action<InstaUploaderProgress> progress, InstaImageUpload image, string caption, InstaLocationShort location = null);
 
         /// <summary>
-        ///     Upload video
+        ///     Upload video [Supports user tags]
         /// </summary>
         /// <param name="video">Video and thumbnail to upload</param>
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="ILocationProcessor.SearchLocationAsync"/></param>
         Task<IResult<InstaMedia>> UploadVideoAsync(InstaVideoUpload video, string caption, InstaLocationShort location = null);
         /// <summary>
-        ///     Upload video with progress
+        ///     Upload video with progress [Supports user tags]
         /// </summary>
         /// <param name="progress">Progress action</param>
         /// <param name="video">Video and thumbnail to upload</param>
