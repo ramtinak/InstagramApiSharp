@@ -347,10 +347,10 @@ Public Class Form1
             Return
         End If
 
-        Dim x = Await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1))
+        Dim topicalExplore = Await InstaApi.FeedProcessor.GetTopicalExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1))
 
-        If x.Succeeded = False Then
-            If (x.Info.ResponseType = ResponseType.ChallengeRequired) Then
+        If topicalExplore.Succeeded = False Then
+            If (topicalExplore.Info.ResponseType = ResponseType.ChallengeRequired) Then
                 Dim challengeData = Await InstaApi.GetLoggedInChallengeDataInfoAsync()
                 ' Do something to challenge data, if you want!
 
@@ -363,15 +363,27 @@ Public Class Form1
 
             sb2.AppendLine("Like 5 Media>")
 
-            For Each item In x.Value.Medias.Take(5)
+            For Each item In topicalExplore.Value.Medias.Take(5)
                 ' like media...
                 Dim liked = Await InstaApi.MediaProcessor.LikeMediaAsync(item.InstaIdentifier)
                 sb2.AppendLine($"{item.InstaIdentifier} liked? {liked.Succeeded}")
             Next
 
-            sb.AppendLine("Explore Feeds Result: " & x.Succeeded)
+            sb.AppendLine("Explore categories: " & topicalExplore.Value.Clusters.Count)
+            Dim ix As Integer = 1
+            For Each cluster As InstaTopicalExploreCluster In topicalExplore.Value.Clusters
+                sb.AppendLine("#" & ix & " " & cluster.Name)
+                ix += 1
+            Next
 
-            For Each media As InstaMedia In x.Value.Medias
+            sb.AppendLine()
+            sb.AppendLine()
+            sb.AppendLine("Explore tv channels: " & topicalExplore.Value.TVChannels.Count)
+            sb.AppendLine()
+            sb.AppendLine()
+
+            sb.AppendLine("Explore Feeds Result: " & topicalExplore.Succeeded)
+            For Each media As InstaMedia In topicalExplore.Value.Medias
                 sb.AppendLine(DebugUtils.PrintMedia("Feed media", media))
             Next
 
@@ -384,6 +396,46 @@ Public Class Form1
             RtBox.Visible = True
             Size = ChallengeSize
         End If
+
+
+        '' old explore page
+        'Dim x = Await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1))
+
+        'If x.Succeeded = False Then
+        '    If (x.Info.ResponseType = ResponseType.ChallengeRequired) Then
+        '        Dim challengeData = Await InstaApi.GetLoggedInChallengeDataInfoAsync()
+        '        ' Do something to challenge data, if you want!
+
+        '        Dim acceptChallenge = Await InstaApi.AcceptChallengeAsync()
+        '        ' If Succeeded was TRUE, you can continue to your work!
+        '    End If
+        'Else
+        '    Dim sb As StringBuilder = New StringBuilder
+        '    Dim sb2 As StringBuilder = New StringBuilder
+
+        '    sb2.AppendLine("Like 5 Media>")
+
+        '    For Each item In x.Value.Medias.Take(5)
+        '        ' like media...
+        '        Dim liked = Await InstaApi.MediaProcessor.LikeMediaAsync(item.InstaIdentifier)
+        '        sb2.AppendLine($"{item.InstaIdentifier} liked? {liked.Succeeded}")
+        '    Next
+
+        '    sb.AppendLine("Explore Feeds Result: " & x.Succeeded)
+
+        '    For Each media As InstaMedia In x.Value.Medias
+        '        sb.AppendLine(DebugUtils.PrintMedia("Feed media", media))
+        '    Next
+
+        '    RtBox.Text = (sb2.ToString _
+        '                & (Environment.NewLine _
+        '                & (Environment.NewLine & Environment.NewLine)))
+
+        '    RtBox.Text = (RtBox.Text & sb.ToString)
+
+        '    RtBox.Visible = True
+        '    Size = ChallengeSize
+        'End If
     End Sub
 
     Private Sub LoadSession()

@@ -374,11 +374,12 @@ namespace ChallengeRequireExample
                 MessageBox.Show("Login first.");
                 return;
             }
-            var x = await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
-            if (x.Succeeded == false)
+            var topicalExplore = await InstaApi.FeedProcessor.GetTopicalExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
+
+            if (topicalExplore.Succeeded == false)
             {
-                if (x.Info.ResponseType == ResponseType.ChallengeRequired)
+                if (topicalExplore.Info.ResponseType == ResponseType.ChallengeRequired)
                 {
                     var challengeData = await InstaApi.GetLoggedInChallengeDataInfoAsync();
                     // Do something to challenge data, if you want!
@@ -392,24 +393,72 @@ namespace ChallengeRequireExample
                 StringBuilder sb = new StringBuilder();
                 StringBuilder sb2 = new StringBuilder();
                 sb2.AppendLine("Like 5 Media>");
-                foreach (var item in x.Value.Medias.Take(5))
+                foreach (var item in topicalExplore.Value.Medias.Take(5))
                 {
                     // like media...
                     var liked = await InstaApi.MediaProcessor.LikeMediaAsync(item.InstaIdentifier);
                     sb2.AppendLine($"{item.InstaIdentifier} liked? {liked.Succeeded}");
                 }
 
-                sb.AppendLine("Explore Feeds Result: " + x.Succeeded);
-                foreach (var media in x.Value.Medias)
-                {
+                sb.AppendLine("Explore categories: " + topicalExplore.Value.Clusters.Count);
+                int ix = 1;
+                foreach (var cluster in topicalExplore.Value.Clusters)
+                    sb.AppendLine($"#{ix++} {cluster.Name}");
+
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.AppendLine("Explore tv channels: " + topicalExplore.Value.TVChannels.Count);
+                sb.AppendLine();
+                sb.AppendLine();
+
+                sb.AppendLine("Explore Feeds Result: " + topicalExplore.Succeeded);
+                foreach (var media in topicalExplore.Value.Medias)
                     sb.AppendLine(DebugUtils.PrintMedia("Feed media", media));
-                }
+
                 RtBox.Text = sb2.ToString() + Environment.NewLine + Environment.NewLine + Environment.NewLine;
 
                 RtBox.Text += sb.ToString();
                 RtBox.Visible = true;
                 Size = ChallengeSize;
             }
+
+
+            //// old explore page
+            //var x = await InstaApi.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
+            //if (x.Succeeded == false)
+            //{
+            //    if (x.Info.ResponseType == ResponseType.ChallengeRequired)
+            //    {
+            //        var challengeData = await InstaApi.GetLoggedInChallengeDataInfoAsync();
+            //        // Do something to challenge data, if you want!
+
+            //        var acceptChallenge = await InstaApi.AcceptChallengeAsync();
+            //        // If Succeeded was TRUE, you can continue to your work!
+            //    }
+            //}
+            //else
+            //{
+            //    StringBuilder sb = new StringBuilder();
+            //    StringBuilder sb2 = new StringBuilder();
+            //    sb2.AppendLine("Like 5 Media>");
+            //    foreach (var item in x.Value.Medias.Take(5))
+            //    {
+            //        // like media...
+            //        var liked = await InstaApi.MediaProcessor.LikeMediaAsync(item.InstaIdentifier);
+            //        sb2.AppendLine($"{item.InstaIdentifier} liked? {liked.Succeeded}");
+            //    }
+
+            //    sb.AppendLine("Explore Feeds Result: " + x.Succeeded);
+            //    foreach (var media in x.Value.Medias)
+            //    {
+            //        sb.AppendLine(DebugUtils.PrintMedia("Feed media", media));
+            //    }
+            //    RtBox.Text = sb2.ToString() + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+
+            //    RtBox.Text += sb.ToString();
+            //    RtBox.Visible = true;
+            //    Size = ChallengeSize;
+            //}
         }
 
         void LoadSession()
