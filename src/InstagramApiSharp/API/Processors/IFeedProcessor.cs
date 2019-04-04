@@ -71,5 +71,13 @@ namespace InstagramApiSharp.API.Processors
         ///     <see cref="InstaFeed" />
         /// </returns>
         Task<IResult<InstaFeed>> GetUserTimelineFeedAsync(PaginationParameters paginationParameters, string[] seenMediaIds = null, bool refreshRequest = false);
+
+        /// <summary>
+        ///     Get user topical explore feeds asynchronously
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="clusterId">Cluster id ( get it from <see cref="InstaTopicalExploreCluster.Id"/> )</param>
+        /// <returns><see cref="InstaTopicalExploreFeed" /></returns>
+        Task<IResult<InstaTopicalExploreFeed>> GetTopicalExploreFeedAsync(PaginationParameters paginationParameters, string clusterId = null);
     }
 }

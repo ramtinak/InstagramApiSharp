@@ -253,6 +253,7 @@ namespace InstagramApiSharp.API
         public const string DISCOVER_AYML = API_SUFFIX + "/discover/ayml/";
         public const string DISCOVER_CHAINING = API_SUFFIX + "/discover/chaining/?target_id={0}";
         public const string DISCOVER_EXPLORE = API_SUFFIX + "/discover/explore/";
+        public const string DISCOVER_TOPICAL_EXPLORE = API_SUFFIX + "/discover/topical_explore/";
         public const string DISCOVER_FETCH_SUGGESTION_DETAILS = API_SUFFIX + "/discover/fetch_suggestion_details/?target_id={0}&chained_ids={1}";
         public const string DISCOVER_TOP_LIVE = API_SUFFIX + "/discover/top_live/";
         public const string DISCOVER_TOP_LIVE_STATUS = API_SUFFIX + "/discover/top_live_status/";

@@ -2236,5 +2236,34 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for hashtag section");
             return instaUri;
         }
+
+        public static Uri GetTopicalExploreUri(string sessionId, string maxId = null, string clusterId = null)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DISCOVER_TOPICAL_EXPLORE, out var instaUri))
+                throw new Exception("Cant create URI for topical explore");
+
+            instaUri = instaUri
+                .AddQueryParameter("is_prefetch", "false")
+                .AddQueryParameter("module", "explore_popular")
+                .AddQueryParameter("use_sectional_payload", "true")
+                .AddQueryParameter("timezone_offset", InstaApiConstants.TIMEZONE_OFFSET.ToString())
+                .AddQueryParameter("session_id", sessionId)
+                .AddQueryParameter("include_fixed_destinations", "false");
+
+            if (clusterId.ToLower() == "explore_all:0" || clusterId.ToLower() == "explore_all%3A0")
+            {
+                if (!string.IsNullOrEmpty(maxId))
+                {
+                    instaUri = instaUri.AddQueryParameter("max_id", maxId);
+                    instaUri = instaUri.AddQueryParameter("cluster_id", "explore_all%3A0");
+                }
+            }
+            else
+            {
+                instaUri = instaUri.AddQueryParameter("cluster_id", clusterId);
+                instaUri = instaUri.AddQueryParameter("max_id", maxId);
+            }
+            return instaUri;
+        }
     }
 }

@@ -968,5 +968,17 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaRelatedHashtagConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaTopicalExploreCluster, InstaTopicalExploreClusterResponse> GetExploreClusterConverter(
+            InstaTopicalExploreClusterResponse response)
+        {
+            return new InstaTopicalExploreClusterConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaTopicalExploreFeed, InstaTopicalExploreFeedResponse> GetTopicalExploreFeedConverter(
+            InstaTopicalExploreFeedResponse response)
+        {
+            return new InstaTopicalExploreFeedConverter { SourceObject = response };
+        }
     }
 }

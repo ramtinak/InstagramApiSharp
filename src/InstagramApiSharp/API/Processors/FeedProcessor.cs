@@ -405,6 +405,82 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        /// <summary>
+        ///     Get user topical explore feeds asynchronously
+        /// </summary>
+        /// <param name="paginationParameters">Pagination parameters: next id and max amount of pages to load</param>
+        /// <param name="clusterId">Cluster id</param>
+        /// <returns><see cref="InstaTopicalExploreFeed" /></returns>
+        public async Task<IResult<InstaTopicalExploreFeed>> GetTopicalExploreFeedAsync(PaginationParameters paginationParameters, string clusterId = null)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            var topicalExploreFeed = new InstaTopicalExploreFeed();
+            try
+            {
+                if (paginationParameters == null)
+                    paginationParameters = PaginationParameters.MaxPagesToLoad(1);
+
+                InstaTopicalExploreFeed Convert(InstaTopicalExploreFeedResponse topicalExploreFeedResponse)
+                {
+                    return ConvertersFabric.Instance.GetTopicalExploreFeedConverter(topicalExploreFeedResponse).Convert();
+                }
+
+                var feeds = await GetTopicalExploreFeed(paginationParameters, clusterId);
+                if (!feeds.Succeeded)
+                {
+                    if (feeds.Value != null)
+                        return Result.Fail(feeds.Info, Convert(feeds.Value));
+                    else
+                        return Result.Fail(feeds.Info, (InstaTopicalExploreFeed)null);
+                }
+                var feedResponse = feeds.Value;
+                paginationParameters.NextMaxId = feedResponse.MaxId;
+                paginationParameters.RankToken = feedResponse.RankToken;
+
+                while (feedResponse.MoreAvailable
+                       && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
+                       && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
+                {
+                    var nextFeed = await GetTopicalExploreFeed(paginationParameters, clusterId);
+                    if (!nextFeed.Succeeded)
+                        return Result.Fail(nextFeed.Info, Convert(feeds.Value));
+
+                    feedResponse.NextMaxId = paginationParameters.NextMaxId = nextFeed.Value.MaxId;
+                    feedResponse.RankToken = paginationParameters.RankToken = nextFeed.Value.RankToken;
+                    feedResponse.MoreAvailable = nextFeed.Value.MoreAvailable;
+                    feedResponse.AutoLoadMoreEnabled = nextFeed.Value.AutoLoadMoreEnabled;
+                    feedResponse.NextMaxId = nextFeed.Value.NextMaxId;
+                    feedResponse.ResultsCount = nextFeed.Value.ResultsCount;
+                    feedResponse.Channel = nextFeed.Value.Channel;
+                    feedResponse.Medias.AddRange(nextFeed.Value.Medias);
+                    feedResponse.TVChannels.AddRange(nextFeed.Value.TVChannels);
+                    feedResponse.Clusters.AddRange(nextFeed.Value.Clusters);
+                    feedResponse.MaxId = nextFeed.Value.MaxId;
+                    feedResponse.HasShoppingChannelContent = nextFeed.Value.HasShoppingChannelContent;
+                    paginationParameters.PagesLoaded++;
+                }
+                topicalExploreFeed = Convert(feedResponse);
+                topicalExploreFeed.Medias.Pages = paginationParameters.PagesLoaded;
+                topicalExploreFeed.Medias.PageSize = feedResponse.ResultsCount;
+                return Result.Success(topicalExploreFeed);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaTopicalExploreFeed), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, topicalExploreFeed);
+            }
+        }
+
+
+
+
+
+
         private async Task<IResult<InstaRecentActivityResponse>> GetFollowingActivityWithMaxIdAsync(string maxId)
         {
             try
@@ -614,6 +690,38 @@ namespace InstagramApiSharp.API.Processors
             {
                 _logger?.LogException(exception);
                 return Result.Fail<InstaMediaListResponse>(exception);
+            }
+        }
+
+        private async Task<IResult<InstaTopicalExploreFeedResponse>> GetTopicalExploreFeed(PaginationParameters paginationParameters, string clusterId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(clusterId))
+                    clusterId = "explore_all:0";
+
+                var exploreUri = UriCreator.GetTopicalExploreUri(_deviceInfo.GoogleAdId.ToString(), paginationParameters?.NextMaxId, clusterId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, exploreUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaTopicalExploreFeedResponse>(response, json);
+
+                var feedResponse = JsonConvert.DeserializeObject<InstaTopicalExploreFeedResponse>(json,
+                    new InstaTopicalExploreFeedDataConverter());
+
+                return Result.Success(feedResponse);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaTopicalExploreFeedResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaTopicalExploreFeedResponse>(exception);
             }
         }
     }
