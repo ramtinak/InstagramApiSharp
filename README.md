@@ -4,10 +4,16 @@ A complete Private Instagram API for .NET (C#, VB.NET).
 Supports almost every features that Instagram app has!
 
 -----
-# Public project is not maintained anymore. [#233](https://github.com/ramtinak/InstagramApiSharp/issues/233)
-# Project will continue to support with subscriptions as an Private project [#243](https://github.com/ramtinak/InstagramApiSharp/issues/243) and check [#244](https://github.com/ramtinak/InstagramApiSharp/issues/244) for changelogs.
+InstagramApiSharp's private version - Under developing. Check [#243](https://github.com/ramtinak/InstagramApiSharp/issues/243)
+
+| Target | Branch | Version | Changelog |
+| ------ | ------ | ------ | ------ |
+| Github | master | v2.0.1 | [v2.0.1](https://github.com/ramtinak/InstagramApiSharp/issues/244#issuecomment-494534737) |
+
 
 -----
+InstagramApiSharp's public version - Update date: April 5, 2019 - End Of Support!!!
+
 | Target | Branch | Version | Download link | Total downloads |
 | ------ | ------ | ------ | ------ | ------ |
 | Nuget | master | v1.4.0.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
