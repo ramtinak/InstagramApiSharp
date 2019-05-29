@@ -189,6 +189,13 @@ Special thanks to [mgp25](https://github.com/mgp25) and his [php wrapper](https:
 This code is in no way affiliated with, authorized, maintained, sponsored or endorsed by Instagram or any of its affiliates or subsidiaries. This is an independent and unofficial API wrapper.
 
 ## Developers
+Private version
+
+| Name | Github | Email | Telegram |
+| ------ | ------ | ------ | ------ |
+| Ramtin Jokar | [@Ramtinak](https://github.com/ramtinak) | [Ramtinak@live.com](mailto:ramtinak@live.com) | https://t.me/ramtinak |
+
+Public version - End Of Support
 
 | Name | Github | Email | Telegram | Instagram |
 | ------ | ------ | ------ | ------ | ------ |
