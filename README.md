@@ -172,7 +172,7 @@ You can ask questions or report issues in Persian or English language.
 I can't answer to other languages, because I don't understand them.
 
 ## License
-Do whatever you want to do! Except changing library name!!!!
+MIT.
 
 ## Terms and conditions
 - Use this Api at your own risk.
@@ -181,7 +181,18 @@ Do whatever you want to do! Except changing library name!!!!
 Feel free to contribute and submit pull requests.
 
 ## Thanks
-Special thanks to [all contributors](https://github.com/ramtinak/InstagramApiSharp/graphs/contributors).
+
+[estgold](https://github.com/estgold) for contribution
+
+[ADeltaX](https://github.com/ADeltaX) for contribution
+
+[vitalragaz](https://github.com/vitalragaz) for contribution
+
+[n0ise9914](https://github.com/n0ise9914) for contribution
+
+Special thanks to [all other contributors](https://github.com/ramtinak/InstagramApiSharp/graphs/contributors).
+
+Special thanks to [all other InstaSharper contributors](https://github.com/a-legotin/InstaSharper/graphs/contributors).
 
 Special thanks to [mgp25](https://github.com/mgp25) and his [php wrapper](https://github.com/mgp25/Instagram-API/).
 
