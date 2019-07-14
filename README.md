@@ -19,6 +19,9 @@ InstagramApiSharp's public version - Update date: April 5, 2019 - End Of Support
 | Nuget | master | v1.4.0.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
 | Release | master | v1.4.0.1 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
 
+## WARNING!!!
+Use [InstagramApiSharp](https://github.com/ramtinak/InstagramApiSharp/)'s free versions at your own risk! I'm not responsible for free versions anymore!!!!
+
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
 
