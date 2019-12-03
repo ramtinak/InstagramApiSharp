@@ -11,7 +11,7 @@ namespace InstagramApiSharp.Helpers
             var badStatus = new BadStatusResponse();
             try
             {
-                if (json == "Oops, an error occurred\n")
+                if (json.Contains("Oops, an error occurred"))
                     badStatus.Message = json;
                 else badStatus = JsonConvert.DeserializeObject<BadStatusResponse>(json);
             }
