@@ -90,6 +90,16 @@ namespace InstagramApiSharp.API.Versions
                          Capabilities = "3brTvw==",
                          SignatureKey = "19ce5f445dbfd9d29c59dc2a78c616a7fc090a8e018b9267bc4240a30244c53b"
                     }
+                },
+                {
+                    InstaApiVersionType.Version107,
+                    new InstaApiVersion
+                    {
+                         AppApiVersionCode = "168361634",
+                         AppVersion = "107.0.0.27.121",
+                         Capabilities = "3brTvw==",
+                         SignatureKey = "c36436a942ea1dbb40d7f2d7d45280a620d991ce8c62fb4ce600f0a048c32c11"
+                    }
                 }
             };
         }
