@@ -1215,8 +1215,16 @@ namespace InstagramApiSharp.API
             ValidateLoggedIn();
             try
             {
+                var data = new Dictionary<string, string>
+                {
+                    {"phone_id", _deviceInfo.PhoneGuid.ToString()},
+                    {"_csrftoken", _user.CsrfToken},
+                    {"guid", _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id", _deviceInfo.DeviceId},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()}
+                };
                 var instaUri = UriCreator.GetLogoutUri();
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<bool>(response, json);
