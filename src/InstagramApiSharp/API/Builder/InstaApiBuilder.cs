@@ -71,7 +71,7 @@ namespace InstagramApiSharp.API.Builder
                     new HttpRequestProcessor(_delay, _httpClient, _httpHandler, _requestMessage, _logger);
 
             if (_apiVersionType == null)
-                _apiVersionType = InstaApiVersionType.Version107;
+                _apiVersionType = InstaApiVersionType.Version126;
 
             var instaApi = new InstaApi(_user, _logger, _device, _httpRequestProcessor, _apiVersionType.Value);
             if (_sessionHandler != null)

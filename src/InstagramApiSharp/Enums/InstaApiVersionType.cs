@@ -42,6 +42,10 @@ namespace InstagramApiSharp.Enums
         /// <summary>
         ///     Api version 107.0.0.27.121
         /// </summary>
-        Version107 = 7
+        Version107 = 7,
+        /// <summary>
+        ///     Api version 126.0.0.25.121
+        /// </summary>
+        Version126 = 22
     }
 }
