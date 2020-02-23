@@ -597,8 +597,14 @@ namespace InstagramApiSharp.API.Processors
                     {"device_id", _deviceInfo.PhoneGuid.ToString()},
                     {"phone_id", _deviceInfo.RankToken.ToString()},
                     {"client_session_id", Guid.NewGuid().ToString()},
+                    {"session_id", Guid.NewGuid().ToString()},
                     {"timezone_offset", _instaApi.GetTimezoneOffset().ToString()},
-                    {"rti_delivery_backend", "0"}
+                                 {"battery_level", "100"},
+                    {"is_charging", "0"},
+                    {"rti_delivery_backend", "0"},
+                    {"is_async_ads_double_request", "0"},
+                    {"is_async_ads_rti", "0"},
+                    {"will_sound_on", "0"}
                 };
 
                 if (seenMediaIds != null)
@@ -610,7 +616,20 @@ namespace InstagramApiSharp.API.Processors
                     data.Add("is_pull_to_refresh", "1");
                 }
                 else
-                    data.Add("reason", "warm_start_fetch");
+                    //data.Add("reason", "warm_start_fetch");
+                {
+                    if (string.IsNullOrEmpty(paginationParameters.NextMaxId))
+                    {
+                        data.Add("reason", "cold_start_fetch");
+                        //data.Add("reason", "warm_start_fetch");
+                    }
+                    else
+                    {
+                        data.Add("reason", "pagination");
+                        data.Add("max_id", paginationParameters.NextMaxId);
+                    }
+                    data.Add("is_pull_to_refresh", "0");
+                }
 
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, userFeedUri, _deviceInfo, data);
                 request.Headers.Add("X-Ads-Opt-Out", "0");

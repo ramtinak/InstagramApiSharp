@@ -32,6 +32,8 @@ namespace InstagramApiSharp.Classes
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
         {
+            Client.DefaultRequestHeaders.ConnectionClose = false;
+            requestMessage.Headers.Add("Connection", "Keep-Alive");
             LogHttpRequest(requestMessage);
             if (_delay.Exist)
                 await Task.Delay(_delay.Value);
@@ -42,6 +44,7 @@ namespace InstagramApiSharp.Classes
 
         public async Task<HttpResponseMessage> GetAsync(Uri requestUri)
         {
+            Client.DefaultRequestHeaders.ConnectionClose = false;
             _logger?.LogRequest(requestUri);
             if (_delay.Exist)
                 await Task.Delay(_delay.Value);
@@ -53,6 +56,8 @@ namespace InstagramApiSharp.Classes
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage,
             HttpCompletionOption completionOption)
         {
+            Client.DefaultRequestHeaders.ConnectionClose = false;
+            requestMessage.Headers.Add("Connection", "Keep-Alive");
             LogHttpRequest(requestMessage);
             if (_delay.Exist)
                 await Task.Delay(_delay.Value);
@@ -64,6 +69,7 @@ namespace InstagramApiSharp.Classes
         public async Task<string> SendAndGetJsonAsync(HttpRequestMessage requestMessage,
             HttpCompletionOption completionOption)
         {
+            Client.DefaultRequestHeaders.ConnectionClose = false;
             LogHttpRequest(requestMessage);
             if (_delay.Exist)
                 await Task.Delay(_delay.Value);
@@ -74,6 +80,7 @@ namespace InstagramApiSharp.Classes
 
         public async Task<string> GeJsonAsync(Uri requestUri)
         {
+            Client.DefaultRequestHeaders.ConnectionClose = false;
             _logger?.LogRequest(requestUri);
             if (_delay.Exist)
                 await Task.Delay(_delay.Value);

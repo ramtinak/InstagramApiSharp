@@ -149,7 +149,7 @@ namespace InstagramApiSharp.API
         public const string ACCOUNTS_VALIDATE_SIGNUP_SMS_CODE = API_SUFFIX + "/accounts/validate_signup_sms_code/";
         public const string ACCOUNTS_VERIFY_SMS_CODE = API_SUFFIX + "/accounts/verify_sms_code/";
         public const string CHANGE_PASSWORD = API_SUFFIX + "/accounts/change_password/";
-        public const string CURRENTUSER = API_SUFFIX + "/accounts/current_user?edit=true";
+        public const string CURRENTUSER = API_SUFFIX + "/accounts/current_user/?edit=true";
         public const string SET_ACCOUNT_PRIVATE = API_SUFFIX + "/accounts/set_private/";
         public const string SET_ACCOUNT_PUBLIC = API_SUFFIX + "/accounts/set_public/";
         public const string ACCOUNTS_CONVERT_TO_PERSONAL = API_SUFFIX + "/accounts/convert_to_personal/";
@@ -178,7 +178,7 @@ namespace InstagramApiSharp.API
 
         #region Collection endpoints constants
 
-        public const string COLLECTION_CREATE_MODULE = API_SUFFIX + "collection_create";
+        public const string COLLECTION_CREATE_MODULE = API_SUFFIX + "/collection_create/";
         public const string CREATE_COLLECTION = API_SUFFIX + "/collections/create/";
         public const string DELETE_COLLECTION = API_SUFFIX + "/collections/{0}/delete/";
         public const string EDIT_COLLECTION = API_SUFFIX + "/collections/{0}/edit/";
@@ -310,7 +310,7 @@ namespace InstagramApiSharp.API
         public const string GET_USER_STORY = API_SUFFIX + "/feed/user/{0}/reel_media/";
         public const string GET_USER_TAGS = API_SUFFIX + "/usertags/{0}/feed/";
         public const string LIKE_FEED = API_SUFFIX + "/feed/liked/";
-        public const string TIMELINEFEED = API_SUFFIX + "/feed/timeline";
+        public const string TIMELINEFEED = API_SUFFIX + "/feed/timeline/";
         public const string USER_REEL_FEED = API_SUFFIX + "/feed/user/{0}/reel_media/";
         public const string USEREFEED = API_SUFFIX + "/feed/user/";
 
