@@ -7,27 +7,78 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using InstagramApiSharp.Enums;
 using InstagramApiSharp.API.Versions;
+using InstagramApiSharp.Classes;
+
 namespace InstagramApiSharp.Helpers
 {
     internal class HttpHelper
     {
         public /*readonly*/ InstaApiVersion _apiVersion;
-        internal HttpHelper(InstaApiVersion apiVersionType)
+        readonly Random Rnd = new Random();
+        public IHttpRequestProcessor _httpRequestProcessor;
+        public IInstaApi _instaApi;
+        internal HttpHelper(InstaApiVersion apiVersionType, IHttpRequestProcessor httpRequestProcessor, IInstaApi instaApi)
         {
             _apiVersion = apiVersionType;
+            _httpRequestProcessor = httpRequestProcessor;
+            _instaApi = instaApi;
         }
 
         public HttpRequestMessage GetDefaultRequest(HttpMethod method, Uri uri, AndroidDevice deviceInfo)
         {
             var userAgent = deviceInfo.GenerateUserAgent(_apiVersion);
             var request = new HttpRequestMessage(method, uri);
-            request.Headers.Add(InstaApiConstants.HEADER_ACCEPT_LANGUAGE, InstaApiConstants.ACCEPT_LANGUAGE);
-            request.Headers.Add(InstaApiConstants.HEADER_IG_CAPABILITIES, _apiVersion.Capabilities);
+            var cookies = _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                                  .BaseAddress);
+            var mid = cookies[InstaApiConstants.COOKIES_MID]?.Value ?? string.Empty;
+            var dsUserId = cookies[InstaApiConstants.COOKIES_DS_USER_ID]?.Value ?? string.Empty;
+            var sessionId = cookies[InstaApiConstants.COOKIES_SESSION_ID]?.Value ?? string.Empty;
+
+            request.Headers.Add(InstaApiConstants.HEADER_X_IG_APP_LOCALE, InstaApiConstants.ACCEPT_LANGUAGE.Replace("-", "_"));
+            request.Headers.Add(InstaApiConstants.HEADER_X_IG_DEVICE_LOCALE, InstaApiConstants.ACCEPT_LANGUAGE.Replace("-", "_"));
+            request.Headers.Add(InstaApiConstants.HEADER_PIGEON_SESSION_ID, deviceInfo.PigeonSessionId.ToString());
+            request.Headers.Add(InstaApiConstants.HEADER_PIGEON_RAWCLINETTIME, $"{DateTime.UtcNow.ToUnixTime()}.0{Rnd.Next(10, 99)}");
+            request.Headers.Add(InstaApiConstants.HEADER_X_IG_CONNECTION_SPEED, "-1kbps");
+            request.Headers.Add(InstaApiConstants.HEADER_X_IG_BANDWIDTH_SPEED_KBPS, deviceInfo.IGBandwidthSpeedKbps);
+            request.Headers.Add(InstaApiConstants.HEADER_X_IG_BANDWIDTH_TOTALBYTES_B, deviceInfo.IGBandwidthTotalBytesB);
+            request.Headers.Add(InstaApiConstants.HEADER_X_IG_BANDWIDTH_TOTALTIME_MS, deviceInfo.IGBandwidthTotalTimeMS);
+            request.Headers.Add(InstaApiConstants.HEADER_IG_APP_STARTUP_COUNTRY, InstaApiConstants.HEADER_IG_APP_STARTUP_COUNTRY_VALUE);
+
+            ////request.Headers.Add(InstaApiConstants.HEADER_X_IG_EXTENDED_CDN_THUMBNAIL_CACHE_BUSTING_VALUE, "1000");
+            //if (!string.IsNullOrEmpty(_apiVersion.BloksVersionId))
+            //    request.Headers.Add(InstaApiConstants.HEADER_X_IG_BLOKS_VERSION_ID, _apiVersion.BloksVersionId);
+            //else
+            //    request.Headers.Add(InstaApiConstants.HEADER_X_IG_BLOKS_VERSION_ID, InstaApiConstants.CURRENT_BLOKS_VERSION_ID);
+            var wwwClaim = _instaApi.GetLoggedUser()?.WwwClaim;
+
+            if (string.IsNullOrEmpty(wwwClaim))
+                request.Headers.Add(InstaApiConstants.HEADER_X_WWW_CLAIM, InstaApiConstants.HEADER_X_WWW_CLAIM_DEFAULT);
+            else
+                request.Headers.Add(InstaApiConstants.HEADER_X_WWW_CLAIM, wwwClaim);
+
+            var authorization = _instaApi.GetLoggedUser()?.Authorization;
+            if (!string.IsNullOrEmpty(dsUserId))
+                    request.Headers.Add(InstaApiConstants.HEADER_AUTHORIZATION, authorization);
+        
+            request.Headers.Add(InstaApiConstants.HEADER_X_IG_BLOKS_IS_LAYOUT_RTL, "false");
+            request.Headers.Add(InstaApiConstants.HEADER_X_IG_BLOKS_ENABLE_RENDERCODE, "false");
+            request.Headers.Add(InstaApiConstants.HEADER_X_IG_DEVICE_ID, deviceInfo.DeviceGuid.ToString());
+                request.Headers.Add(InstaApiConstants.HEADER_X_IG_ANDROID_ID, deviceInfo.DeviceId);
+
             request.Headers.Add(InstaApiConstants.HEADER_IG_CONNECTION_TYPE, InstaApiConstants.IG_CONNECTION_TYPE);
-            request.Headers.Add(InstaApiConstants.HEADER_USER_AGENT, userAgent);
+            request.Headers.Add(InstaApiConstants.HEADER_IG_CAPABILITIES, _apiVersion.Capabilities);
             request.Headers.Add(InstaApiConstants.HEADER_IG_APP_ID, InstaApiConstants.IG_APP_ID);
-            request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_XGOOGLE_AD_IDE,
-                deviceInfo.GoogleAdId.ToString()));
+
+            request.Headers.Add(InstaApiConstants.HEADER_USER_AGENT, userAgent);
+            request.Headers.Add(InstaApiConstants.HEADER_ACCEPT_LANGUAGE, InstaApiConstants.ACCEPT_LANGUAGE);
+
+            if (!string.IsNullOrEmpty(mid))
+                request.Headers.Add(InstaApiConstants.HEADER_X_MID, mid);
+            request.Headers.TryAddWithoutValidation(InstaApiConstants.HEADER_ACCEPT_ENCODING, InstaApiConstants.ACCEPT_ENCODING2);
+
+            request.Headers.Add(InstaApiConstants.HOST, InstaApiConstants.HOST_URI);
+
+            request.Headers.Add(InstaApiConstants.HEADER_X_FB_HTTP_ENGINE, "Liger");
             return request;
         }
         public HttpRequestMessage GetDefaultRequest(HttpMethod method, Uri uri, AndroidDevice deviceInfo, Dictionary<string, string> data)

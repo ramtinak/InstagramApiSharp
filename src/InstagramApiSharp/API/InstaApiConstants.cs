@@ -24,6 +24,37 @@ namespace InstagramApiSharp.API
     {
         #region Main
 
+        public const string ACCEPT_ENCODING2 = "gzip, deflate";
+        public const string HEADER_PIGEON_SESSION_ID = "X-Pigeon-Session-Id";
+        public const string HEADER_PIGEON_RAWCLINETTIME = "X-Pigeon-Rawclienttime";
+        public const string HEADER_X_IG_CONNECTION_SPEED = "X-IG-Connection-Speed";
+        public const string HEADER_X_IG_BANDWIDTH_SPEED_KBPS = "X-IG-Bandwidth-Speed-KBPS";
+        public const string HEADER_X_IG_BANDWIDTH_TOTALBYTES_B = "X-IG-Bandwidth-TotalBytes-B";
+        public const string HEADER_X_IG_BANDWIDTH_TOTALTIME_MS = "X-IG-Bandwidth-TotalTime-MS";
+        public const string HEADER_X_FB_HTTP_ENGINE = "X-FB-HTTP-Engine";
+        public const string HEADER_X_IG_APP_LOCALE = "X-IG-App-Locale";
+        public const string HEADER_X_IG_DEVICE_LOCALE = "X-IG-Device-Locale";
+        public const string HEADER_X_MID = "X-MID";
+        public const string HEADER_AUTHORIZATION = "Authorization";
+        public const string HEADER_RESPONSE_AUTHORIZATION = "ig-set-authorization";
+        public const string HEADER_X_WWW_CLAIM = "X-IG-WWW-Claim";
+        public const string HEADER_X_WWW_CLAIM_DEFAULT = "0";
+        public const string HEADER_RESPONSE_X_WWW_CLAIM = "x-ig-set-www-claim";
+        public const string HEADER_X_FB_TRIP_ID = "X-FB-TRIP-ID";
+        public const string COOKIES_MID = "mid";
+        public const string COOKIES_DS_USER_ID = "ds_user_id";
+        public const string COOKIES_SESSION_ID = "sessionid";
+        public const string HEADER_IG_APP_STARTUP_COUNTRY = "X-IG-App-Startup-Country";
+        public static string HEADER_IG_APP_STARTUP_COUNTRY_VALUE = "US"; // IR
+        public const string HEADER_X_IG_EXTENDED_CDN_THUMBNAIL_CACHE_BUSTING_VALUE = "X-IG-Extended-CDN-Thumbnail-Cache-Busting-Value";
+        public const string HEADER_X_IG_BLOKS_VERSION_ID = "X-Bloks-Version-Id";
+        public const string HEADER_X_IG_BLOKS_IS_LAYOUT_RTL = "X-Bloks-Is-Layout-RTL";
+        public const string HEADER_X_IG_BLOKS_ENABLE_RENDERCODE = "X-Bloks-Enable-RenderCore";
+        public const string HEADER_X_IG_DEVICE_ID = "X-IG-Device-ID";
+        public const string HEADER_X_IG_ANDROID_ID = "X-IG-Android-ID";
+        public const string CURRENT_BLOKS_VERSION_ID = "e538d4591f238824118bfcb9528c8d005f2ea3becd947a3973c030ac971bb88e";
+        public const string HOST = "Host";
+        public const string HOST_URI = "i.instagram.com";
         public const string ACCEPT_ENCODING = "gzip, deflate, sdch";
         public const string API = "/api";
         public const string API_SUFFIX = API + API_VERSION;

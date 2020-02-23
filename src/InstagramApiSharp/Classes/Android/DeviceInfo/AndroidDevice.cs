@@ -10,6 +10,9 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         public Guid GoogleAdId { get; set; } = Guid.NewGuid();
         public Guid RankToken { get; set; } = Guid.NewGuid();
         public Guid AdId { get; set; } = Guid.NewGuid();
+        public Guid PigeonSessionId { get; set; } = Guid.NewGuid();
+        public Guid PushDeviceGuid { get; set; } = Guid.NewGuid();
+        public Guid FamilyDeviceGuid { get; set; } = Guid.NewGuid();
         public AndroidVersion AndroidVer { get; set; } = AndroidVersion.GetRandomAndriodVersion();
 
         public string AndroidBoardName { get; set; }
@@ -27,5 +30,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         public string HardwareModel { get; set; }
         public string Resolution { get; set; } = "1080x1812";
         public string Dpi { get; set; } = "480dpi";
+        public string IGBandwidthSpeedKbps { get; set; } = "-1000";
+        public string IGBandwidthTotalBytesB { get; set; } = "0";
+        public string IGBandwidthTotalTimeMS { get; set; } = "0";
     }
 }

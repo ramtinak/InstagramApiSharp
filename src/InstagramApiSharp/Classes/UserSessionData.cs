@@ -9,6 +9,11 @@ namespace InstagramApiSharp.Classes
         public string UserName { get; set; }
         public string Password { get; set; }
 
+        public string PublicKey { get; set; }
+        public string PublicKeyId { get; set; }
+        public string WwwClaim { get; set; }
+        public string FbTripId { get; set; }
+        public string Authorization { get; set; }
         public InstaUserShort LoggedInUser { get; set; }
 
         public string RankToken { get; set; }
