@@ -111,11 +111,17 @@ Public Class Form1
         LoadSession()
 
         If Not InstaApi.IsUserAuthenticated Then
+            ' Call this function before calling LoginAsync
+            Await InstaApi.SendRequestsBeforeLoginAsync()
+
+
             Dim logInResult = Await InstaApi.LoginAsync()
             Debug.WriteLine(logInResult.Value)
             If logInResult.Succeeded Then
                 GetFeedButton.Visible = True
                 Text = $"{AppName} Connected"
+                'Call this function after a successful login
+                Await InstaApi.SendRequestsAfterLoginAsync()
                 ' Save session 
                 SaveSession()
             ElseIf (logInResult.Value = InstaLoginResult.ChallengeRequired) Then
