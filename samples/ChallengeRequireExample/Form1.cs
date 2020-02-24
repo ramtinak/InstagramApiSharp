@@ -119,12 +119,20 @@ namespace ChallengeRequireExample
             LoadSession();
             if (!InstaApi.IsUserAuthenticated)
             {
+                // Call this function before calling LoginAsync
+                await InstaApi.SendRequestsBeforeLoginAsync();
+                // wait 5 seconds
+                await Task.Delay(5000);
                 var logInResult = await InstaApi.LoginAsync();
                 Debug.WriteLine(logInResult.Value);
                 if (logInResult.Succeeded)
                 {
                     GetFeedButton.Visible = true;
                     Text = $"{AppName} Connected";
+
+                    // Call this function after a successful login
+                    await InstaApi.SendRequestsAfterLoginAsync();
+
                     // Save session 
                     SaveSession();
                 }
