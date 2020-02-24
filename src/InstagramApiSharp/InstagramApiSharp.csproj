@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452;uap10.0;netstandard1.3</TargetFrameworks>
-    <VersionPrefix>1.4.0</VersionPrefix>
+    <VersionPrefix>1.5.0</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.4.0.0</Version>
-    <AssemblyVersion>1.4.0.0</AssemblyVersion>
-    <FileVersion>1.4.0.0</FileVersion>
+    <Version>1.5.0.0</Version>
+    <AssemblyVersion>1.5.0.0</AssemblyVersion>
+    <FileVersion>1.5.0.0</FileVersion>
     <Description>A complete Private Instagram API for .NET.
 
 
@@ -34,11 +34,19 @@ Support:
 - and many more.
 
 See example projects and wiki pages to find out how this library works.</Description>
-    <Authors>Ramtin Jokar, Ali NGame1</Authors>
+    <Authors>Ramtin Jokar</Authors>
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.4.0.0
+    <PackageReleaseNotes>v1.5.0.0
+[Update] api version and signature key to v126.0.0.25.121
+[Update] Headers and constants
+[Update] GetUserTimelineFeedAsync, Constants and some others
+[Update] a lot of things related to login and other things
+[Add] SendRequestsBeforeLoginAsync to InstaApi
+[Add] SendRequestsAfterLoginAsync to InstaApi
+
+v1.4.0.0
 - [Add] GetTopicalExploreFeedAsync to FeedProcessor (new explore page)
 	Supports explore categories, ig tv videos
 

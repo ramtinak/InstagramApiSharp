@@ -13,12 +13,12 @@ InstagramApiSharp's private version - Under developing. Check [#243](https://git
 
 
 -----
-InstagramApiSharp's public version - Update date: April 5, 2019 - End Of Support!!!
+InstagramApiSharp's public version - Update date: February 24, 2020 - End Of Support(from April 5, 2019)!!!
 
 | Target | Branch | Version | Download link | Total downloads |
 | ------ | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.4.0.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
-| Release | master | v1.4.0.1 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
+| Nuget | master | v1.5.0.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Release | master | v1.5.0.0 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
 
 ## WARNING!!!
 Use [InstagramApiSharp](https://github.com/ramtinak/InstagramApiSharp/)'s free versions at your own risk! I'm not responsible for free versions anymore!!!!
@@ -107,6 +107,14 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.5.0.0
+- [Update] api version and signature key to v126.0.0.25.121
+- [Update] Headers and constants
+- [Update] GetUserTimelineFeedAsync, Constants and some others
+- [Update] a lot of things related to login and other things
+- [Add] SendRequestsBeforeLoginAsync to InstaApi
+- [Add] SendRequestsAfterLoginAsync to InstaApi
+
 v1.4.0.1
 - Change license to MIT
 
