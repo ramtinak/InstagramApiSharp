@@ -543,16 +543,26 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             }
         };
 
-        static Random rnd = new Random();
+        static Random Rnd = new Random();
         private static AndroidDevice LastDevice;
         public static AndroidDevice GetRandomAndroidDevice()
         {
             TryLabel:
-            var randomDeviceIndex = rnd.Next(0, DevicesNames.Count);
+            var randomDeviceIndex = Rnd.Next(0, DevicesNames.Count);
             var device = AndroidAndroidDeviceSets.ElementAt(randomDeviceIndex).Value;
             device.PhoneGuid = Guid.NewGuid();
             device.DeviceGuid = Guid.NewGuid();
             device.DeviceId = ApiRequestMessage.GenerateDeviceIdFromGuid(device.DeviceGuid);
+            device.PigeonSessionId = Guid.NewGuid();
+            device.PushDeviceGuid = Guid.NewGuid();
+            device.FamilyDeviceGuid = Guid.NewGuid();
+            device.IGBandwidthSpeedKbps = $"{Rnd.Next(1233, 1567)}.{Rnd.Next(100, 999)}";
+            device.IGBandwidthTotalTimeMS = Rnd.Next(781, 999).ToString();
+            try
+            {
+                device.IGBandwidthTotalBytesB = ((int)((double.Parse(device.IGBandwidthSpeedKbps) * double.Parse(device.IGBandwidthTotalTimeMS)) + Rnd.Next(100, 999))).ToString();
+            }
+            catch { }
             if (LastDevice != null)
                 if (device.DeviceId == LastDevice.DeviceId)
                     goto TryLabel;

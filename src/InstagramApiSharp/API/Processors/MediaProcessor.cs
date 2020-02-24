@@ -1430,12 +1430,10 @@ namespace InstagramApiSharp.API.Processors
                     data.Add("usertags", root.ToString(Formatting.None));
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, UriCreator.GetMediaUploadFinishUri(), _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
                 request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)

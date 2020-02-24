@@ -338,7 +338,6 @@ namespace InstagramApiSharp.API.Processors
                 };
 
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 Debug.WriteLine(json);

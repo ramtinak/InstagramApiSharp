@@ -68,7 +68,6 @@ namespace InstagramApiSharp.API.Processors
                     {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -114,7 +113,6 @@ namespace InstagramApiSharp.API.Processors
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -160,7 +158,6 @@ namespace InstagramApiSharp.API.Processors
                     {"internal_only",  0}
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -198,7 +195,6 @@ namespace InstagramApiSharp.API.Processors
                     {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -235,7 +231,6 @@ namespace InstagramApiSharp.API.Processors
                     {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -272,7 +267,6 @@ namespace InstagramApiSharp.API.Processors
                     {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -726,7 +720,6 @@ namespace InstagramApiSharp.API.Processors
                     {"broadcast_ids", new JArray(broadcastIds)},
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -799,7 +792,6 @@ namespace InstagramApiSharp.API.Processors
                     {"user_like_count", likeCount}
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -868,7 +860,6 @@ namespace InstagramApiSharp.API.Processors
                     {"offset_to_video_start", 0}
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -912,7 +903,6 @@ namespace InstagramApiSharp.API.Processors
 
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -950,7 +940,6 @@ namespace InstagramApiSharp.API.Processors
                     {"should_send_notifications",  sendNotifications}
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 var obj = JsonConvert.DeserializeObject<InstaBroadcastStartResponse>(json);
@@ -1063,7 +1052,6 @@ namespace InstagramApiSharp.API.Processors
                     {"offset_to_video_start", 0}
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)

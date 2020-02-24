@@ -102,6 +102,14 @@ namespace InstagramApiSharp
         {
             return System.Net.WebUtility.UrlEncode(data);
         }
+        public static string GenerateJazoest(string guid)
+        {
+            int ix = 0;
+            var chars = guid.ToCharArray();
+            foreach (var ch in chars)
+                ix += (int)ch;
+            return "2" + ix;
+        }
         public static string GetJson(this InstaLocationShort location)
         {
             if (location == null)

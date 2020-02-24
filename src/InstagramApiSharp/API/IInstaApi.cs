@@ -307,13 +307,22 @@ namespace InstagramApiSharp.API
         #endregion Other public functions
 
         #region Authentication, challenge functions
-
+        /// <summary>
+        ///     Send requests for login flows (contact prefill, read msisdn header, launcher sync and qe sync)
+        ///     <para>Note 1: You should call this function before you calling <see cref="IInstaApi.LoginAsync(bool)"/>, if you want your account act like original instagram app.</para>
+        ///     <para>Note 2: One call per one account! No need to call while you are loading a session</para>
+        /// </summary>
+        Task<IResult<bool>> SendRequestsBeforeLoginAsync();
+        /// <summary>
+        ///     Send requests after you logged in successfully (Act as an real instagram user)
+        /// </summary>
+        Task<IResult<bool>> SendRequestsAfterLoginAsync();
         #region Challenge part
 
 
         //////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////// Challenge for logged in user /////////////////////////////////
-        
+
 
 
         /// <summary>

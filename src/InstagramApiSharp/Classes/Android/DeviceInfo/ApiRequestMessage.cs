@@ -12,9 +12,15 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
     }
     public class ApiRequestMessage
     {
+        private string _phoneId;
+
         static readonly Random Rnd = new Random();
+        [JsonProperty("jazoest")]
+        public string Jazoest { get; set; }
+        [JsonProperty("country_codes")]
+        public string CountryCodes { get; set; } = "[{\"country_code\":\"1\",\"source\":[\"default\"]},{\"country_code\":\"1\",\"source\":[\"uig_via_phone_id\"]}]";
         [JsonProperty("phone_id")]
-        public string PhoneId { get; set; }
+        public string PhoneId { get { return _phoneId; } set { _phoneId = value; Jazoest = ExtensionHelper.GenerateJazoest(value); } }
         [JsonProperty("username")]
         public string Username { get; set; }
         [JsonProperty("adid")]
@@ -44,11 +50,12 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                 CsrtToken = csrfToken,
                 DeviceId = DeviceId,
                 Guid = Guid,
-                LoginAttemptCount = "1",
+                LoginAttemptCount = "0",
                 Password = Password,
                 PhoneId = PhoneId,
                 Username = Username,
-                AdId = AdId
+                AdId = AdId,
+                CountryCodes = CountryCodes,
             };
             var json = JsonConvert.SerializeObject(api);
             return json;
@@ -79,11 +86,12 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
                 CsrtToken = csrfToken,
                 DeviceId = DeviceId,
                 Guid = Guid,
-                LoginAttemptCount = "1",
+                LoginAttemptCount = "0",
                 Password = Password,
                 PhoneId = PhoneId,
                 Username = Username,
-                AdId = AdId
+                AdId = AdId,
+                CountryCodes = CountryCodes,
             };
             var res = CryptoHelper.CalculateHash(signatureKey,
                 JsonConvert.SerializeObject(api));

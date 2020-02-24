@@ -257,7 +257,6 @@ namespace InstagramApiSharp.API.Processors
                     {"email", email},
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Add("Host", "i.instagram.com");
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -404,7 +403,6 @@ namespace InstagramApiSharp.API.Processors
                     { "_csrftoken", _user.CsrfToken}
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                request.Headers.Add("Host", "i.instagram.com");
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
