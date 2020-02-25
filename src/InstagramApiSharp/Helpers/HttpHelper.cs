@@ -57,7 +57,7 @@ namespace InstagramApiSharp.Helpers
                 request.Headers.Add(InstaApiConstants.HEADER_X_WWW_CLAIM, wwwClaim);
 
             var authorization = _instaApi.GetLoggedUser()?.Authorization;
-            if (!string.IsNullOrEmpty(dsUserId))
+            if (!string.IsNullOrEmpty(dsUserId) && !string.IsNullOrEmpty(authorization))
                     request.Headers.Add(InstaApiConstants.HEADER_AUTHORIZATION, authorization);
         
             request.Headers.Add(InstaApiConstants.HEADER_X_IG_BLOKS_IS_LAYOUT_RTL, "false");
