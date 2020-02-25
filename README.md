@@ -107,6 +107,9 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.5.0.1
+- [Bugfix] for adding header
+
 v1.5.0.0
 - [Update] api version and signature key to v126.0.0.25.121
 - [Update] Headers and constants
