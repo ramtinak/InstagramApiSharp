@@ -58,7 +58,7 @@ namespace Examples.Samples
             };
             var result = await InstaApi.StoryProcessor.UploadStoryVideoAsync(video, "ramtinak");
             Console.WriteLine(result.Succeeded
-                ? $"Story created: {result.Value.Pk}"
+                ? $"Story created: {result.Value.Media.Pk}"
                 : $"Unable to upload video story: {result.Info.Message}");
         }
 
