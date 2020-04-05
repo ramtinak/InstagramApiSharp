@@ -56,7 +56,7 @@ namespace Examples.Samples
                 Video = new InstaVideo(@"c:\video1.mp4", 0, 0),
                 VideoThumbnail = new InstaImage(@"c:\video thumbnail 1.jpg", 0, 0)
             };
-            var result = await InstaApi.MediaProcessor.UploadVideoAsync(video, "ramtinak");
+            var result = await InstaApi.StoryProcessor.UploadStoryVideoAsync(video, "ramtinak");
             Console.WriteLine(result.Succeeded
                 ? $"Story created: {result.Value.Pk}"
                 : $"Unable to upload video story: {result.Info.Message}");
