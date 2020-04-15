@@ -635,7 +635,14 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetEditProfileUri()
+        public static Uri GetUploadAccountPictureUri(string uploadId, int fileHashCode)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.UPLOAD_PHOTO, uploadId, fileHashCode), out var instaUri))
+                throw new Exception("Cant create URI for account pic upload photo");
+            return instaUri;
+        }
+
+    public static Uri GetEditProfileUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_EDIT_PROFILE, out var instaUri))
                 throw new Exception("Cant create URI for edit profile");
