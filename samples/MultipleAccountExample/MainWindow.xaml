@@ -5,8 +5,99 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultipleAccountExample"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Multiple login example"
+        Height="280"
+        Width="360">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Login"
+                  VerticalAlignment="Center">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="37*" />
+                    <ColumnDefinition Width="48*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal"
+                            Margin="0,10,0.4,9.6"
+                            Grid.ColumnSpan="2">
+                    <TextBlock Text="Username:" />
+                    <TextBox x:Name="UserText"
+                             Width="100"
+                             Margin="5 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2">
+                    <TextBlock Text="Password:" />
+                    <TextBox x:Name="PassText"
+                             Width="100"
+                             Margin="9 0" />
+                </StackPanel>
+                <Button x:Name="LoginButton"
+                        Grid.Row="2"
+                        Height="35"
+                        Content="Login"
+                        Click="LoginButtonClick"
+                        Grid.ColumnSpan="2"
+                        Margin="0,37.4,0.4,0.4"
+                        Grid.RowSpan="2" />
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <GroupBox Header="Sessions"
+                      VerticalAlignment="Top"
+                      HorizontalAlignment="Left">
+                <ComboBox x:Name="SessionsCombo"
+                          Width="150"/>
+            </GroupBox>
+
+
+            <GroupBox Header="Send message"
+                      Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="MessageText"
+                             AcceptsReturn="True"
+                             MinHeight="50" />
+
+                    <Button x:Name="SendMessageToSingleButton"
+                            Grid.Row="1"
+                            Height="35"
+                            Margin="0 5"
+                            Content="Send via current account"
+                            Click="SendMessageToSingleButtonClick" />
+
+                    <Button x:Name="SendMessageToAllButton"
+                            Grid.Row="2"
+                            Margin="0 5"
+                            Height="35"
+                            Content="Send via all accounts"
+                            Click="SendMessageToAllButtonClick" />
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="Developer: Ramtin Jokar [ Ramtinak@live.com ]" Margin="0 5" HorizontalAlignment="Center"/>
+
     </Grid>
 </Window>
