@@ -173,8 +173,8 @@ v1.3.4.1
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
-## Known Issues
-Nothing!!!!
+## Minista App
+[Minista App](https://github.com/ramtinak/Minista) is now open source.
 
 ## [InstaPost](https://github.com/ramtinak/InstaPost/) app.
 You can download source code or app from [InstaPost](https://github.com/ramtinak/InstaPost/) github page.
