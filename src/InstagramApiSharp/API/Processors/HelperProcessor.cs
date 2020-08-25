@@ -182,7 +182,7 @@ namespace InstagramApiSharp.API.Processors
                 // video part
                 byte[] videoBytes;
                 if (video.Video.VideoBytes == null)
-                    videoBytes = File.ReadAllBytes(video.Video.Uri);
+                    videoBytes = GetBytesFromUrl(video.Video.Uri);
                 else
                     videoBytes = video.Video.VideoBytes;
 
@@ -236,7 +236,7 @@ namespace InstagramApiSharp.API.Processors
                     var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
                     byte[] imageBytes;
                     if (video.VideoThumbnail.ImageBytes == null)
-                        imageBytes = File.ReadAllBytes(video.VideoThumbnail.Uri);
+                        imageBytes = GetBytesFromUrl(video.VideoThumbnail.Uri);
                     else
                         imageBytes = video.VideoThumbnail.ImageBytes;
                     var imageContent = new ByteArrayContent(imageBytes);
@@ -1299,12 +1299,14 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaMedia>(exception);
             }
         }
-
-
-
-
-
-
+        internal byte[] GetBytesFromUrl(string url)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var s = client.GetAsync(url);
+                return s.Result.Content.ReadAsByteArrayAsync().Result;
+            }
+        }
         internal static string GetRetryContext()
         {
             return new JObject
