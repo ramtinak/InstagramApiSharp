@@ -9,7 +9,7 @@ InstagramApiSharp's private version - Under developing. Check [#243](https://git
 
 | Target | Branch | Version | Changelog |
 | ------ | ------ | ------ | ------ |
-| Github | master | v2.4.0 | [v2.4.0](https://github.com/ramtinak/InstagramApiSharp/issues/244#issuecomment-673779999) |
+| Github | master | v2.5.0 | [v2.5.0](https://github.com/ramtinak/InstagramApiSharp/issues/244#issuecomment-716996294) |
 
 
 -----
