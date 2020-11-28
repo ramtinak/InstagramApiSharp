@@ -959,7 +959,16 @@ namespace InstagramApiSharp.API.Processors
                 request.Headers.Add("retry_context", retryContext);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-                
+
+                JObject rootJsonObj = JObject.Parse(json);
+                var status = rootJsonObj["status"];
+
+                if (status != null && status.ToString() == "fail")
+                {
+                    var message = rootJsonObj["message"].ToString();
+                    return Result.Fail<InstaMedia>(message);
+                }
+
                 var mediaResponse =
                      JsonConvert.DeserializeObject<InstaMediaItemResponse>(json, new InstaMediaDataConverter());
                 var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
