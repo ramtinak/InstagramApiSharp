@@ -16,7 +16,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("created_at")]
         public float CreatedAt { get; set; }
         [JsonProperty("created_at_utc")]
-        public int CreatedAtUtc { get; set; }
+        public string CreatedAtUtc { get; set; }
         [JsonProperty("media_id")]
         public long MediaId { get; set; }
         [JsonProperty("status")]
