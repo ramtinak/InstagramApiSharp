@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.5.0.1</Version>
-    <AssemblyVersion>1.5.0.1</AssemblyVersion>
-    <FileVersion>1.5.0.1</FileVersion>
+    <Version>1.5.0.2</Version>
+    <AssemblyVersion>1.5.0.2</AssemblyVersion>
+    <FileVersion>1.5.0.2</FileVersion>
     <Description>A complete Private Instagram API for .NET.
 
 
@@ -38,7 +38,12 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.5.0.1
+    <PackageReleaseNotes>v1.5.0.2
+- [Bugfix] Fix ChangeProfilePictureAsync in AccountProcessor [ by @juliendu11 ]
+- [Bugfix] for parsing created_at_utc in comments [ by @Anushiravani ]
+- [Add] additional error handlers  [ by @fatihdumanli ]
+
+v1.5.0.1
 - [Bugfix] for adding header
 
 v1.5.0.0
@@ -198,7 +203,7 @@ v1.3.3.0
     <Copyright>Ramtin Jokar</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo, igtv</PackageTags>
-    <PackageIconUrl>http://s9.picofile.com/file/8336165642/insta5.png</PackageIconUrl>
+    <PackageIcon>insta.png</PackageIcon>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
@@ -220,6 +225,7 @@ v1.3.3.0
 
   <ItemGroup>
     <None Include="LICENSE.txt" Pack="true" Visible="true" PackagePath="$(PackageLicenseFile)" />
+    <None Include="insta.png" Pack="true" Visible="true" PackagePath="$(PackageIcon)" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' OR  '$(TargetFramework)' == 'net471'">
