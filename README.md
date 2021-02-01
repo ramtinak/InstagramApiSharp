@@ -57,7 +57,7 @@ Public version - End Of Support
 | Name | Github | Email | Telegram | Instagram |
 | ------ | ------ | ------ | ------ | ------ |
 | Ramtin Jokar | [@Ramtinak](https://github.com/ramtinak) | - | - | - |
-| Ali Noshahi | [@NGame1](https://github.com/NGame1) | [NGame1390@hotmail.com](mailto:ngame1390@hotmail.com) | https://t.me/NGameW | https://instagram.com/alingame |
+| Ali Noshahi | [@NGame1](https://github.com/NGame1) | [NGame1390@hotmail.com](mailto:ngame1390@hotmail.com) | [NGameW](https://t.me/NGameW) | [alingame](https://instagram.com/alingame) |
 
 
 
