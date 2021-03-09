@@ -1205,6 +1205,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetLiveThumbnails(string broadcastId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_THUMBNAILS, broadcastId), out var instaUri))
+                throw new Exception("Cant get Live Thumbnails");
+            return instaUri;
+        }
+
         public static Uri GetRegenerateTwoFactorBackUpCodeUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_REGEN_BACKUP_CODES, out var instaUri))

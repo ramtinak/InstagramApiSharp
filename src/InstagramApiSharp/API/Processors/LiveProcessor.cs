@@ -1095,5 +1095,36 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaDiscoverTopLiveResponse>(exception);
             }
         }
+
+        public async Task<IResult<LivePostLiveThumbnailsResponseRootObject>> GetPostLiveThumbnails(string broadcastId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetLiveThumbnails(broadcastId);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var imgResp = JsonConvert.DeserializeObject<LivePostLiveThumbnailsResponseRootObject>(json);
+                if (imgResp.Status.ToLower() == "ok")
+                {
+                    return Result.Success(imgResp);
+                }
+                else
+                {
+                    return Result.UnExpectedResponse<LivePostLiveThumbnailsResponseRootObject>(response, json);
+                }
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(LivePostLiveThumbnailsResponseRootObject), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<LivePostLiveThumbnailsResponseRootObject>(exception);
+            }
+        }
     }
 }

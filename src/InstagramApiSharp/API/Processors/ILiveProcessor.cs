@@ -8,6 +8,7 @@
  */
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Classes.ResponseWrappers;
 using System.Threading.Tasks;
 
 namespace InstagramApiSharp.API.Processors
@@ -17,6 +18,13 @@ namespace InstagramApiSharp.API.Processors
     /// </summary>
     public interface ILiveProcessor
     {
+        /// <summary>
+        /// Get the list of URLs for Thumbnails after finishing live
+        /// </summary>
+        /// <param name="broadcastId">Broadcast id</param>
+        /// <returns></returns>
+        Task<IResult<LivePostLiveThumbnailsResponseRootObject>> GetPostLiveThumbnails(string broadcastId);
+
         /// <summary>
         ///     Add an broadcast to post live.
         /// </summary>
