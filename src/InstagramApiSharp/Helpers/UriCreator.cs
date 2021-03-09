@@ -77,6 +77,14 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetIGTVcreatorTools()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.IGTV_CREATION_TOOL),
+                    out var instaUri)) throw new Exception("Cant create URI for IGTV creator Tools");
+            return instaUri;
+        }
+
         public static Uri GetAccountVerifySmsCodeUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_VERIFY_SMS_CODE, out var instaUri))
