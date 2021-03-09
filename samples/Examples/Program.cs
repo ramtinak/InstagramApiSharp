@@ -70,6 +70,7 @@ namespace Examples
             Console.WriteLine("Press 7 to start location demo sample");
             Console.WriteLine("Press 8 to start collections demo sample");
             Console.WriteLine("Press 9 to start upload video demo sample");
+            Console.WriteLine("Press 0 to start live video and save it afterwards.");
 
             var samplesMap = new Dictionary<ConsoleKey, IDemoSample>
             {
