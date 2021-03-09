@@ -117,13 +117,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetBroadcastAddToPostLiveUri(string broadcastId)
-        {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_ADD_TO_POST_LIVE, broadcastId), out var instaUri))
-                throw new Exception("Cant create URI for broadcast add to post live");
-            return instaUri;
-        }
-
+     //   public static Uri GetBroadcastAddToPostLiveUri(string broadcastId)
+     //   {
+     //       if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_ADD_TO_POST_LIVE, broadcastId), out var instaUri))
+     //           throw new Exception("Cant create URI for broadcast add to post live");
+     //       return instaUri;
+     //   }
+     //
         public static Uri GetBroadcastCommentUri(string broadcastId, string lastcommentts = "")
         {
             if(lastcommentts == "")

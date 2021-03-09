@@ -21,7 +21,7 @@ namespace InstagramApiSharp.API.Processors
         ///     Add an broadcast to post live.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
-        Task<IResult<InstaBroadcastAddToPostLive>> AddToPostLiveAsync(string broadcastId);
+   //     Task<IResult<InstaBroadcastAddToPostLive>> AddToPostLiveAsync(string broadcastId);
 
         /// <summary>
         ///     Post a new comment to broadcast.

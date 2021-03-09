@@ -413,6 +413,7 @@ namespace InstagramApiSharp.API
         public const string IGTV_SUGGESTED_SEARCHES = API_SUFFIX + "/igtv/suggested_searches/";
         public const string IGTV_TV_GUIDE = API_SUFFIX + "/igtv/tv_guide/";
         public const string MEDIA_CONFIGURE_TO_IGTV = API_SUFFIX + "/media/configure_to_igtv/";
+        public const string IGTV_CREATION_TOOL = API_SUFFIX + "/igtv/igtv_creation_tools/";
 
         #endregion IgTv (instagram tv) endpoints constants
 
@@ -425,10 +426,11 @@ namespace InstagramApiSharp.API
 
         #region Live endpoints constants
 
-        public const string LIVE_ADD_TO_POST_LIVE = API_SUFFIX + "/live/{0}/add_to_post_live/";
+       // public const string LIVE_ADD_TO_POST_LIVE = API_SUFFIX + "/live/{0}/add_to_post_live/";
         public const string LIVE_COMMENT = API_SUFFIX + "/live/{0}/comment/";
         public const string LIVE_CREATE = API_SUFFIX + "/live/create/";
         public const string LIVE_DELETE_POST_LIVE = API_SUFFIX + "/live/{0}/delete_post_live/";
+        public const string LIVE_THUMBNAILS = API_SUFFIX + "/live/{0}/get_post_live_thumbnails/";
         public const string LIVE_END = API_SUFFIX + "/live/{0}/end_broadcast/";
         public const string LIVE_GET_COMMENT = API_SUFFIX + "/live/{0}/get_comment/";
         public const string LIVE_GET_COMMENT_LASTCOMMENTTS = API_SUFFIX + "/live/{0}/get_comment/?last_comment_ts={1}";
