@@ -52,7 +52,6 @@ namespace Examples
             if (loginRequest.Succeeded)
             {
                 Console.WriteLine("Logged in to " + user.UserName);
-                //     username = user.UserName;
                 InstaApi.SetRequestDelay(RequestDelay.FromSeconds(1, 2));
             }
             else
