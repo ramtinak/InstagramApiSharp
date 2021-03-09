@@ -1694,6 +1694,13 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
+        public static Uri GetPostToIGTVafterLiveUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_CONFIGURE_TO_IGTV), out var instaUri))
+                throw new Exception("Cant create URI for broadcast end");
+            return instaUri;
+        }
+
         public static Uri GetArchivedMediaFeedsListUri(string nextId = "")
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FEED_ONLY_ME_FEED, out var instaUri))

@@ -9,6 +9,7 @@
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.ResponseWrappers;
+using System;
 using System.Threading.Tasks;
 
 namespace InstagramApiSharp.API.Processors
@@ -21,15 +22,31 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         /// Get the list of URLs for Thumbnails after finishing live
         /// </summary>
-        /// <param name="broadcastId">Broadcast id</param>
+        /// <param name="broadcastID">Broadcast id</param>
         /// <returns></returns>
-        Task<IResult<LivePostLiveThumbnailsResponseRootObject>> GetPostLiveThumbnails(string broadcastId);
+        Task<IResult<LivePostLiveThumbnailsResponseRootObject>> GetPostLiveThumbnails(string broadcastID);
 
         /// <summary>
-        ///     Add an broadcast to post live.
+        /// Add an broadcast to post live.
         /// </summary>
-        /// <param name="broadcastId">Broadcast id</param>
-   //     Task<IResult<InstaBroadcastAddToPostLive>> AddToPostLiveAsync(string broadcastId);
+        /// <param name="thumbnail">thumbnail path IN YOUR COMPUTER</param>
+        /// <param name="title">title </param>
+        /// <param name="caption"></param>
+        /// <param name="broadcastID">broadcast ID</param>
+        /// <returns></returns>
+        Task<IResult<InstaMediaItemResponse>> AddToPostLiveAsync(InstaImageUpload thumbnail, string title, string caption, string broadcastID);
+
+        /// <summary>
+        /// Process to add an broadcast to post live.
+        /// </summary>
+        /// <param name="progress"></param>
+        /// <param name="thumbnail">thumbnail path IN YOUR COMPUTER</param>
+        /// <param name="title">title </param>
+        /// <param name="caption"></param>
+        /// <param name="broadcastID">broadcast ID</param>
+        /// <returns></returns>
+        Task<IResult<InstaMediaItemResponse>> AddToPostLiveAsync(Action<InstaUploaderProgress> progress, InstaImageUpload thumbnail, string title, string caption, string broadcastID);
+
 
         /// <summary>
         ///     Post a new comment to broadcast.

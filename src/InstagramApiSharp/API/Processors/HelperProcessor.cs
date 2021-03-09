@@ -1309,10 +1309,186 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
+        public async Task<IResult<InstaMediaItemResponse>> SendPicToIGTV(Action<InstaUploaderProgress> progress,
+          InstaImageUpload image, string title, string caption, string BID)
+        {
+            var upProgress = new InstaUploaderProgress
+            {
+                Caption = caption ?? string.Empty,
+                UploadState = InstaUploadState.Preparing
+            };
+            try
+            {
+                var uploadId = ApiRequestMessage.GenerateRandomUploadId();
+                var photoHashCode = Path.GetFileName(image.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
+                var photoEntityName = $"{uploadId}_0_{photoHashCode}";
+                var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
+                var waterfallId = Guid.NewGuid().ToString();
+                var retryContext = GetRetryContext();
+                HttpRequestMessage request = null;
+                HttpResponseMessage response = null;
+                string json = null;
+                upProgress.UploadId = uploadId;
+                progress?.Invoke(upProgress);
+                var photoUploadParamsObj = new JObject
+                {
+                    {"upload_id", uploadId},
+                    {"media_type", "1"},
+                    {"broadcast_id", BID},
+                    {"retry_context", retryContext},
+                    {"is_post_live_igtv", "1"},
+                    {"image_compression", "{\"lib_name\":\"moz\",\"lib_version\":\"3.1.m\",\"quality\":\"95\"}"}, // quality 0 ?
+                    {"xsharing_user_ids", "[]"} 
+                };
 
+                var uploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Get, photoUri, _deviceInfo);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
+                    return Result.UnExpectedResponse<InstaMediaItemResponse>(response, json);
+                }
+                upProgress.UploadState = InstaUploadState.Uploading;
+                progress?.Invoke(upProgress);
+                var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
+                var imageBytes = image.ImageBytes ?? File.ReadAllBytes(image.Uri);
+                var imageContent = new ByteArrayContent(imageBytes);
+                imageContent.Headers.Add("Content-Type", "application/octet-stream");
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Post, photoUri, _deviceInfo);
 
+                request.Content = imageContent;
+                request.Headers.Add("X-Entity-Type", "image/jpeg");
+                request.Headers.Add("Offset", "0");
+                request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
+                request.Headers.Add("X-Entity-Name", photoEntityName);
+                request.Headers.Add("X-Entity-Length", imageBytes.Length.ToString());
+                request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
 
+                request.Headers.Add("X-FB-Client-IP", "True");                                    
+                request.Headers.Add("Connection", "close");                                       
+                                                                                                  
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    upProgress.UploadState = InstaUploadState.Uploaded;
+                    progress?.Invoke(upProgress);
+                    var imgResp = JsonConvert.DeserializeObject<ImageThumbnailResponse>(json);
+                    return await ConfigureToIGTVafterLive(progress, upProgress, title, caption, uploadId);
+                }
 
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                return Result.UnExpectedResponse<InstaMediaItemResponse>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMediaItemResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMediaItemResponse>(exception);
+            }
+
+        }
+
+        public async Task<IResult<InstaMediaItemResponse>> ConfigureToIGTVafterLive(Action<InstaUploaderProgress> progress, InstaUploaderProgress upProgress, string title, string caption, string uploadId)
+        {
+            try
+            {
+                upProgress.UploadState = InstaUploadState.Configuring;
+                progress?.Invoke(upProgress);
+                var instaUri = UriCreator.GetPostToIGTVafterLiveUri();
+                var retryContext = HelperProcessor.GetRetryContext();
+
+                var data = new JObject
+                {
+                    { "_csrftoken", _user.CsrfToken},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"timezone_offset", InstaApiConstants.TIMEZONE_OFFSET.ToString() },
+                    {"igtv_ads_toggled_on", false},
+                    {"title", title},
+                    {"caption", caption},
+                    {"igtv_share_preview_to_feed", true },
+                    {"upload_id", uploadId },
+                    {"device_id", _deviceInfo.DeviceId },
+                    {"source_type", "4" },
+                    {"keep_shoppable_products", false },
+                    {"igtv_composer_session_id", Guid.NewGuid().ToString() },
+                    {
+                        "device", new JObject{
+                            {"manufacturer", _deviceInfo.HardwareManufacturer},
+                            {"model", _deviceInfo.DeviceModelIdentifier},
+                            {"android_version", int.Parse(_deviceInfo.AndroidVer.APILevel)},
+                            {"android_release", _deviceInfo.AndroidVer.VersionNumber}
+                        }
+                    },
+                    {
+                        "extra", new JObject
+                        {
+                            {"source_width", "576" /*videoUploadOption.SourceWidth*/},
+                            {"source_height", "944" /*videoUploadOption.SourceHeight*/}
+                        }
+                    }
+                };
+
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Add("retry_context", retryContext);
+                request.Headers.Add("is_igtv_video", "true");
+
+                request.Headers.Add("IG-U-IG-DIRECT-REGION-HINT", "FRC");
+                request.Headers.Add("IG-U-DS-USER-ID", _user.LoggedInUser.Pk.ToString());
+                request.Headers.Add("IG-U-RUR", "RVA");
+
+                request.Headers.Add("DEBUG-IG-USER-ID", _user.LoggedInUser.Pk.ToString());
+                request.Headers.Add("Priority", "u=3");
+                request.Headers.Add("X-Bloks-Is-Panorama-Enabled", "true");
+                request.Headers.Add("X-FB-Client-IP", "true");
+                request.Headers.ConnectionClose = true;
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    upProgress.UploadState = InstaUploadState.Error;
+                    progress?.Invoke(upProgress);
+                    return Result.UnExpectedResponse<InstaMediaItemResponse>(response, json);
+                }
+
+                upProgress.UploadState = InstaUploadState.Uploading;
+                Console.WriteLine("Uploading.....");
+                progress?.Invoke(upProgress);
+                if (response.IsSuccessStatusCode)
+                {
+                    upProgress.UploadState = InstaUploadState.Uploaded;
+                    progress?.Invoke(upProgress);
+                    var resp = JsonConvert.DeserializeObject<InstaMediaItemResponse>(json);
+                    return Result.Success(resp);
+                }
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                return Result.UnExpectedResponse<InstaMediaItemResponse>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaMediaItemResponse), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaMediaItemResponse>(exception);
+            }
+
+        }
 
         internal static string GetRetryContext()
         {

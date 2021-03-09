@@ -1096,12 +1096,12 @@ namespace InstagramApiSharp.API.Processors
             }
         }
 
-        public async Task<IResult<LivePostLiveThumbnailsResponseRootObject>> GetPostLiveThumbnails(string broadcastId)
+        public async Task<IResult<LivePostLiveThumbnailsResponseRootObject>> GetPostLiveThumbnails(string broadcastID)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
-                var instaUri = UriCreator.GetLiveThumbnails(broadcastId);
+                var instaUri = UriCreator.GetLiveThumbnails(broadcastID);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
@@ -1125,6 +1125,17 @@ namespace InstagramApiSharp.API.Processors
                 _logger?.LogException(exception);
                 return Result.Fail<LivePostLiveThumbnailsResponseRootObject>(exception);
             }
+        }
+
+        public async Task<IResult<InstaMediaItemResponse>> AddToPostLiveAsync(InstaImageUpload thumbnail, string title, string caption, string broadcastID)
+        {
+            return await AddToPostLiveAsync(null, thumbnail, title, caption, broadcastID);
+        }
+
+        public async Task<IResult<InstaMediaItemResponse>> AddToPostLiveAsync(Action<InstaUploaderProgress> progress, InstaImageUpload thumbnail, string title, string caption, string broadcastID)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendPicToIGTV(progress, thumbnail, title, caption, broadcastID);
         }
     }
 }
