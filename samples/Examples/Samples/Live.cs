@@ -200,8 +200,6 @@ EndAsync");
                 await InstaApi.LiveProcessor.GetLikeCountAsync(broadcastId, 0);
 
 
-                // add broadcast to post live
-                await InstaApi.LiveProcessor.AddToPostLiveAsync(broadcastId);
                 // delete broadcast from post live
                 await InstaApi.LiveProcessor.DeletePostLiveAsync(broadcastId);
 

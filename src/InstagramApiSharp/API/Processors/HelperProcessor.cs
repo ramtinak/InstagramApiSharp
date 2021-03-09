@@ -1487,7 +1487,6 @@ namespace InstagramApiSharp.API.Processors
                 _logger?.LogException(exception);
                 return Result.Fail<InstaMediaItemResponse>(exception);
             }
-
         }
 
         internal static string GetRetryContext()
