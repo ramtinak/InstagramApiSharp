@@ -447,29 +447,24 @@ namespace InstagramApiSharp.API.Processors
             };
             try
             {
-                var uploadId = ApiRequestMessage.GenerateRandomUploadId();
-                var photoHashCode = Path.GetFileName($"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
-
-                var waterfallId = Guid.NewGuid().ToString();
-
-                var photoEntityName = $"{uploadId}_0_{photoHashCode}";
-                var photoUri = UriCreator.GetUploadAccountPictureUri(uploadId, photoHashCode);
-
+                var rnd = new Random();
+                var uploadId = ApiRequestMessage.GenerateRandomUploadId() + rnd.Next(10000, 99999);
+                var instaUri = UriCreator.GetChangeProfilePictureUri();
                 upProgress.UploadId = uploadId;
                 progress?.Invoke(upProgress);
 
-                var photoUploadParamsObj = new JObject
+                var uploader = await _instaApi.HelperProcessor.UploadSinglePhoto(progress,
+                    new InstaImageUpload { ImageBytes = pictureBytes }, upProgress, uploadId);
+
+                var data = new Dictionary<string, string>
                 {
                     {"upload_id", uploadId},
-                    {"media_type", "1"},
-                    {"image_compression", "{\"lib_name\":\"moz\",\"lib_version\":\"3.1.m\",\"quality\":\"82\"}"}
+                    {"_csrftoken", _user.CsrfToken},
+                    {"use_fbuploader", "true"},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                 };
-                upProgress.UploadState = InstaUploadState.Configuring;
-                progress?.Invoke(upProgress);
-                var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, photoUri, _deviceInfo);
-                request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
-                request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
+
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -478,57 +473,10 @@ namespace InstagramApiSharp.API.Processors
                     progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<InstaUserEdit>(response, json);
                 }
-
-
-                upProgress.UploadState = InstaUploadState.Uploading;
-                progress?.Invoke(upProgress);
-                var imageContent = new ByteArrayContent(pictureBytes);
-                imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
-                imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                request = _httpHelper.GetDefaultRequest(HttpMethod.Post, photoUri, _deviceInfo);
-                request.Content = imageContent;
-                request.Headers.Add("X-Entity-Type", "image/jpeg");
-                request.Headers.Add("Offset", "0");
-                request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
-                request.Headers.Add("X-Entity-Name", photoEntityName);
-                request.Headers.Add("X-Entity-Length", pictureBytes.Length.ToString());
-                request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", waterfallId);
-                response = await _httpRequestProcessor.SendAsync(request);
-                json = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    upProgress.UploadState = InstaUploadState.Uploaded;
-                    progress?.Invoke(upProgress);
-                    await Task.Delay(5000);
-                    return Result.UnExpectedResponse<InstaUserEdit>(response, json);
-                }
-                upProgress.UploadState = InstaUploadState.Uploaded;
-                progress?.Invoke(upProgress);
-
-                var obj = JsonConvert.DeserializeObject<InstaAccountProfilPicUpload>(json);
-                var requestContent = new FormUrlEncodedContent(new[]
-           {
-                new KeyValuePair<string, string>("_csrftoken", _user.CsrfToken),
-                new KeyValuePair<string, string>("_uuid", _deviceInfo.DeviceGuid.ToString()),
-                new KeyValuePair<string, string>("use_fbuploader", "true"),
-                new KeyValuePair<string, string>("upload_id", obj.UploadId),
-            });
-                var instaUri = UriCreator.GetChangeProfilePictureUri();
-                request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = requestContent;
-                response = await _httpRequestProcessor.SendAsync(request);
-                json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    upProgress.UploadState = InstaUploadState.Error;
-                    progress?.Invoke(upProgress);
-                    return Result.UnExpectedResponse<InstaUserEdit>(response, json);
-                }
-                var obj2 = JsonConvert.DeserializeObject<InstaUserEditContainer>(json);
+                var obj = JsonConvert.DeserializeObject<InstaUserEditContainer>(json);
                 upProgress.UploadState = InstaUploadState.Completed;
                 progress?.Invoke(upProgress);
-                return Result.Success(obj2.User);
+                return Result.Success(obj.User);
             }
             catch (HttpRequestException httpException)
             {
