@@ -496,7 +496,7 @@ namespace InstagramApiSharp.API.Processors
                 response = await _httpRequestProcessor.SendAsync(request);
                 json = await response.Content.ReadAsStringAsync();
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
                     upProgress.UploadState = InstaUploadState.Uploaded;
                     progress?.Invoke(upProgress);

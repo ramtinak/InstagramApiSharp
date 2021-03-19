@@ -66,9 +66,10 @@ namespace InstagramApiSharp.Classes
         }
         public void HandleMessages(string errorMessage)
         {
-            if (errorMessage.Contains("task was canceled"))
+            if (string.IsNullOrEmpty(errorMessage)) return;
+            else if (errorMessage.Contains("task was canceled"))
                 Timeout = true;
-            if (errorMessage.ToLower().Contains("challenge"))
+            else if (errorMessage.ToLower().Contains("challenge"))
                 NeedsChallenge = true;
         }
 
