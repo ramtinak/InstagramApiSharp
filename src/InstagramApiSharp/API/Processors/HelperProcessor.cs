@@ -1062,6 +1062,52 @@ namespace InstagramApiSharp.API.Processors
         }
 
 
+        public async Task<IResult<string>> UploadSinglePhoto(Action<InstaUploaderProgress> progress,
+            InstaImageUpload image, InstaUploaderProgress upProgress, string uploadId = null)
+        {
+            if (string.IsNullOrEmpty(uploadId))
+                uploadId = ApiRequestMessage.GenerateUploadId();
+            var photoHashCode = Path.GetFileName(image.Uri ?? $"C:\\{13.GenerateRandomString()}.jpg").GetHashCode();
+            var photoEntityName = $"{uploadId}_0_{photoHashCode}";
+            var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
+            var photoUploadParamsObj = new JObject
+            {
+                {"upload_id", uploadId},
+                {"media_type", "1"},
+                {"retry_context", GetRetryContext()},
+                {"image_compression", "{\"lib_name\":\"moz\",\"lib_version\":\"3.1.m\",\"quality\":\"95\"}"},
+                {"xsharing_user_ids", "[]"},
+            };
+            upProgress.UploadState = InstaUploadState.UploadingThumbnail;
+            progress?.Invoke(upProgress);
+            var photoUploadParams = JsonConvert.SerializeObject(photoUploadParamsObj);
+            var imageBytes = image.ImageBytes ?? File.ReadAllBytes(image.Uri);
+            var imageContent = new ByteArrayContent(imageBytes);
+            imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
+            imageContent.Headers.Add("Content-Type", "application/octet-stream");
+            var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, photoUri, _deviceInfo);
+            request.Content = imageContent;
+            request.Headers.Add("X-Entity-Type", "image/jpeg");
+            request.Headers.Add("Offset", "0");
+            request.Headers.Add("X-Instagram-Rupload-Params", photoUploadParams);
+            request.Headers.Add("X-Entity-Name", photoEntityName);
+            request.Headers.Add("X-Entity-Length", imageBytes.Length.ToString());
+            request.Headers.Add("X_FB_PHOTO_WATERFALL_ID", Guid.NewGuid().ToString());
+            var response = await _httpRequestProcessor.SendAsync(request);
+            var json = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                upProgress.UploadState = InstaUploadState.Uploaded;
+                progress?.Invoke(upProgress);
+                return Result.Success(uploadId);
+            }
+            else
+            {
+                upProgress.UploadState = InstaUploadState.Error;
+                progress?.Invoke(upProgress);
+                return Result.Fail<string>("NO UPLOAD ID");
+            }
+        }
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
