@@ -9,7 +9,7 @@ InstagramApiSharp's private version - Under developing. Check [#243](https://git
 
 | Target | Branch | Version | Changelog |
 | ------ | ------ | ------ | ------ |
-| Github | master | v2.6.0 | [v2.6.0](https://github.com/ramtinak/InstagramApiSharp/issues/244#issuecomment-757090070) |
+| Github | master | v2.7.0 | [v2.7.0](https://github.com/ramtinak/InstagramApiSharp/issues/244#issuecomment-807517856) |
 
 -----
 InstagramApiSharp's public version - Update date: February 01, 2021 - End Of Support(from April 5, 2019)!!!
