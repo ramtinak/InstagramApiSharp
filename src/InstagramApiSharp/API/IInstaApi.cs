@@ -123,6 +123,14 @@ namespace InstagramApiSharp.API
         /// </summary>
         ISessionHandler SessionHandler { get; set; }
 
+        /// <summary>
+        ///     Gets or sets two factor login info
+        /// </summary>
+        InstaTwoFactorLoginInfo TwoFactorLoginInfo { get; set; }
+        /// <summary>
+        ///     Gets or sets challenge login info
+        /// </summary>
+        InstaChallengeLoginInfo ChallengeLoginInfo { get; set; }
         #endregion
 
         #region State data

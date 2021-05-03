@@ -19,6 +19,8 @@ using InstagramApiSharp.Enums;
 using InstagramApiSharp.API.Versions;
 using InstagramApiSharp.Helpers;
 using System.Text;
+using InstagramApiSharp.Classes;
+using System.Net.Http;
 
 #if NETSTANDARD2_0 || NET461_OR_GREATER
 using Org.BouncyCastle.Security;
@@ -30,6 +32,22 @@ namespace InstagramApiSharp
 {
     internal static class ExtensionHelper
     {
+        public static void SetCsrfTokenIfAvailable(this UserSessionData data, HttpResponseMessage response,
+            IHttpRequestProcessor _httpRequestProcessor, bool dontCheck = false)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+
+                var csrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
+                if (dontCheck && !string.IsNullOrEmpty(csrfToken))
+                    data.CsrfToken = csrfToken;
+                else if (!string.IsNullOrEmpty(csrfToken) && string.IsNullOrEmpty(data.CsrfToken))
+                    data.CsrfToken = csrfToken;
+            }
+        }
         public static string GenerateUserAgent(this AndroidDevice deviceInfo, InstaApiVersion apiVersion)
         {
             if (deviceInfo == null)
@@ -224,7 +242,22 @@ namespace InstagramApiSharp
                 .Select(x => pool[Rnd.Next(0, pool.Length)]);
             return new string(chars.ToArray());
         }
-        
+
+        public static string GenerateSnNonce(string emailOrPhoneNumber)
+        {
+            byte[] b = new byte[24];
+            Rnd.NextBytes(b);
+            var str = $"{emailOrPhoneNumber}|{DateTimeHelper.ToUnixTime(DateTime.UtcNow)}|{Encoding.UTF8.GetString(b)}";
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
+        }
+
+        public static DateTime GenerateRandomBirthday()
+        {
+            int day = Rnd.Next(1, 29);
+            int month = Rnd.Next(1, 12);
+            int year = Rnd.Next(1979, 2000);
+            return new DateTime(year, month, day);
+        }
         public static void PrintInDebug(this object obj)
         {
             System.Diagnostics.Debug.WriteLine(Convert.ToString(obj));

@@ -69,6 +69,15 @@ namespace InstagramApiSharp.API
         public IHttpRequestProcessor HttpRequestProcessor => _httpRequestProcessor;
 
         public InstaApiVersionType InstaApiVersionType => _apiVersionType;
+
+        /// <summary>
+        ///     Gets or sets challenge login info
+        /// </summary>
+        public InstaChallengeLoginInfo ChallengeLoginInfo { get { return _challengeinfo; } set { _challengeinfo = value; } }
+        /// <summary>
+        ///     Gets or sets two factor login info
+        /// </summary>
+        public InstaTwoFactorLoginInfo TwoFactorLoginInfo { get { return _twoFactorInfo; } set { _twoFactorInfo = value; } }
         #endregion Variables and properties
 
         #region SessionHandler
@@ -3005,7 +3014,7 @@ namespace InstagramApiSharp.API
 
         }
 
-        private void ValidateUserAsync(InstaUserShortResponse user, string csrfToken, bool validateExtra = true, string password = null)
+        public void ValidateUserAsync(InstaUserShortResponse user, string csrfToken, bool validateExtra = true, string password = null)
         {
             try
             {
