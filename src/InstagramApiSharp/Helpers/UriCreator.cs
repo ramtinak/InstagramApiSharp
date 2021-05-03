@@ -13,6 +13,7 @@ namespace InstagramApiSharp.Helpers
     internal class UriCreator
     {
         private static readonly Uri BaseInstagramUri = new Uri(InstaApiConstants.INSTAGRAM_URL);
+        private static readonly Uri BaseInstagramBUri = new Uri(InstaApiConstants.INSTAGRAM_B_URL);
 
         public static Uri GetAcceptFriendshipUri(long userId)
         {
@@ -1099,9 +1100,9 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetOnboardingStepsUri()
+        public static Uri GetOnboardingStepsUri(bool isBUrl = false)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DYNAMIC_ONBOARDING_GET_STEPS, out var instaUri))
+            if (!Uri.TryCreate(isBUrl ? BaseInstagramBUri : BaseInstagramUri, InstaApiConstants.DYNAMIC_ONBOARDING_GET_STEPS, out var instaUri))
                 throw new Exception("Cant create URI for dynamic onboarding get steps");
             return instaUri;
         }
@@ -2272,9 +2273,9 @@ namespace InstagramApiSharp.Helpers
             }
             return instaUri;
         }
-        public static Uri GetLauncherSyncUri()
+        public static Uri GetLauncherSyncUri(bool isBUrl = false)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.LAUNCHER_SYNC, out var instaUri))
+            if (!Uri.TryCreate(isBUrl ? BaseInstagramBUri : BaseInstagramUri, InstaApiConstants.LAUNCHER_SYNC, out var instaUri))
                 throw new Exception("Cant create URI for launcher sync");
             return instaUri;
         }
@@ -2284,9 +2285,9 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for notification badge");
             return instaUri;
         }
-        public static Uri GetContactPointPrefillUri()
+        public static Uri GetContactPointPrefillUri(bool isBUrl = false)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_CONTACT_POINT_PREFILL, out var instaUri))
+            if (!Uri.TryCreate(isBUrl ? BaseInstagramBUri : BaseInstagramUri, InstaApiConstants.ACCOUNTS_CONTACT_POINT_PREFILL, out var instaUri))
                 throw new Exception("Cant create URI for contact point prefill");
             return instaUri;
         }
@@ -2302,12 +2303,71 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for get prefill candidates");
             return instaUri;
         }
-        public static Uri GetQeSyncUri()
+        public static Uri GetQeSyncUri(bool isBUrl = false)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.QE_SYNC, out var instaUri))
+            if (!Uri.TryCreate(isBUrl ? BaseInstagramBUri : BaseInstagramUri, InstaApiConstants.QE_SYNC, out var instaUri))
                 throw new Exception("Cant create URI for qe sync");
             return instaUri;
         }
         public static Uri GetTokenUri() => new Uri("https://www.instagram.com/.well-known/assetlinks.json");
+
+        public static Uri GetSignupConsentConfigUri(string guid, bool isMainAccount, long? loggedInUserId = null)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CONSENT_GET_SIGNUP_CONFIG,
+                    out var instaUri)) throw new Exception("Can't create URI for consent get signup config");
+
+            return instaUri
+                .AddQueryParameter("logged_in_user_id", loggedInUserId.ToString())
+                .AddQueryParameter("guid", guid)
+                .AddQueryParameter("main_account_selected", isMainAccount.ToString().ToLower());
+        }
+        public static Uri GetSendRegistrationVerifyEmailUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_SEND_VERIFY_EMAIL, out var instaUri))
+                throw new Exception("Cant create URI for account registration send verify email");
+            return instaUri;
+        }
+        public static Uri GetCheckRegistrationConfirmationCodeUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_CHECK_CONFIRMATION_CODE, out var instaUri))
+                throw new Exception("Cant create URI for check account registration confirmation code");
+            return instaUri;
+        }
+        public static Uri GetSiFetchHeadersUri(string deviceGuid, string challengeType = "signup")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.SI_FETCH_HEADERS, out var instaUri))
+                throw new Exception("Cant create URI for si fetch headers");
+            return instaUri
+                .AddQueryParameter("guid", deviceGuid)
+                .AddQueryParameter("challenge_type", challengeType);
+        }
+        public static Uri GetCheckAgeEligibilityUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CONSENT_CHECK_AGE_ELIGIBILITY, out var instaUri))
+                throw new Exception("Cant create URI for check age eligibility");
+            return instaUri;
+        }
+        public static Uri GetMultipleAccountsFamilyUri(bool isBUrl = false)
+        {
+            if (!Uri.TryCreate(isBUrl ? BaseInstagramBUri : BaseInstagramUri, InstaApiConstants.MULTIPLE_ACCOUNTS_GET_ACCOUNT_FAMILY, out var instaUri))
+                throw new Exception("Cant create URI for get multiple accounts family");
+            return instaUri;
+        }
+        public static Uri GetZrTokenResultUri(string deviceGuid, string deviceId, bool isBUrl = false)
+        {
+            if (!Uri.TryCreate(isBUrl ? BaseInstagramBUri : BaseInstagramUri, InstaApiConstants.ZR_TOKEN_RESULT, out var instaUri))
+                throw new Exception("Cant create URI for zr token result");
+            return instaUri
+                .AddQueryParameter("device_id", deviceId)
+                .AddQueryParameter("token_hash", "", true)
+                .AddQueryParameter("custom_device_id", deviceGuid)
+                .AddQueryParameter("fetch_reason", "token_expired");
+        }
+        public static Uri GetNuxNewAccountSeenUri(bool isBUrl = false)
+        {
+            if (!Uri.TryCreate(isBUrl ? BaseInstagramBUri : BaseInstagramUri, InstaApiConstants.NUX_NEW_ACCOUNT_NUX_SEEN, out var instaUri))
+                throw new Exception("Cant create URI for nux new account seen");
+            return instaUri;
+        }
     }
 }

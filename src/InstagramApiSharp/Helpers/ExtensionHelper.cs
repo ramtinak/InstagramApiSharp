@@ -18,10 +18,36 @@ using Newtonsoft.Json;
 using InstagramApiSharp.Enums;
 using InstagramApiSharp.API.Versions;
 using InstagramApiSharp.Helpers;
+using System.Text;
+using InstagramApiSharp.Classes;
+using System.Net.Http;
+
+#if NETSTANDARD2_0 || NET461_OR_GREATER
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Parameters;
+#endif
 namespace InstagramApiSharp
 {
     internal static class ExtensionHelper
     {
+        public static void SetCsrfTokenIfAvailable(this UserSessionData data, HttpResponseMessage response,
+            IHttpRequestProcessor _httpRequestProcessor, bool dontCheck = false)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                var cookies =
+                    _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(_httpRequestProcessor.Client
+                    .BaseAddress);
+
+                var csrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
+                if (dontCheck && !string.IsNullOrEmpty(csrfToken))
+                    data.CsrfToken = csrfToken;
+                else if (!string.IsNullOrEmpty(csrfToken) && string.IsNullOrEmpty(data.CsrfToken))
+                    data.CsrfToken = csrfToken;
+            }
+        }
         public static string GenerateUserAgent(this AndroidDevice deviceInfo, InstaApiVersion apiVersion)
         {
             if (deviceInfo == null)
@@ -110,6 +136,51 @@ namespace InstagramApiSharp
                 ix += (int)ch;
             return "2" + ix;
         }
+#if NETSTANDARD2_0 || NET461_OR_GREATER
+      
+        static private readonly SecureRandom secureRandom = new SecureRandom();
+
+        public static string GetEncryptedPassword(this IInstaApi api, string password, long? providedTime = null) 
+        {
+            var pubKey = api.GetLoggedUser().PublicKey;
+            var pubKeyId = api.GetLoggedUser().PublicKeyId;
+            byte[] randKey = new byte[32];
+            byte[] iv = new byte[12];
+            secureRandom.NextBytes(randKey, 0, randKey.Length);
+            secureRandom.NextBytes(iv, 0, iv.Length);
+            long time = providedTime ?? DateTime.UtcNow.ToUnixTime();
+            byte[] associatedData = Encoding.UTF8.GetBytes(time.ToString());
+            var pubKEY = Encoding.UTF8.GetString(Convert.FromBase64String(pubKey));
+            byte[] encryptedKey;
+            using (var rdr = PemKeyUtils.GetRSAProviderFromPemString(pubKEY.Trim()))
+                encryptedKey = rdr.Encrypt(randKey, false);
+
+            byte[] plaintext = Encoding.UTF8.GetBytes(password);
+
+            var cipher = new GcmBlockCipher(new AesEngine());
+            var parameters = new AeadParameters(new KeyParameter(randKey), 128, iv, associatedData);
+            cipher.Init(true, parameters);
+
+            var ciphertext = new byte[cipher.GetOutputSize(plaintext.Length)];
+            var len = cipher.ProcessBytes(plaintext, 0, plaintext.Length, ciphertext, 0);
+            cipher.DoFinal(ciphertext, len);
+
+            var con = new byte[plaintext.Length];
+            for (int i = 0; i < plaintext.Length; i++)
+                con[i] = ciphertext[i];
+            ciphertext = con;
+            var tag = cipher.GetMac();
+
+            byte[] buffersSize = BitConverter.GetBytes(Convert.ToInt16(encryptedKey.Length));
+            byte[] encKeyIdBytes = BitConverter.GetBytes(Convert.ToUInt16(pubKeyId));
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(encKeyIdBytes);
+            encKeyIdBytes[0] = 1; 
+            var payload = Convert.ToBase64String(encKeyIdBytes.Concat(iv).Concat(buffersSize).Concat(encryptedKey).Concat(tag).Concat(ciphertext).ToArray());
+
+            return $"#PWD_INSTAGRAM:4:{time}:{payload}";
+        }
+#endif
         public static string GetJson(this InstaLocationShort location)
         {
             if (location == null)
@@ -163,7 +234,7 @@ namespace InstagramApiSharp
 
             }
         }
-        static Random Rnd = new Random();
+        static readonly Random Rnd = new Random();
         public static string GenerateRandomString(this int length)
         {
             const string pool = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -171,7 +242,22 @@ namespace InstagramApiSharp
                 .Select(x => pool[Rnd.Next(0, pool.Length)]);
             return new string(chars.ToArray());
         }
-        
+
+        public static string GenerateSnNonce(string emailOrPhoneNumber)
+        {
+            byte[] b = new byte[24];
+            Rnd.NextBytes(b);
+            var str = $"{emailOrPhoneNumber}|{DateTimeHelper.ToUnixTime(DateTime.UtcNow)}|{Encoding.UTF8.GetString(b)}";
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
+        }
+
+        public static DateTime GenerateRandomBirthday()
+        {
+            int day = Rnd.Next(1, 29);
+            int month = Rnd.Next(1, 12);
+            int year = Rnd.Next(1979, 2000);
+            return new DateTime(year, month, day);
+        }
         public static void PrintInDebug(this object obj)
         {
             System.Diagnostics.Debug.WriteLine(Convert.ToString(obj));

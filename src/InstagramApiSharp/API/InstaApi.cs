@@ -39,7 +39,7 @@ namespace InstagramApiSharp.API
         private InstaTwoFactorLoginInfo _twoFactorInfo;
         private InstaChallengeLoginInfo _challengeinfo;
         private UserSessionData _userSession;
-        private UserSessionData _user
+        internal UserSessionData _user
         {
             get { return _userSession; }
             set { _userSession = value; _userAuthValidate.User = value; }
@@ -68,6 +68,22 @@ namespace InstagramApiSharp.API
         /// </summary>
         public IHttpRequestProcessor HttpRequestProcessor => _httpRequestProcessor;
 
+        public InstaApiVersionType InstaApiVersionType => _apiVersionType;
+
+#if NETSTANDARD2_0 || NET461_OR_GREATER
+        /// <summary>
+        ///     Registration Service
+        /// </summary>
+        public Services.IRegistrationService RegistrationService { get; }
+#endif
+        /// <summary>
+        ///     Gets or sets challenge login info
+        /// </summary>
+        public InstaChallengeLoginInfo ChallengeLoginInfo { get { return _challengeinfo; } set { _challengeinfo = value; } }
+        /// <summary>
+        ///     Gets or sets two factor login info
+        /// </summary>
+        public InstaTwoFactorLoginInfo TwoFactorLoginInfo { get { return _twoFactorInfo; } set { _twoFactorInfo = value; } }
         #endregion Variables and properties
 
         #region SessionHandler
@@ -183,6 +199,9 @@ namespace InstagramApiSharp.API
             _apiVersionType = apiVersionType;
             _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(apiVersionType);
             _httpHelper = new HttpHelper(_apiVersion, httpRequestProcessor, this);
+#if NETSTANDARD2_0 || NET461_OR_GREATER
+            RegistrationService = new Services.RegistrationService(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
+#endif
         }
 
         #endregion Constructor
@@ -3004,7 +3023,7 @@ namespace InstagramApiSharp.API
 
         }
 
-        private void ValidateUserAsync(InstaUserShortResponse user, string csrfToken, bool validateExtra = true, string password = null)
+        public void ValidateUserAsync(InstaUserShortResponse user, string csrfToken, bool validateExtra = true, string password = null)
         {
             try
             {

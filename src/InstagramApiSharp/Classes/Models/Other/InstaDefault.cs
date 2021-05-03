@@ -17,7 +17,7 @@ namespace InstagramApiSharp.Classes.Models
         [JsonProperty("message")]
         public string Message { get; set; }
     }
-    internal class InstaDefaultResponse : InstaDefault
+    public class InstaDefaultResponse : InstaDefault
     {
         public bool IsSucceed { get { return Status.ToLower() == "ok"; } }
     }

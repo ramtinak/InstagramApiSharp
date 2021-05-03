@@ -10,7 +10,7 @@
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes.Models
 {
-    public class InstaAccountCheck
+    public class InstaAccountCheck : InstaDefaultResponse
     {
         [JsonProperty("username")]
         public string Username { get; set; }
@@ -18,10 +18,7 @@ namespace InstagramApiSharp.Classes.Models
         public bool Available { get; set; }
         [JsonProperty("error")]
         public string Error { get; set; }
-        [JsonProperty("status")]
-        internal string Status { get; set; }
         [JsonProperty("error_type")]
         internal string ErrorType { get; set; }
     }
-
 }
