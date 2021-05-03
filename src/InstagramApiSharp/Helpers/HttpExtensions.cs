@@ -4,9 +4,14 @@ namespace InstagramApiSharp.Helpers
 {
     public static class HttpExtensions
     {
-        public static Uri AddQueryParameter(this Uri uri, string name, string value)
+        public static Uri AddQueryParameter(this Uri uri, string name, string value, bool dontCheck = false)
         {
-            if (value == null || value == "" || value == "[]") return uri;
+            if (!dontCheck)
+                if (value == null || value == "" || value == "[]") return uri;
+
+            if (value == null)
+                value = "";
+
             var httpValueCollection = HttpUtility.ParseQueryString(uri);
 
             httpValueCollection.Remove(name);

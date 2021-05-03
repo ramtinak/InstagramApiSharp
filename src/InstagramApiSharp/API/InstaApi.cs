@@ -39,7 +39,7 @@ namespace InstagramApiSharp.API
         private InstaTwoFactorLoginInfo _twoFactorInfo;
         private InstaChallengeLoginInfo _challengeinfo;
         private UserSessionData _userSession;
-        private UserSessionData _user
+        internal UserSessionData _user
         {
             get { return _userSession; }
             set { _userSession = value; _userAuthValidate.User = value; }
