@@ -35,6 +35,10 @@ namespace InstagramApiSharp.API
     {
         #region Properties
         /// <summary>
+        ///     Get current api version of Instagram that <see cref="InstagramApiSharp"/> is using it
+        /// </summary>
+        InstaApiVersionType InstaApiVersionType { get; }
+        /// <summary>
         ///     Current <see cref="IHttpRequestProcessor"/>
         /// </summary>
         IHttpRequestProcessor HttpRequestProcessor { get; }
