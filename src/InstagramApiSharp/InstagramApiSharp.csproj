@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452;uap10.0;netstandard1.3;net461</TargetFrameworks>
-    <VersionPrefix>1.5.0</VersionPrefix>
+    <VersionPrefix>1.6.0</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,14 +11,14 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.5.0.2</Version>
-    <AssemblyVersion>1.5.0.2</AssemblyVersion>
-    <FileVersion>1.5.0.2</FileVersion>
+    <Version>1.6.0.0</Version>
+    <AssemblyVersion>1.6.0.0</AssemblyVersion>
+    <FileVersion>1.6.0.0</FileVersion>
     <Description>A complete Private Instagram API for .NET.
 
 
 Support:
-- Create new account with phone number and email.
+- Create new account with phone number and email. [v180]
 - Login with Cookies.
 - Edit Profile, change/remove profile picture.
 - Upload album (videos and photos)
@@ -38,7 +38,40 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.5.0.2
+    <PackageReleaseNotes>v1.6.0
+- [Add] support for NETFramework4.6.1
+- [Add] GetEncryptedPassword to ExtensionHelper for .NETFramework 4.6.1 or newer and NETStandard 2.0 or newer
+- [Add] IRegistrationService and RegistrationService
+- [Add] CreateNewAccountWithPhoneNumberAsync to IRegistrationService
+- [Add] CreateNewAccountWithEmailAsync to IRegistrationService
+- [Add] GenerateRandomBirthday to IRegistrationService
+- [Add] GetFirstContactPointPrefillAsync to RegistrationService
+- [Add] FirstLauncherSyncAsync to IRegistrationService
+- [Add] FirstQeSyncAsync to IRegistrationService
+- [Add] CheckUsernameAsync to IRegistrationService
+- [Add] InstaCheckEmailRegistration to IRegistrationService
+- [Add] CheckEmailAsync to IRegistrationService
+- [Add] GetSignupConsentConfigAsync to IRegistrationService
+- [Add] SendRegistrationVerifyEmailAsync to IRegistrationService
+- [Add] CheckRegistrationConfirmationCodeAsync to IRegistrationService
+- [Add] GetSiFetchHeadersAsync to IRegistrationService
+- [Add] GetUsernameSuggestionsAsync to IRegistrationService
+- [Add] CheckAgeEligibilityAsync to IRegistrationService
+- [Add] GetOnboardingStepsAsync to IRegistrationService
+- [Add] NewUserFlowBeginsConsentAsync to IRegistrationService
+- [Add] GetMultipleAccountsFamilyAsync to IRegistrationService
+- [Add] GetZrTokenResultAsync to IRegistrationService
+- [Add] LauncherSyncAsync to IRegistrationService
+- [Add] QeSyncAsync to IRegistrationService
+- [Add] NuxNewAccountSeenAsync to IRegistrationService
+- [Add] GetContactPointPrefillAsync to IRegistrationService
+- [Add] SmsVerificationCode property to IRegistrationService
+- [Add] AccountRegistrationPhoneNumber to IRegistrationService
+- [Add] CheckPhoneNumberAsync to IRegistrationService
+- [Add] SendSignUpSmsCodeAsync to IRegistrationService
+- [Add] VerifySignUpSmsCodeAsync to IRegistrationService
+
+v1.5.0.2
 - [Bugfix] Fix ChangeProfilePictureAsync in AccountProcessor [ by @juliendu11 ]
 - [Bugfix] for parsing created_at_utc in comments [ by @Anushiravani ]
 - [Add] additional error handlers  [ by @fatihdumanli ]
