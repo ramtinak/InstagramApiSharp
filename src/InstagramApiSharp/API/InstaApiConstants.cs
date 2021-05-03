@@ -23,6 +23,24 @@ namespace InstagramApiSharp.API
     internal static class InstaApiConstants
     {
         #region Main
+        public const string RESPONSE_HEADER_IG_PASSWORD_ENC_PUB_KEY = "ig-set-password-encryption-pub-key";
+        public const string RESPONSE_HEADER_IG_PASSWORD_ENC_KEY_ID = "ig-set-password-encryption-key-id";
+        public const string HEADER_IG_U_DIRECT_REGION_HINT = "ig-u-ig-direct-region-hint";
+        public const string HEADER_IG_U_SHBID = "ig-u-shbid";
+        public const string HEADER_IG_U_SHBTS = "ig-u-shbts";
+        public const string HEADER_IG_U_DS_USER_ID = "ig-u-ds-user-id";
+        public const string HEADER_IG_U_RUR = "ig-u-rur";
+        public const string COOKIES_IG_DIRECT_REGION_HINT = "ig_direct_region_hint";
+        public const string COOKIES_SHBTS = "shbts";
+        public const string COOKIES_SHBID = "shbid";
+        public const string COOKIES_RUR = "rur";
+
+
+        public const string HEADER_X_IG_BLOKS_PANORAMA_ENABLED = "X-Bloks-Is-Panorama-Enabled";
+        public const string HEADER_X_IG_MAPPED_LOCALE = "X-IG-Mapped-Locale";
+        public const string HEADER_X_IG_TIGON_RETRY = "X-Tigon-Is-Retry";
+        public const string HEADER_X_FB_HTTP_IP = "X-FB-CLIENT-IP";
+        public const string HEADER_X_FB_SERVER_CLUSTER = "X-FB-SERVER-CLUSTER";
 
         public const string ACCEPT_ENCODING2 = "gzip, deflate";
         public const string HEADER_PIGEON_SESSION_ID = "X-Pigeon-Session-Id";

@@ -68,6 +68,7 @@ namespace InstagramApiSharp.API
         /// </summary>
         public IHttpRequestProcessor HttpRequestProcessor => _httpRequestProcessor;
 
+        public InstaApiVersionType InstaApiVersionType => _apiVersionType;
         #endregion Variables and properties
 
         #region SessionHandler

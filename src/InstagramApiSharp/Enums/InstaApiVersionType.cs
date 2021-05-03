@@ -46,6 +46,10 @@ namespace InstagramApiSharp.Enums
         /// <summary>
         ///     Api version 126.0.0.25.121
         /// </summary>
-        Version126 = 22
+        Version126 = 22,
+        /// <summary>
+        ///     Api version 180.0.0.31.119, Requires BouncyCastle Nuget Package!!! 
+        /// </summary>
+        Version180 = 30,
     }
 }
