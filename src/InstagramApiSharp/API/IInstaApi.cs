@@ -122,7 +122,12 @@ namespace InstagramApiSharp.API
         ///     Session handler
         /// </summary>
         ISessionHandler SessionHandler { get; set; }
-
+#if NETSTANDARD2_0 || NET461_OR_GREATER
+        /// <summary>
+        ///     Registration Service
+        /// </summary>
+        Services.IRegistrationService RegistrationService { get; }
+#endif
         /// <summary>
         ///     Gets or sets two factor login info
         /// </summary>
