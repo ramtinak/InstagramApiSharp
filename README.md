@@ -22,6 +22,8 @@ InstagramApiSharp's public version - Update date: February 01, 2021 - End Of Sup
 ## Note
 This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharper) with more features and new cool things.
 
+[Account Registration Sample](https://github.com/ramtinak/InstagramRegistration)
+
 ## Minista App
 [Minista App](https://github.com/ramtinak/Minista) is now open source.
 
