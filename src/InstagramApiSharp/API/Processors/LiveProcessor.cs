@@ -55,40 +55,40 @@ namespace InstagramApiSharp.API.Processors
         ///     Add an broadcast to post live.
         /// </summary>
         /// <param name="broadcastId">Broadcast id</param>
-        public async Task<IResult<InstaBroadcastAddToPostLive>> AddToPostLiveAsync(string broadcastId)
-        {
-            UserAuthValidator.Validate(_userAuthValidate);
-            try
-            {
-                var instaUri = UriCreator.GetBroadcastAddToPostLiveUri(broadcastId);
-                var data = new JObject
-                {
-                    { "_csrftoken", _user.CsrfToken},
-                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_uid", _user.LoggedInUser.Pk.ToString()}
-                };
-                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaBroadcastAddToPostLive>(response, json);
-
-                var obj = JsonConvert.DeserializeObject<InstaBroadcastAddToPostLiveResponse>(json);
-
-                return Result.Success(ConvertersFabric.Instance.GetAddToPostLiveConverter(obj).Convert());
-            }
-            catch (HttpRequestException httpException)
-            {
-                _logger?.LogException(httpException);
-                return Result.Fail(httpException, default(InstaBroadcastAddToPostLive), ResponseType.NetworkProblem);
-            }
-            catch (Exception exception)
-            {
-                _logger?.LogException(exception);
-                return Result.Fail<InstaBroadcastAddToPostLive>(exception);
-            }
-        }
-
+   //    public async Task<IResult<InstaBroadcastAddToPostLive>> AddToPostLiveAsync(string broadcastId)
+   //    {
+   //        UserAuthValidator.Validate(_userAuthValidate);
+   //        try
+   //        {
+   //            var instaUri = UriCreator.GetBroadcastAddToPostLiveUri(broadcastId);
+   //            var data = new JObject
+   //            {
+   //                { "_csrftoken", _user.CsrfToken},
+   //                {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+   //                {"_uid", _user.LoggedInUser.Pk.ToString()}
+   //            };
+   //            var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+   //            var response = await _httpRequestProcessor.SendAsync(request);
+   //            var json = await response.Content.ReadAsStringAsync();
+   //            if (response.StatusCode != HttpStatusCode.OK)
+   //                return Result.UnExpectedResponse<InstaBroadcastAddToPostLive>(response, json);
+   //
+   //            var obj = JsonConvert.DeserializeObject<InstaBroadcastAddToPostLiveResponse>(json);
+   //
+   //            return Result.Success(ConvertersFabric.Instance.GetAddToPostLiveConverter(obj).Convert());
+   //        }
+   //        catch (HttpRequestException httpException)
+   //        {
+   //            _logger?.LogException(httpException);
+   //            return Result.Fail(httpException, default(InstaBroadcastAddToPostLive), ResponseType.NetworkProblem);
+   //        }
+   //        catch (Exception exception)
+   //        {
+   //            _logger?.LogException(exception);
+   //            return Result.Fail<InstaBroadcastAddToPostLive>(exception);
+   //        }
+   //    }
+   //
         /// <summary>
         ///     Post a new comment to broadcast.
         /// </summary>
@@ -1094,6 +1094,48 @@ namespace InstagramApiSharp.API.Processors
                 _logger?.LogException(exception);
                 return Result.Fail<InstaDiscoverTopLiveResponse>(exception);
             }
+        }
+
+        public async Task<IResult<LivePostLiveThumbnailsResponseRootObject>> GetPostLiveThumbnails(string broadcastID)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetLiveThumbnails(broadcastID);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var imgResp = JsonConvert.DeserializeObject<LivePostLiveThumbnailsResponseRootObject>(json);
+                if (imgResp.Status.ToLower() == "ok")
+                {
+                    return Result.Success(imgResp);
+                }
+                else
+                {
+                    return Result.UnExpectedResponse<LivePostLiveThumbnailsResponseRootObject>(response, json);
+                }
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(LivePostLiveThumbnailsResponseRootObject), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<LivePostLiveThumbnailsResponseRootObject>(exception);
+            }
+        }
+
+        public async Task<IResult<InstaMediaItemResponse>> AddToPostLiveAsync(InstaImageUpload thumbnail, string title, string caption, string broadcastID)
+        {
+            return await AddToPostLiveAsync(null, thumbnail, title, caption, broadcastID);
+        }
+
+        public async Task<IResult<InstaMediaItemResponse>> AddToPostLiveAsync(Action<InstaUploaderProgress> progress, InstaImageUpload thumbnail, string title, string caption, string broadcastID)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            return await _instaApi.HelperProcessor.SendPicToIGTV(progress, thumbnail, title, caption, broadcastID);
         }
     }
 }

@@ -61,6 +61,38 @@ namespace InstagramApiSharp.API.Processors
             return await GetChannel(channelType, null, paginationParameters);
         }
 
+        public async Task<IResult<IGTVcreation>> GetCreationTools()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetIGTVcreatorTools();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                var imgResp = JsonConvert.DeserializeObject<IGTVcreation>(json);
+                if (imgResp.Status.ToLower() == "ok")
+                {
+                    return Result.Success(imgResp);
+                }
+                else
+                {
+                    return Result.UnExpectedResponse<IGTVcreation>(response, json);
+                }
+            }
+
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(IGTVcreation), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<IGTVcreation>(exception);
+            }
+        }
+
         /// <summary>
         ///     Get suggested searches
         /// </summary>

@@ -20,6 +20,12 @@ namespace InstagramApiSharp.API.Processors
     public interface ITVProcessor
     {
         /// <summary>
+        /// Get the creation tools after finishing live broadcast
+        /// </summary>
+        /// <returns></returns>
+        Task<IResult<IGTVcreation>> GetCreationTools();
+
+        /// <summary>
         ///     Get channel by user id (pk) => channel owner
         /// </summary>
         /// <param name="userId">User id (pk) => channel owner</param>

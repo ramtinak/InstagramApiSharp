@@ -78,6 +78,14 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetIGTVcreatorTools()
+        {
+            if (
+                !Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.IGTV_CREATION_TOOL),
+                    out var instaUri)) throw new Exception("Cant create URI for IGTV creator Tools");
+            return instaUri;
+        }
+
         public static Uri GetAccountVerifySmsCodeUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_VERIFY_SMS_CODE, out var instaUri))
@@ -118,13 +126,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetBroadcastAddToPostLiveUri(string broadcastId)
-        {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_ADD_TO_POST_LIVE, broadcastId), out var instaUri))
-                throw new Exception("Cant create URI for broadcast add to post live");
-            return instaUri;
-        }
-
+     //   public static Uri GetBroadcastAddToPostLiveUri(string broadcastId)
+     //   {
+     //       if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_ADD_TO_POST_LIVE, broadcastId), out var instaUri))
+     //           throw new Exception("Cant create URI for broadcast add to post live");
+     //       return instaUri;
+     //   }
+     //
         public static Uri GetBroadcastCommentUri(string broadcastId, string lastcommentts = "")
         {
             if(lastcommentts == "")
@@ -1198,6 +1206,13 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetLiveThumbnails(string broadcastId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.LIVE_THUMBNAILS, broadcastId), out var instaUri))
+                throw new Exception("Cant get Live Thumbnails");
+            return instaUri;
+        }
+
         public static Uri GetRegenerateTwoFactorBackUpCodeUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_REGEN_BACKUP_CODES, out var instaUri))
@@ -1678,6 +1693,13 @@ namespace InstagramApiSharp.Helpers
             return !string.IsNullOrEmpty(nextId)
                 ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
                 : instaUri;
+        }
+
+        public static Uri GetPostToIGTVafterLiveUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_CONFIGURE_TO_IGTV), out var instaUri))
+                throw new Exception("Cant create URI for broadcast end");
+            return instaUri;
         }
 
         public static Uri GetArchivedMediaFeedsListUri(string nextId = "")
