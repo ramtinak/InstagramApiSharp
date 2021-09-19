@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using InstagramApiSharp.Enums;
 using InstagramApiSharp.API.Versions;
 using InstagramApiSharp.Classes;
+using System.Linq;
 
 namespace InstagramApiSharp.Helpers
 {
@@ -145,6 +146,15 @@ namespace InstagramApiSharp.Helpers
         public HttpRequestMessage GetDefaultRequest(HttpMethod method, Uri uri, AndroidDevice deviceInfo, Dictionary<string, string> data)
         {
             var request = GetDefaultRequest(HttpMethod.Post, uri, deviceInfo);
+            
+            foreach(var item in data.ToDictionary(entry => entry.Key, entry => entry.Value))
+            {
+                if(item.Value.IsEmpty())
+                {
+                    data.Remove(item.Key);
+                }
+            }
+
             request.Content = new FormUrlEncodedContent(data);
             return request;
         }
@@ -163,63 +173,16 @@ namespace InstagramApiSharp.Helpers
             AndroidDevice deviceInfo,
             Dictionary<string, string> data)
         {
+            var payload = JsonConvert.SerializeObject(data, Formatting.None,
+                            new JsonSerializerSettings
+                            {
+                                NullValueHandling = NullValueHandling.Ignore
+                            });
+
             var hash = CryptoHelper.CalculateHash(_apiVersion.SignatureKey,
-                JsonConvert.SerializeObject(data));
-            var payload = JsonConvert.SerializeObject(data);
+                payload);
+
             var signature = $"{hash}.{payload}";
-
-            var fields = new Dictionary<string, string>
-            {
-                {InstaApiConstants.HEADER_IG_SIGNATURE, signature},
-            };
-            if (!IsNewerApis)
-                fields.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
-            var request = GetDefaultRequest(HttpMethod.Post, uri, deviceInfo);
-            request.Content = new FormUrlEncodedContent(fields);
-            request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE, signature);
-            if (!IsNewerApis)
-                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION,
-                InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
-            return request;
-        }
-
-
-        public HttpRequestMessage GetSignedRequest(HttpMethod method,
-            Uri uri,
-            AndroidDevice deviceInfo,
-            Dictionary<string, int> data)
-        {
-            var hash = CryptoHelper.CalculateHash(_apiVersion.SignatureKey,
-                JsonConvert.SerializeObject(data));
-            var payload = JsonConvert.SerializeObject(data);
-            var signature = $"{(IsNewerApis ? _apiVersion.SignatureKey : hash)}.{payload}";
-
-            var fields = new Dictionary<string, string>
-            {
-                {InstaApiConstants.HEADER_IG_SIGNATURE, signature},
-            };
-            if (!IsNewerApis)
-                fields.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
-            var request = GetDefaultRequest(HttpMethod.Post, uri, deviceInfo);
-            request.Content = new FormUrlEncodedContent(fields);
-            request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE, signature);
-            if (!IsNewerApis)
-                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION,
-                InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
-            return request;
-        }
-
-
-
-        public HttpRequestMessage GetSignedRequest(HttpMethod method,
-            Uri uri,
-            AndroidDevice deviceInfo,
-            Dictionary<string, object> data)
-        {
-            var hash = CryptoHelper.CalculateHash(_apiVersion.SignatureKey,
-                JsonConvert.SerializeObject(data));
-            var payload = JsonConvert.SerializeObject(data);
-            var signature = $"{(IsNewerApis ? _apiVersion.SignatureKey : hash)}.{payload}";
 
             var fields = new Dictionary<string, string>
             {
@@ -241,9 +204,13 @@ namespace InstagramApiSharp.Helpers
             AndroidDevice deviceInfo,
             JObject data)
         {
+            var payload = JsonConvert.SerializeObject(data, Formatting.None,
+                            new JsonSerializerSettings
+                            {
+                                NullValueHandling = NullValueHandling.Ignore
+                            });
             var hash = CryptoHelper.CalculateHash(_apiVersion.SignatureKey,
-                data.ToString(Formatting.None));
-            var payload = data.ToString(Formatting.None);
+                payload);
             var signature = $"{(IsNewerApis ? _apiVersion.SignatureKey : hash)}.{payload}";
             var fields = new Dictionary<string, string>
             {
@@ -263,8 +230,12 @@ namespace InstagramApiSharp.Helpers
 
         public string GetSignature(JObject data)
         {
-            var hash = CryptoHelper.CalculateHash(_apiVersion.SignatureKey, data.ToString(Formatting.None));
-            var payload = data.ToString(Formatting.None);
+            var payload = JsonConvert.SerializeObject(data, Formatting.None,
+                       new JsonSerializerSettings
+                       {
+                           NullValueHandling = NullValueHandling.Ignore
+                       });
+            var hash = CryptoHelper.CalculateHash(_apiVersion.SignatureKey, payload);
             var signature = $"{(IsNewerApis ? _apiVersion.SignatureKey : hash)}.{payload}";
             return signature;
         }
