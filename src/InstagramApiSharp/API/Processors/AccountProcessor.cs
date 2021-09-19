@@ -170,15 +170,22 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var changePasswordUri = UriCreator.GetChangePasswordUri();
+                var time = DateTime.UtcNow.ToUnixTime();
+
+                string GetPassword(string pass) => _instaApi.GetEncryptedPassword(pass, time);
+
+                string enc1 = GetPassword(oldPassword);
+                string enc2 = GetPassword(newPassword);
+                string enc3 = GetPassword(newPassword);
 
                 var data = new JObject
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
                     {"_csrftoken", _user.CsrfToken},
-                    {"old_password", oldPassword},
-                    {"new_password1", newPassword},
-                    {"new_password2", newPassword}
+                    {"old_password", enc1},
+                    {"new_password1", enc2},
+                    {"new_password2", enc3}
                 };
 
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Get, changePasswordUri, _deviceInfo, data);

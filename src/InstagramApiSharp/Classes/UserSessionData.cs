@@ -14,6 +14,8 @@ namespace InstagramApiSharp.Classes
         public string WwwClaim { get; set; }
         public string FbTripId { get; set; }
         public string Authorization { get; set; }
+        public string XMidHeader { get; set; }
+        public string RurHeader { get; set; }
         public InstaUserShort LoggedInUser { get; set; }
 
         public string RankToken { get; set; }

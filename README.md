@@ -12,12 +12,12 @@ InstagramApiSharp's private version - Under developing. Check [#243](https://git
 | Github | master | v2.8.6 | [v2.8.6](https://github.com/ramtinak/InstagramApiSharp/issues/244#issuecomment-913897699) |
 
 -----
-InstagramApiSharp's public version - Update date: May 03, 2021 - End Of Support(from April 5, 2019)!!!
+InstagramApiSharp's public version - Update date: September 19, 2021 - End Of Support(from April 5, 2019)!!!
 
 | Target | Branch | Version | Download link | Total downloads |
 | ------ | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.6.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
-| Release | master | v1.6.0 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
+| Nuget | master | v1.7.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Release | master | v1.7.0 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
 
 ## Note
 This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharper) with more features and new cool things.

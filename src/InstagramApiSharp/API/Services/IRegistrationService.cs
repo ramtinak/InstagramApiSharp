@@ -1,5 +1,4 @@
-﻿#if NETSTANDARD2_0 || NET461_OR_GREATER
-/*
+﻿/*
 *This file is a part of private version of InstagramApiSharp's project
  * 
  * 
@@ -219,4 +218,3 @@ namespace InstagramApiSharp.API.Services
         #endregion Public Async Functions
     }
 }
-#endif

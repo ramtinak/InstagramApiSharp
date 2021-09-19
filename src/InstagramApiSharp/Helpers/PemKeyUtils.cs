@@ -1,6 +1,5 @@
 ﻿// Originally from https://stackoverflow.com/a/49889680/7527745
 // Adapted from https://stackoverflow.com/a/32243171/645283
-#if NETSTANDARD2_0 || NET461_OR_GREATER
 namespace InstagramApiSharp.Helpers
 {
     using System;
@@ -659,4 +658,3 @@ namespace InstagramApiSharp.Helpers
         }
     }
 }
-#endif

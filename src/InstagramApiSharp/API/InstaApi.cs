@@ -70,12 +70,10 @@ namespace InstagramApiSharp.API
 
         public InstaApiVersionType InstaApiVersionType => _apiVersionType;
 
-#if NETSTANDARD2_0 || NET461_OR_GREATER
         /// <summary>
         ///     Registration Service
         /// </summary>
         public Services.IRegistrationService RegistrationService { get; }
-#endif
         /// <summary>
         ///     Gets or sets challenge login info
         /// </summary>
@@ -199,9 +197,7 @@ namespace InstagramApiSharp.API
             _apiVersionType = apiVersionType;
             _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(apiVersionType);
             _httpHelper = new HttpHelper(_apiVersion, httpRequestProcessor, this);
-#if NETSTANDARD2_0 || NET461_OR_GREATER
             RegistrationService = new Services.RegistrationService(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
-#endif
         }
 
         #endregion Constructor
@@ -942,6 +938,15 @@ namespace InstagramApiSharp.API
             ValidateRequestMessage();
             try
             {
+                if (isNewLogin)
+                {
+                    _user.Authorization =
+                        _user.RurHeader =
+                        _user.XMidHeader =
+                        _user.WwwClaim = null;
+
+                    _user.LoggedInUser = null;
+                }
                 bool needsRelogin = false;
             ReloginLabel:
                 //if (isNewLogin)
@@ -955,6 +960,13 @@ namespace InstagramApiSharp.API
                 var instaUri = UriCreator.GetLoginUri();
                 var signature = string.Empty;
                 var devid = string.Empty;
+                if (!string.IsNullOrEmpty(_user.Password))
+                {
+                    if (string.IsNullOrEmpty(_user.PublicKey))
+                        await SendRequestsBeforeLoginAsync();
+                    var encruptedPassword = this.GetEncryptedPassword(_user.Password);
+                    _httpRequestProcessor.RequestMessage.EncPassword = encruptedPassword;
+                }
                 if (isNewLogin)
                     signature = $"{_httpRequestProcessor.RequestMessage.GenerateSignature(_apiVersion, _apiVersion.SignatureKey, out devid)}.{_httpRequestProcessor.RequestMessage.GetMessageString()}";
                 else
@@ -969,6 +981,7 @@ namespace InstagramApiSharp.API
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
+                AddXMidHeader(response);
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     var loginFailReason = JsonConvert.DeserializeObject<InstaLoginBaseResponse>(json);
@@ -1027,6 +1040,7 @@ namespace InstagramApiSharp.API
                           .BaseAddress);
                     _user.CsrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 }
+                await AfterLoginAsync(response).ConfigureAwait(false);
                 return Result.Success(InstaLoginResult.Success);
             }
             catch (HttpRequestException httpException)
@@ -1143,21 +1157,20 @@ namespace InstagramApiSharp.API
                     _twoFactorInfo.TwoFactorIdentifier);
 
                 var instaUri = UriCreator.GetTwoFactorLoginUri();
-                var signature =
-                    $"{twoFactorRequestMessage.GenerateSignature(_apiVersion, _apiVersion.SignatureKey)}.{twoFactorRequestMessage.GetMessageString()}";
-                var fields = new Dictionary<string, string>
+                var data = new Dictionary<string, string>
                 {
-                    {InstaApiConstants.HEADER_IG_SIGNATURE, signature},
-                    {
-                        InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION,
-                        InstaApiConstants.IG_SIGNATURE_KEY_VERSION
-                    }
+                    {"verification_code", verificationCode},
+                    {"phone_id", _deviceInfo.PhoneGuid.ToString()},
+                    {"two_factor_identifier", _twoFactorInfo.TwoFactorIdentifier},
+                    {"username", _httpRequestProcessor.RequestMessage.Username.ToLower()},
+                    {"trust_this_device", "1"},
+                    {"guid", _deviceInfo.DeviceGuid.ToString()},
+                    {"device_id", _deviceInfo.DeviceId},
+                    {"waterfall_id", Guid.NewGuid().ToString()},
+                    {"verification_method", "1"},
                 };
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = new FormUrlEncodedContent(fields);
-                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE, signature);
-                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION,
-                    InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -1172,6 +1185,8 @@ namespace InstagramApiSharp.API
                     _user.LoggedInUser = converter.Convert();
                     _user.RankToken = $"{_user.LoggedInUser.Pk}_{_httpRequestProcessor.RequestMessage.PhoneId}";
 
+                    InvalidateProcessors();
+                    await AfterLoginAsync(response).ConfigureAwait(false);
                     return Result.Success(InstaLoginTwoFactorResult.Success);
                 }
 
@@ -1397,7 +1412,7 @@ namespace InstagramApiSharp.API
                 _logger?.LogException(exception);
             }
         }
-        private async Task LauncherSyncPrivate(bool second = false, bool third = false)
+        private async Task LauncherSyncPrivate()
         {
             try
             {
@@ -1408,23 +1423,44 @@ namespace InstagramApiSharp.API
                 var csrftoken = cookies[InstaApiConstants.CSRFTOKEN]?.Value;
                 if (!string.IsNullOrEmpty(csrftoken))
                     data.Add("_csrftoken", csrftoken);
+                data.Add("server_config_retrieval", "1");
                 if (IsUserAuthenticated && _user?.LoggedInUser != null)
                 {
-                    data.Add("id", _deviceInfo.DeviceGuid.ToString());
-                    //data.Add("_uuid", _deviceInfo.DeviceGuid.ToString());
+                    data.Add("id", _user.LoggedInUser.Pk.ToString());
+                    data.Add("_uid", _user.LoggedInUser.Pk.ToString());
+                    data.Add("_uuid", _deviceInfo.DeviceGuid.ToString());
                 }
                 else
                     data.Add("id", _deviceInfo.DeviceGuid.ToString());
-                data.Add("server_config_retrieval", "1");
 
                 var uri = UriCreator.GetLauncherSyncUri();
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, uri, _deviceInfo, data);
 
                 var response = await _httpRequestProcessor.SendAsync(request);
-                if (!third)
+                await AfterLoginAsync(response, true).ConfigureAwait(false);
+                if (!IsUserAuthenticated)
                 {
-                    _user.PublicKey = string.Join("", response.Headers.GetValues("ig-set-password-encryption-pub-key"));
-                    _user.PublicKeyId = string.Join("", response.Headers.GetValues("ig-set-password-encryption-key-id"));
+                    if (ContainsHeader(InstaApiConstants.RESPONSE_HEADER_IG_PASSWORD_ENC_PUB_KEY) && ContainsHeader(InstaApiConstants.RESPONSE_HEADER_IG_PASSWORD_ENC_KEY_ID))
+                    {
+                        _user.PublicKey = string.Join("", response.Headers.GetValues(InstaApiConstants.RESPONSE_HEADER_IG_PASSWORD_ENC_PUB_KEY));
+                        _user.PublicKeyId = string.Join("", response.Headers.GetValues(InstaApiConstants.RESPONSE_HEADER_IG_PASSWORD_ENC_KEY_ID));
+                    }
+
+
+                    string mid = cookies[InstaApiConstants.COOKIES_MID]?.Value ?? (ContainsHeader(InstaApiConstants.RESPONSE_HEADER_IG_SET_X_MID) ? string.Join("", response.Headers.GetValues(InstaApiConstants.RESPONSE_HEADER_IG_SET_X_MID)) : null);
+                    string rur = cookies[InstaApiConstants.COOKIES_RUR]?.Value ?? (ContainsHeader(InstaApiConstants.RESPONSE_HEADER_X_IG_ORIGIN_REGION) ? string.Join("", response.Headers.GetValues(InstaApiConstants.RESPONSE_HEADER_X_IG_ORIGIN_REGION)) : null);
+
+                    if (!string.IsNullOrEmpty(mid))
+                    {
+                        _user.XMidHeader = mid;
+                    }
+
+                    if (!string.IsNullOrEmpty(rur))
+                    {
+                        _user.RurHeader = rur;
+                    }
+
+                    bool ContainsHeader(string head) => response.Headers.Contains(head);
                 }
 
             }
@@ -2074,6 +2110,7 @@ namespace InstagramApiSharp.API
                     {
                         ValidateUserAsync(obj.LoggedInUser, csrftoken);
                         await Task.Delay(3000);
+                        await AfterLoginAsync(response).ConfigureAwait(false);
                         await _messagingProcessor.GetDirectInboxAsync(PaginationParameters.MaxPagesToLoad(1));
                         await _feedProcessor.GetRecentActivityFeedAsync(PaginationParameters.MaxPagesToLoad(1));
 
@@ -2262,6 +2299,7 @@ namespace InstagramApiSharp.API
                           .BaseAddress);
                     _user.CsrfToken = cookies[InstaApiConstants.CSRFTOKEN]?.Value ?? string.Empty;
                 }
+                await AfterLoginAsync(response).ConfigureAwait(false);
                 return Result.Success(InstaLoginResult.Success);
             }
             catch (HttpRequestException httpException)
@@ -2757,24 +2795,7 @@ namespace InstagramApiSharp.API
         /// </returns>
         public Stream GetStateDataAsStream()
         {
-
-            var Cookies = _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(new Uri(InstaApiConstants.INSTAGRAM_URL));
-            var RawCookiesList = new List<Cookie>();
-            foreach (Cookie cookie in Cookies)
-            {
-                RawCookiesList.Add(cookie);
-            }
-
-
-            var state = new StateData
-            {
-                DeviceInfo = _deviceInfo,
-                IsAuthenticated = IsUserAuthenticated,
-                UserSession = _user,
-                Cookies = _httpRequestProcessor.HttpHandler.CookieContainer,
-                RawCookies = RawCookiesList,
-                InstaApiVersion = _apiVersionType
-            };
+            var state = GetStateDataAsObject();
             return SerializationHelper.SerializeToStream(state);
         }
         /// <summary>
@@ -2785,23 +2806,7 @@ namespace InstagramApiSharp.API
         /// </returns>
         public string GetStateDataAsString()
         {
-
-            var Cookies = _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(new Uri(InstaApiConstants.INSTAGRAM_URL));
-            var RawCookiesList = new List<Cookie>();
-            foreach (Cookie cookie in Cookies)
-            {
-                RawCookiesList.Add(cookie);
-            }
-
-            var state = new StateData
-            {
-                DeviceInfo = _deviceInfo,
-                IsAuthenticated = IsUserAuthenticated,
-                UserSession = _user,
-                Cookies = _httpRequestProcessor.HttpHandler.CookieContainer,
-                RawCookies = RawCookiesList,
-                InstaApiVersion = _apiVersionType
-            };
+            var state = GetStateDataAsObject();
             return SerializationHelper.SerializeToString(state);
         }
 
@@ -2869,31 +2874,7 @@ namespace InstagramApiSharp.API
         public void LoadStateDataFromStream(Stream stream)
         {
             var data = SerializationHelper.DeserializeFromStream<StateData>(stream);
-            if (!IsCustomDeviceSet)
-                _deviceInfo = data.DeviceInfo;
-            _user = data.UserSession;
-
-            _httpRequestProcessor.RequestMessage.Username = data.UserSession.UserName;
-            _httpRequestProcessor.RequestMessage.Password = data.UserSession.Password;
-
-            _httpRequestProcessor.RequestMessage.DeviceId = data.DeviceInfo.DeviceId;
-            _httpRequestProcessor.RequestMessage.PhoneId = data.DeviceInfo.PhoneGuid.ToString();
-            _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
-            _httpRequestProcessor.RequestMessage.AdId = data.DeviceInfo.AdId.ToString();
-
-            foreach (var cookie in data.RawCookies)
-            {
-                _httpRequestProcessor.HttpHandler.CookieContainer.Add(new Uri(InstaApiConstants.INSTAGRAM_URL), cookie);
-            }
-
-            if (data.InstaApiVersion == null)
-                data.InstaApiVersion = InstaApiVersionType.Version126;
-            _apiVersionType = data.InstaApiVersion.Value;
-            _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(_apiVersionType);
-            _httpHelper = new HttpHelper(_apiVersion, HttpRequestProcessor, this);
-
-            IsUserAuthenticated = data.IsAuthenticated;
-            InvalidateProcessors();
+            LoadStateDataFromObject(data);
         }
         /// <summary>
         ///     Set state data from provided json string
@@ -2901,32 +2882,7 @@ namespace InstagramApiSharp.API
         public void LoadStateDataFromString(string json)
         {
             var data = SerializationHelper.DeserializeFromString<StateData>(json);
-            if (!IsCustomDeviceSet)
-                _deviceInfo = data.DeviceInfo;
-            _user = data.UserSession;
-
-            //Load Stream Edit 
-            _httpRequestProcessor.RequestMessage.Username = data.UserSession.UserName;
-            _httpRequestProcessor.RequestMessage.Password = data.UserSession.Password;
-
-            _httpRequestProcessor.RequestMessage.DeviceId = data.DeviceInfo.DeviceId;
-            _httpRequestProcessor.RequestMessage.PhoneId = data.DeviceInfo.PhoneGuid.ToString();
-            _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
-            _httpRequestProcessor.RequestMessage.AdId = data.DeviceInfo.AdId.ToString();
-
-            foreach (var cookie in data.RawCookies)
-            {
-                _httpRequestProcessor.HttpHandler.CookieContainer.Add(new Uri(InstaApiConstants.INSTAGRAM_URL), cookie);
-            }
-
-            if (data.InstaApiVersion == null)
-                data.InstaApiVersion = InstaApiVersionType.Version126;
-            _apiVersionType = data.InstaApiVersion.Value;
-            _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(_apiVersionType);
-            _httpHelper = new HttpHelper(_apiVersion, HttpRequestProcessor, this);
-
-            IsUserAuthenticated = data.IsAuthenticated;
-            InvalidateProcessors();
+            LoadStateDataFromObject(data);
         }
 
         async Task GetToken(bool fromBaseUri = true)
@@ -2964,7 +2920,7 @@ namespace InstagramApiSharp.API
             }
 
             if (stateData.InstaApiVersion == null)
-                stateData.InstaApiVersion = InstaApiVersionType.Version126;
+                stateData.InstaApiVersion = InstaApiVersionType.Version180;
             _apiVersionType = stateData.InstaApiVersion.Value;
             _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(_apiVersionType);
             _httpHelper = new HttpHelper(_apiVersion, HttpRequestProcessor, this);
@@ -3000,6 +2956,65 @@ namespace InstagramApiSharp.API
 
         #region private part
 
+        internal async Task AfterLoginAsync(HttpResponseMessage response, bool dontCallLauncherSync = false)
+        {
+            try
+            {
+                if (ContainsHeader(InstaApiConstants.HEADER_RESPONSE_X_WWW_CLAIM))
+                {
+                    var wwwClaimHeader = response.Headers.GetValues(InstaApiConstants.HEADER_RESPONSE_X_WWW_CLAIM);
+                    if (wwwClaimHeader != null &&
+                        string.Join("", wwwClaimHeader) is string wwwClaim &&
+                        !string.IsNullOrEmpty(wwwClaim))
+                    {
+                        _user.WwwClaim = wwwClaim;
+                    }
+                }
+
+                if (ContainsHeader(InstaApiConstants.HEADER_X_FB_TRIP_ID))
+                {
+                    var fbTripIdHeader = response.Headers.GetValues(InstaApiConstants.HEADER_X_FB_TRIP_ID);
+                    if (fbTripIdHeader != null &&
+                        string.Join("", fbTripIdHeader) is string fbTripId &&
+                        !string.IsNullOrEmpty(fbTripId))
+                    {
+                        _user.FbTripId = fbTripId;
+                    }
+                }
+
+                if (ContainsHeader(InstaApiConstants.HEADER_RESPONSE_AUTHORIZATION))
+                {
+                    var authorizationHeader = response.Headers.GetValues(InstaApiConstants.HEADER_RESPONSE_AUTHORIZATION);
+                    if (authorizationHeader != null &&
+                        string.Join("", authorizationHeader) is string authorization &&
+                        !string.IsNullOrEmpty(authorization) &&
+                        authorization != InstaApiConstants.HEADER_BEARER_IGT_2_VALUE)
+                    {
+                        _user.Authorization = authorization;
+                    }
+                }
+
+                if (!dontCallLauncherSync)
+                {
+                    await LauncherSyncPrivate(/*false, true*/).ConfigureAwait(false);
+                }
+
+                bool ContainsHeader(string head) => response.Headers.Contains(head);
+            }
+            catch (Exception exception)
+            {
+                LogException(exception);
+            }
+        }
+        internal void AddXMidHeader(HttpResponseMessage response)
+        {
+            string mid = response.Headers.Contains(InstaApiConstants.RESPONSE_HEADER_IG_SET_X_MID) ? string.Join("", response.Headers.GetValues(InstaApiConstants.RESPONSE_HEADER_IG_SET_X_MID)) : null;
+
+            if (!string.IsNullOrEmpty(mid))
+            {
+                _user.XMidHeader = mid;
+            }
+        }
         private void InvalidateProcessors()
         {
             _hashtagProcessor = new HashtagProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
