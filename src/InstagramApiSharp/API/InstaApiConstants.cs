@@ -44,6 +44,8 @@ namespace InstagramApiSharp.API
         #region Main
         public const string RESPONSE_HEADER_IG_PASSWORD_ENC_PUB_KEY = "ig-set-password-encryption-pub-key";
         public const string RESPONSE_HEADER_IG_PASSWORD_ENC_KEY_ID = "ig-set-password-encryption-key-id";
+        public const string RESPONSE_HEADER_IG_SET_X_MID = "ig-set-x-mid";
+        public const string RESPONSE_HEADER_X_IG_ORIGIN_REGION = "x-ig-origin-region";
         public const string HEADER_IG_U_DIRECT_REGION_HINT = "ig-u-ig-direct-region-hint";
         public const string HEADER_IG_U_SHBID = "ig-u-shbid";
         public const string HEADER_IG_U_SHBTS = "ig-u-shbts";
@@ -54,6 +56,7 @@ namespace InstagramApiSharp.API
         public const string COOKIES_SHBID = "shbid";
         public const string COOKIES_RUR = "rur";
 
+        public const string HEADER_BEARER_IGT_2_VALUE = "Bearer IGT:2:";
 
         public const string HEADER_X_IG_BLOKS_PANORAMA_ENABLED = "X-Bloks-Is-Panorama-Enabled";
         public const string HEADER_X_IG_MAPPED_LOCALE = "X-IG-Mapped-Locale";
