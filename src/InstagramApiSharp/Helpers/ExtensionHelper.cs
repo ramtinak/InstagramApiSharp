@@ -21,13 +21,11 @@ using InstagramApiSharp.Helpers;
 using System.Text;
 using InstagramApiSharp.Classes;
 using System.Net.Http;
-
-#if NETSTANDARD2_0 || NET461_OR_GREATER
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
-#endif
+
 namespace InstagramApiSharp
 {
     internal static class ExtensionHelper
@@ -136,8 +134,7 @@ namespace InstagramApiSharp
                 ix += (int)ch;
             return "2" + ix;
         }
-#if NETSTANDARD2_0 || NET461_OR_GREATER
-      
+
         static private readonly SecureRandom secureRandom = new SecureRandom();
 
         public static string GetEncryptedPassword(this IInstaApi api, string password, long? providedTime = null) 
@@ -180,7 +177,7 @@ namespace InstagramApiSharp
 
             return $"#PWD_INSTAGRAM:4:{time}:{payload}";
         }
-#endif
+
         public static string GetJson(this InstaLocationShort location)
         {
             if (location == null)
