@@ -951,6 +951,13 @@ namespace InstagramApiSharp.API
                 var instaUri = UriCreator.GetLoginUri();
                 var signature = string.Empty;
                 var devid = string.Empty;
+                if (!string.IsNullOrEmpty(_user.Password))
+                {
+                    if (string.IsNullOrEmpty(_user.PublicKey))
+                        await SendRequestsBeforeLoginAsync();
+                    var encruptedPassword = this.GetEncryptedPassword(_user.Password);
+                    _httpRequestProcessor.RequestMessage.EncPassword = encruptedPassword;
+                }
                 if (isNewLogin)
                     signature = $"{_httpRequestProcessor.RequestMessage.GenerateSignature(_apiVersion, _apiVersion.SignatureKey, out devid)}.{_httpRequestProcessor.RequestMessage.GetMessageString()}";
                 else

@@ -14,7 +14,6 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
     {
         private string _phoneId;
 
-        static readonly Random Rnd = new Random();
         [JsonProperty("jazoest")]
         public string Jazoest { get; set; }
         [JsonProperty("country_codes")]
@@ -33,8 +32,10 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         public string Uuid => Guid.ToString();
         [JsonProperty("google_tokens")]
         public string GoogleTokens { get; set; } = "[]";
-        [JsonProperty("password")]
+        [JsonIgnore()/*JsonProperty("password")*/]
         public string Password { get; set; }
+        [JsonProperty("enc_password")]
+        public string EncPassword { get; set; }
         [JsonProperty("login_attempt_count")]
         public string LoginAttemptCount { get; set; } = "1";
         public static ApiRequestMessage CurrentDevice { get; private set; }
