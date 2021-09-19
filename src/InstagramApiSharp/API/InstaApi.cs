@@ -938,6 +938,15 @@ namespace InstagramApiSharp.API
             ValidateRequestMessage();
             try
             {
+                if (isNewLogin)
+                {
+                    _user.Authorization =
+                        _user.RurHeader =
+                        _user.XMidHeader =
+                        _user.WwwClaim = null;
+
+                    _user.LoggedInUser = null;
+                }
                 bool needsRelogin = false;
             ReloginLabel:
                 //if (isNewLogin)
