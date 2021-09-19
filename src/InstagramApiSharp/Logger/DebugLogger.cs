@@ -111,9 +111,9 @@ namespace InstagramApiSharp.Logger
         private void Write(string message)
         {
 #if !WINDOWS_UWP
-            Console.WriteLine($"{DateTime.Now.ToString()}:\t{message}");
+            Console.WriteLine($"{DateTime.Now}:\t{message}");
 #else
-            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString()}:\t{message}");
+            System.Diagnostics.Debug.WriteLine($"{DateTime.Now}:\t{message}");
 #endif
         }
     }
