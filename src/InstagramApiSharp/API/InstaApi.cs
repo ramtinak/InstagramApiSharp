@@ -70,12 +70,10 @@ namespace InstagramApiSharp.API
 
         public InstaApiVersionType InstaApiVersionType => _apiVersionType;
 
-#if NETSTANDARD2_0 || NET461_OR_GREATER
         /// <summary>
         ///     Registration Service
         /// </summary>
         public Services.IRegistrationService RegistrationService { get; }
-#endif
         /// <summary>
         ///     Gets or sets challenge login info
         /// </summary>
@@ -199,9 +197,7 @@ namespace InstagramApiSharp.API
             _apiVersionType = apiVersionType;
             _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(apiVersionType);
             _httpHelper = new HttpHelper(_apiVersion, httpRequestProcessor, this);
-#if NETSTANDARD2_0 || NET461_OR_GREATER
             RegistrationService = new Services.RegistrationService(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
-#endif
         }
 
         #endregion Constructor
