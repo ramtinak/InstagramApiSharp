@@ -22,6 +22,9 @@ InstagramApiSharp's public version - Update date: September 19, 2021 - End Of Su
 ## Note
 This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharper) with more features and new cool things.
 
+All references in [v1.7.0](https://www.nuget.org/packages/InstagramApiSharp/1.7.0) is updated. 
+Also if you got challenge locked, you can purchase for a subscription, because private version is supports this feature.
+
 [Account Registration Sample](https://github.com/ramtinak/InstagramRegistration)
 
 ## Minista App
