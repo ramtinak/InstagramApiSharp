@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net452;uap10.0;netstandard1.3;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;uap10.0;netstandard1.3;net461</TargetFrameworks>
     <VersionPrefix>1.6.0</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
@@ -245,7 +245,7 @@ v1.3.3.0
         <TargetFramework>netstandard2.0;netstandard1.3</TargetFramework>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-      <TargetFrameworks>netstandard2.0;net452;uap10.0;netstandard1.3;net461</TargetFrameworks>
+      <TargetFrameworks>netstandard2.0;uap10.0;netstandard1.3;net461</TargetFrameworks>
     </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
@@ -261,13 +261,6 @@ v1.3.3.0
     <None Include="insta.png" Pack="true" Visible="true" PackagePath="$(PackageIcon)" />
   </ItemGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452'">
-    <Reference Include="System" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
     <DefaultLanguage>en-US</DefaultLanguage>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
