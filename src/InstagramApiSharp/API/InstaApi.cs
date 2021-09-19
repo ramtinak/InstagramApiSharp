@@ -2760,24 +2760,7 @@ namespace InstagramApiSharp.API
         /// </returns>
         public Stream GetStateDataAsStream()
         {
-
-            var Cookies = _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(new Uri(InstaApiConstants.INSTAGRAM_URL));
-            var RawCookiesList = new List<Cookie>();
-            foreach (Cookie cookie in Cookies)
-            {
-                RawCookiesList.Add(cookie);
-            }
-
-
-            var state = new StateData
-            {
-                DeviceInfo = _deviceInfo,
-                IsAuthenticated = IsUserAuthenticated,
-                UserSession = _user,
-                Cookies = _httpRequestProcessor.HttpHandler.CookieContainer,
-                RawCookies = RawCookiesList,
-                InstaApiVersion = _apiVersionType
-            };
+            var state = GetStateDataAsObject();
             return SerializationHelper.SerializeToStream(state);
         }
         /// <summary>
@@ -2788,23 +2771,7 @@ namespace InstagramApiSharp.API
         /// </returns>
         public string GetStateDataAsString()
         {
-
-            var Cookies = _httpRequestProcessor.HttpHandler.CookieContainer.GetCookies(new Uri(InstaApiConstants.INSTAGRAM_URL));
-            var RawCookiesList = new List<Cookie>();
-            foreach (Cookie cookie in Cookies)
-            {
-                RawCookiesList.Add(cookie);
-            }
-
-            var state = new StateData
-            {
-                DeviceInfo = _deviceInfo,
-                IsAuthenticated = IsUserAuthenticated,
-                UserSession = _user,
-                Cookies = _httpRequestProcessor.HttpHandler.CookieContainer,
-                RawCookies = RawCookiesList,
-                InstaApiVersion = _apiVersionType
-            };
+            var state = GetStateDataAsObject();
             return SerializationHelper.SerializeToString(state);
         }
 
@@ -2872,31 +2839,7 @@ namespace InstagramApiSharp.API
         public void LoadStateDataFromStream(Stream stream)
         {
             var data = SerializationHelper.DeserializeFromStream<StateData>(stream);
-            if (!IsCustomDeviceSet)
-                _deviceInfo = data.DeviceInfo;
-            _user = data.UserSession;
-
-            _httpRequestProcessor.RequestMessage.Username = data.UserSession.UserName;
-            _httpRequestProcessor.RequestMessage.Password = data.UserSession.Password;
-
-            _httpRequestProcessor.RequestMessage.DeviceId = data.DeviceInfo.DeviceId;
-            _httpRequestProcessor.RequestMessage.PhoneId = data.DeviceInfo.PhoneGuid.ToString();
-            _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
-            _httpRequestProcessor.RequestMessage.AdId = data.DeviceInfo.AdId.ToString();
-
-            foreach (var cookie in data.RawCookies)
-            {
-                _httpRequestProcessor.HttpHandler.CookieContainer.Add(new Uri(InstaApiConstants.INSTAGRAM_URL), cookie);
-            }
-
-            if (data.InstaApiVersion == null)
-                data.InstaApiVersion = InstaApiVersionType.Version126;
-            _apiVersionType = data.InstaApiVersion.Value;
-            _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(_apiVersionType);
-            _httpHelper = new HttpHelper(_apiVersion, HttpRequestProcessor, this);
-
-            IsUserAuthenticated = data.IsAuthenticated;
-            InvalidateProcessors();
+            LoadStateDataFromObject(data);
         }
         /// <summary>
         ///     Set state data from provided json string
@@ -2904,32 +2847,7 @@ namespace InstagramApiSharp.API
         public void LoadStateDataFromString(string json)
         {
             var data = SerializationHelper.DeserializeFromString<StateData>(json);
-            if (!IsCustomDeviceSet)
-                _deviceInfo = data.DeviceInfo;
-            _user = data.UserSession;
-
-            //Load Stream Edit 
-            _httpRequestProcessor.RequestMessage.Username = data.UserSession.UserName;
-            _httpRequestProcessor.RequestMessage.Password = data.UserSession.Password;
-
-            _httpRequestProcessor.RequestMessage.DeviceId = data.DeviceInfo.DeviceId;
-            _httpRequestProcessor.RequestMessage.PhoneId = data.DeviceInfo.PhoneGuid.ToString();
-            _httpRequestProcessor.RequestMessage.Guid = data.DeviceInfo.DeviceGuid;
-            _httpRequestProcessor.RequestMessage.AdId = data.DeviceInfo.AdId.ToString();
-
-            foreach (var cookie in data.RawCookies)
-            {
-                _httpRequestProcessor.HttpHandler.CookieContainer.Add(new Uri(InstaApiConstants.INSTAGRAM_URL), cookie);
-            }
-
-            if (data.InstaApiVersion == null)
-                data.InstaApiVersion = InstaApiVersionType.Version126;
-            _apiVersionType = data.InstaApiVersion.Value;
-            _apiVersion = InstaApiVersionList.GetApiVersionList().GetApiVersion(_apiVersionType);
-            _httpHelper = new HttpHelper(_apiVersion, HttpRequestProcessor, this);
-
-            IsUserAuthenticated = data.IsAuthenticated;
-            InvalidateProcessors();
+            LoadStateDataFromObject(data);
         }
 
         async Task GetToken(bool fromBaseUri = true)
