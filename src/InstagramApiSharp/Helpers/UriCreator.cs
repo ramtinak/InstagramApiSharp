@@ -1673,7 +1673,7 @@ namespace InstagramApiSharp.Helpers
 
         public static Uri GetUserMediaListUri(long userPk, string nextId = "")
         {
-            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.USEREFEED + userPk, out var instaUri))
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USEREFEED, userPk), out var instaUri))
                 throw new Exception("Cant create URI for user media retrieval");
             return !string.IsNullOrEmpty(nextId)
                 ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri

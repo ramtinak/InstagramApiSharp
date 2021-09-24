@@ -379,7 +379,7 @@ namespace InstagramApiSharp.API
         public const string LIKE_FEED = API_SUFFIX + "/feed/liked/";
         public const string TIMELINEFEED = API_SUFFIX + "/feed/timeline/";
         public const string USER_REEL_FEED = API_SUFFIX + "/feed/user/{0}/reel_media/";
-        public const string USEREFEED = API_SUFFIX + "/feed/user/";
+        public const string USEREFEED = API_SUFFIX + "/feed/user/{0}/";
 
         #endregion Feed endpoints constants
 
