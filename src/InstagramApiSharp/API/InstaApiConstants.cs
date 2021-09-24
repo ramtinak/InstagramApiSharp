@@ -616,7 +616,7 @@ namespace InstagramApiSharp.API
         public const string ACCOUNTS_LOOKUP_PHONE = API_SUFFIX + "/users/lookup_phone/";
         public const string GET_USER_INFO_BY_ID = API_SUFFIX + "/users/{0}/info/";
         public const string GET_USER_INFO_BY_USERNAME = API_SUFFIX + "/users/{0}/usernameinfo/";
-        public const string SEARCH_USERS = API_SUFFIX + "/users/search";
+        public const string SEARCH_USERS = API_SUFFIX + "/users/search/";
         public const string USERS_CHECK_EMAIL = API_SUFFIX + "/users/check_email/";
         public const string USERS_CHECK_USERNAME = API_SUFFIX + "/users/check_username/";
         public const string USERS_LOOKUP = API_SUFFIX + "/users/lookup/";
