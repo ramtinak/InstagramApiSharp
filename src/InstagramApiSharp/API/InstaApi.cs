@@ -1138,13 +1138,18 @@ namespace InstagramApiSharp.API
         ///     Before call this method, please run LoginAsync first.
         /// </summary>
         /// <param name="verificationCode">Verification Code sent to your phone number</param>
+        /// <param name="verificationMethod">
+        ///     Method to verify with.
+        ///         0 for OTP
+        ///         1 for SMS
+        /// </param>
         /// <returns>
         ///     Success --> is succeed
         ///     InvalidCode --> The code is invalid
         ///     CodeExpired --> The code is expired, please request a new one.
         ///     Exception --> Something wrong happened
         /// </returns>
-        public async Task<IResult<InstaLoginTwoFactorResult>> TwoFactorLoginAsync(string verificationCode)
+        public async Task<IResult<InstaLoginTwoFactorResult>> TwoFactorLoginAsync(string verificationCode, int verificationMethod = 1)
         {
             if (_twoFactorInfo == null)
                 return Result.Fail<InstaLoginTwoFactorResult>("Run LoginAsync first");
@@ -1167,7 +1172,7 @@ namespace InstagramApiSharp.API
                     {"guid", _deviceInfo.DeviceGuid.ToString()},
                     {"device_id", _deviceInfo.DeviceId},
                     {"waterfall_id", Guid.NewGuid().ToString()},
-                    {"verification_method", "1"},
+                    {"verification_method", verificationMethod.ToString()},
                 };
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
 
