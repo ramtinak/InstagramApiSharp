@@ -2,18 +2,18 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;uap10.0;net461</TargetFrameworks>
-    <VersionPrefix>1.7.1</VersionPrefix>
+    <VersionPrefix>1.7.3</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <AssemblyName>InstagramApiSharp</AssemblyName>
-    <PackageId>InstagramApiSharp</PackageId>
+    <AssemblyName>Bman46InstagramApiSharpLabs</AssemblyName>
+    <PackageId>Bman46InstagramApiSharpLabs</PackageId>
     <NetStandardImplicitPackageVersion>2.0</NetStandardImplicitPackageVersion>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.7.1.0</Version>
-    <AssemblyVersion>1.7.1.0</AssemblyVersion>
-    <FileVersion>1.7.1.0</FileVersion>
+    <Version>1.7.3.0</Version>
+    <AssemblyVersion>1.7.3.0</AssemblyVersion>
+    <FileVersion>1.7.3.0</FileVersion>
     <Description>A complete Private Instagram API for .NET.
 
 
@@ -34,10 +34,10 @@ Support:
 - and many more.
 
 See example projects and wiki pages to find out how this library works.</Description>
-    <Authors>Ramtin Jokar</Authors>
+    <Authors>Ramtin Jokar and Brendan McShane</Authors>
     <RepositoryType></RepositoryType>
-    <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bman46/InstagramApiSharp/</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/bman46/InstagramApiSharp/</PackageProjectUrl>
     <PackageReleaseNotes>v1.7.1
 - [Bugfix] for GetUserMediaAsync, GetUserMediaByIdAsync [ thx to @bynifaciy ]
 - [Bugfix] for GetUserAsync
@@ -249,7 +249,7 @@ v1.3.3.0
 - [Update] ApproveDirectPendingRequestAsync
 - [Update] GetUserShoppableMediaAsync pagination
 - [Update] GetUserShoppableMediaAsync pagination</PackageReleaseNotes>
-    <Copyright>Ramtin Jokar</Copyright>
+    <Copyright>Ramtin Jokar and Brendan McShane</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo, igtv</PackageTags>
     <PackageIcon>insta.png</PackageIcon>
