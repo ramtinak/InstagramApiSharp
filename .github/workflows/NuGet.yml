@@ -21,7 +21,7 @@ jobs:
         uses: rohith/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: InstagramApiSharp/src/InstagramApiSharp/InstagramApiSharp.csproj
+          PROJECT_FILE_PATH: src/InstagramApiSharp/InstagramApiSharp.csproj
           
           # NuGet package id, used for version detection & defaults to project name
           # PACKAGE_NAME: Core
