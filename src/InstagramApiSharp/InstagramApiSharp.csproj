@@ -39,7 +39,7 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
     <PackageReleaseNotes>v1.7.2
-- [Update] TwoFactorLoginAsync ( thx to @@bman46 )
+- [Update] TwoFactorLoginAsync ( thx to @bman46 )
 
 v1.7.1
 - [Bugfix] for GetUserMediaAsync, GetUserMediaByIdAsync [ thx to @bynifaciy ]
