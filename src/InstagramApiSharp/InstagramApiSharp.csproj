@@ -2,18 +2,18 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;uap10.0;net461</TargetFrameworks>
-    <VersionPrefix>1.7.2</VersionPrefix>
+    <VersionPrefix>1.7.6</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <AssemblyName>InstagramApiSharp</AssemblyName>
-    <PackageId>InstagramApiSharp</PackageId>
+    <AssemblyName>Bman46InstagramApiSharpLabs</AssemblyName>
+    <PackageId>Bman46InstagramApiSharpLabs</PackageId>
     <NetStandardImplicitPackageVersion>2.0</NetStandardImplicitPackageVersion>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.7.2.0</Version>
-    <AssemblyVersion>1.7.2.0</AssemblyVersion>
-    <FileVersion>1.7.2.0</FileVersion>
+    <Version>1.7.6.0</Version>
+    <AssemblyVersion>1.7.6.0</AssemblyVersion>
+    <FileVersion>1.7.6.0</FileVersion>
     <Description>A complete Private Instagram API for .NET.
 
 
@@ -34,14 +34,11 @@ Support:
 - and many more.
 
 See example projects and wiki pages to find out how this library works.</Description>
-    <Authors>Ramtin Jokar</Authors>
+    <Authors>Ramtin Jokar and Brendan McShane</Authors>
     <RepositoryType></RepositoryType>
-    <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.7.2
-- [Update] TwoFactorLoginAsync ( thx to @bman46 )
-
-v1.7.1
+    <RepositoryUrl>https://github.com/bman46/InstagramApiSharp/</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/bman46/InstagramApiSharp/</PackageProjectUrl>
+    <PackageReleaseNotes>v1.7.1
 - [Bugfix] for GetUserMediaAsync, GetUserMediaByIdAsync [ thx to @bynifaciy ]
 - [Bugfix] for GetUserAsync
 - [Bugfix] for GetDirectInboxThreadAsync
@@ -252,7 +249,7 @@ v1.3.3.0
 - [Update] ApproveDirectPendingRequestAsync
 - [Update] GetUserShoppableMediaAsync pagination
 - [Update] GetUserShoppableMediaAsync pagination</PackageReleaseNotes>
-    <Copyright>Ramtin Jokar</Copyright>
+    <Copyright>Ramtin Jokar and Brendan McShane</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>C#, Instagram, Insta, Client, Sharp, InstagramApiSharp, Client, Api, media, video, album, photo, igtv</PackageTags>
     <PackageIcon>insta.png</PackageIcon>
@@ -286,7 +283,7 @@ v1.3.3.0
   
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.6.7" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.12" Condition="'$(TargetFramework)' == 'uap10.0'" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" Condition="'$(TargetFramework)' == 'net461'" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

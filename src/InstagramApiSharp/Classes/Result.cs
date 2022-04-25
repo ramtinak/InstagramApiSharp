@@ -142,6 +142,9 @@ namespace InstagramApiSharp.Classes
                     case "inactive_user":
                         responseType = ResponseType.InactiveUser;
                         break;
+                    case "checkpoint_required":
+                        responseType = ResponseType.CheckPointRequired;
+                        break;
                     case "checkpoint_challenge_required":
                         responseType = ResponseType.ChallengeRequired;
                         break;

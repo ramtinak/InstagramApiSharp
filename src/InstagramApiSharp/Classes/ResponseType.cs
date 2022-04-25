@@ -1,4 +1,4 @@
-namespace InstagramApiSharp.Classes
+﻿namespace InstagramApiSharp.Classes
 {
     public enum ResponseType
     {
@@ -11,7 +11,7 @@ namespace InstagramApiSharp.Classes
         /// </summary>
         LoginRequired = 1,
         /// <summary>
-        ///     Unknown behavior:|
+        ///     Unknown behavior:
         /// </summary>
         CheckPointRequired = 2,
         /// <summary>
