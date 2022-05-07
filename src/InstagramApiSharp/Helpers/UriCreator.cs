@@ -1680,6 +1680,15 @@ namespace InstagramApiSharp.Helpers
                 : instaUri;
         }
 
+        public static Uri GetUserMediaListMinIdUri(long userPk, string minId = "")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USEREFEED, userPk), out var instaUri))
+                throw new Exception("Cant create URI for user media retrieval");
+            return !string.IsNullOrEmpty(minId)
+                ? new UriBuilder(instaUri) { Query = $"min_id={minId}" }.Uri
+                : instaUri;
+        }
+
         public static Uri GetArchivedMediaFeedsListUri(string nextId = "")
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.FEED_ONLY_ME_FEED, out var instaUri))
