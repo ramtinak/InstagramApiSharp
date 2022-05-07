@@ -1020,9 +1020,9 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetMediaIdFromUrlUri(Uri uri)
+        public static Uri GetMediaOembedFromUrlUri(Uri uri)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_MEDIAID, uri.AbsoluteUri),
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.OEMBED, uri.AbsoluteUri),
                 out var instaUri))
                 throw new Exception("Can't create URI for getting media id");
             return instaUri;
