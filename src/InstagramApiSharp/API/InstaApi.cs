@@ -38,6 +38,7 @@ namespace InstagramApiSharp.API
         private AndroidDevice _deviceInfo;
         private InstaTwoFactorLoginInfo _twoFactorInfo;
         private InstaChallengeLoginInfo _challengeinfo;
+        private InstaChallengeRequireVerifyMethod _challengeRequireVerifyMethod;
         private UserSessionData _userSession;
         internal UserSessionData _user
         {
@@ -49,6 +50,18 @@ namespace InstagramApiSharp.API
 
         string _waterfallIdReg = "", _deviceIdReg = "", _phoneIdReg = "", _guidReg = "";
         InstaAccountRegistrationPhoneNumber _signUpPhoneNumberInfo;
+        /// <summary>
+        ///     Gets or sets challenge login info
+        /// </summary>
+        public InstaChallengeLoginInfo ChallengeLoginInfo { get { return _challengeinfo; } set { _challengeinfo = value; } }
+        /// <summary>
+        ///     Gets or sets two factor login info
+        /// </summary>
+        public InstaTwoFactorLoginInfo TwoFactorLoginInfo { get { return _twoFactorInfo; } set { _twoFactorInfo = value; } }
+        /// <summary>
+        ///     Gets or sets challenge verify method
+        /// </summary>
+        public InstaChallengeRequireVerifyMethod ChallengeVerifyMethod { get => _challengeRequireVerifyMethod; set => _challengeRequireVerifyMethod = value; }
 
         private bool _isUserAuthenticated;
         /// <summary>
@@ -74,14 +87,6 @@ namespace InstagramApiSharp.API
         ///     Registration Service
         /// </summary>
         public Services.IRegistrationService RegistrationService { get; }
-        /// <summary>
-        ///     Gets or sets challenge login info
-        /// </summary>
-        public InstaChallengeLoginInfo ChallengeLoginInfo { get { return _challengeinfo; } set { _challengeinfo = value; } }
-        /// <summary>
-        ///     Gets or sets two factor login info
-        /// </summary>
-        public InstaTwoFactorLoginInfo TwoFactorLoginInfo { get { return _twoFactorInfo; } set { _twoFactorInfo = value; } }
         #endregion Variables and properties
 
         #region SessionHandler
@@ -1874,6 +1879,7 @@ namespace InstagramApiSharp.API
                     return Result.UnExpectedResponse<InstaChallengeRequireVerifyMethod>(response, json);
 
                 var obj = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyMethod>(json);
+                _challengeRequireVerifyMethod = obj;
                 return Result.Success(obj);
             }
             catch (HttpRequestException httpException)
@@ -1919,6 +1925,7 @@ namespace InstagramApiSharp.API
                 }
 
                 var obj = JsonConvert.DeserializeObject<InstaChallengeRequireVerifyMethod>(json);
+                _challengeRequireVerifyMethod = obj;
                 return Result.Success(obj);
             }
             catch (HttpRequestException httpException)
@@ -2837,7 +2844,10 @@ namespace InstagramApiSharp.API
                 UserSession = _user,
                 Cookies = _httpRequestProcessor.HttpHandler.CookieContainer,
                 RawCookies = RawCookiesList,
-                InstaApiVersion = _apiVersionType
+                InstaApiVersion = _apiVersionType,
+                ChallengeLoginInfo = ChallengeLoginInfo,
+                TwoFactorLoginInfo = TwoFactorLoginInfo,
+                ChallengeVerifyMethod = ChallengeVerifyMethod,
             };
             return state;
         }
@@ -2931,6 +2941,9 @@ namespace InstagramApiSharp.API
             _httpHelper = new HttpHelper(_apiVersion, HttpRequestProcessor, this);
 
             IsUserAuthenticated = stateData.IsAuthenticated;
+            TwoFactorLoginInfo = stateData.TwoFactorLoginInfo;
+            ChallengeLoginInfo = stateData.ChallengeLoginInfo;
+            ChallengeVerifyMethod = stateData.ChallengeVerifyMethod;
             InvalidateProcessors();
         }
 

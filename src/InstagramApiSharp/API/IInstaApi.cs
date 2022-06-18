@@ -134,6 +134,10 @@ namespace InstagramApiSharp.API
         ///     Gets or sets challenge login info
         /// </summary>
         InstaChallengeLoginInfo ChallengeLoginInfo { get; set; }
+        /// <summary>
+        ///     Gets or sets challenge verify method
+        /// </summary>
+        InstaChallengeRequireVerifyMethod ChallengeVerifyMethod { get; set; }
         #endregion
 
         #region State data
