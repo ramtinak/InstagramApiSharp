@@ -183,12 +183,12 @@ namespace InstagramApiSharp.API.Processors
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
                     {"_csrftoken", _user.CsrfToken},
-                    {"old_password", enc1},
-                    {"new_password1", enc2},
-                    {"new_password2", enc3}
+                    {"enc_old_password", enc1},
+                    {"enc_new_password1", enc2},
+                    {"enc_new_password2", enc3}
                 };
 
-                var request = _httpHelper.GetSignedRequest(HttpMethod.Get, changePasswordUri, _deviceInfo, data);
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, changePasswordUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == HttpStatusCode.OK)
@@ -256,7 +256,6 @@ namespace InstagramApiSharp.API.Processors
                     {"external_url", url},
                     {"gender", ((int)gender).ToString()},
                     {"phone_number", phone},
-                    {"_csrftoken", _user.CsrfToken},
                     {"username", newUsername},
                     {"first_name", name},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
