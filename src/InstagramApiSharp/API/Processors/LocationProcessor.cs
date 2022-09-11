@@ -158,7 +158,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                     {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
                     {"longitude", longitude.ToString(CultureInfo.InvariantCulture)},
                     {"rank_token", _user.RankToken}
@@ -439,7 +438,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"rank_token", _deviceInfo.DeviceGuid.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                     {"session_id", Guid.NewGuid().ToString()},
                     {"tab", sectionType.ToString().ToLower()}
                 };

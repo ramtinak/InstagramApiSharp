@@ -44,7 +44,6 @@ namespace InstagramApiSharp.API.Processors
     //            {
     //                {"product_version", "beta" },
     //                {"wp_token_type","wns" },
-    //                {"_csrftoken", _user.CsrfToken},
     //                {"device_token", "https://db5p.notify.windows.com/?token=AwYAAABg4Ep0deAFuOd%2f5%2b9aSMJGsnkDXTEnbu6L7L2haknP2QqxwDHLwvIuzhNmjzN8zFGLgwc7Ni8KUn73HwM9HCMNgbS0FjJOZTLctbDZ03ID6kfBvvDp5N548I8u0i772O%2b1JYPkdvl3AFi060gA2cN7"},
     //                {"_uuid", _deviceInfo.DeviceGuid.ToString()},
     //                {"device_id", _deviceInfo.DeviceId },

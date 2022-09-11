@@ -231,7 +231,7 @@ namespace InstagramApiSharp
 
             }
         }
-        static readonly Random Rnd = new Random();
+        internal static readonly Random Rnd = new Random();
         public static string GenerateRandomString(this int length)
         {
             const string pool = "abcdefghijklmnopqrstuvwxyz0123456789";

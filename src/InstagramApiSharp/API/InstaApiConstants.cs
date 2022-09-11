@@ -530,7 +530,7 @@ namespace InstagramApiSharp.API
         public const string MEDIA_CONFIGURE = API_SUFFIX + "/media/configure/";
         public const string MEDIA_CONFIGURE_VIDEO = API_SUFFIX + "/media/configure/?video=1";
         public const string MEDIA_UPLOAD_FINISH = API_SUFFIX + "/media/upload_finish/?video=1";
-        public const string MEDIA_INFOS = API_SUFFIX + "/media/infos/?_uuid={0}&_csrftoken={1}&media_ids={2}&ranked_content=true&include_inactive_reel=true";
+        public const string MEDIA_INFOS = API_SUFFIX + "/media/infos/?_uuid={0}&media_ids={1}&ranked_content=true&include_inactive_reel=true";
         public const string MEDIA_CONFIGURE_NAMETAG = API_SUFFIX + "/media/configure_to_nametag/";
         public const string MEDIA_INLINE_COMMENTS = API_SUFFIX + "/media/{0}/comments/{1}/inline_child_comments/";
         public const string MEDIA_LIKERS = API_SUFFIX + "/media/{0}/likers/";

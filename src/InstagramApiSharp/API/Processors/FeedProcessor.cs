@@ -592,7 +592,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new Dictionary<string, string>
                 {
                     {"is_prefetch", "0"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"device_id", _deviceInfo.PhoneGuid.ToString()},
                     {"phone_id", _deviceInfo.RankToken.ToString()},
