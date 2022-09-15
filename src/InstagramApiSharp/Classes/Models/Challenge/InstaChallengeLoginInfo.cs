@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 namespace InstagramApiSharp.Classes
 {
+    [System.Serializable]
     public class InstaChallengeLoginInfo
     {
         [JsonProperty("url")]

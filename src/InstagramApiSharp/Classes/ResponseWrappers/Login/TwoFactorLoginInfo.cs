@@ -2,6 +2,7 @@
 
 namespace InstagramApiSharp.Classes
 {
+    [System.Serializable]
     public class InstaTwoFactorLoginInfo
     {
         [JsonProperty("obfuscated_phone_number")]

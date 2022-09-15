@@ -10,6 +10,7 @@
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes
 {
+    [System.Serializable]
     public class InstaChallengeRequireVerifyMethod
     {
         [JsonProperty("step_name")]
@@ -28,6 +29,7 @@ namespace InstagramApiSharp.Classes
         public bool SubmitPhoneRequired => StepName == "submit_phone";
     }
 
+    [System.Serializable]
     public class InstaChallengeRequireStepData
     {
         [JsonProperty("choice")]
