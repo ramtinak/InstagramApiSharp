@@ -27,8 +27,10 @@ Also if you got challenge locked, you can purchase for a subscription, because p
 
 [Account Registration Sample](https://github.com/ramtinak/InstagramRegistration)
 
-## Minista App
-[Minista App](https://github.com/ramtinak/Minista) is now open source.
+## Wingo Tag App
+[Wingo Tag App](https://github.com/NGame1/Winsta11) is an excelent app to demonstrate how [InstagramApiSharp](https://github.com/ramtinak/InstagramApiSharp) works, a clean project.
+
+If you have any problem with using a function, search it in this repo.
 
 ## License
 MIT.
