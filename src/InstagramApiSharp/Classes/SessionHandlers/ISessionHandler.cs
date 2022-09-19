@@ -26,11 +26,16 @@ namespace InstagramApiSharp.Classes.SessionHandlers
         /// <summary>
         ///     Load and Set StateData to InstaApi
         /// </summary>
-        void Load();
+        /// <param name="useBinaryFormatter">Use BinaryFomatter, Not suggested!!!!
+        /// <para> P.S: This is only for backward compatibility</para>
+        /// </param>
+        void Load(bool useBinaryFormatter = true);
 
         /// <summary>
         ///     Save current StateData from InstaApi
         /// </summary>
-        void Save();
+        /// <param name="useBinaryFormatter">Use BinaryFomatter, Not suggested!!!!
+        /// <para> P.S: This is only for backward compatibility</para>
+        void Save(bool useBinaryFormatter = true);
     }
 }
