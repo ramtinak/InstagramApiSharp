@@ -1675,9 +1675,11 @@ namespace InstagramApiSharp.Helpers
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USEREFEED, userPk), out var instaUri))
                 throw new Exception("Cant create URI for user media retrieval");
-            return !string.IsNullOrEmpty(nextId)
-                ? new UriBuilder(instaUri) { Query = $"max_id={nextId}" }.Uri
-                : instaUri;
+            return instaUri
+                .AddQueryParameter("exclude_comment", "true")
+                .AddQueryParameter("max_id", nextId)
+                .AddQueryParameter("only_fetch_first_carousel_media", "false")
+                .AddQueryParameter("count", "9");
         }
 
         public static Uri GetArchivedMediaFeedsListUri(string nextId = "")
