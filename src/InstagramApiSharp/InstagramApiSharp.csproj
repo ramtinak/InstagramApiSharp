@@ -42,6 +42,7 @@ See example projects and wiki pages to find out how this library works.</Descrip
 - [Bugfix] for ChangePasswordAsync ( thx to @behi1ty for report )
 - [Add] checkpoint required error ( thx to @bman46 )
 - [Update] GenerateUploadId
+- [Update] GetUserMedia... URI
 - [Tiny update] for ChallengeLoginInfo/TwoFactorLoginInfo
 
 v1.7.2
