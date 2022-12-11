@@ -5,11 +5,6 @@ using Newtonsoft.Json;
 using InstagramApiSharp.API.Versions;
 namespace InstagramApiSharp.Classes.Android.DeviceInfo
 {
-    internal class ApiRequestChallengeMessage : ApiRequestMessage
-    {
-        [JsonProperty("_csrftoken")]
-        public string CsrtToken { get; set; }
-    }
     public class ApiRequestMessage
     {
         private string _phoneId;
@@ -46,9 +41,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         }
         internal string GetChallengeMessageString(string csrfToken)
         {
-            var api = new ApiRequestChallengeMessage
+            var api = new ApiRequestMessage
             {
-                CsrtToken = csrfToken,
                 DeviceId = DeviceId,
                 Guid = Guid,
                 LoginAttemptCount = "0",
@@ -60,14 +54,6 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             };
             var json = JsonConvert.SerializeObject(api);
             return json;
-        }
-        internal string GetMessageStringForChallengeVerificationCodeSend(int Choice = 1)
-        {
-            return JsonConvert.SerializeObject(new { choice = Choice.ToString(), _csrftoken = "ReplaceCSRF", Guid, DeviceId });
-        }
-        internal string GetChallengeVerificationCodeSend(string verify)
-        {
-            return JsonConvert.SerializeObject(new { security_code = verify, _csrftoken = "ReplaceCSRF", Guid, DeviceId });
         }
         internal string GenerateSignature(InstaApiVersion apiVersion, string signatureKey, out string deviceid)
         {
@@ -82,9 +68,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         {
             if (string.IsNullOrEmpty(signatureKey))
                 signatureKey = apiVersion.SignatureKey;
-            var api = new ApiRequestChallengeMessage
+            var api = new ApiRequestMessage
             {
-                CsrtToken = csrfToken,
                 DeviceId = DeviceId,
                 Guid = Guid,
                 LoginAttemptCount = "0",
@@ -116,7 +101,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         {
             var timeSpan = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0);
             var uploadId = (long) timeSpan.TotalSeconds;
-            return uploadId.ToString();
+            var u = (uploadId * ExtensionHelper.Rnd.Next(1111, 99999)) - ExtensionHelper.Rnd.Next(1000, 99999);
+            return $"{u}{ExtensionHelper.Rnd.Next(33333, 9999999)}";
         }
         //internal static string GenerateRandomUploadIdOLD()
         //{
@@ -126,7 +112,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         //}
         internal static string GenerateRandomUploadId()
         {
-            return DateTime.UtcNow.ToUnixTimeMiliSeconds().ToString();
+            return GenerateUploadId();
         }
         public static ApiRequestMessage FromDevice(AndroidDevice device)
         {

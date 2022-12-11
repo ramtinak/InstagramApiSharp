@@ -61,7 +61,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                     {"response", responseText ?? string.Empty},
                     {"type", "text"}
                 };
@@ -116,7 +115,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"source", "self_profile"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"cover", cover},
@@ -174,7 +172,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
-                    {"_csrftoken", _user.CsrfToken},
                     {"media_id", storyMediaId}
                 };
 
@@ -224,7 +221,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -363,7 +359,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {InstaApiConstants.SUPPORTED_CAPABALITIES_HEADER, InstaApiConstants.SupportedCapabalities.ToString(Formatting.None)},
                     {"source", "reel_highlights_gallery"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"user_ids", new JArray(highlightId)}
@@ -409,7 +404,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {InstaApiConstants.SUPPORTED_CAPABALITIES_HEADER, InstaApiConstants.SupportedCapabalities.ToString(Formatting.None)},
                     {"source", "profile"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"user_ids", new JArray(highlightId)}
@@ -655,7 +649,6 @@ namespace InstagramApiSharp.API.Processors
                 };
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"container_module", "feed_timeline"},
@@ -709,7 +702,6 @@ namespace InstagramApiSharp.API.Processors
                 };
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"container_module", "profile"},
@@ -823,7 +815,6 @@ namespace InstagramApiSharp.API.Processors
                     {"reel_id", reelId},
                     {"text", text ?? ""},
                     {"story_media_id", storyMediaId},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                 };
@@ -868,7 +859,6 @@ namespace InstagramApiSharp.API.Processors
                     {"action", "send_item"},
                     {"client_context", clientContext},
                     {"media_id", storyMediaId},
-                    {"_csrftoken", _user.CsrfToken},
                     {"text", text ?? string.Empty},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
@@ -1027,7 +1017,6 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 var videoMediaInfoData = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"media_info", new JObject
@@ -1208,7 +1197,6 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 var videoMediaInfoData = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"media_info", new JObject
@@ -1393,7 +1381,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetValidateReelLinkAddressUri();
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"url", url},
@@ -1433,7 +1420,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetStoryPollVoteUri(storyMediaId, pollId);
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"radio_type", "wifi-none"},
@@ -1484,7 +1470,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetVoteStorySliderUri(storyMediaId, pollId);
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"vote", sliderVote.ToString()},
@@ -1522,7 +1507,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"source", "story_viewer"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
@@ -1575,7 +1559,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
-                    {"_csrftoken", _user.CsrfToken},
                     {"source_type", "3"},
                     {"caption", caption},
                     {"upload_id", uploadId},
@@ -1731,10 +1714,9 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"filter_type", "0"},
-                    {"timezone_offset", "16200"},
-                    {"_csrftoken", _user.CsrfToken},
-                    {"client_shared_at", (long.Parse(ApiRequestMessage.GenerateUploadId())- rnd.Next(25,55)).ToString()},
-                    {"story_media_creation_date", (long.Parse(ApiRequestMessage.GenerateUploadId())- rnd.Next(50,70)).ToString()},
+                    {"timezone_offset", InstaApiConstants.TIMEZONE_OFFSET.ToString()},
+                    {"client_shared_at", (DateTime.UtcNow.ToUnixTime()- rnd.Next(25,55)).ToString()},
+                    {"story_media_creation_date", ( DateTime.UtcNow.ToUnixTime()- rnd.Next(50,70)).ToString()},
                     {"media_folder", "Camera"},
                     {"configure_mode", "1"},
                     {"source_type", "4"},
@@ -1746,7 +1728,7 @@ namespace InstagramApiSharp.API.Processors
                     {"capture_type", "normal"},
                     {"mas_opt_in", "NOT_PROMPTED"},
                     {"upload_id", uploadId},
-                    {"client_timestamp", ApiRequestMessage.GenerateUploadId()},
+                    {"client_timestamp", DateTime.UtcNow.ToUnixTime()},
                     {
                         "device", new JObject{
                             {"manufacturer", _deviceInfo.HardwareManufacturer},
@@ -1949,7 +1931,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
-                    {"_csrftoken", _user.CsrfToken},
                 };
 
                 var request =  _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -2023,7 +2004,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {new StringContent(uploadId), "\"upload_id\""},
                     //{new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
-                    //{new StringContent(_user.CsrfToken), "\"_csrftoken\""},
                     {
                         new StringContent("{\"lib_name\":\"jt\",\"lib_version\":\"1.3.0\",\"quality\":\"87\"}"),
                         "\"image_compression\""

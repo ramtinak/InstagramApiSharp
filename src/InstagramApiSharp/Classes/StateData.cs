@@ -15,5 +15,8 @@ namespace InstagramApiSharp.Classes
         public CookieContainer Cookies { get; set; }
         public List<Cookie> RawCookies { get; set; }
         public InstaApiVersionType? InstaApiVersion { get; set; }
+        public InstaTwoFactorLoginInfo TwoFactorLoginInfo { get; set; }
+        public InstaChallengeLoginInfo ChallengeLoginInfo { get; set; }
+        public InstaChallengeRequireVerifyMethod ChallengeVerifyMethod { get; set; }
     }
 }

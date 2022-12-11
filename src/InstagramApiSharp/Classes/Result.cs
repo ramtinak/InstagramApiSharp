@@ -150,6 +150,9 @@ namespace InstagramApiSharp.Classes
             if (!status.IsOk() && status.Message.Contains("wait a few minutes"))
                 responseType = ResponseType.RequestsLimit;
 
+            if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("checkpoint_required"))
+                responseType = ResponseType.CheckPointRequired;
+
             if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("consent_required"))
                 responseType = ResponseType.ConsentRequired;
 

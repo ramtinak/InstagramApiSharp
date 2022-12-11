@@ -1,12 +1,15 @@
 ﻿using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
+using InstagramApiSharp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+
 #if WINDOWS_UWP
 using Windows.Storage;
 #endif
+
 namespace InstagramApiSharp.Classes.SessionHandlers
 {
     public class FileSessionHandler : ISessionHandler
@@ -25,6 +28,9 @@ namespace InstagramApiSharp.Classes.SessionHandlers
         /// <summary>
         ///     Path to file
         /// </summary>
+        /// <param name="useBinaryFormatter">Use BinaryFomatter, Not suggested!!!!
+        /// <para> P.S: This is only for backward compatibility</para>
+        /// </param>
         public string FilePath { get; set; }
 #endif
 
@@ -35,7 +41,7 @@ namespace InstagramApiSharp.Classes.SessionHandlers
 #if WINDOWS_UWP
             async
 #endif
-            void Load()
+            void Load(bool useBinaryFormatter = true)
         {
 #if WINDOWS_UWP
             if (File == null)
@@ -57,9 +63,18 @@ namespace InstagramApiSharp.Classes.SessionHandlers
 #else
             if (File.Exists(FilePath))
             {
-                using (var fs = File.OpenRead(FilePath))
+                if (useBinaryFormatter)
                 {
-                    InstaApi.LoadStateDataFromStream(fs);
+                    using (var fs = File.OpenRead(FilePath))
+                    {
+                        InstaApi.LoadStateDataFromStream(fs);
+                    }
+                }
+                else
+                {
+                    var state = File.ReadAllText(FilePath);
+                    var decoded = CryptoHelper.Base64Decode(state);
+                    InstaApi.LoadStateDataFromString(decoded);
                 }
             }
 #endif
@@ -68,11 +83,14 @@ namespace InstagramApiSharp.Classes.SessionHandlers
         /// <summary>
         ///     Save current StateData from InstaApi
         /// </summary>
+        /// <param name="useBinaryFormatter">Use BinaryFomatter, Not suggested!!!!
+        /// <para> P.S: This is only for backward compatibility</para>
+        /// </param>
         public
 #if WINDOWS_UWP
             async
 #endif
-            void Save()
+            void Save(bool useBinaryFormatter = true)
         {
 #if WINDOWS_UWP
             if (File == null)
@@ -81,12 +99,23 @@ namespace InstagramApiSharp.Classes.SessionHandlers
             var json = InstaApi.GetStateDataAsString();
             await FileIO.WriteTextAsync(File, json, Windows.Storage.Streams.UnicodeEncoding.Utf8);
 #else
-            using (var state = InstaApi.GetStateDataAsStream())
+
+            if (useBinaryFormatter)
+            {
+                SaveMe(InstaApi.GetStateDataAsStream());
+            }
+            else
+            {
+                var b64 = CryptoHelper.Base64Encode(InstaApi.GetStateDataAsString());
+                var data = Encoding.UTF8.GetBytes(b64);
+                SaveMe(new MemoryStream(data));
+            }
+            void SaveMe(Stream stream)
             {
                 using (var fileStream = File.Create(FilePath))
                 {
-                    state.Seek(0, SeekOrigin.Begin);
-                    state.CopyTo(fileStream);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    stream.CopyTo(fileStream);
                 }
             }
 #endif

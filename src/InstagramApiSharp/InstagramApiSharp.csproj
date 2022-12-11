@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;uap10.0;net461</TargetFrameworks>
-    <VersionPrefix>1.7.2</VersionPrefix>
+    <VersionPrefix>1.7.4</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -11,9 +11,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.7.2.0</Version>
-    <AssemblyVersion>1.7.2.0</AssemblyVersion>
-    <FileVersion>1.7.2.0</FileVersion>
+    <Version>1.7.4.0</Version>
+    <AssemblyVersion>1.7.4.0</AssemblyVersion>
+    <FileVersion>1.7.4.0</FileVersion>
     <Description>A complete Private Instagram API for .NET.
 
 
@@ -38,7 +38,14 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.7.2
+    <PackageReleaseNotes>v1.7.4
+- [Bugfix] for ChangePasswordAsync ( thx to @behi1ty for report )
+- [Add] checkpoint required error ( thx to @bman46 )
+- [Update] GenerateUploadId
+- [Update] GetUserMedia... URI
+- [Tiny update] for ChallengeLoginInfo/TwoFactorLoginInfo
+
+v1.7.2
 - [Update] TwoFactorLoginAsync ( thx to @bman46 )
 
 v1.7.1

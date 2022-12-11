@@ -1,5 +1,5 @@
 ﻿/*
- * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ RamtinJokar@outlook.com ]
  * 
  * Github source: https://github.com/ramtinak/InstagramApiSharp
  * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
@@ -63,7 +63,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetBroadcastAddToPostLiveUri(broadcastId);
                 var data = new JObject
                 {
-                    { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
@@ -108,7 +107,6 @@ namespace InstagramApiSharp.API.Processors
                     {"comment_text", commentText},
                     {"live_or_vod", "1"},
                     {"offset_to_video_start"," 0"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                 };
@@ -149,7 +147,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetBroadcastCreateUri();
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"preview_height",  previewHeight},
                     {"preview_width",  previewWidth},
@@ -190,7 +187,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetBroadcastDeletePostLiveUri(broadcastId);
                 var data = new JObject
                 {
-                    { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
@@ -226,7 +222,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetBroadcastDisableCommenstUri(broadcastId);
                 var data = new JObject
                 {
-                    { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
@@ -262,7 +257,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetBroadcastEnableCommenstUri(broadcastId);
                 var data = new JObject
                 {
-                    { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()}
                 };
@@ -299,7 +293,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetBroadcastEndUri(broadcastId);
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.UserName},
                     {"end_after_copyright_warning", endAfterCopyrightWarning.ToString()},
@@ -460,7 +453,6 @@ namespace InstagramApiSharp.API.Processors
                 var uploadId = ApiRequestMessage.GenerateUploadId();
                 var requestContent = new MultipartFormDataContent(uploadId)
                 {
-                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
                     {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
                     {new StringContent("offset_to_video_start"),"30"}
                 };
@@ -786,7 +778,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetLikeLiveUri(broadcastId);
                 var data = new JObject
                 {
-                    { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"user_like_count", likeCount}
@@ -853,7 +844,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetBroadcastPinCommentUri(broadcastId);
                 var data = new JObject
                 {
-                    { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"comment_id", commentId},
@@ -891,7 +881,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"live_vods_skipped",  new JObject()},
@@ -935,7 +924,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetBroadcastStartUri(broadcastId);
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"should_send_notifications",  sendNotifications}
                 };
@@ -990,7 +978,6 @@ namespace InstagramApiSharp.API.Processors
                     {"broadcast_id", broadcastId},
                     {"action", "send_item"},
                     {"client_context", clientContext},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 if (threadIds?.Length > 0)
@@ -1045,7 +1032,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetBroadcastUnPinCommentUri(broadcastId);
                 var data = new JObject
                 {
-                    { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"comment_id", commentId},

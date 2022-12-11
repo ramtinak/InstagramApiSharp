@@ -1,5 +1,5 @@
 ﻿/*
- * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ RamtinJokar@outlook.com ]
  * 
  * Github source: https://github.com/ramtinak/InstagramApiSharp
  * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
@@ -113,7 +113,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     videoUploadParamsObj = new JObject
                     {
-                        {"_csrftoken", _user.CsrfToken},
                         {"_uid", _user.LoggedInUser.Pk},
                         {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                         {"media_info", new JObject
@@ -283,7 +282,6 @@ namespace InstagramApiSharp.API.Processors
                     {
                          {"action","send_item"},
                          {"client_context",clientContext},
-                         {"_csrftoken",_user.CsrfToken},
                          {"video_result",""},
                          {"_uuid",_deviceInfo.DeviceGuid.ToString()},
                          {"upload_id",uploadId}
@@ -327,7 +325,6 @@ namespace InstagramApiSharp.API.Processors
                     {
                         {"filter_type", "0"},
                         {"timezone_offset", "16200"},
-                        {"_csrftoken", _user.CsrfToken},
                         {"client_shared_at", (DateTime.UtcNow.ToUnixTime() - rnd.Next(25,55)).ToString()},
                         {"story_media_creation_date", (DateTime.UtcNow.ToUnixTime() - rnd.Next(50,70)).ToString()},
                         {"media_folder", "Camera"},
@@ -542,7 +539,6 @@ namespace InstagramApiSharp.API.Processors
                 };
                 var uploadParamsObj = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"media_info", new JObject
@@ -644,7 +640,6 @@ namespace InstagramApiSharp.API.Processors
                     //	"view_mode": "permanent",
                     //	"thread_ids": "[\"340282366841710300949128132202173515958\"]",
                     //	"timezone_offset": "16200",
-                    //	"_csrftoken": "gRMgctLzzC9MfJBQTz3MzxeYMtBxCY4s",
                     //	"client_shared_at": "1536323374",
                     //	"configure_mode": "2",
                     //	"source_type": "3",
@@ -674,7 +669,6 @@ namespace InstagramApiSharp.API.Processors
                     var data = new JObject
                     {
                         {"timezone_offset", "16200"},
-                        {"_csrftoken", _user.CsrfToken},
                         {"client_shared_at", (DateTime.UtcNow.ToUnixTime() - rnd.Next(25,55)).ToString()},
                         {"story_media_creation_date", (DateTime.UtcNow.ToUnixTime() - rnd.Next(50,70)).ToString()},
                         {"media_folder", "Camera"},
@@ -905,7 +899,6 @@ namespace InstagramApiSharp.API.Processors
                     {"date_time_original", DateTime.UtcNow.ToString("yyyy:MM:dd+hh:mm:ss")},
                     {"is_suggested_venue", "false"},
                     {"timezone_offset", InstaApiConstants.TIMEZONE_OFFSET.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                     {"media_folder", "Camera"},
                     {"source_type", "3"},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
@@ -1018,7 +1011,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"upload_id", uploadId},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
@@ -1032,7 +1024,6 @@ namespace InstagramApiSharp.API.Processors
                 var converter = ConvertersFabric.Instance.GetSingleMediaConverter(mediaResponse);
                 var obj = converter.Convert();
                 //{
-                //	"_csrftoken": "5zpWUcNSwJQuYlua9fKDWWXzUhUofqul",
                 //	"selfie_sticker": "1",
                 //	"_uid": "7405924766",
                 //	"mode": "2",
@@ -1139,7 +1130,6 @@ namespace InstagramApiSharp.API.Processors
                 progress?.Invoke(upProgress);
                 var videoUploadParamsObj = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"media_info", new JObject
@@ -1289,7 +1279,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"filter_type", "0"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"source_type", "4"},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},

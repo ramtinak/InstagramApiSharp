@@ -1,5 +1,5 @@
 ﻿/*
- * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ RamtinJokar@outlook.com ]
  * 
  * Github source: https://github.com/ramtinak/InstagramApiSharp
  * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
@@ -71,7 +71,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"use_unified_inbox", "true"},
                     {"user_ids", $"[{userIds.EncodeList()}]"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -114,7 +113,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new Dictionary<string, string>
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 Uri instaUri;
@@ -177,7 +175,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new Dictionary<string, string>
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"use_unified_inbox", "true"}
                 };
@@ -215,7 +212,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new Dictionary<string, string>
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request =
@@ -568,7 +564,6 @@ namespace InstagramApiSharp.API.Processors
                 var clientContext = Guid.NewGuid().ToString();
                 var data = new Dictionary<string, string>
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                 };
                 var request =
@@ -609,7 +604,6 @@ namespace InstagramApiSharp.API.Processors
                     {"item_type", "reaction"},
                     {"reaction_type", "like"},
                     {"action", "send_item"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"thread_ids", $"[{threadId}]"},
                     {"client_context", Guid.NewGuid().ToString()},
@@ -653,7 +647,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"thread_id", threadId},
                     {"action", "mark_seen"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"item_id", itemId},
                     {"use_unified_inbox", "true"},
@@ -692,7 +685,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new Dictionary<string, string>
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request =
@@ -814,7 +806,6 @@ namespace InstagramApiSharp.API.Processors
                     {"hashtag", hashtag},
                     {"action", "send_item"},
                     {"client_context", clientContext},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 if (threadIds?.Length > 0)
@@ -889,7 +880,6 @@ namespace InstagramApiSharp.API.Processors
                     {"link_urls", $"[{ExtensionHelper.EncodeList(new[]{ link })}]"},
                     {"action", "send_item"},
                     {"client_context", clientContext},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 if (threadIds?.Length > 0)
@@ -939,7 +929,6 @@ namespace InstagramApiSharp.API.Processors
                     {"action", "send_item"},
                     {"thread_ids", $"[{threadIds.EncodeList(false)}]"},
                     {"client_context", clientContext},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
 
@@ -1032,7 +1021,6 @@ namespace InstagramApiSharp.API.Processors
                     {"action", "send_item"},
                     {"thread_ids", $"[{threadIds.EncodeList(false)}]"},
                     {"client_context", clientContext},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request =
@@ -1074,7 +1062,6 @@ namespace InstagramApiSharp.API.Processors
                     {"action", "send_item"},
                     {"recipient_users", $"[[" + recipients + "]]"},
                     {"client_context", clientContext},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request =
@@ -1260,7 +1247,6 @@ namespace InstagramApiSharp.API.Processors
                     {"action", "send_item"},
                     {"client_context", clientContext},
                     {"media_id", mediaId},
-                    {"_csrftoken", _user.CsrfToken},
                     {"unified_broadcast_format", "1"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"text", text ?? string.Empty}
@@ -1311,7 +1297,6 @@ namespace InstagramApiSharp.API.Processors
                     {new StringContent($"[{threadId}]"), "\"thread_ids\""},
                     {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""},
                     {new StringContent(_user.LoggedInUser.Pk.ToString()), "\"_uid\""},
-                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""}
 
                 };
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
@@ -1354,7 +1339,6 @@ namespace InstagramApiSharp.API.Processors
                     {"item_type", "reaction"},
                     {"reaction_type", "like"},
                     {"action", "send_item"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"thread_ids", $"[{threadId}]"},
                     {"client_context", Guid.NewGuid().ToString()},
@@ -1395,7 +1379,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new Dictionary<string, string>
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request =
@@ -1433,7 +1416,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new Dictionary<string, string>
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"title", title},
                 };
@@ -1466,7 +1448,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new Dictionary<string, string>
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 if (!all)
@@ -1516,7 +1497,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new Dictionary<string, string>
                 {
                     {"action", "send_item"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"thread_id", $"{threadId}"},
                     {"client_context", Guid.NewGuid().ToString()}
@@ -1559,7 +1539,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {new StringContent("send_item"), "\"action\""},
                     {new StringContent(clientContext.ToString()), "\"client_context\""},
-                    {new StringContent(_user.CsrfToken), "\"_csrftoken\""},
                     {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""}
                 };
                 if (!string.IsNullOrEmpty(recipients))

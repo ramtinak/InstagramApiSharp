@@ -1,5 +1,5 @@
 ﻿/*
- * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ RamtinJokar@outlook.com ]
  * 
  * Github source: https://github.com/ramtinak/InstagramApiSharp
  * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
@@ -231,7 +231,7 @@ namespace InstagramApiSharp
 
             }
         }
-        static readonly Random Rnd = new Random();
+        internal static readonly Random Rnd = new Random();
         public static string GenerateRandomString(this int length)
         {
             const string pool = "abcdefghijklmnopqrstuvwxyz0123456789";

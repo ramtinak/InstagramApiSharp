@@ -59,7 +59,6 @@ namespace InstagramApiSharp.API.Processors
                     {"user_id", userId.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
@@ -337,7 +336,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new Dictionary<string, string>
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"user_ids", string.Join(",", userIds)},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
@@ -595,7 +593,6 @@ namespace InstagramApiSharp.API.Processors
                 var uploadId = ApiRequestMessage.GenerateUploadId();
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"gallery", "true"},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
@@ -1091,7 +1088,6 @@ namespace InstagramApiSharp.API.Processors
                     {"user_id", userId.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, fields);
@@ -1139,7 +1135,6 @@ namespace InstagramApiSharp.API.Processors
                     {"user_id", userId.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -1198,7 +1193,6 @@ namespace InstagramApiSharp.API.Processors
                     {"reason", "1"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                     {"is_spam", "true"}
                 };
                 var request =
@@ -1299,7 +1293,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"user_id", userId.ToString()},
                     {"radio_type", "wifi-none"},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
@@ -1373,7 +1366,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"module", "favorites_home_list"},
@@ -1429,7 +1421,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                     {"user_id", userId.ToString()},
                     {"radio_type", "wifi-none"}
                 };
@@ -1463,7 +1454,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                     {"user_id", userId.ToString()},
                     {"radio_type", "wifi-none"}
                 };
@@ -1601,7 +1591,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"phone_id", _deviceInfo.PhoneGuid.ToString()},
                     {"module", "discover_people"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"paginate", "true"},
                 };
@@ -1776,7 +1765,6 @@ namespace InstagramApiSharp.API.Processors
                     {"user_id", userId.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -1809,7 +1797,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                 };
                 switch (muteUnmuteOption)
                 {
@@ -1858,7 +1845,6 @@ namespace InstagramApiSharp.API.Processors
                     {"source", "profile"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -1894,7 +1880,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                 };
                 var request =
                     _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);

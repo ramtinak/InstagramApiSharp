@@ -1,5 +1,5 @@
 ﻿/*
- * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ RamtinJokar@outlook.com ]
  * 
  * Github source: https://github.com/ramtinak/InstagramApiSharp
  * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
@@ -10,6 +10,7 @@
 using Newtonsoft.Json;
 namespace InstagramApiSharp.Classes
 {
+    [System.Serializable]
     public class InstaChallengeRequireVerifyMethod
     {
         [JsonProperty("step_name")]
@@ -28,6 +29,7 @@ namespace InstagramApiSharp.Classes
         public bool SubmitPhoneRequired => StepName == "submit_phone";
     }
 
+    [System.Serializable]
     public class InstaChallengeRequireStepData
     {
         [JsonProperty("choice")]

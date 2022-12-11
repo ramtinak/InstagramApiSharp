@@ -1,5 +1,5 @@
 ﻿/*
- * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ RamtinJokar@outlook.com ]
  * 
  * Github source: https://github.com/ramtinak/InstagramApiSharp
  * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
@@ -61,7 +61,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetClearSearchHistoryUri();
                 var data = new JObject
                 {
-                    { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                 };
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -331,7 +330,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     { "phone_id", _deviceInfo.DeviceGuid.ToString()},
                     { "module","discover_people"},
-                    { "_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     { "paginate","true"}
                     //{"_uid", _user.LoggedInUder.Pk.ToString()},

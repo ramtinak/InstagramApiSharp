@@ -1,5 +1,5 @@
 ﻿/*
- * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ My Telegram Account: https://t.me/ramtinak ]
+ * Developer: Ramtin Jokar [ Ramtinak@live.com ] [ RamtinJokar@outlook.com ]
  * 
  * Github source: https://github.com/ramtinak/InstagramApiSharp
  * Nuget package: https://www.nuget.org/packages/InstagramApiSharp
@@ -82,7 +82,6 @@ namespace InstagramApiSharp.API.Processors
                     {"ix_url", uri.ToString()},
                     {"ix_app_id", businessPartner.AppId},
                     {"is_call_to_action_enabled","1"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
@@ -155,7 +154,6 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetSetBusinessCategoryUri();
                 var data = new JObject
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"category_id", subCategoryId},
@@ -490,7 +488,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new Dictionary<string, string>
                 {
                     {"thread_label", "1"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request =
@@ -528,7 +525,6 @@ namespace InstagramApiSharp.API.Processors
 
                 var data = new Dictionary<string, string>
                 {
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
                 var request =
@@ -704,7 +700,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"is_call_to_action_enabled","0"},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };
@@ -896,7 +891,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"page_id", user.PageId.Value.ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                     {"public_phone_contact", publicPhoneContact.ToString(Formatting.None)},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
@@ -947,7 +941,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"app_id", desirePartner.AppId},
-                    {"_csrftoken", _user.CsrfToken},
                     {"url", uri.ToString()},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
@@ -983,7 +976,6 @@ namespace InstagramApiSharp.API.Processors
                 var data = new JObject
                 {
                     {"require_approval", (approval ?? 1).ToString()},
-                    {"_csrftoken", _user.CsrfToken},
                     {"_uid", _user.LoggedInUser.Pk.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()}
                 };

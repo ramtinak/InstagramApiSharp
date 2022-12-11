@@ -16,8 +16,8 @@ InstagramApiSharp's public version - Update date: September 19, 2021 - End Of Su
 
 | Target | Branch | Version | Download link | Total downloads |
 | ------ | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.7.2 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
-| Release | master | v1.7.2 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
+| Nuget | master | v1.7.4 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Release | master | v1.7.4 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
 
 ## Note
 This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharper) with more features and new cool things.
@@ -27,8 +27,10 @@ Also if you got challenge locked, you can purchase for a subscription, because p
 
 [Account Registration Sample](https://github.com/ramtinak/InstagramRegistration)
 
-## Minista App
-[Minista App](https://github.com/ramtinak/Minista) is now open source.
+## Wingo Tag App
+[Wingo Tag App](https://github.com/NGame1/Winsta11) is an excelent app to demonstrate how [InstagramApiSharp](https://github.com/ramtinak/InstagramApiSharp) works, a clean project.
+
+If you have any problem with using a function, search it in this repo.
 
 ## License
 MIT.
@@ -66,4 +68,4 @@ Public version - End Of Support
 
 
 
-Iranian developers - (c) 2021 | Paeez 1400.
+Iranian developers - (c) 2022 | Tabestan 1401.

@@ -61,7 +61,6 @@ namespace InstagramApiSharp.API.Processors
                     {"radio_type", "wifi-none"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
-                    {"_csrftoken", _user.CsrfToken}
                 };
 
                 var request =
@@ -104,7 +103,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
-                    {"_csrftoken", _user.CsrfToken},
                     {"name", collectionName},
                     {"module_name", InstaApiConstants.COLLECTION_CREATE_MODULE}
                 };
@@ -149,7 +147,6 @@ namespace InstagramApiSharp.API.Processors
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
-                    {"_csrftoken", _user.CsrfToken},
                     {"module_name", "collection_editor"}
                 };
 
@@ -199,7 +196,6 @@ namespace InstagramApiSharp.API.Processors
                     {"name", name ?? string.Empty},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"_uid", _user.LoggedInUser.Pk},
-                    {"_csrftoken", _user.CsrfToken}
                 };
                 if (!string.IsNullOrEmpty(photoCoverMediaId))
                     data.Add("cover_media_id", photoCoverMediaId);
