@@ -68,4 +68,4 @@ Public version - End Of Support
 
 
 
-Iranian developers - (c) 2022 | Tabestan 1401.
+Iranian developers - (c) 2023 | Tabestan 1402.
