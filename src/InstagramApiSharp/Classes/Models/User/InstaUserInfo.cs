@@ -102,7 +102,7 @@ namespace InstagramApiSharp.Classes.Models
 
         public bool HasUnseenBestiesMedia { get; set; }
 
-        public bool AutoExpandChaining { get; set; }
+        public bool? AutoExpandChaining { get; set; }
 
         public InstaBiographyEntities BiographyWithEntities { get; set; }
 
