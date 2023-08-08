@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
 
@@ -104,8 +105,9 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
 
         [JsonProperty("has_unseen_besties_media")] public bool HasUnseenBestiesMedia { get; set; }
 
-        [JsonProperty("auto_expand_chaining")] public bool AutoExpandChaining { get; set; }
-
+        [JsonProperty("auto_expand_chaining", DefaultValueHandling = DefaultValueHandling.Populate, NullValueHandling = NullValueHandling.Ignore)]
+        [DefaultValue(false)]
+        public bool AutoExpandChaining { get; set; }
         
         [JsonProperty("biography_with_entities")] public InstaBiographyEntities BiographyWithEntities { get; set; }
 
