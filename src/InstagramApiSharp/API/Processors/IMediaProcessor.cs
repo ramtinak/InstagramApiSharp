@@ -195,5 +195,11 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="caption">Caption</param>
         /// <param name="location">Location => Optional (get it from <seealso cref="ILocationProcessor.SearchLocationAsync"/></param>
         Task<IResult<InstaMedia>> UploadVideoAsync(Action<InstaUploaderProgress> progress, InstaVideoUpload video, string caption, InstaLocationShort location = null);
+
+        /// <summary>
+        ///     Get media Oembed data from url ("share link")
+        /// </summary>
+        /// <param name="uri">Uri to get media Oembed</param>
+        Task<IResult<InstaOembed>> GetOembedByUrlAsync(Uri uri);
     }
 }

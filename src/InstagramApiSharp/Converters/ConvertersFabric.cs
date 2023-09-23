@@ -980,5 +980,11 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaTopicalExploreFeedConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaOembed, InstaOembedUrlResponse> GetOembedConverter(
+            InstaOembedUrlResponse responseOembed)
+        {
+            return new InstaOembedConverter { SourceObject = responseOembed };
+        }
     }
 }

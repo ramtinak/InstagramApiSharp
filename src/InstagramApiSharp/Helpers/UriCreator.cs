@@ -1020,9 +1020,9 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetMediaIdFromUrlUri(Uri uri)
+        public static Uri GetMediaOembedFromUrlUri(Uri uri)
         {
-            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_MEDIAID, uri.AbsoluteUri),
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.OEMBED, uri.AbsoluteUri),
                 out var instaUri))
                 throw new Exception("Can't create URI for getting media id");
             return instaUri;
@@ -1680,6 +1680,15 @@ namespace InstagramApiSharp.Helpers
                 .AddQueryParameter("max_id", nextId)
                 .AddQueryParameter("only_fetch_first_carousel_media", "false")
                 .AddQueryParameter("count", "9");
+        }
+
+        public static Uri GetUserMediaListMinIdUri(long userPk, string minId = "")
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.USEREFEED, userPk), out var instaUri))
+                throw new Exception("Cant create URI for user media retrieval");
+            return !string.IsNullOrEmpty(minId)
+                ? new UriBuilder(instaUri) { Query = $"min_id={minId}" }.Uri
+                : instaUri;
         }
 
         public static Uri GetArchivedMediaFeedsListUri(string nextId = "")
