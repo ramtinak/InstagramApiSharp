@@ -9,10 +9,10 @@ InstagramApiSharp's private version - Under developing. Check [#243](https://git
 
 | Target | Branch | Version | Changelog |
 | ------ | ------ | ------ | ------ |
-| Github | master | v2.8.6 | [v2.8.6](https://github.com/ramtinak/InstagramApiSharp/issues/244#issuecomment-913897699) |
+| Github | master | v2.8.21 | [v2.8.21](https://github.com/ramtinak/InstagramApiSharp/issues/244#issuecomment-913897699) |
 
 -----
-InstagramApiSharp's public version - Update date: September 19, 2021 - End Of Support(from April 5, 2019)!!!
+InstagramApiSharp's public version - Update date: September 23, 2023 - End Of Support(from April 5, 2019)!!!
 
 | Target | Branch | Version | Download link | Total downloads |
 | ------ | ------ | ------ | ------ | ------ |
@@ -23,7 +23,7 @@ InstagramApiSharp's public version - Update date: September 19, 2021 - End Of Su
 This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharper) with more features and new cool things.
 
 All references in [v1.7.0](https://www.nuget.org/packages/InstagramApiSharp/1.7.0) is updated. 
-Also if you got challenge locked, you can purchase for a subscription, because private version is supports this feature.
+Also if you got challenge locked, you can purchase for a subscription, because private version supports this feature.
 
 [Account Registration Sample](https://github.com/ramtinak/InstagramRegistration)
 
@@ -63,9 +63,9 @@ Public version - End Of Support
 
 | Name | Github | Email | Telegram | Instagram |
 | ------ | ------ | ------ | ------ | ------ |
-| Ramtin Jokar | [@Ramtinak](https://github.com/ramtinak) | - | - | - |
+| Ramtin Jokar | [@Ramtinak](https://github.com/ramtinak) | [ramtinak@live.com](mailto:ramtinak@live.com) | [RamtinJokar](https://t.me/RamtinJokar) | - |
 | Ali Noshahi | [@NGame1](https://github.com/NGame1) | [NGame1390@hotmail.com](mailto:ngame1390@hotmail.com) | [NGameW](https://t.me/NGameW) | [alingame](https://instagram.com/alingame) |
 
 
 
-Iranian developers - (c) 2023 | Tabestan 1402.
+Iranian developers - (c) 2023 | Paeez 1402.

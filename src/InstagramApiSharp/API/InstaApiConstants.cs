@@ -56,6 +56,11 @@ namespace InstagramApiSharp.API
         public const string COOKIES_SHBID = "shbid";
         public const string COOKIES_RUR = "rur";
 
+        public const string RESPONSE_HEADER_U_DIRECT_REGION_HINT = "ig-set-ig-u-ig-direct-region-hint";
+        public const string RESPONSE_HEADER_U_SHBID = "ig-set-ig-u-shbid";
+        public const string RESPONSE_HEADER_U_SHBTS = "ig-set-ig-u-shbts";
+        public const string RESPONSE_HEADER_U_RUR = "ig-set-ig-u-rur";
+
         public const string HEADER_BEARER_IGT_2_VALUE = "Bearer IGT:2:";
 
         public const string HEADER_X_IG_BLOKS_PANORAMA_ENABLED = "X-Bloks-Is-Panorama-Enabled";
@@ -659,6 +664,7 @@ namespace InstagramApiSharp.API
         public const string LAUNCHER_SYNC = API_SUFFIX + "/launcher/sync/";
         public const string ACCOUNTS_GET_PREFILL_CANDIDATES = API_SUFFIX + "/accounts/get_prefill_candidates/";
         public const string QE_SYNC = API_SUFFIX + "/qe/sync/";
+        public const string LAUNCHER_MOBILE_CONFIG = API_SUFFIX + "/launcher/mobileconfig/";
         #endregion Other endpoints constants
 
         #region Web endpoints constants

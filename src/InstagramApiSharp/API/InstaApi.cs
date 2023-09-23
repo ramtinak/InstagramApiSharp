@@ -1443,23 +1443,24 @@ namespace InstagramApiSharp.API
                 _logger?.LogException(exception);
             }
         }
-        private async Task QeSync()
+        public async Task QeSync()
         {
             try
             {
-                var data = new JObject();
+                var data = new JObject
+                {
+                    {"server_config_retrieval", "1"}
+                };
                 if (IsUserAuthenticated && _user?.LoggedInUser != null)
                 {
                     data.Add("id", _deviceInfo.DeviceGuid.ToString());
                     data.Add("_uid", _deviceInfo.DeviceGuid.ToString());
-                    data.Add("server_config_retrieval", "1");
-                    data.Add("experiments", InstaApiConstants./*AFTER_*/LOGIN_EXPERIMENTS_CONFIGS);
+                    //data.Add("experiments", InstaApiConstants./*AFTER_*/LOGIN_EXPERIMENTS_CONFIGS);
                 }
                 else
                 {
                     data.Add("id", _deviceInfo.DeviceGuid.ToString());
-                    data.Add("server_config_retrieval", "1");
-                    data.Add("experiments", InstaApiConstants.LOGIN_EXPERIMENTS_CONFIGS);
+                    //data.Add("experiments", InstaApiConstants.LOGIN_EXPERIMENTS_CONFIGS);
                 }
 
 
@@ -2698,6 +2699,105 @@ namespace InstagramApiSharp.API
             }
         }
 
+        public async Task<IResult<bool>> LauncherMobileConfigAsync(bool intendedUserIdIsZero = false)
+        {
+            try
+            {
+                var data = new JObject
+                {
+                    {"bool_opt_policy", "0"},
+                    {(!intendedUserIdIsZero ? "mobileconfig" : "mobileconfigsessionless"), ""},
+                    {"api_version", "3"},
+                    {"unit_type", !intendedUserIdIsZero ? "2" : "1"},
+                    {"query_hash", !intendedUserIdIsZero ? "6d00f38945e83fae8c18eac88cc7e983241cf0ec8dc668fe6df10d1ec1d96a1f" : "e3c027b7896936999d38b5cd62bb9391bddc8fc3c6809c3dd365a739bbe7aa8f"},
+                    //{"ts", DateTime.UtcNow.ToUnixTime().ToString()},
+                    {"device_id", _deviceInfo.DeviceGuid.ToString()},
+                    {"fetch_type", "ASYNC_FULL"},
+                };
+
+                if (intendedUserIdIsZero)
+                {
+                    data.Add("family_device_id", _deviceInfo.FamilyDeviceGuid.ToString().ToUpper());
+                }
+                else
+                {
+                    if (_user.LoggedInUser != null)
+                        data.Add("_uid", _user.LoggedInUser.Pk.ToString());
+                    data.Add("_uuid", _deviceInfo.DeviceGuid.ToString());
+                }
+                var uri = UriCreator.GetLauncherMobileConfigUri(true);
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, uri, _deviceInfo, data);
+
+                request.Headers.Add(InstaApiConstants.HEADER_X_WWW_CLAIM, "0");
+
+                if (intendedUserIdIsZero)
+                {
+                    request.Headers.Remove(InstaApiConstants.HEADER_AUTHORIZATION);
+                    request.Headers.Add("Ig-Intended-User-Id", "0");
+                    request.Headers.Remove(InstaApiConstants.HEADER_IG_U_DS_USER_ID);
+                    request.Headers.Remove(InstaApiConstants.HEADER_IG_U_RUR);
+                }
+                else
+                {
+                    request.Headers.Remove(InstaApiConstants.HEADER_PIGEON_SESSION_ID);
+                }
+
+                var response = await _httpRequestProcessor.SendAsync(request);
+
+                if (!response.IsSuccessStatusCode)
+                    return Result.UnExpectedResponse<bool>(response, await response.Content.ReadAsStringAsync());
+
+                if (!intendedUserIdIsZero)
+                {
+
+                    var json = await response.Content.ReadAsStringAsync();
+                    var obj = JsonConvert.DeserializeObject<JObject>(json);
+                    //_user.LoggingId = obj?["configs"]?["41207"]?["fields"].First?["li"]?.Value<string>();
+                    IResult<bool> afterLoginResult = await AfterLoginAsync(response, true).ConfigureAwait(false);
+
+                    if (ContainsHeader(InstaApiConstants.RESPONSE_HEADER_IG_PASSWORD_ENC_PUB_KEY) && ContainsHeader(InstaApiConstants.RESPONSE_HEADER_IG_PASSWORD_ENC_KEY_ID))
+                    {
+                        _user.PublicKey = string.Join("", response.Headers.GetValues(InstaApiConstants.RESPONSE_HEADER_IG_PASSWORD_ENC_PUB_KEY));
+                        _user.PublicKeyId = string.Join("", response.Headers.GetValues(InstaApiConstants.RESPONSE_HEADER_IG_PASSWORD_ENC_KEY_ID));
+                    }
+
+                    var cookies = _httpRequestProcessor.HttpHandler.CookieContainer
+                        .GetCookies(_httpRequestProcessor.Client.BaseAddress);
+
+                    string mid = cookies[InstaApiConstants.COOKIES_MID]?.Value ?? (ContainsHeader(InstaApiConstants.RESPONSE_HEADER_IG_SET_X_MID) ? string.Join("", response.Headers.GetValues(InstaApiConstants.RESPONSE_HEADER_IG_SET_X_MID)) : null);
+                    string rur = cookies[InstaApiConstants.COOKIES_RUR]?.Value ?? (ContainsHeader(InstaApiConstants.RESPONSE_HEADER_X_IG_ORIGIN_REGION) ? string.Join("", response.Headers.GetValues(InstaApiConstants.RESPONSE_HEADER_X_IG_ORIGIN_REGION)) : null);
+
+                    if (!string.IsNullOrEmpty(mid))
+                    {
+                        _user.XMidHeader = mid;
+                    }
+
+                    if (!string.IsNullOrEmpty(rur))
+                    {
+                        _user.RurHeader = rur;
+                    }
+
+                    if (!afterLoginResult.Succeeded)
+                        return Result.Fail(afterLoginResult.Info, false);
+
+                }
+
+                return Result.Success(true);
+
+                bool ContainsHeader(string head) => response.Headers.Contains(head);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, false);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail(exception, false);
+            }
+        }
+
         #endregion Other public functions
 
         #region State data
@@ -2876,8 +2976,7 @@ namespace InstagramApiSharp.API
         #endregion State data
 
         #region private part
-
-        internal async Task AfterLoginAsync(HttpResponseMessage response, bool dontCallLauncherSync = false)
+        internal async Task<IResult<bool>> AfterLoginAsync(HttpResponseMessage response, bool dontCallLauncherConfig = false)
         {
             try
             {
@@ -2914,12 +3013,63 @@ namespace InstagramApiSharp.API
                         _user.Authorization = authorization;
                     }
                 }
-
-                if (!dontCallLauncherSync)
+                AppendOtherHeadersAsync(response);
+                if (!dontCallLauncherConfig)
                 {
-                    await LauncherSyncPrivate(/*false, true*/).ConfigureAwait(false);
+                    IResult<bool> launcherResult = await LauncherMobileConfigAsync().ConfigureAwait(false);
+                    if (!launcherResult.Succeeded)
+                        return Result.Fail(launcherResult.Info, false);
                 }
 
+                return Result.Success(true);
+
+                bool ContainsHeader(string head) => response.Headers.Contains(head);
+            }
+            catch (Exception exception)
+            {
+                LogException(exception);
+                return Result.Fail(exception, false);
+            }
+        }
+
+        public void AppendOtherHeadersAsync(HttpResponseMessage response)
+        {
+            try
+            {
+                if (ContainsHeader(InstaApiConstants.RESPONSE_HEADER_U_DIRECT_REGION_HINT))
+                {
+                    var value = GetHeader(InstaApiConstants.RESPONSE_HEADER_U_DIRECT_REGION_HINT);
+                    if (value.IsNotEmpty())
+                    {
+                        _user.RespondUDirectRegionHint = GetHeader(InstaApiConstants.RESPONSE_HEADER_U_DIRECT_REGION_HINT);
+                    }
+                }
+                if (ContainsHeader(InstaApiConstants.RESPONSE_HEADER_U_SHBID))
+                {
+                    var value = GetHeader(InstaApiConstants.RESPONSE_HEADER_U_SHBID);
+                    if (value.IsNotEmpty())
+                    {
+                        _user.RespondUShbid = GetHeader(InstaApiConstants.RESPONSE_HEADER_U_SHBID);
+                    }
+                }
+                if (ContainsHeader(InstaApiConstants.RESPONSE_HEADER_U_SHBTS))
+                {
+                    var value = GetHeader(InstaApiConstants.RESPONSE_HEADER_U_SHBTS);
+                    if (value.IsNotEmpty())
+                    {
+                        _user.RespondUShbts = GetHeader(InstaApiConstants.RESPONSE_HEADER_U_SHBTS);
+                    }
+                }
+                if (ContainsHeader(InstaApiConstants.RESPONSE_HEADER_U_RUR))
+                {
+                    var value = GetHeader(InstaApiConstants.RESPONSE_HEADER_U_RUR);
+                    if (value.IsNotEmpty())
+                    {
+                        _user.RespondURur = GetHeader(InstaApiConstants.RESPONSE_HEADER_U_RUR);
+                    }
+                }
+
+                string GetHeader(string head) => string.Join("", response.Headers.GetValues(head));
                 bool ContainsHeader(string head) => response.Headers.Contains(head);
             }
             catch (Exception exception)

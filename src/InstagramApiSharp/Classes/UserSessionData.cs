@@ -16,6 +16,12 @@ namespace InstagramApiSharp.Classes
         public string Authorization { get; set; }
         public string XMidHeader { get; set; }
         public string RurHeader { get; set; }
+
+        public string RespondUDirectRegionHint { get; set; }
+        public string RespondUShbid { get; set; }
+        public string RespondUShbts { get; set; }
+        public string RespondURur { get; set; }
+        public string SessionFlushNonce { get; set; }
         public InstaUserShort LoggedInUser { get; set; }
 
         public string RankToken { get; set; }
