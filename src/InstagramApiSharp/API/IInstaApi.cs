@@ -1,15 +1,15 @@
-﻿/*  
- *  
- *  
- *  Base of everything! Access to any other classes via IInstaApi
- *  
- *  
- *                      IRANIAN DEVELOPERS
- *        
- *        
- *                            2019
- *  
- *  
+﻿/*                                                                  *
+ *                                                                  *
+ *                                                                  *
+ *  Base of everything! Access to any other classes via IInstaApi   *
+ *                                                                  *
+ *                                                                  *
+ *                      IRANIAN DEVELOPERS                          *
+ *                                                                  *
+ *                                                                  *
+ *                            2023                                  *
+ *                                                                  *
+ *                                                                  *  
  */
 
 using System.IO;
@@ -33,6 +33,8 @@ namespace InstagramApiSharp.API
     /// </summary>
     public interface IInstaApi
     {
+        Task QeSync();
+        Task<IResult<bool>> LauncherMobileConfigAsync(bool IgIntendedUserIdIsZero = false);
         #region Properties
         /// <summary>
         ///     Get current api version of Instagram that <see cref="InstagramApiSharp"/> is using it

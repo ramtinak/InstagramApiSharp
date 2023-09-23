@@ -2371,5 +2371,11 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for nux new account seen");
             return instaUri;
         }
+        public static Uri GetLauncherMobileConfigUri(bool isBUrl = false)
+        {
+            if (!Uri.TryCreate(isBUrl ? BaseInstagramBUri : BaseInstagramUri, InstaApiConstants.LAUNCHER_MOBILE_CONFIG, out var instaUri))
+                throw new Exception("Cant create URI for dynamic onboarding get steps");
+            return instaUri;
+        }
     }
 }

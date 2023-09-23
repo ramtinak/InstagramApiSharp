@@ -127,11 +127,11 @@ namespace InstagramApiSharp.API.Versions
                     InstaApiVersionType.Version261,
                     new InstaApiVersion
                     {
-                         AppApiVersionCode = "418951243",
-                         AppVersion = "261.0.0.21.111",
+                         AppApiVersionCode = "436384445",
+                         AppVersion = "265.0.0.19.301",
                          Capabilities = "3brTv10=",
                          SignatureKey = "SIGNATURE",
-                         BloksVersionId = "a399f367a2e4aa3e40cdb4aab6535045b23db15f3dea789880aa0970463de062",
+                         BloksVersionId = "0ee04a4a6556c5bb584487d649442209a3ae880ae5c6380b16235b870fcc4052",
                     }
                 },
             };
