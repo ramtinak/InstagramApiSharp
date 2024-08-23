@@ -1096,6 +1096,7 @@ namespace InstagramApiSharp.API
                 _user.CsrfToken = csrfToken;
                 _user.RankToken = $"{_deviceInfo.RankToken}_{userId}";
 
+                await LauncherSyncPrivate();
                 IsUserAuthenticated = true;
                 InvalidateProcessors();
 
