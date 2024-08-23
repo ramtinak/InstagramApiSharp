@@ -561,7 +561,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetLeaveThreadUri(threadId);
-                var clientContext = Guid.NewGuid().ToString();
+                var clientContext = ExtensionHelper.GetThreadToken();
                 var data = new Dictionary<string, string>
                 {
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
@@ -606,7 +606,7 @@ namespace InstagramApiSharp.API.Processors
                     {"action", "send_item"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"thread_ids", $"[{threadId}]"},
-                    {"client_context", Guid.NewGuid().ToString()},
+                    {"client_context", ExtensionHelper.GetThreadToken()},
                     {"node_type", "item"},
                     {"reaction_status", "created"},
                     {"item_id", itemId}
@@ -799,7 +799,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetSendDirectHashtagUri();
-                var clientContext = Guid.NewGuid().ToString();
+                var clientContext = ExtensionHelper.GetThreadToken();
                 var data = new Dictionary<string, string>
                 {
                     {"text", text ?? string.Empty},
@@ -873,7 +873,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetSendDirectLinkUri();
-                var clientContext = Guid.NewGuid().ToString();
+                var clientContext = ExtensionHelper.GetThreadToken();
                 var data = new Dictionary<string, string>
                 {
                     {"link_text", text ?? string.Empty},
@@ -922,7 +922,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetSendDirectLocationUri();
-                var clientContext = Guid.NewGuid().ToString();
+                var clientContext = ExtensionHelper.GetThreadToken();
                 var data = new Dictionary<string, string>
                 {
                     {"venue_id", externalId},
@@ -1014,7 +1014,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetSendDirectProfileUri();
-                var clientContext = Guid.NewGuid().ToString();
+                var clientContext = ExtensionHelper.GetThreadToken();
                 var data = new Dictionary<string, string>
                 {
                     {"profile_user_id", userIdToSend.ToString()},
@@ -1055,7 +1055,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetSendDirectProfileUri();
-                var clientContext = Guid.NewGuid().ToString();
+                var clientContext = ExtensionHelper.GetThreadToken();
                 var data = new Dictionary<string, string>
                 {
                     {"profile_user_id", userIdToSend.ToString()},
@@ -1241,7 +1241,7 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetMediaShareUri(mediaType);
-                var clientContext = Guid.NewGuid().ToString();
+                var clientContext = ExtensionHelper.GetThreadToken();
                 var data = new Dictionary<string, string>
                 {
                     {"action", "send_item"},
@@ -1341,7 +1341,7 @@ namespace InstagramApiSharp.API.Processors
                     {"action", "send_item"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"thread_ids", $"[{threadId}]"},
-                    {"client_context", Guid.NewGuid().ToString()},
+                    {"client_context", ExtensionHelper.GetThreadToken()},
                     {"node_type", "item"},
                     {"reaction_status", "deleted"},
                     {"item_id", itemId}
@@ -1499,7 +1499,7 @@ namespace InstagramApiSharp.API.Processors
                     {"action", "send_item"},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"thread_id", $"{threadId}"},
-                    {"client_context", Guid.NewGuid().ToString()}
+                    {"client_context", ExtensionHelper.GetThreadToken()}
                 };
                 var request =
                     _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);

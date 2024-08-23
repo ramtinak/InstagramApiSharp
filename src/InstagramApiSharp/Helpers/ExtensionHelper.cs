@@ -126,6 +126,34 @@ namespace InstagramApiSharp
         {
             return System.Net.WebUtility.UrlEncode(data);
         }
+
+        public static string GetStoryToken()
+        {
+            var str = "";
+            str += Rnd.Next(3, 4);
+            str += Rnd.Next(1, 9);
+            str += Rnd.Next(0, 9);
+            str += Rnd.Next(0, 9);
+            str += Rnd.Next(0, 9);
+            str += Rnd.Next(0, 9);
+            str += Rnd.Next(11111, 99999);
+            str += Rnd.Next(2222, 6789);
+            return str;
+        }
+        public static string GetThreadToken()
+        {
+            var str = "";
+            str += Rnd.Next(11, 99);
+            str += Rnd.Next(0, 9);
+            str += Rnd.Next(2, 9);
+            str += Rnd.Next(1000, 9999);
+            str += Rnd.Next(1111, 8898);
+
+            str += Rnd.Next(2222, 6789);
+            str += Rnd.Next(5000, 8000);
+
+            return $"{str}";
+        }
         public static string GenerateJazoest(string guid)
         {
             int ix = 0;
