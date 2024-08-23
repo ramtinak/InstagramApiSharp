@@ -396,16 +396,14 @@ namespace InstagramApiSharp.API.Processors
         {
             try
             {
-                var collectionUri = UriCreator.GetMediaIdFromUrlUri(uri);
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
+                var oembed = await GetOembedByUrlAsync(uri);
 
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<string>(response, json);
+                if (oembed.Succeeded)
+                {
+                    return Result.Success(oembed.Value.MediaId);
+                }
 
-                var data = JsonConvert.DeserializeObject<InstaOembedUrlResponse>(json);
-                return Result.Success(data.MediaId);
+                return Result.Fail<string>(oembed.Info.Exception);
             }
             catch (HttpRequestException httpException)
             {
@@ -1689,6 +1687,38 @@ namespace InstagramApiSharp.API.Processors
                 vidData.Add("usertags", root.ToString(Formatting.None));
             }
             return vidData;
+        }
+
+        /// <summary>
+        ///     Get media Oembed data from url ("share link")
+        /// </summary>
+        /// <param name="uri">Uri to get media Oembed</param>
+        public async Task<IResult<InstaOembed>> GetOembedByUrlAsync(Uri uri)
+        {
+            try
+            {
+                var collectionUri = UriCreator.GetMediaOembedFromUrlUri(uri);
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, collectionUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaOembed>(response, json);
+
+                var oembedResponse = JsonConvert.DeserializeObject<InstaOembedUrlResponse>(json);
+                var converter = ConvertersFabric.Instance.GetOembedConverter(oembedResponse);
+                return Result.Success(converter.Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaOembed), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaOembed>(exception);
+            }
         }
     }
 }

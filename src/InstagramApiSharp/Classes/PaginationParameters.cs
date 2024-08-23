@@ -15,7 +15,7 @@ namespace InstagramApiSharp
         public string RankToken { get; set; } = string.Empty;
         public string NextMaxId { get; set; } = string.Empty;
         /// <summary>
-        ///     Only works for Comments!
+        ///     Only works for Comments and User Feeds!
         /// </summary>
         public string NextMinId { get; set; } = string.Empty;
         public int MaximumPagesToLoad { get; private set; }

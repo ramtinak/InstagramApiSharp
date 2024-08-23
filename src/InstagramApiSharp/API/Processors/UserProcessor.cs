@@ -943,7 +943,7 @@ namespace InstagramApiSharp.API.Processors
                        && !string.IsNullOrEmpty(paginationParameters.NextMaxId)
                        && paginationParameters.PagesLoaded < paginationParameters.MaximumPagesToLoad)
                 {
-
+                    paginationParameters.NextMinId = null; // we started at the correct spot, so just continue with max ids
                     var nextMedia = await GetUserMedia(userId, paginationParameters);
                     if (!nextMedia.Succeeded)
                         return Result.Fail(nextMedia.Info, mediaList);
@@ -1733,6 +1733,8 @@ namespace InstagramApiSharp.API.Processors
             try
             {
                 var instaUri = UriCreator.GetUserMediaListUri(userId, paginationParameters.NextMaxId);
+                if (!string.IsNullOrEmpty(paginationParameters.NextMinId))
+                    instaUri = UriCreator.GetUserMediaListMinIdUri(userId, paginationParameters.NextMinId);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
