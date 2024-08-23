@@ -105,7 +105,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("has_unseen_besties_media")] public bool HasUnseenBestiesMedia { get; set; }
 
         [JsonProperty("auto_expand_chaining", NullValueHandling = NullValueHandling.Include)]
-        public bool? AutoExpandChaining { get; set; }
+        public string AutoExpandChaining { get; set; }
         
         [JsonProperty("biography_with_entities")] public InstaBiographyEntities BiographyWithEntities { get; set; }
 
