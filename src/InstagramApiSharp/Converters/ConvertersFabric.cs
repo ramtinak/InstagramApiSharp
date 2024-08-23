@@ -986,5 +986,10 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaOembedConverter { SourceObject = responseOembed };
         }
+        public IObjectConverter<InstaReelsMediaList, InstaReelsMediaListResponse> GetReelsMediaListConverter(
+            InstaReelsMediaListResponse response)
+        {
+            return new InstaReelsMediaListConverter { SourceObject = response };
+        }
     }
 }

@@ -188,6 +188,15 @@ namespace InstagramApiSharp.API
 
         #endregion Main
 
+        #region Clips (reels) endpoints constants
+
+        public const string DISCOVER_VIDEOS_FEED = API_SUFFIX + "/discover/videos_feed/";
+        public const string CLIPS_WRITE_SEEN_STATE = API_SUFFIX + "/clips/write_seen_state/";
+        public const string CLIPS_USER = API_SUFFIX + "/clips/user/";
+        public const string DIRECT_BROADCAST_CLIPS_SHARE = API_SUFFIX + "/direct_v2/threads/broadcast/clip_share/";
+        public const string CLIPS_USER_SHARE_TO_FB_CONFIG = API_SUFFIX + "/clips/user/share_to_fb_config/";
+
+        #endregion Clips (reels) constants
         #region Account endpoints constants
 
         public const string ACCOUNTS_2FA_LOGIN = API_SUFFIX + "/accounts/two_factor_login/";

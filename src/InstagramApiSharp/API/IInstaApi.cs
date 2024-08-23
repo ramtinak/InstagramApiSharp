@@ -7,7 +7,7 @@
  *                      IRANIAN DEVELOPERS                          *
  *                                                                  *
  *                                                                  *
- *                            2023                                  *
+ *                            2024                                  *
  *                                                                  *
  *                                                                  *  
  */
@@ -114,6 +114,10 @@ namespace InstagramApiSharp.API
         ///     Shopping and commerce api functions
         /// </summary>
         IShoppingProcessor ShoppingProcessor { get; }
+        /// <summary>
+        ///     Reels api functions
+        /// </summary>
+        IReelProcessor ReelProcessor { get; }
         /// <summary>
         ///     Instagram Web api functions.
         ///     <para>It's related to https://instagram.com/accounts/ </para>

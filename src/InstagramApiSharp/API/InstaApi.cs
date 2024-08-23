@@ -164,6 +164,11 @@ namespace InstagramApiSharp.API
         ///     User api functions.
         /// </summary>
         public IUserProcessor UserProcessor => _userProcessor;
+
+        /// <summary>
+        ///     Reels api functions
+        /// </summary>
+        public IReelProcessor ReelProcessor { get; private set; }
         /// <summary>
         ///     Helper processor for other processors
         /// </summary>
@@ -3107,6 +3112,7 @@ namespace InstagramApiSharp.API
             _businessProcessor = new BusinessProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
             _shoppingProcessor = new ShoppingProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
             _webProcessor = new WebProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
+            ReelProcessor = new ReelProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger, _userAuthValidate, this, _httpHelper);
 
         }
 

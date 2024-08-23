@@ -2386,5 +2386,35 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for dynamic onboarding get steps");
             return instaUri;
         }
+        public static Uri GetReelsClipsUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DISCOVER_VIDEOS_FEED, out var instaUri))
+                throw new Exception("Cant create URI for reels feeds");
+            return instaUri;
+        }
+        public static Uri GetMarkReelAsSeenUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CLIPS_WRITE_SEEN_STATE, out var instaUri))
+                throw new Exception("Cant create URI for reels seen");
+            return instaUri;
+        }
+        public static Uri GetUserReelsClipsUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CLIPS_USER, out var instaUri))
+                throw new Exception("Cant create URI for user reels clips");
+            return instaUri;
+        }
+        public static Uri GetCreativeClipsAssetsUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CREATIVE_CLIPS_ASSETS, out var instaUri))
+                throw new Exception("Cant create URI for creative clips assets");
+            return instaUri;
+        }
+        public static Uri GetDirectBroadcastReelsClipsShareUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DIRECT_BROADCAST_CLIPS_SHARE, out var instaUri))
+                throw new Exception("Cant create URI for direct broadcast reel clips share");
+            return instaUri;
+        }
     }
 }
