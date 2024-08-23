@@ -100,9 +100,8 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         internal static string GenerateUploadId()
         {
             var timeSpan = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0);
-            var uploadId = (long) timeSpan.TotalSeconds;
-            var u = (uploadId * ExtensionHelper.Rnd.Next(1111, 99999)) - ExtensionHelper.Rnd.Next(1000, 99999);
-            return $"{u}{ExtensionHelper.Rnd.Next(33333, 9999999)}";
+            var min = (int) timeSpan.TotalSeconds;
+            return ExtensionHelper.Rnd.Next(min, int.MaxValue).ToString();
         }
         //internal static string GenerateRandomUploadIdOLD()
         //{
