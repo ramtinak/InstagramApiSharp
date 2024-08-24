@@ -138,8 +138,8 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="previewWidth">Preview width</param>
         /// <param name="previewHeight">Preview height</param>
-        /// <param name="broadcastMessage">Broadcast start message</param>
-        public async Task<IResult<InstaBroadcastCreate>> CreateAsync(int previewWidth = 720, int previewHeight = 1184, string broadcastMessage = "")
+        /// <param name="title">Broadcast start message</param>
+        public async Task<IResult<InstaBroadcastCreate>> CreateAsync(int previewWidth = 720, int previewHeight = 1184, string title = "")
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -147,14 +147,21 @@ namespace InstagramApiSharp.API.Processors
                 var instaUri = UriCreator.GetBroadcastCreateUri();
                 var data = new JObject
                 {
+                    {"user_pay_enabled", "false"},
+                    {"preview_height",  previewHeight.ToString()},
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
-                    {"preview_height",  previewHeight},
-                    {"preview_width",  previewWidth},
-                    {"broadcast_message",  broadcastMessage},
-                    {"broadcast_type",  "RTMP"},
-                    {"internal_only",  0}
+                    {"should_use_rsys_rtc_infra", "false"},
+                    {"broadcast_type",  "RTMP_SWAP_ENABLED"},
+                    {"preview_width",  previewWidth.ToString()},
+                    {"internal_only",  "0"},
+                    {"visibility",  "0"},
                 };
+                if (title.IsNotEmpty())
+                {
+                    data.Add("broadcast_message", title);
+                }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                request.Headers.Host = "i.instagram.com";
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)

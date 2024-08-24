@@ -36,8 +36,8 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="previewWidth">Preview width</param>
         /// <param name="previewHeight">Preview height</param>
-        /// <param name="broadcastMessage">Broadcast start message</param>
-        Task<IResult<InstaBroadcastCreate>> CreateAsync(int previewWidth = 720, int previewHeight = 1184, string broadcastMessage = "");
+        /// <param name="title">Broadcast title</param>
+        Task<IResult<InstaBroadcastCreate>> CreateAsync(int previewWidth = 720, int previewHeight = 1184, string title = "");
 
         /// <summary>
         ///     Delete an broadcast from post live.
