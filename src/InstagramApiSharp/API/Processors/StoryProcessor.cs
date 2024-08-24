@@ -45,6 +45,35 @@ namespace InstagramApiSharp.API.Processors
             _httpHelper = httpHelper;
         }
 
+
+        /// <summary>
+        ///     Like story
+        /// </summary>
+        /// <param name="storyMediaId">Story media identifier</param>
+        public async Task<IResult<bool>> LikeStoryAsync(string storyMediaId)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetStoryLikeUri();
+                var data = new JObject
+                {
+                    {"media_id", $"{storyMediaId}" },
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"container_module", "reel_feed_timeline" }
+                };
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK) Result.UnExpectedResponse<InstaStory>(response, json);
+                return Result.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<bool>(ex);
+            }
+        }
         /// <summary>
         ///     Respond to an story question
         /// </summary>

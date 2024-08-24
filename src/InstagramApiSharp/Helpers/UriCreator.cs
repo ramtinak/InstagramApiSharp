@@ -2416,5 +2416,11 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for direct broadcast reel clips share");
             return instaUri;
         }
+        public static Uri GetStoryLikeUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.STORY_LIKE), out var instaUri))
+                throw new Exception("Cant create URI for accept friendship");
+            return instaUri;
+        }
     }
 }
