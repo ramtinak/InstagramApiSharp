@@ -14,6 +14,7 @@ namespace InstagramApiSharp.Helpers
     {
         private static readonly Uri BaseInstagramUri = new Uri(InstaApiConstants.INSTAGRAM_URL);
         private static readonly Uri BaseInstagramBUri = new Uri(InstaApiConstants.INSTAGRAM_B_URL);
+        public static readonly Uri FacebookRUploadUri = new Uri(InstaApiConstants.RUPLOAD_HOST_URI);
 
         public static Uri GetAcceptFriendshipUri(long userId)
         {
@@ -2422,10 +2423,27 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for accept friendship");
             return instaUri;
         }
+
         public static Uri GetStoryUnLikeUri()
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.STORY_UNLIKE), out var instaUri))
                 throw new Exception("Cant create URI for accept friendship");
+            return instaUri;
+        }
+
+        public static Uri GetRUploadMessengerImageUri(string path)
+        {
+            if (!Uri.TryCreate(FacebookRUploadUri,
+                InstaApiConstants.RUPLOAD_MESSENGER_IMAGE + "/" + path, out var instaUri))
+                throw new Exception("Cant create URI for GetRUploadMessengerImageUri");
+            return instaUri;
+        }
+        public static Uri GetBroadcastPhotoAttachmentUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri,
+                InstaApiConstants.DIRECT_BROADCAST_PHOTO_ATTACHMENT, out var instaUri))
+                throw new Exception("Cant create URI for GetBroadcastPhotoAttachmentUri");
+
             return instaUri;
         }
     }

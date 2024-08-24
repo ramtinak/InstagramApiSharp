@@ -9,6 +9,7 @@ using InstagramApiSharp.Enums;
 using InstagramApiSharp.API.Versions;
 using InstagramApiSharp.Classes;
 using System.Linq;
+using System.Net.Http.Headers;
 
 namespace InstagramApiSharp.Helpers
 {
@@ -228,6 +229,102 @@ namespace InstagramApiSharp.Helpers
             return request;
         }
 
+        public HttpRequestMessage GetMessengerAudioRequest(
+            HttpMethod method, Uri uri,
+            string entityName = null,
+            byte[] entityLength = null,
+            long offset = 0,
+            string entityType = null,
+            InstaDirectMessengerUpload messengerUpload = InstaDirectMessengerUpload.Image,
+            Dictionary<string, string> data = null)
+        {
+
+            HttpRequestMessage request;
+            if (data != null)
+            {
+                request = new HttpRequestMessage(method, uri)
+                {
+                    Content = new FormUrlEncodedContent(data)
+                };
+            }
+            else
+            {
+                request = new HttpRequestMessage(method, uri);
+            }
+            var currentCulture = GetCurrentCulture();
+            System.Globalization.CultureInfo.CurrentCulture = EnglishCulture;
+            var userAgent = _instaApi.GetUserAgent();
+            var currentUser = _instaApi.GetLoggedUser();
+            var authorization = currentUser?.Authorization;
+
+            var shbid = currentUser.RespondUShbid;
+            var shbts = currentUser.RespondUShbts;
+            var igDirectRegionHint = currentUser.RespondUDirectRegionHint;
+            var uRur = currentUser.RespondURur;
+
+
+            if (entityName.IsNotEmpty())
+            {
+                request.Headers.Add("X-Entity-Length", entityLength?.Length.ToString());
+                request.Headers.Add("X-Entity-Name", entityName);
+            }
+            switch (messengerUpload)
+            {
+                default:
+                case InstaDirectMessengerUpload.Image:
+                    request.Headers.Add("X-Entity-Type", entityType);
+                    request.Headers.Add("image_type", "FILE_ATTACHMENT");
+                    break;
+            }
+            if (entityName.IsNotEmpty())
+            {
+                request.Headers.Add("Offset", offset.ToString());
+            }
+            request.Headers.Add(InstaApiConstants.HEADER_PRIORITY, InstaApiConstants.HEADER_PRIORITY_VALUE_6_I);
+            request.Headers.Add(InstaApiConstants.HEADER_USER_AGENT, userAgent);
+            request.Headers.Add(InstaApiConstants.HEADER_ACCEPT_LANGUAGE, InstaApiConstants.ACCEPT_LANGUAGE);
+            if (_instaApi.GetLoggedUser().LoggedInUser != null && _instaApi.IsUserAuthenticated)
+            {
+                request.Headers.Add(InstaApiConstants.HEADER_AUTHORIZATION, _instaApi.GetLoggedUser().Authorization);
+            }
+            if (currentUser.XMidHeader.IsNotEmpty())
+                request.Headers.Add(InstaApiConstants.HEADER_X_MID, currentUser.XMidHeader);
+
+            if (igDirectRegionHint.IsNotEmpty() && IsLoggedIn())
+                request.Headers.Add(InstaApiConstants.HEADER_IG_U_DIRECT_REGION_HINT, igDirectRegionHint);
+
+            if (shbid.IsNotEmpty() && IsLoggedIn())
+                request.Headers.Add(InstaApiConstants.HEADER_IG_U_SHBID, shbid);
+
+            if (shbts.IsNotEmpty() && IsLoggedIn())
+                request.Headers.Add(InstaApiConstants.HEADER_IG_U_SHBTS, shbts);
+
+            if (currentUser?.LoggedInUser?.Pk > 0 && IsLoggedIn())
+                request.Headers.Add(InstaApiConstants.HEADER_IG_U_DS_USER_ID, currentUser.LoggedInUser.Pk.ToString());
+
+            if (currentUser.RespondURur.IsNotEmpty())
+                request.Headers.Add(InstaApiConstants.HEADER_IG_U_RUR, uRur);
+            else if (currentUser.RurHeader.IsNotEmpty())
+                request.Headers.Add(InstaApiConstants.HEADER_IG_U_RUR, currentUser.RurHeader);
+
+            request.Headers.Add(InstaApiConstants.HEADER_IG_INTENDED_USER_ID, (currentUser.LoggedInUser?.Pk ?? 0).ToString());
+            request.Headers.Add(InstaApiConstants.HEADER_X_FB_HTTP_ENGINE, "Liger");
+            request.Headers.Add(InstaApiConstants.HEADER_X_FB_CLIENT_IP, "True");
+            request.Headers.Add(InstaApiConstants.HEADER_X_FB_SERVER_CLUSTER, "True");
+
+            request.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("utf-8"));
+
+            System.Globalization.CultureInfo.CurrentCulture = currentCulture;
+
+            return request;
+
+            bool IsLoggedIn()
+            {
+                return authorization.IsNotEmpty() &&
+                    authorization != InstaApiConstants.HEADER_BEARER_IGT_2_VALUE &&
+                    _instaApi.IsUserAuthenticated;
+            }
+        }
         public string GetSignature(JObject data)
         {
             var payload = JsonConvert.SerializeObject(data, Formatting.None,

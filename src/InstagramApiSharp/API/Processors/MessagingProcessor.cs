@@ -1530,55 +1530,94 @@ namespace InstagramApiSharp.API.Processors
             };
             try
             {
-                var instaUri = UriCreator.GetDirectSendPhotoUri();
-                var uploadId = ApiRequestMessage.GenerateRandomUploadId();
-                var clientContext = Guid.NewGuid();
+                var uploadId = ApiRequestMessage.GenerateUnknownUploadId();
+                var imageHashCode = Path.GetFileName(image.Uri ?? $"C:\\{13.GenerateRandomString()}.mp4").GetHashCode();
+                var waterfallId = Guid.NewGuid().ToString();
+                var entityName = $"{uploadId}_0_-{imageHashCode}";
+                var instaUri = UriCreator.GetRUploadMessengerImageUri(entityName);
+                var retryContext = HelperProcessor.GetRetryContext();
+                HttpRequestMessage request = null;
+                HttpResponseMessage response = null;
+                string json = null;
                 upProgress.UploadId = uploadId;
                 progress?.Invoke(upProgress);
-                var requestContent = new MultipartFormDataContent(uploadId)
-                {
-                    {new StringContent("send_item"), "\"action\""},
-                    {new StringContent(clientContext.ToString()), "\"client_context\""},
-                    {new StringContent(_deviceInfo.DeviceGuid.ToString()), "\"_uuid\""}
-                };
-                if (!string.IsNullOrEmpty(recipients))
-                    requestContent.Add(new StringContent($"[[{recipients}]]"), "recipient_users");
-                else
-                    requestContent.Add(new StringContent($"[{threadId}]"), "thread_ids");
-                byte[] fileBytes;
-                if (image.ImageBytes == null)
-                    fileBytes = File.ReadAllBytes(image.Uri);
-                else
-                    fileBytes = image.ImageBytes;
-                var imageContent = new ByteArrayContent(fileBytes);
+
+                request = _httpHelper.GetMessengerAudioRequest(HttpMethod.Get,
+                    instaUri);
+                upProgress.UploadId = uploadId;
+                progress?.Invoke(upProgress);
+
+                var imageBytes = image.ImageBytes ?? File.ReadAllBytes(image.Uri);
+                var imageContent = new ByteArrayContent(imageBytes);
                 imageContent.Headers.Add("Content-Transfer-Encoding", "binary");
                 imageContent.Headers.Add("Content-Type", "application/octet-stream");
-                requestContent.Add(imageContent, "photo",
-                    $"direct_temp_photo_{ApiRequestMessage.GenerateUploadId()}.jpg");
-                //var progressContent = new ProgressableStreamContent(requestContent, 4096, progress)
-                //{
-                //    UploaderProgress = upProgress
-                //};
-                var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
-                request.Content = requestContent;
+
+                request = _httpHelper.GetMessengerAudioRequest(HttpMethod.Post,
+                    instaUri,
+                    entityName,
+                    imageBytes,
+                    0,
+                    "image/jpeg",
+                    InstaDirectMessengerUpload.Image);
+
+                request.Content = imageContent;
                 upProgress.UploadState = InstaUploadState.Uploading;
                 progress?.Invoke(upProgress);
-                var response = await _httpRequestProcessor.SendAsync(request);
-                var json = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+                await Task.Delay(TimeSpan.FromSeconds(ExtensionHelper.Rnd.Next(4, 10)));
+
+                if (!response.IsSuccessStatusCode)
                 {
                     upProgress.UploadState = InstaUploadState.Error;
                     progress?.Invoke(upProgress);
                     return Result.UnExpectedResponse<bool>(response, json);
                 }
-                upProgress.UploadState = InstaUploadState.Uploaded;
-                progress?.Invoke(upProgress);
-                var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
-                if (obj.Status.ToLower() == "ok")
+                var mediaId = JsonConvert.DeserializeObject<InstaSimpleMediaIdResponse>(json);
+                instaUri = UriCreator.GetBroadcastPhotoAttachmentUri();
+                var token = ExtensionHelper.GetThreadToken();
+
+                var data = new Dictionary<string, string>
                 {
-                    upProgress.UploadState = InstaUploadState.Completed;
-                    progress?.Invoke(upProgress);
-                    return Result.Success(true);
+                    {"action", "send_item"},
+                    {"is_x_transport_forward", "false"},
+                    {"is_shh_mode", "0"},
+                    {"send_attribution", "direct_thread"},
+                    {"client_context", token},
+                    {"attachment_fbid", mediaId.MediaId},
+                    {"device_id", _deviceInfo.DeviceId},
+                    {"mutation_token", token},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"allow_full_aspect_ratio", "true"},
+                    {"btt_dual_send", "false"},
+                    {"is_ae_dual_send", "false"},
+                    {"offline_threading_id", token},
+                };
+                if (!string.IsNullOrEmpty(threadId))
+                    data.Add("thread_ids", $"[{threadId}]");
+                else if (!string.IsNullOrEmpty(recipients))
+                    data.Add("recipient_users", $"[[{recipients}]]");
+
+                upProgress.UploadState = InstaUploadState.Configuring;
+                progress?.Invoke(upProgress);
+                request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                response = await _httpRequestProcessor.SendAsync(request);
+                json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var obj = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
+
+                    if (obj.IsSucceed)
+                    {
+                        upProgress.UploadState = InstaUploadState.Configured;
+                        progress?.Invoke(upProgress);
+                    }
+                    else
+                    {
+                        upProgress.UploadState = InstaUploadState.Completed;
+                        progress?.Invoke(upProgress);
+                    }
+                    return obj.IsSucceed ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
                 }
 
                 upProgress.UploadState = InstaUploadState.Error;

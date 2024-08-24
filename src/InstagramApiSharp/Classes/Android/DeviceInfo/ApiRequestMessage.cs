@@ -3,6 +3,7 @@ using InstagramApiSharp.API;
 using InstagramApiSharp.Helpers;
 using Newtonsoft.Json;
 using InstagramApiSharp.API.Versions;
+using Org.BouncyCastle.Asn1.X500;
 namespace InstagramApiSharp.Classes.Android.DeviceInfo
 {
     public class ApiRequestMessage
@@ -112,6 +113,16 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
         internal static string GenerateRandomUploadId()
         {
             return GenerateUploadId();
+        }
+        internal static string GenerateUnknownUploadId()
+        {
+            var mil = DateTime.UtcNow.ToUnixTimeMiliSeconds();
+            var sec = DateTime.UtcNow.ToUnixTime();
+            var s = mil + sec;
+            s += s;
+            s -= ExtensionHelper.Rnd.Next(10000, 999999);
+            s += ExtensionHelper.Rnd.Next(1000, 9999);
+            return s + ExtensionHelper.Rnd.Next(12, 98).ToString();
         }
         public static ApiRequestMessage FromDevice(AndroidDevice device)
         {

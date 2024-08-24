@@ -7,7 +7,7 @@
  *        IRANIAN DEVELOPERS
  *        
  *        
- *               2018
+ *               2024
  *  
  *  
  */
@@ -35,6 +35,14 @@ namespace InstagramApiSharp.API
         public const string CREATIVE_CLIPS_ASSETS = API_SUFFIX + "/creatives/clips_assets/";
 
         #endregion New
+
+        #region New Uploaders
+
+        // https://rupload.facebook.com/messenger_image/247129406586247_0_-643356890
+        public const string RUPLOAD_HOST_URI = "https://rupload.facebook.com";
+        public const string RUPLOAD_MESSENGER_IMAGE = "/messenger_image/";
+
+        #endregion New Uploaders
 
         #region B Url endpoints
 
@@ -71,6 +79,16 @@ namespace InstagramApiSharp.API
         public const string HEADER_X_IG_TIGON_RETRY = "X-Tigon-Is-Retry";
         public const string HEADER_X_FB_HTTP_IP = "X-FB-CLIENT-IP";
         public const string HEADER_X_FB_SERVER_CLUSTER = "X-FB-SERVER-CLUSTER";
+
+        public const string HEADER_PRIORITY = "Priority";
+        public const string HEADER_PRIORITY_VALUE_3 = "u=3";
+        public const string HEADER_PRIORITY_VALUE_3_I = "u=3, i";
+        public const string HEADER_PRIORITY_VALUE_0 = "u=0";
+        public const string HEADER_PRIORITY_VALUE_5_I = "u=5, i";
+        public const string HEADER_PRIORITY_VALUE_6_I = "u=6, i";
+        public const string HEADER_IG_TIMEZONE_OFFSET = "X-IG-Timezone-Offset";
+        public const string HEADER_IG_INTENDED_USER_ID = "Ig-Intended-User-Id";
+        public const string HEADER_X_FB_CLIENT_IP = "X-Fb-Client-Ip";
 
         public const string ACCEPT_ENCODING2 = "gzip, deflate";
         public const string HEADER_PIGEON_SESSION_ID = "X-Pigeon-Session-Id";
@@ -329,7 +347,8 @@ namespace InstagramApiSharp.API
         public const string GET_RANKED_RECIPIENTS = API_SUFFIX + "/direct_v2/ranked_recipients/";
         public const string GET_RECENT_RECIPIENTS = API_SUFFIX + "/direct_share/recent_recipients/";
         public const string STORY_SHARE = API_SUFFIX + "/direct_v2/threads/broadcast/story_share/?media_type={0}";
-        public const string DIRECT_THREAD_DELETE_MESSAGE = API_SUFFIX + "/direct_v2/threads/{0}/items/{1}/delete/"; 
+        public const string DIRECT_THREAD_DELETE_MESSAGE = API_SUFFIX + "/direct_v2/threads/{0}/items/{1}/delete/";
+        public const string DIRECT_BROADCAST_PHOTO_ATTACHMENT = API_SUFFIX + "/direct_v2/threads/broadcast/photo_attachment/";
 
         #endregion Direct endpoints constants
 
