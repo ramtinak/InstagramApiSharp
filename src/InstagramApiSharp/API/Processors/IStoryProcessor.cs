@@ -11,6 +11,11 @@ namespace InstagramApiSharp.API.Processors
     /// </summary>
     public interface IStoryProcessor
     {
+        /// <summary>
+        ///     Unlike story
+        /// </summary>
+        /// <param name="storyMediaId">Story media identifier</param>
+        Task<IResult<bool>> UnlikeStoryAsync(string storyMediaId);
 
         /// <summary>
         ///     Like story

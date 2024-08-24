@@ -2422,5 +2422,11 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for accept friendship");
             return instaUri;
         }
+        public static Uri GetStoryUnLikeUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.STORY_UNLIKE), out var instaUri))
+                throw new Exception("Cant create URI for accept friendship");
+            return instaUri;
+        }
     }
 }
