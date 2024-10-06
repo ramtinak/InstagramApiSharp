@@ -288,6 +288,23 @@ namespace InstagramApiSharp
             System.Diagnostics.Debug.WriteLine(Convert.ToString(obj));
         }
 
+        public static string GetStoryLink(this InstaStoryLinkType linkType)
+        {
+            switch (linkType)
+            {
+                case InstaStoryLinkType.Link:
+                    return "link";
+                case InstaStoryLinkType.SwipeUp:
+                    return "swipe up";
+                case InstaStoryLinkType.Shopping:
+                    return "shopping";
+                case InstaStoryLinkType.IgTV:
+                    return "igtv";
+                default:
+                case InstaStoryLinkType.Web:
+                    return "web";
+            }
+        }
         public static InstaImageUpload ConvertToImageUpload(this InstaImage instaImage, InstaUserTagUpload[] userTags = null)
         {
             return new InstaImageUpload
@@ -401,9 +418,9 @@ namespace InstagramApiSharp
             };
         }
 
-        public static JObject ConvertToJson(this InstaStoryMentionUpload storyMention)
+        public static JObject ConvertToJson(this InstaStoryMentionUpload storyMention, bool isNew = false)
         {
-            return new JObject
+            var jObj = new JObject
             {
                 {"x", storyMention.X},
                 {"y", storyMention.Y},
@@ -413,6 +430,15 @@ namespace InstagramApiSharp
                 {"rotation", storyMention.Rotation},
                 {"user_id", storyMention.Pk}
             };
+            if (isNew)
+            {
+                jObj.Add("type", "mention");
+                jObj.Add("is_sticker", true);
+                jObj.Add("display_type", "mention_username");
+                jObj.Add("tap_state", 0);
+                jObj.Add("tap_state_str_id", "mention_sticker_gradient");
+            }
+            return jObj;
         }
 
         public static JObject ConvertToJson(this InstaStoryQuestionUpload question)
@@ -456,5 +482,31 @@ namespace InstagramApiSharp
                 {"is_sticker", countdown.IsSticker}
             };
         }
+
+        public static JObject ConvertToJson(this InstaStoryLinkStickerUpload storyLink)
+        {
+            var sticker = new JObject
+            {
+                {"x", storyLink.X},
+                {"y", storyLink.Y},
+                {"z", storyLink.Z},
+                {"width", storyLink.Width},
+                {"height", storyLink.Height},
+                {"rotation", storyLink.Rotation},
+                {"type", "story_link"},
+                {"link_type", storyLink.LinkType.GetStoryLink()},
+                {"url", storyLink.Url},
+                {"selected_index", storyLink.SelectedIndex},
+                {"is_sticker", Convert.ToInt32(storyLink.IsSticker)},
+                {"tap_state", storyLink.TapState},
+                {"tap_state_str_id", storyLink.TapStateStrId},
+            };
+            if (storyLink.CustomStickerText.IsNotEmpty())
+            {
+                sticker.Add("custom_cta", storyLink.CustomStickerText);
+            }
+            return sticker;
+        }
+
     }
 }

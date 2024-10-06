@@ -1643,6 +1643,16 @@ namespace InstagramApiSharp.API.Processors
                 }
                 if (uploadOptions != null)
                 {
+                    JArray tapModelsArray = new JArray();
+                    List<string> storyStickerIds = new List<string>();
+                    bool hasTapModels = false;
+                    if (uploadOptions.LinkStickers?.Count > 0)
+                    {
+                        foreach (var item in uploadOptions.LinkStickers)
+                            tapModelsArray.Add(item.ConvertToJson());
+                        hasTapModels = true;
+                        storyStickerIds.Add("link_sticker_default");
+                    }
                     if (uploadOptions.Hashtags?.Count > 0)
                     {
                         var hashtagArr = new JArray();
@@ -1669,7 +1679,7 @@ namespace InstagramApiSharp.API.Processors
 
                         data.Add("story_sliders", sliderArr.ToString(Formatting.None));
                         if (uploadOptions.Slider.IsSticker)
-                            data.Add("story_sticker_ids", $"{uploadOptions.Slider.Emoji}");
+                            storyStickerIds.Add($"{uploadOptions.Slider.Emoji}");
                     }
                     else
                     {
@@ -1702,11 +1712,17 @@ namespace InstagramApiSharp.API.Processors
 
                     if (uploadOptions.Mentions?.Count > 0)
                     {
-                        var mentionArr = new JArray();
-                        foreach (var item in uploadOptions.Mentions)
-                            mentionArr.Add(item.ConvertToJson());
+                        //var mentionArr = new JArray();
+                        //foreach (var item in uploadOptions.Mentions)
+                        //    mentionArr.Add(item.ConvertToJson());
 
-                        data.Add("reel_mentions", mentionArr.ToString(Formatting.None));
+                        //data.Add("reel_mentions", mentionArr.ToString(Formatting.None));
+
+                        foreach (var item in uploadOptions.Mentions)
+                            tapModelsArray.Add(item.ConvertToJson(true));
+
+                        storyStickerIds.Add("mention_sticker");
+                        hasTapModels = true;
                     }
                     if (uploadOptions.Countdown != null)
                     {
@@ -1716,7 +1732,17 @@ namespace InstagramApiSharp.API.Processors
                         };
 
                         data.Add("story_countdowns", countdownArr.ToString(Formatting.None));
-                        data.Add("story_sticker_ids", "countdown_sticker_time");
+                        storyStickerIds.Add("countdown_sticker_time");
+                    }
+
+
+                    if (hasTapModels)
+                    {
+                        data.Add("tap_models", tapModelsArray.ToString(Formatting.None));
+                    }
+                    if (storyStickerIds?.Count > 0)
+                    {
+                        data.Add("story_sticker_ids", string.Join(",", storyStickerIds));
                     }
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -1824,6 +1850,16 @@ namespace InstagramApiSharp.API.Processors
                 }
                 if (uploadOptions != null)
                 {
+                    JArray tapModelsArray = new JArray();
+                    List<string> storyStickerIds = new List<string>();
+                    bool hasTapModels = false;
+                    if (uploadOptions.LinkStickers?.Count > 0)
+                    {
+                        foreach (var item in uploadOptions.LinkStickers)
+                            tapModelsArray.Add(item.ConvertToJson());
+                        hasTapModels = true;
+                        storyStickerIds.Add("link_sticker_default");
+                    }
                     if (uploadOptions.Hashtags?.Count > 0)
                     {
                         var hashtagArr = new JArray();
@@ -1850,7 +1886,7 @@ namespace InstagramApiSharp.API.Processors
 
                         data.Add("story_sliders", sliderArr.ToString(Formatting.None));
                         if (uploadOptions.Slider.IsSticker)
-                            data.Add("story_sticker_ids", $"emoji_slider_{uploadOptions.Slider.Emoji}");
+                            storyStickerIds.Add($"{uploadOptions.Slider.Emoji}");
                     }
                     else
                     {
@@ -1880,7 +1916,16 @@ namespace InstagramApiSharp.API.Processors
                         };
 
                         data.Add("story_countdowns", countdownArr.ToString(Formatting.None));
-                        data.Add("story_sticker_ids", "countdown_sticker_time");
+                        storyStickerIds.Add("countdown_sticker_time");
+                    }
+
+                    if (hasTapModels)
+                    {
+                        data.Add("tap_models", tapModelsArray.ToString(Formatting.None));
+                    }
+                    if (storyStickerIds?.Count > 0)
+                    {
+                        data.Add("story_sticker_ids", string.Join(",", storyStickerIds));
                     }
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
