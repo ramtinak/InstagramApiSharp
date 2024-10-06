@@ -991,5 +991,10 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaReelsMediaListConverter { SourceObject = response };
         }
+        public IObjectConverter<InstaStoryLinkStickerItem, InstaStoryLinkStickerItemResponse> GetStoryLinkStickerItemConverter(
+                    InstaStoryLinkStickerItemResponse response)
+        {
+            return new InstaStoryLinkStickerItemConverter { SourceObject = response };
+        }
     }
 }

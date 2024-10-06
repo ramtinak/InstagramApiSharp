@@ -131,6 +131,10 @@ namespace InstagramApiSharp.Converters
                 foreach (var countdown in SourceObject.Countdowns)
                     instaStory.Countdowns.Add(ConvertersFabric.Instance.GetStoryCountdownItemConverter(countdown).Convert());
 
+            if (SourceObject.StoryLinkStickers?.Count > 0)
+                foreach (var linkSticker in SourceObject.StoryLinkStickers)
+                    instaStory.StoryLinkStickers.Add(ConvertersFabric.Instance.GetStoryLinkStickerItemConverter(linkSticker).Convert());
+
             return instaStory;
         }
     }

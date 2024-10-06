@@ -128,5 +128,7 @@ namespace InstagramApiSharp.Classes.ResponseWrappers
         [JsonProperty("viewers")] public List<InstaUserShortResponse> Viewers { get; set; }
 
         [JsonProperty("story_countdowns")] public List<InstaStoryCountdownItemResponse> Countdowns { get; set; }
+
+        [JsonProperty("story_link_stickers")] public List<InstaStoryLinkStickerItemResponse> StoryLinkStickers { get; set; }
     }
 }
