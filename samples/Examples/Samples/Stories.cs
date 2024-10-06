@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using InstagramApiSharp.API;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Enums;
 /////////////////////////////////////////////////////////////////////
 ////////////////////// IMPORTANT NOTE ///////////////////////////////
 // Please check wiki pages for more information:
@@ -135,6 +136,21 @@ namespace Examples.Samples
                 Question = "What do you think about InstagramApiSharp?!",
                 BackgroundColor = "#ffffff", // #ffffff is white
                 TextColor = "#000000" // #000000 is black
+            });
+
+            // Add story link sticker [ your account must support this feature, unless you won't see this sticker when your image/video uploaded ]
+            storyOptions.LinkStickers.Add(new InstaStoryLinkStickerUpload
+            {
+                X = 0.5, // center of image
+                Y = 0.5, // center of image
+                Z = 0,
+                Width = 0.22498246,
+                Height = 0.042,
+                Rotation = 0,
+                Url = "https://microsoft.com",
+                LinkType = InstaStoryLinkType.Web, // MUST BE THIS FOR WEB URLs
+                // CustomStickerText = "Custom text" // => Optional, This doesn't appear in InstaMedia respond,---
+                //// just tells instagram that we used custom sticker text
             });
 
             var image = new InstaImage { Uri = @"c:\someawesomepicture.jpg" };
