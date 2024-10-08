@@ -11,6 +11,13 @@ namespace InstagramApiSharp.API.Processors
     /// </summary>
     public interface IStoryProcessor
     {
+
+        /// <summary>
+        ///     Validate uri for adding to story link
+        /// </summary>
+        /// <param name="uri">Uri address</param>
+        Task<IResult<bool>> ValidateUriAsync(Uri uri);
+
         /// <summary>
         ///     Unlike story
         /// </summary>

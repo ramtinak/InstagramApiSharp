@@ -46,6 +46,46 @@ namespace InstagramApiSharp.API.Processors
         }
 
         /// <summary>
+        ///     Validate uri for adding to story link
+        /// </summary>
+        /// <param name="uri">Uri address</param>
+        public async Task<IResult<bool>> ValidateUriAsync(Uri uri)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (uri == null)
+                    return Result.Fail("Uri cannot be null.", false);
+
+                var instaUri = UriCreator.GetValidateReelLinkAddressUri();
+                var data = new JObject
+                {
+                    {"url", uri.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                };
+                var request =
+                    _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+                var obj = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
+                return obj.IsSucceed ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, json);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
+
+        /// <summary>
         ///     Unlike story
         /// </summary>
         /// <param name="storyMediaId">Story media identifier</param>
