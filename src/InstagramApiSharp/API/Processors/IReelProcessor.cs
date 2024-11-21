@@ -51,5 +51,32 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="cancellationToken">Cancellation token</param>
         Task<IResult<InstaReelsMediaList>> GetReelsClipsAsync(PaginationParameters paginationParameters,
             CancellationToken cancellationToken);
+
+
+        /// <summary>
+        ///     Upload reel video
+        /// </summary>
+        /// <param name="video">Video to upload.<para>Note: Thumbnail is required.</para></param>
+        /// <param name="caption">Caption => Optional</param>
+        /// <param name="sharePreviewToFeed">Share preview to feed</param>
+        /// <param name="delayOnMediaConfiguration">Wait before configuring media, default is randomize between 10-15</param>
+        Task<IResult<InstaMedia>> UploadReelVideoAsync(InstaVideoUpload video,
+            string caption,
+            bool sharePreviewToFeed = false,
+            TimeSpan delayOnMediaConfiguration = default);
+
+        /// <summary>
+        ///     Upload reel video with progress
+        /// </summary>
+        /// <param name="progress">Progress action</param>
+        /// <param name="video">Video to upload.<para>Note: Thumbnail is required.</para></param>
+        /// <param name="caption">Caption => Optional</param>
+        /// <param name="sharePreviewToFeed">Share preview to feed</param>
+        /// <param name="delayOnMediaConfiguration">Wait before configuring media, default is randomize between 10-15</param>
+        Task<IResult<InstaMedia>> UploadReelVideoAsync(Action<InstaUploaderProgress> progress,
+            InstaVideoUpload video,
+            string caption, 
+            bool sharePreviewToFeed = false,
+            TimeSpan delayOnMediaConfiguration = default);
     }
 }

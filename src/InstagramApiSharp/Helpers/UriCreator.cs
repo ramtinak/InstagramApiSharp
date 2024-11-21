@@ -1428,7 +1428,7 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
-        public static Uri GetStoryUploadVideoUri(string uploadId, int fileHashCode)
+        public static Uri GetStoryUploadVideoUri(string uploadId, string fileHashCode)
         {
             if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.UPLOAD_VIDEO, uploadId, fileHashCode), out var instaUri))
                 throw new Exception("Cant create URI for story upload video");
@@ -2444,6 +2444,12 @@ namespace InstagramApiSharp.Helpers
                 InstaApiConstants.DIRECT_BROADCAST_PHOTO_ATTACHMENT, out var instaUri))
                 throw new Exception("Cant create URI for GetBroadcastPhotoAttachmentUri");
 
+            return instaUri;
+        }
+        public static Uri GetReelsMediaConfigureUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.MEDIA_CONFIGURE_TO_CLIPS, out var instaUri))
+                throw new Exception("Cant create URI for reels media configure");
             return instaUri;
         }
     }

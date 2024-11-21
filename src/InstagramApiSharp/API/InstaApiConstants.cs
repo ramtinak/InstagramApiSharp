@@ -350,6 +350,8 @@ namespace InstagramApiSharp.API
         public const string DIRECT_THREAD_DELETE_MESSAGE = API_SUFFIX + "/direct_v2/threads/{0}/items/{1}/delete/";
         public const string DIRECT_BROADCAST_PHOTO_ATTACHMENT = API_SUFFIX + "/direct_v2/threads/broadcast/photo_attachment/";
 
+        public const string MEDIA_CONFIGURE_TO_CLIPS = API_SUFFIX + "/media/configure_to_clips/?video=1";
+
         #endregion Direct endpoints constants
 
         #region Discover endpoints constants

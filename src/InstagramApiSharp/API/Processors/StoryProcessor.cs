@@ -1284,7 +1284,7 @@ namespace InstagramApiSharp.API.Processors
                 var waterfallId = Guid.NewGuid().ToString();
 
                 var videoEntityName = $"{uploadId}_0_{videoHashCode}";
-                var videoUri = UriCreator.GetStoryUploadVideoUri(uploadId, videoHashCode);
+                var videoUri = UriCreator.GetStoryUploadVideoUri(uploadId, videoHashCode.ToString());
 
                 var photoEntityName = $"{uploadId}_0_{photoHashCode}";
                 var photoUri = UriCreator.GetStoryUploadPhotoUri(uploadId, photoHashCode);
