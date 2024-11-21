@@ -54,6 +54,17 @@ namespace InstagramApiSharp.API.Processors
         #endregion Properties and constructor
 
 
+        public async Task<IResult<string>> GetClipsCreationInterestPickerAsync()
+        {
+            return await _instaApi.SendGetRequestAsync(new Uri("https://i.instagram.com/api/v1/clips/creation_interest_picker/"));
+        }
+        public async Task<IResult<string>> GetClipsInfoForCreationAsync(string mediaId = null)
+        {
+            if (mediaId == null)
+                return await _instaApi.SendGetRequestAsync(new Uri("https://i.instagram.com/api/v1/clips/clips_info_for_creation/"));
+            else
+                return await _instaApi.SendGetRequestAsync(new Uri($"https://i.instagram.com/api/v1/clips/clips_info_for_creation/?m_pk={mediaId}"));
+        }
         /// <summary>
         ///     Get user's reels clips (medias)
         /// </summary>

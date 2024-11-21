@@ -14,6 +14,8 @@ namespace InstagramApiSharp.API.Processors
 {
     public interface IReelProcessor 
     {
+        Task<IResult<string>> GetClipsCreationInterestPickerAsync();
+        Task<IResult<string>> GetClipsInfoForCreationAsync(string mediaId = null);
         /// <summary>
         ///     Get user's reels clips (medias)
         /// </summary>
