@@ -39,7 +39,26 @@ See example projects and wiki pages to find out how this library works.</Descrip
     <RepositoryType></RepositoryType>
     <RepositoryUrl>https://github.com/ramtinak/InstagramApiSharp/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ramtinak/InstagramApiSharp/</PackageProjectUrl>
-    <PackageReleaseNotes>v1.7.4
+    <PackageReleaseNotes>v1.8.0
+- [Add] support for reels media
+- [Add] support for uploading reels
+- [Add] 261 api version
+- [Add] LikeStoryAsync/UnLikeStoryAsync to StoryProcessor
+- [Add] support for uploading story link
+- [Add] support for story link
+- [Add] ValidateUriAsync to StoryProcessor
+- [Bugfix] for GenerateUploadId()
+- [Fix] issue with auto_expand_chaining null (#597) by @bman46
+	* Update depends
+	* Fix null value exception
+	* Allow null value instead
+	* Remove excess using
+
+- [Update] all thread client_context functions
+- [Update] SendDirectPhotoAsync to latest version
+- [Update] LiveProcessor.CreateAsync
+
+v1.7.4
 - [Bugfix] for ChangePasswordAsync ( thx to @behi1ty for report )
 - [Add] checkpoint required error ( thx to @bman46 )
 - [Update] GenerateUploadId
@@ -271,9 +290,14 @@ v1.3.3.0
    <PropertyGroup>
       <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard2.0</TargetFrameworks>
       <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">netstandard2.0;uap10.0;net461</TargetFrameworks>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
   
   <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="LICENSE.txt" Pack="true" Visible="true" PackagePath="$(PackageLicenseFile)" />
     <None Include="insta.png" Pack="true" Visible="true" PackagePath="$(PackageIcon)" />
   </ItemGroup>
