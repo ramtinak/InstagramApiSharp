@@ -10,6 +10,7 @@ using InstagramApiSharp.Classes.Models;
 using Newtonsoft.Json;
 using InstagramApiSharp.Enums;
 using InstagramApiSharp.Classes.ResponseWrappers;
+using System.Collections.Generic;
 
 namespace InstagramApiSharp.Classes.Models
 {
@@ -23,6 +24,8 @@ namespace InstagramApiSharp.Classes.Models
 
     public class InstaUserEdit
     {
+        [JsonProperty("bio_links")]
+        public List<InstaBioLinkResponse> BioLinks { get; set; } = new List<InstaBioLinkResponse>();
         [JsonProperty("has_biography_translation")]
         public bool HasBiographyTranslation { get; set; }
         [JsonProperty("biography_with_entities")]

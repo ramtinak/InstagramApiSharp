@@ -262,6 +262,7 @@ namespace InstagramApiSharp.API
         public const string ACCOUNTS_SET_BLOCKED_COMMENTERS = API_SUFFIX + "/accounts/set_blocked_commenters/";
 
         public const string ACCOUNTS_UPDATE_BIO_LINKS = API_SUFFIX + "/accounts/update_bio_links/";
+        public const string ACCOUNTS_REMOVE_BIO_LINKS = API_SUFFIX + "/accounts/remove_bio_links/";
 
         #endregion Account endpoint constants
 

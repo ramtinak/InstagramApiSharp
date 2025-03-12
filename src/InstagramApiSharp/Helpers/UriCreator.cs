@@ -2459,5 +2459,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for GetUpdateBioLinksUri");
             return instaUri;
         }
+        public static Uri GetRemoveBioLinksUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_REMOVE_BIO_LINKS,
+                out var instaUri))
+                throw new Exception("Cant create URI for GetRemoveBioLinksUri");
+            return instaUri;
+        }
     }
 }
