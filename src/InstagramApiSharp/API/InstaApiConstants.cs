@@ -7,7 +7,7 @@
  *        IRANIAN DEVELOPERS
  *        
  *        
- *               2024
+ *               2025
  *  
  *  
  */
@@ -260,6 +260,8 @@ namespace InstagramApiSharp.API
         public const string ACCOUNTS_GET_PRESENCE = API_SUFFIX + "/accounts/get_presence_disabled/";
         public const string ACCOUNTS_GET_BLOCKED_COMMENTERS = API_SUFFIX + "/accounts/get_blocked_commenters/";
         public const string ACCOUNTS_SET_BLOCKED_COMMENTERS = API_SUFFIX + "/accounts/set_blocked_commenters/";
+
+        public const string ACCOUNTS_UPDATE_BIO_LINKS = API_SUFFIX + "/accounts/update_bio_links/";
 
         #endregion Account endpoint constants
 

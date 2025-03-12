@@ -58,6 +58,54 @@ namespace InstagramApiSharp.API.Processors
 
         #region Profile edit
         /// <summary>
+        ///     Add or update bio link
+        /// </summary>
+        /// <param name="uri">Url</param>
+        /// <param name="title">Title</param>
+        public async Task<IResult<InstaUserEdit>> AddOrUpdateBioLinkAsync(Uri uri, string title)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var web = new JObject
+                {
+                    {"url", uri.ToString()},
+                    {"title", title ?? string.Empty},
+                    {"link_type", "external"}, // faceboook
+                };
+                var jArr = new JArray(web);
+                var instaUri = UriCreator.GetUpdateBioLinksUri();
+                var data = new Dictionary<string, string>
+                {
+                    {"updated_links", jArr.ToString(Formatting.None)},
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                };
+
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUserEdit>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaUserEditContainer>(json);
+
+                return Result.Success(obj.User);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaUserEdit), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUserEdit>(exception);
+            }
+        }
+        /// <summary>
         ///     Set current account private
         /// </summary>
         public async Task<IResult<InstaUserShort>> SetAccountPrivateAsync()

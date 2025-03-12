@@ -23,6 +23,14 @@ namespace InstagramApiSharp.API.Processors
     public interface IAccountProcessor
     {
         #region Edit profile
+
+        /// <summary>
+        ///     Add or update bio link
+        /// </summary>
+        /// <param name="uri">Url</param>
+        /// <param name="title">Title</param>
+        Task<IResult<InstaUserEdit>> AddOrUpdateBioLinkAsync(Uri uri, string title);
+
         /// <summary>
         ///     Change password
         /// </summary>

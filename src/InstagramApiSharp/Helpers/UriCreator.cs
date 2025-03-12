@@ -2452,5 +2452,12 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for reels media configure");
             return instaUri;
         }
+        public static Uri GetUpdateBioLinksUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.ACCOUNTS_UPDATE_BIO_LINKS,
+                out var instaUri))
+                throw new Exception("Cant create URI for GetUpdateBioLinksUri");
+            return instaUri;
+        }
     }
 }
