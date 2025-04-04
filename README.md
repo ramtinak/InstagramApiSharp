@@ -1,7 +1,5 @@
 # InstagramApiSharp ![InstagramApiSharp](http://s8.picofile.com/file/8336601292/insta50x.png)
-A complete Private Instagram API for .NET (C#, VB.NET).
-
-Supports almost every features that Instagram app has!
+A complete Private Instagram API for .NET (C#, VB.NET), covering nearly all functionalities available in the official Instagram app!
 
 IRANIAN DEVELOPERS
 -----
@@ -9,28 +7,23 @@ InstagramApiSharp's private version - Under developing. Check [#243](https://git
 
 | Target | Branch | Version | Changelog |
 | ------ | ------ | ------ | ------ |
-| Github | master | v2.8.34 | [v2.8.34](https://github.com/ramtinak/InstagramApiSharp/issues/244#issuecomment-2044572109) |
+| Github | master | v2.8.40 | [v2.8.34](https://github.com/ramtinak/InstagramApiSharp/issues/244#issuecomment-2044572109) |
 
 -----
-InstagramApiSharp's public version - Update date: November 21, 2024 - End Of Support(from April 5, 2019)!!!
+InstagramApiSharp's public version - Update date: April 05, 2025 - End Of Support(from April 5, 2019)!!!
 
 | Target | Branch | Version | Download link | Total downloads |
 | ------ | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.8.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
-| Release | master | v1.8.0 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
+| Nuget | master | v1.8.1 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Release | master | v1.8.1 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
 
 ## Note
 This library is based on [InstaSharper](https://github.com/a-legotin/InstaSharper) with more features and new cool things.
-
-All references in [v1.7.0](https://www.nuget.org/packages/InstagramApiSharp/1.7.0) is updated. 
-Also if you got challenge locked, you can purchase for a subscription, because private version supports this feature.
 
 [Account Registration Sample](https://github.com/ramtinak/InstagramRegistration)
 
 ## Wingo Tag App
 [Wingo Tag App](https://github.com/NGame1/Winsta11) is an excelent app to demonstrate how [InstagramApiSharp](https://github.com/ramtinak/InstagramApiSharp) works, a clean project.
-
-If you have any problem with using a function, search it in this repo.
 
 ## License
 MIT.
@@ -67,5 +60,6 @@ Public version - End Of Support
 | Ali Noshahi | [@NGame1](https://github.com/NGame1) | [NGame1390@hotmail.com](mailto:ngame1390@hotmail.com) | [NGameW](https://t.me/NGameW) | [alingame](https://instagram.com/alingame) |
 
 
+Iranian developers - (c) 2025 | Bahar 1404.
 
-Iranian developers - (c) 2024 | Paeez 1403.
+<div dir="rtl">ศๅวั 1404</div>

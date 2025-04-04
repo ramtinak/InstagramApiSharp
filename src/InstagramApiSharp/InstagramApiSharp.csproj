@@ -1,8 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;uap10.0;net461;net6.0;net8.0</TargetFrameworks>
-    <VersionPrefix>1.8.0</VersionPrefix>
+	  
+	 <!--If you encounter compilation errors with InstagramApiSharp, 
+	 try removing some target frameworks from the 'TargetFrameworks' tag. -->
+	  
+	<TargetFrameworks>netstandard2.0;uap10.0;net461;net6.0;net8.0</TargetFrameworks>
+    <VersionPrefix>1.8.1</VersionPrefix>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AssemblyName>InstagramApiSharp</AssemblyName>
     <PackageId>InstagramApiSharp</PackageId>
@@ -12,9 +16,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.8.0.0</Version>
-    <AssemblyVersion>1.8.0.0</AssemblyVersion>
-    <FileVersion>1.8.0.0</FileVersion>
+    <Version>1.8.1.0</Version>
+    <AssemblyVersion>1.8.1.0</AssemblyVersion>
+    <FileVersion>1.8.1.0</FileVersion>
     <Description>A complete Private Instagram API for .NET.
 
 
