@@ -40,7 +40,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             var json = JsonConvert.SerializeObject(this);
             return json;
         }
-        internal string GetChallengeMessageString(string csrfToken)
+        internal string GetChallengeMessageString()
         {
             var api = new ApiRequestMessage
             {
@@ -65,7 +65,7 @@ namespace InstagramApiSharp.Classes.Android.DeviceInfo
             deviceid = DeviceId;
             return res;
         }
-        internal string GenerateChallengeSignature(InstaApiVersion apiVersion, string signatureKey,string csrfToken, out string deviceid)
+        internal string GenerateChallengeSignature(InstaApiVersion apiVersion, string signatureKey, out string deviceid)
         {
             if (string.IsNullOrEmpty(signatureKey))
                 signatureKey = apiVersion.SignatureKey;
