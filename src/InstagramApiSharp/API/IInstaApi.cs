@@ -220,7 +220,7 @@ namespace InstagramApiSharp.API
         ///     Set timeout to <see cref="HttpClient"/>
         /// </summary>
         /// <param name="timeout">Timeout</param>
-        void SetTimeout(TimeSpan timeout);
+        void SetTimeout(TimeSpan? timeout);
         /// <summary>
         ///     Set custom HttpClientHandler to be able to use certain features, e.g Proxy and so on
         /// </summary>

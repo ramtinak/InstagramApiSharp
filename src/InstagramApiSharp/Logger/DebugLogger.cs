@@ -24,7 +24,6 @@ namespace InstagramApiSharp.Logger
             WriteSeprator();
             Write($"Request: {request.Method} {request.RequestUri}");
             WriteHeaders(request.Headers);
-            WriteProperties(request.Properties);
             if (request.Method == HttpMethod.Post)
                 WriteRequestContent(request.Content);
         }
@@ -69,12 +68,6 @@ namespace InstagramApiSharp.Logger
                 Write($"{item.Key}:{JsonConvert.SerializeObject(item.Value)}");
         }
 
-        private void WriteProperties(IDictionary<string, object> properties)
-        {
-            if (properties == null) return;
-            if (properties.Count == 0) return;
-            Write($"Properties:\n{JsonConvert.SerializeObject(properties, Formatting.Indented)}");
-        }
 
         private async void WriteContent(HttpContent content, Formatting formatting, int maxLength = 0)
         {

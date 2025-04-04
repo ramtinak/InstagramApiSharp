@@ -2339,12 +2339,12 @@ namespace InstagramApiSharp.API
         ///     <para>Note: Set timeout more than 100 seconds!</para>
         /// </summary>
         /// <param name="timeout">Timeout (set more than 100 seconds!)</param>
-        public void SetTimeout(TimeSpan timeout)
+        public void SetTimeout(TimeSpan? timeout)
         {
             if (timeout == null)
                 timeout = TimeSpan.FromSeconds(350);
 
-            HttpClient.Timeout = timeout;
+            HttpClient.Timeout = timeout.Value;
         }
         /// <summary>
         ///     Set custom HttpClientHandler to be able to use certain features, e.g Proxy and so on

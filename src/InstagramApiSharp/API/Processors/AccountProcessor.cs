@@ -173,9 +173,6 @@ namespace InstagramApiSharp.API.Processors
                 var signature = $"{hash}.{Uri.EscapeDataString(payload)}";
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
                 request.Content = new FormUrlEncodedContent(fields);
-                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE, signature);
-                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION,
-                    InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -218,9 +215,6 @@ namespace InstagramApiSharp.API.Processors
                 var signature = $"{hash}.{Uri.EscapeDataString(payload)}";
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Post, instaUri, _deviceInfo);
                 request.Content = new FormUrlEncodedContent(fields);
-                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE, signature);
-                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION,
-                    InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == HttpStatusCode.OK)

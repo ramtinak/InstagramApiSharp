@@ -409,7 +409,6 @@ namespace InstagramApiSharp.API.Processors
                 _user.CsrfToken = csrftoken;
                 var instaUri = UriCreator.GetFriendshipPendingRequestsUri(_user.RankToken);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
-                request.Properties.Add(InstaApiConstants.HEADER_IG_SIGNATURE_KEY_VERSION, InstaApiConstants.IG_SIGNATURE_KEY_VERSION);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -544,11 +543,6 @@ namespace InstagramApiSharp.API.Processors
             {
                 var userUri = UriCreator.GetUserUri(username);
                 var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
-                request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_TIMEZONE,
-                    InstaApiConstants.TIMEZONE_OFFSET.ToString()));
-                request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_COUNT, "1"));
-                request.Properties.Add(
-                    new KeyValuePair<string, object>(InstaApiConstants.HEADER_RANK_TOKEN, _user.RankToken));
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
 

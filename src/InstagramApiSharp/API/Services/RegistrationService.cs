@@ -654,7 +654,7 @@ namespace InstagramApiSharp.API.Services
 
                 if (obj.AccountCreated && obj.CreatedUser != null)
                 {
-                    _instaApi.ValidateUserAsync(obj.CreatedUser, _user.CsrfToken, true, password);
+                    _instaApi.ValidateUserAsync(obj.CreatedUser, true, password);
                     ValidateUser(obj.CreatedUser);
                 }
                 return obj.IsSucceed ? Result.Success(obj) : Result.UnExpectedResponse<InstaAccountCreation>(response, json);
@@ -948,7 +948,7 @@ namespace InstagramApiSharp.API.Services
                 var obj = JsonConvert.DeserializeObject<InstaAccountCreation>(json);
                 if (obj.AccountCreated && obj.CreatedUser != null)
                 {
-                    _instaApi.ValidateUserAsync(obj.CreatedUser, _user.CsrfToken, true, password);
+                    _instaApi.ValidateUserAsync(obj.CreatedUser, true, password);
                     ValidateUser(obj.CreatedUser);
                 }
                 return Result.Success(obj);

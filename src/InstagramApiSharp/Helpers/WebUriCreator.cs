@@ -28,7 +28,7 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for current follow requests");
             string query = string.Empty;
             if (cursor.IsNotEmpty())
-                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeDataString(cursor));
 
             return new UriBuilder(instaUri) { Query = query }.Uri;
         }
@@ -39,7 +39,7 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for former biography texts");
             string query = string.Empty;
             if (cursor.IsNotEmpty())
-                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeDataString(cursor));
 
             return new UriBuilder(instaUri) { Query = query }.Uri;
         }
@@ -50,7 +50,7 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for former biography links");
             string query = string.Empty;
             if (cursor.IsNotEmpty())
-                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeDataString(cursor));
 
             return new UriBuilder(instaUri) { Query = query }.Uri;
         }
@@ -61,7 +61,7 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for former usernames");
             string query = string.Empty;
             if (cursor.IsNotEmpty())
-                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeDataString(cursor));
 
             return new UriBuilder(instaUri) { Query = query }.Uri;
         }
@@ -72,7 +72,7 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for former full names");
             string query = string.Empty;
             if (cursor.IsNotEmpty())
-                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeDataString(cursor));
 
             return new UriBuilder(instaUri) { Query = query }.Uri;
         }
@@ -83,7 +83,7 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for former phone numbers");
             string query = string.Empty;
             if (cursor.IsNotEmpty())
-                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeDataString(cursor));
 
             return new UriBuilder(instaUri) { Query = query }.Uri;
         }
@@ -94,7 +94,7 @@ namespace InstagramApiSharp.Helpers
                 throw new Exception("Cant create URI for former emails");
             string query = string.Empty;
             if (cursor.IsNotEmpty())
-                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeUriString(cursor));
+                query = string.Format(InstaApiConstants.WEB_CURSOR, Uri.EscapeDataString(cursor));
 
             return new UriBuilder(instaUri) { Query = query }.Uri;
         }
