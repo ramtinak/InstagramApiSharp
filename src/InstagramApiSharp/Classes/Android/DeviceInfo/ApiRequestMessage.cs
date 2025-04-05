@@ -3,7 +3,6 @@ using InstagramApiSharp.API;
 using InstagramApiSharp.Helpers;
 using Newtonsoft.Json;
 using InstagramApiSharp.API.Versions;
-using Org.BouncyCastle.Asn1.X500;
 namespace InstagramApiSharp.Classes.Android.DeviceInfo
 {
     public class ApiRequestMessage
