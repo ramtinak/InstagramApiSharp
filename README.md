@@ -62,4 +62,4 @@ Public version - End Of Support
 
 Iranian developers - (c) 2025 | Bahar 1404.
 
-<div dir="rtl">ÈåÇÑ 1404</div>
+<div dir="rtl">Ø¨Ù‡Ø§Ø± 1404</div>
