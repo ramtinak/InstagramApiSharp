@@ -289,14 +289,11 @@ v1.3.3.0
     <PackageIcon>insta.png</PackageIcon>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-	<PackageReadmeFile>readme.md</PackageReadmeFile>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   
   <ItemGroup>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
     <None Include="LICENSE.txt" Pack="true" Visible="true" PackagePath="$(PackageLicenseFile)" />
     <None Include="insta.png" Pack="true" Visible="true" PackagePath="$(PackageIcon)" />
   </ItemGroup>
@@ -317,7 +314,7 @@ v1.3.3.0
   
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" Condition="'$(TargetFramework)' != 'net6.0' AND '$(TargetFramework)' != 'net8.0'"/>
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" Condition="'$(TargetFramework)' != 'net6.0' AND '$(TargetFramework)' != 'net8.0'" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" Condition="'$(TargetFramework)' == 'uap10.0'" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" Condition="'$(TargetFramework)' == 'net461'" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
