@@ -25,6 +25,12 @@ namespace InstagramApiSharp.API.Processors
         #region Edit profile
 
         /// <summary>
+        ///     Reorder bio links
+        /// </summary>
+        /// <param name="bioLinkIds">Bio link ids to remove (Get it from <see cref="InstaBioLink.LinkId"/> from <see cref="IAccountProcessor.GetRequestForEditProfileAsync"/> or <see cref="IUserProcessor.GetUserInfoByIdAsync(long, InstaMediaSurfaceType?, InstaMediaContainerModuleType?)"/> requests)</param>
+        Task<IResult<InstaUserEdit>> ReorderBioLinksAsync(params string[] bioLinkIds);
+
+        /// <summary>
         ///     Remove bio links
         /// </summary>
         /// <param name="bioLinkIds">Bio link ids to remove (Get it from <see cref="InstaBioLinkResponse.LinkId"/> from <see cref="IAccountProcessor.GetRequestForEditProfileAsync"/> or <see cref="IUserProcessor.GetUserInfoByIdAsync(long, InstaMediaSurfaceType?, InstaMediaContainerModuleType?)"/> requests)</param>

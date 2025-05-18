@@ -58,7 +58,51 @@ namespace InstagramApiSharp.API.Processors
 
         #region Profile edit
 
+        /// <summary>
+        ///     Reorder bio links
+        /// </summary>
+        /// <param name="bioLinkIds">Bio link ids to remove (Get it from <see cref="InstaBioLink.LinkId"/> from <see cref="IAccountProcessor.GetRequestForEditProfileAsync"/> or <see cref="IUserProcessor.GetUserInfoByIdAsync(long, InstaMediaSurfaceType?, InstaMediaContainerModuleType?)"/> requests)</param>
+        public async Task<IResult<InstaUserEdit>> ReorderBioLinksAsync(params string[] bioLinkIds)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                if (bioLinkIds == null || bioLinkIds?.Length == 0)
+                {
+                    throw new Exception("At least one bio link id is required");
+                }
 
+                var instaUri = UriCreator.GetUpdateBioLinksUri();
+                var data = new Dictionary<string, string>
+                {
+                    {"_uid", _user.LoggedInUser.Pk.ToString()},
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"ordered_link_ids", JsonConvert.SerializeObject(bioLinkIds, Formatting.None)},
+                };
+
+                var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUserEdit>(response, json);
+
+                var obj = JsonConvert.DeserializeObject<InstaUserEditContainer>(json);
+
+                return Result.Success(obj.User);
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaUserEdit), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUserEdit>(exception);
+            }
+        }
         /// <summary>
         ///     Remove bio links
         /// </summary>
